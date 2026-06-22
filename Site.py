@@ -30,7 +30,7 @@ st.markdown("""
 # ========================= MODEL =========================
 @st.cache_resource
 def load_model():
-    return YOLO(r'Treinamento da IA\runs\detect\runs\exp1\weights\best.pt')
+    return YOLO(r'AI Training\runs\detect\runs\exp1\weights\best.pt')
 
 # ========================= FUNÇÕES DE TILES =========================
 def deg2tile(lat, lon, z):
