@@ -4,5 +4,4 @@ matplotlib>=3.10.8
 pillow>=12.1.1
 requests>=2.34.2
 cv>=1.0.0
-opencv-python>=4.13.0.92
 opencv-python-headless>=4.10.0.84
