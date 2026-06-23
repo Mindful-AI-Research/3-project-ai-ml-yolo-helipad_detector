@@ -146,6 +146,16 @@
 <!-- ========= END BADGES GROUP 2========= -->
 
 
+<!-- ========= START NOTE ========= -->
+> [!WARNING]
+>
+> ⚠️ Projects may be publicly shared when permitted.  
+> The focus is on applied, hands-on learning with real datasets in AI governance and security contexts.  
+> All sensitive content remains protected in private repositories when required.
+>
+
+<br><br>
+<!-- ========= END NOTE ========= -->
 
 
 
