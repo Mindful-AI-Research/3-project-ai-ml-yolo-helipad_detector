@@ -39,7 +39,64 @@
 
 <br><br>
 
+<br><br>
+<!-- ========= END REPO TITLE ========= -->
 
+<!-- ========= START APP BADGE ========= -->
+<p align="center" style="margin: 0;">
+  <a href="https://github.com/Mindful-AI-Assistants/Helipoint-Detector" rel="noopener noreferrer">
+    <img 
+      src="https://img.shields.io/badge/GitHub%20Repository-Helipoint%20Detector-0f172a?style=for-the-badge&logo=github&logoColor=white" 
+      alt="GitHub Repository Helipoint Detector"
+      style="height: 38px; width: auto;"
+    />
+  </a>
+</p>
+
+<!-- ========= END APP BADGE ========= -->
+
+
+<!-- ========= START NOTEBOOK BADGE ========= -->
+<p align="center" style="margin: 0;">
+
+  <a href="https://github.com/Mindful-AI-Assistants/Helipoint-Detector/blob/main/Analise.ipynb" rel="noopener noreferrer">
+    <img 
+      src="https://img.shields.io/badge/Jupyter-Training%20%26%20Evaluation%20Notebook-0f766e?style=for-the-badge&logo=jupyter&logoColor=white" 
+      alt="Jupyter Training and Evaluation Notebook"
+      style="height: 32px; width: auto; margin-right: 8px;"
+    />
+  </a>
+  
+<!-- =========End NOTEBOOK BADGE ========= -->
+
+<!-- ========= START APP BADGE ========= -->
+  <a href="https://github.com/Mindful-AI-Assistants/Helipoint-Detector/blob/main/Site.py" target="_blank" rel="noopener noreferrer">
+    <img 
+      src="https://img.shields.io/badge/Streamlit-Helipad%20Detection%20Interface-134e4a?style=for-the-badge&logo=streamlit&logoColor=white&labelColor=022c22" 
+      alt="Streamlit Helipad Detection Interface"
+      style="height: 32px; width: auto;"
+    />
+  </a>
+
+</p>
+
+<br><br>
+
+#
+
+<br><br>
+<!-- ========= END APP BADGE ========= -->
+
+<!-- ======================================= Start Institutional INFO ===========================================  -->
+[**Institution:**]() Pontifical Catholic University of São Paulo (PUC-SP) • Humanistic AI & Data Science • 2026 <br>
+[**School:**]() Faculty of Interdisciplinary Studies  <br>
+[**Course Repo:**]() Integrated Project — Machine Learning  <br>
+**Project:**  P2 — Object Detection in Satellite Images with YOLO  <br>
+**Professor:**  [✨ Rooney Ribeiro Albuquerque Coelho](https://www.linkedin.com/in/rooney-coelho-320857182/)  <br>
+**Authors:**  [Fabiana ⚡️ Campanari](https://linktr.ee/fabianacampanari) and Pedro Vyctor Almeida  <br>  <br>
+
+<br><br>
+<!-- ========= END Institutional INFO ========= -->
 
 
 
