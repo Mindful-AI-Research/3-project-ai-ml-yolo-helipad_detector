@@ -63,7 +63,7 @@
 [**Course Repo:**]() Integrated Project — Machine Learning  <br>
 **Project:**  P2 — Object Detection in Satellite Images with YOLO  <br>
 **Professor:**  [✨ Rooney Ribeiro Albuquerque Coelho](https://www.linkedin.com/in/rooney-coelho-320857182/)  <br>
-**Authors:**  [Fabiana ⚡️ Campanari](https://linktr.ee/fabianacampanari) and Pedro Vyctor Almeida  <br>  <br>
+**Authors:** [CARLOS ANTONIO DOS SANTOS ROTH GORHAM](), [Fabiana ⚡️ Campanari](https://linktr.ee/fabianacampanari) and [Pedro Vyctor Almeida]()  
 
 <br><br>
 
