@@ -27,8 +27,6 @@
 <br>
 
 
-#
-
 #### <p align="center"> ✨ ***From Pixels to Geospatial Intelligence*** ✨
 
 
@@ -39,8 +37,40 @@
 
 <br><br>
 
+#
+
 <br><br>
 <!-- ========= END REPO TITLE ========= -->
+
+<!-- ========= START SPONSOR BADGE ========= -->
+#### <p align="center"> [![Sponsor Mindful AI Assistants](https://img.shields.io/badge/Sponsor-%C2%B7%C2%B7%C2%B7%20Mindful%20AI%20Assistants%20%C2%B7%C2%B7%C2%B7-brightgreen?logo=GitHub)](https://github.com/sponsors/Mindful-AI-Assistants)
+
+<br><br>
+<!-- ========= END SPONSOR BADGE ========= -->
+
+<!-- ========= START GIFE ========= -->
+<p align="center">
+   <img src="https://github.com/user-attachments/assets/791a69e2-d09a-429f-9257-f6667fff5c04 ">
+ </p>
+
+
+<br><br><br>
+<!-- ========= END GIFR IMAGE ========= -->
+
+<!-- ======================================= Start Institutional INFO ===========================================  -->
+[**Institution:**]() Pontifical Catholic University of São Paulo (PUC-SP) • Humanistic AI & Data Science • 2026 <br>
+[**School:**]() Faculty of Interdisciplinary Studies  <br>
+[**Course Repo:**]() Integrated Project — Machine Learning  <br>
+**Project:**  P2 — Object Detection in Satellite Images with YOLO  <br>
+**Professor:**  [✨ Rooney Ribeiro Albuquerque Coelho](https://www.linkedin.com/in/rooney-coelho-320857182/)  <br>
+**Authors:**  [Fabiana ⚡️ Campanari](https://linktr.ee/fabianacampanari) and Pedro Vyctor Almeida  <br>  <br>
+
+<br><br>
+
+#
+
+<br><br>
+<!-- ========= END Institutional INFO ========= -->
 
 <!-- ========= START APP BADGE ========= -->
 <p align="center" style="margin: 0;">
@@ -87,32 +117,10 @@
 <br><br>
 <!-- ========= END APP BADGE ========= -->
 
-<!-- ======================================= Start Institutional INFO ===========================================  -->
-[**Institution:**]() Pontifical Catholic University of São Paulo (PUC-SP) • Humanistic AI & Data Science • 2026 <br>
-[**School:**]() Faculty of Interdisciplinary Studies  <br>
-[**Course Repo:**]() Integrated Project — Machine Learning  <br>
-**Project:**  P2 — Object Detection in Satellite Images with YOLO  <br>
-**Professor:**  [✨ Rooney Ribeiro Albuquerque Coelho](https://www.linkedin.com/in/rooney-coelho-320857182/)  <br>
-**Authors:**  [Fabiana ⚡️ Campanari](https://linktr.ee/fabianacampanari) and Pedro Vyctor Almeida  <br>  <br>
-
-<br><br>
-<!-- ========= END Institutional INFO ========= -->
 
 
-<!-- ========= START SPONSOR BADGE ========= -->
-#### <p align="center"> [![Sponsor Mindful AI Assistants](https://img.shields.io/badge/Sponsor-%C2%B7%C2%B7%C2%B7%20Mindful%20AI%20Assistants%20%C2%B7%C2%B7%C2%B7-brightgreen?logo=GitHub)](https://github.com/sponsors/Mindful-AI-Assistants)
-
-<br><br><br>
-<!-- ========= END SPONSOR BADGE ========= -->
-
-<!-- ========= START GIFE ========= -->
-<p align="center">
-   <img src="https://github.com/user-attachments/assets/791a69e2-d09a-429f-9257-f6667fff5c04 ">
- </p>
 
 
-<br><br><br><br>
-<!-- ========= END GIFR IMAGE ========= -->
 
 
 
