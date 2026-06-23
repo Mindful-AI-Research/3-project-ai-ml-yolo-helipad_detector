@@ -75,7 +75,7 @@
 
 <!-- ========= START Streamlit BADGE ========= -->
 <p align="center" style="margin: 0;">
-  <a href="https://github.com/Mindful-AI-Assistants/Helipoint-Detector" rel="noopener noreferrer">
+  <a href="" rel="noopener noreferrer">
     <img 
       src="https://img.shields.io/badge/Streamlit%20Repository-Helipoint%20Detector-0f172a?style=for-the-badge&logo=github&logoColor=white" 
       alt="Streamlit Repository Helipoint Detector"
@@ -90,7 +90,7 @@
 <!-- ========= START React Presentation BADGE ========= -->
 <p align="center" style="margin: 0;">
 
-  <a href="https://github.com/Mindful-AI-Assistants/Helipoint-Detector/blob/main/Analise.ipynb" rel="noopener noreferrer">
+  <a href="" rel="noopener noreferrer">
     <img 
       src="https://img.shields.io/badge/React%20Presentation-Slides%20and%20Overview-0f766e?style=for-the-badge&logo=jupyter&logoColor=white" 
       alt="React Presentation Slides and Overview"
@@ -103,7 +103,7 @@
 
 
 <!-- ========= START Data Analysis Report BADGE ========= -->
-  <a href="https://github.com/Mindful-AI-Assistants/Helipoint-Detector/blob/main/Site.py" target="_blank" rel="noopener noreferrer">
+  <a href="" target="_blank" rel="noopener noreferrer">
     <img 
       src="https://img.shields.io/badge/Data%20Analysis-Report%20and%20PDF-134e4a?style=for-the-badge&logo=streamlit&logoColor=white&labelColor=022c22" 
       alt="Data Analysis Report and PDF"
