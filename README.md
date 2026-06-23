@@ -72,7 +72,7 @@
 <br><br>
 <!-- ========= END Institutional INFO ========= -->
 
-<!-- ========= START APP BADGE ========= -->
+<!-- ========= START Streamlit BADGE ========= -->
 <p align="center" style="margin: 0;">
   <a href="https://github.com/Mindful-AI-Assistants/Helipoint-Detector" rel="noopener noreferrer">
     <img 
@@ -83,10 +83,10 @@
   </a>
 </p>
 
-<!-- ========= END APP BADGE ========= -->
+<!-- ========= END Streamlit BADGE========= -->
 
 
-<!-- ========= START NOTEBOOK BADGE ========= -->
+<!-- ========= START React Presentation BADGE ========= -->
 <p align="center" style="margin: 0;">
 
   <a href="https://github.com/Mindful-AI-Assistants/Helipoint-Detector/blob/main/Analise.ipynb" rel="noopener noreferrer">
@@ -97,9 +97,9 @@
     />
   </a>
   
-<!-- =========End NOTEBOOK BADGE ========= -->
+<!-- =========End Eeact Presentation BADGE ========= -->
 
-<!-- ========= START APP BADGE ========= -->
+<!-- ========= START Data Analysis Report BADGE ========= -->
   <a href="https://github.com/Mindful-AI-Assistants/Helipoint-Detector/blob/main/Site.py" target="_blank" rel="noopener noreferrer">
     <img 
       src="https://img.shields.io/badge/Streamlit-Helipad%20Detection%20Interface-134e4a?style=for-the-badge&logo=streamlit&logoColor=white&labelColor=022c22" 
@@ -115,16 +115,9 @@
 #
 
 <br><br>
-<!-- ========= END APP BADGE ========= -->
+<!-- ========= END Data Analysis Report BADGE ========= -->
 
-
-
-
-
-
-
-
-<!-- ========= START BADGES GROUP ========= -->
+<!-- ========= START BADGES GROUP 2 ========= -->
 <p align="center">
   <img src="https://img.shields.io/badge/Python-AI%20Pipeline-0f172a?style=for-the-badge&logo=python&logoColor=white" />
 </p>
@@ -141,7 +134,7 @@
 </p>
 
 <br><br><br>
-<!-- ========= END BADGES GROUP ========= -->
+<!-- ========= END BADGES GROUP 2========= -->
 
 
 
