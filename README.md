@@ -72,12 +72,13 @@
 <br><br>
 <!-- ========= END Institutional INFO ========= -->
 
+
 <!-- ========= START Streamlit BADGE ========= -->
 <p align="center" style="margin: 0;">
   <a href="https://github.com/Mindful-AI-Assistants/Helipoint-Detector" rel="noopener noreferrer">
     <img 
-      src="https://img.shields.io/badge/GitHub%20Repository-Helipoint%20Detector-0f172a?style=for-the-badge&logo=github&logoColor=white" 
-      alt="GitHub Repository Helipoint Detector"
+      src="https://img.shields.io/badge/Streamlit%20Repository-Helipoint%20Detector-0f172a?style=for-the-badge&logo=github&logoColor=white" 
+      alt="Streamlit Repository Helipoint Detector"
       style="height: 38px; width: auto;"
     />
   </a>
@@ -91,19 +92,21 @@
 
   <a href="https://github.com/Mindful-AI-Assistants/Helipoint-Detector/blob/main/Analise.ipynb" rel="noopener noreferrer">
     <img 
-      src="https://img.shields.io/badge/Jupyter-Training%20%26%20Evaluation%20Notebook-0f766e?style=for-the-badge&logo=jupyter&logoColor=white" 
-      alt="Jupyter Training and Evaluation Notebook"
+      src="https://img.shields.io/badge/React%20Presentation-Slides%20and%20Overview-0f766e?style=for-the-badge&logo=jupyter&logoColor=white" 
+      alt="React Presentation Slides and Overview"
       style="height: 32px; width: auto; margin-right: 8px;"
     />
   </a>
   
 <!-- =========End Eeact Presentation BADGE ========= -->
 
+
+
 <!-- ========= START Data Analysis Report BADGE ========= -->
   <a href="https://github.com/Mindful-AI-Assistants/Helipoint-Detector/blob/main/Site.py" target="_blank" rel="noopener noreferrer">
     <img 
-      src="https://img.shields.io/badge/Streamlit-Helipad%20Detection%20Interface-134e4a?style=for-the-badge&logo=streamlit&logoColor=white&labelColor=022c22" 
-      alt="Streamlit Helipad Detection Interface"
+      src="https://img.shields.io/badge/Data%20Analysis-Report%20and%20PDF-134e4a?style=for-the-badge&logo=streamlit&logoColor=white&labelColor=022c22" 
+      alt="Data Analysis Report and PDF"
       style="height: 32px; width: auto;"
     />
   </a>
@@ -115,7 +118,13 @@
 #
 
 <br><br>
-<!-- ========= END Data Analysis Report BADGE ========= -->
+
+
+
+
+
+
+
 
 <!-- ========= START BADGES GROUP 2 ========= -->
 <p align="center">
