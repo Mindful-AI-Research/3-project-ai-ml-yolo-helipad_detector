@@ -99,11 +99,60 @@
 <!-- ========= END Institutional INFO ========= -->
 
 
+<!-- ========= START SPONSOR BADGE ========= -->
+#### <p align="center"> [![Sponsor Mindful AI Assistants](https://img.shields.io/badge/Sponsor-%C2%B7%C2%B7%C2%B7%20Mindful%20AI%20Assistants%20%C2%B7%C2%B7%C2%B7-brightgreen?logo=GitHub)](https://github.com/sponsors/Mindful-AI-Assistants)
+
+<br><br><br>
+<!-- ========= END SPONSOR BADGE ========= -->
+
+<!-- ========= START GIFE ========= -->
+<p align="center">
+   <img src="https://github.com/user-attachments/assets/791a69e2-d09a-429f-9257-f6667fff5c04 ">
+ </p>
+
+
+<br><br><br><br>
+<!-- ========= END GIFR IMAGE ========= -->
+
+
+
+<!-- ========= START BADGES GROUP ========= -->
+<p align="center">
+  <img src="https://img.shields.io/badge/Python-AI%20Pipeline-0f172a?style=for-the-badge&logo=python&logoColor=white" />
+</p>
+
+<p align="center">
+  <img src="https://img.shields.io/badge/Ultralytics-YOLOv8%20%2F%20YOLOv11-101f2f?style=for-the-badge&logo=pytorch&logoColor=white" />
+  <img src="https://img.shields.io/badge/Object%20Detection-Satellite%20Vision-112a3a?style=for-the-badge&logo=tensorflow&logoColor=white" />
+</p>
+
+<p align="center">
+  <img src="https://img.shields.io/badge/ESRI-World%20Imagery-124050?style=for-the-badge&logo=esri&logoColor=white" />
+  <img src="https://img.shields.io/badge/Roboflow-Annotation%20Workflow-134a4a?style=for-the-badge&logo=roboflow&logoColor=white" />
+  <img src="https://img.shields.io/badge/Google%20Colab-T4%20GPU-134e4a?style=for-the-badge&logo=googlecolab&logoColor=white" />
+</p>
+
+<br><br><br>
+<!-- ========= END BADGES GROUP ========= -->
 
 
 
 
 
+
+
+
+
+
+
+
+
+<br><br>
+<br><br>
+<br><br>
+<br><br>
+<br><br>
+<br><br>
 
 ## [MLOps Pipeline Architecture]()
 
@@ -192,3 +241,47 @@ flowchart TD
       V
     end
 ```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<br><br>
+<br><br>
+<br><br>
+<br><br>
+<br><br>
+<br><br>
+
+
+
+
+
+
+
+
+
