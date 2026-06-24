@@ -62,12 +62,10 @@
 [**Course:**]() BSc in Humanistic AI & Data Science — 5th semester — 2026  
 [**Subject:**]() Machine Learning / Computer Vision — YOLO  
 [**Project:**]() P2 — Object Detection in Satellite Images with YOLO  
-**Professor:** [⭐️ Rooney Ribeiro Albuquerque Coelho](https://www.linkedin.com/in/rooney-coelho-320857182/)  <br> 
 
-**Project Authors (Helipoint Detector):**  
-- [Carlos Antonio Roth Gorham]() 
-- [Fabiana ⚡️ Campanari](https://linktr.ee/fabianacampanari)  
-- [Pedro Vyctor Almeida](https://www.linkedin.com/in/pedro-vyctor-almeida-285b89273/) 
+**Professor:** [✨ Rooney Ribeiro Albuquerque Coelho](https://www.linkedin.com/in/rooney-coelho-320857182/)  
+**Authors:**  
+[Carlos Antonio Roth Gorham]()   • [Fabiana ⚡️ Campanari](https://linktr.ee/fabianacampanari)   •  [Pedro Vyctor Almeida](https://www.linkedin.com/in/pedro-vyctor-almeida-285b89273/) 
 
 <br><br>
 
