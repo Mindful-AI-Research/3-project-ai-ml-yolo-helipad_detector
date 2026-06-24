@@ -4,8 +4,7 @@
 
 <br><br>
 
-
-# <p align="center">🧠 AI/ML Project II · Computer Vision · Helipoint Detector</p>
+# <p align="center">🧠 AI/ML Project 2 · Computer Vision · Helipoint Detector</p>
 
 ### <p align="center">Automated Helipad Detection Using YOLO and Satellite Imagery of São Paulo, Brazil</p>
 
@@ -19,7 +18,7 @@
 &nbsp;&nbsp;✦&nbsp;&nbsp;
 <a href="https://github.com/topics/object-detection">Object Detection</a>
 &nbsp;&nbsp;✦&nbsp;&nbsp;
-<a href="https://github.com/topics/yolo">YOLOv8 / YOLOv11</a>
+<a href="https://github.com/topics/yolo">YOLO (v8 / v11)</a>
 &nbsp;&nbsp;✦&nbsp;&nbsp;
 <a href="https://github.com/topics/geospatial">Geospatial Intelligence</a>
 
@@ -27,14 +26,14 @@
 
 <br><br>
 
-#### <p align="center">✨ <i>Teaching YOLO to Spot the City's Most Exclusive Parking Spaces</i> ✨</p>
+#### <p align="center">✨ <i>Teaching YOLO to spot the city's most exclusive landing spots.</i> ✨</p>
 
 <p align="center">
-<i>Finding hidden H’s in the concrete jungle</i><br><br>
+<i>Finding hidden H’s in the Concrete Jungle</i><br><br>
 <b>One rooftop at a time.</b> 🚁⚡️
 </p>
 
-<br>
+<br><br>
 
 #
 
