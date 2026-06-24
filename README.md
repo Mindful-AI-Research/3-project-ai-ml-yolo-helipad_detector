@@ -57,12 +57,18 @@
 <!-- ========= END GIFR IMAGE ========= -->
 
 <!-- ======================================= Start Institutional INFO ===========================================  -->
-[**Institution:**]() Pontifical Catholic University of São Paulo (PUC-SP) • Humanistic AI & Data Science • 2026 <br>
-[**School:**]() Faculty of Interdisciplinary Studies  <br>
-[**Course Repo:**]() Integrated Project — Machine Learning  <br>
-**Project:**  P2 — Object Detection in Satellite Images with YOLO  <br>
-**Professor:**  [✨ Rooney Ribeiro Albuquerque Coelho](https://www.linkedin.com/in/rooney-coelho-320857182/)  <br>
-**Authors:** [Fabiana ⚡️ Campanari](https://linktr.ee/fabianacampanari) and [Pedro Vyctor Almeida]()  [Carlos Antonio Roth Gorham]()
+## [Institutional Information]()
+
+[**Institution:**]() Pontifical Catholic University of São Paulo (PUC‑SP) — FACEI  
+[**Course:**]() BSc in Humanistic AI & Data Science — 5th semester — 2026  
+[**Subject:**]() Machine Learning / Computer Vision — YOLO  
+[**Project:**]() P2 — Object Detection in Satellite Images with YOLO  
+**Professor:** [⭐️ Rooney Ribeiro Albuquerque Coelho](https://www.linkedin.com/in/rooney-coelho-320857182/)  <br> 
+
+**Project Authors (Helipoint Detector):**  
+- [Carlos Antonio Roth Gorham]() 
+- [Fabiana ⚡️ Campanari](https://linktr.ee/fabianacampanari)  
+- [Pedro Vyctor Almeida]() 
 
 <br><br>
 
