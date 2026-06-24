@@ -160,9 +160,35 @@
 <!-- ========= END NOTE ========= -->
 
 
+<!-- =========START MAIN REPO =Projects REFERENCES ========= -->
+> [!TIP]
+>
+> This repository is part of the flagship ecosystem:
+>
+> ## 🧠 AI & Machine Learning — Main Hub
+>
+> Explore the complete collection of projects, notebooks, research materials, analyses, and interactive applications available in the central repository:
+>
+> 🔗 **[AI & Machine Learning — Hub](https://github.com/Mindful-AI-Assistants/1-AI_Machine-Learning_Hub)**
+>
+> #
+>
+> ### 🔗 Related Project in this Series
+>
+> **AI/ML Project 1 · Computer Vision · EMNIST Vision Intelligence**
+>
+> A deep learning system for handwritten character recognition using PyTorch and Streamlit.
+>
+> 🔗 *Foundational step in visual pattern recognition within this series*
+>
+> #
+>
+> ✨ Part of the *Humanistic AI & Machine Learning Series*
+>
+> *From handwriting to rooftops — simplicity was never in the roadmap.* ⚡️
 
-
-
+<br><br>
+<!-- =========ENDMAIN REPO =Projects REFERENCES ========= -->
 
 
 
