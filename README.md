@@ -60,10 +60,12 @@
 [**Institution:**]() Pontifical Catholic University of São Paulo (PUC‑SP) — FACEI  
 [**Course:**]() BSc in Humanistic AI & Data Science — 5th semester — 2026  
 [**Subject:**]() Machine Learning / Computer Vision — YOLO  
-[**Project:**]() P2 — Object Detection in Satellite Images with YOLO 
+[**Project:**]() P2 — Object Detection in Satellite Images with YOLO  
 
-**Professor:** [⭐️ Rooney Ribeiro Albuquerque Coelho](https://www.linkedin.com/in/rooney-coelho-320857182/)  <br> 
-**Project Authors:** [Carlos Antonio Roth Gorham](), [Fabiana ⚡️ Campanari](https://linktr.ee/fabianacampanari) andn [Pedro Vyctor Almeida](https://www.linkedin.com/in/pedro-vyctor-almeida-285b89273/) 
+**Professor:** [✨ Rooney Ribeiro Albuquerque Coelho](https://www.linkedin.com/in/rooney-coelho-320857182/)  
+**Authors:**  
+[Carlos Antonio Roth Gorham]()   • [Fabiana ⚡️ Campanari](https://linktr.ee/fabianacampanari)   •  [Pedro Vyctor Almeida](https://www.linkedin.com/in/pedro-vyctor-almeida-285b89273/) 
+
 
 <br><br>
 
@@ -158,8 +160,7 @@
 <!-- ========= END NOTE ========= -->
 
 
-<!-- ========= MAIN REPO REFERENCE ========= -->
-
+<!-- =========START MAIN REPO =Projects REFERENCES ========= -->
 > [!TIP]
 >
 > This repository is part of the flagship ecosystem:
@@ -185,6 +186,10 @@
 > ✨ Part of the *Humanistic AI & Machine Learning Series*
 >
 > *From handwriting to rooftops — simplicity was never in the roadmap.* ⚡️
+
+<br><br>
+<!-- =========ENDMAIN REPO =Projects REFERENCES ========= -->
+
 
 
 
