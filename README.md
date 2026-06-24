@@ -68,7 +68,7 @@
 **Project Authors (Helipoint Detector):**  
 - [Carlos Antonio Roth Gorham]() 
 - [Fabiana ⚡️ Campanari](https://linktr.ee/fabianacampanari)  
-- [Pedro Vyctor Almeida]() 
+- [Pedro Vyctor Almeida](https://www.linkedin.com/in/pedro-vyctor-almeida-285b89273/) 
 
 <br><br>
 
