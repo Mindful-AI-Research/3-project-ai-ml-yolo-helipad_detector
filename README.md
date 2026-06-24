@@ -3,7 +3,6 @@
 \[[🇧🇷 Português](README.pt_BR.md)\] \[**[🇺🇸 English](README.md)**\]
 
 <br><br>
-
 # <p align="center">🧠 AI/ML Project 2 · Computer Vision · Helipoint Detector</p>
 
 ### <p align="center">Automated Helipad Detection Using YOLO and Satellite Imagery of São Paulo, Brazil</p>
@@ -29,11 +28,11 @@
 #### <p align="center">✨ <i>Teaching YOLO to spot the city's most exclusive landing spots.</i> ✨</p>
 
 <p align="center">
-<i>Finding hidden H’s in the Concrete Jungle</i><br><br>
+<i>Finding hidden H’s in the concrete jungle</i><br><br>
 <b>One rooftop at a time.</b> 🚁⚡️
 </p>
 
-<br><br>
+<br>
 
 #
 
@@ -66,6 +65,7 @@
 **Professor:** [✨ Rooney Ribeiro Albuquerque Coelho](https://www.linkedin.com/in/rooney-coelho-320857182/)  
 **Authors:**  
 [Carlos Antonio Roth Gorham]()   • [Fabiana ⚡️ Campanari](https://linktr.ee/fabianacampanari)   •  [Pedro Vyctor Almeida](https://www.linkedin.com/in/pedro-vyctor-almeida-285b89273/) 
+
 
 <br><br>
 
@@ -289,6 +289,7 @@ flowchart TD
       V
     end
 ```
+
 
 
 
