@@ -118,31 +118,31 @@
 
 <br><br>
 
-
-
-
-
-
-
-
-<!-- ========= START BADGES GROUP 2 ========= -->
+<!-- ========= START TECH STACK / PIPELINE BADGES ========= -->
 <p align="center">
-  <img src="https://img.shields.io/badge/Python-AI%20Pipeline-0f172a?style=for-the-badge&logo=python&logoColor=white" />
+  <img src="https://img.shields.io/badge/Python-Core%20Language-0f172a?style=for-the-badge&logo=python&logoColor=white" />
+  <img src="https://img.shields.io/badge/PyTorch-Deep%20Learning%20Framework-101f2f?style=for-the-badge&logo=pytorch&logoColor=white" />
+  <img src="https://img.shields.io/badge/YOLO-Ultralytics%20Object%20Detection-112a3a?style=for-the-badge&logo=ultralytics&logoColor=white" />
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Ultralytics-YOLOv8%20%2F%20YOLOv11-101f2f?style=for-the-badge&logo=pytorch&logoColor=white" />
-  <img src="https://img.shields.io/badge/Object%20Detection-Satellite%20Vision-112a3a?style=for-the-badge&logo=tensorflow&logoColor=white" />
+  <img src="https://img.shields.io/badge/Roboflow-Dataset%20%26%20Annotation-134a4a?style=for-the-badge&logo=roboflow&logoColor=white" />
+  <img src="https://img.shields.io/badge/Geospatial-Satellite%20Imagery-124050?style=for-the-badge&logo=googleearth&logoColor=white" />
+  <img src="https://img.shields.io/badge/Computer%20Vision-Object%20Detection-0f2a2a?style=for-the-badge&logo=opencv&logoColor=white" />
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/ESRI-World%20Imagery-124050?style=for-the-badge&logo=esri&logoColor=white" />
-  <img src="https://img.shields.io/badge/Roboflow-Annotation%20Workflow-134a4a?style=for-the-badge&logo=roboflow&logoColor=white" />
-  <img src="https://img.shields.io/badge/Google%20Colab-T4%20GPU-134e4a?style=for-the-badge&logo=googlecolab&logoColor=white" />
+  <img src="https://img.shields.io/badge/Google%20Colab-GPU%20Training-134e4a?style=for-the-badge&logo=googlecolab&logoColor=white" />
+  <img src="https://img.shields.io/badge/Evaluation-mAP%20%2F%20Precision%20Metrics-0f172a?style=for-the-badge&logo=githubactions&logoColor=white" />
 </p>
 
-<br><br><br>
-<!-- ========= END BADGES GROUP 2========= -->
+
+<br><br>
+
+#
+
+<br><br>
+<!-- =========END TECH STACK / PIPELINE BADGES========= -->
 
 
 <!-- ========= START NOTE ========= -->
