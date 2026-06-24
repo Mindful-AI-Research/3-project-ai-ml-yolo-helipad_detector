@@ -3,7 +3,6 @@
 \[[🇧🇷 Português](README.pt_BR.md)\] \[**[🇺🇸 English](README.md)**\]
 
 <br><br>
-
 # <p align="center">🧠 AI/ML Project 2 · Computer Vision · Helipoint Detector</p>
 
 ### <p align="center">Automated Helipad Detection Using YOLO and Satellite Imagery of São Paulo, Brazil</p>
@@ -29,11 +28,11 @@
 #### <p align="center">✨ <i>Teaching YOLO to spot the city's most exclusive landing spots.</i> ✨</p>
 
 <p align="center">
-<i>Finding hidden H’s in the Concrete Jungle</i><br><br>
+<i>Finding hidden H’s in the concrete jungle</i><br><br>
 <b>One rooftop at a time.</b> 🚁⚡️
 </p>
 
-<br><br>
+<br>
 
 #
 
@@ -63,11 +62,10 @@
 [**Subject:**]() Machine Learning / Computer Vision — YOLO  
 [**Project:**]() P2 — Object Detection in Satellite Images with YOLO  
 
-**Professor:** [⭐️ Rooney Ribeiro Albuquerque Coelho](https://www.linkedin.com/in/rooney-coelho-320857182/)  <br> 
-**Project Authors (Helipoint Detector):**  
-- [Carlos Antonio Roth Gorham]() 
-- [Fabiana ⚡️ Campanari](https://linktr.ee/fabianacampanari)  
-- [Pedro Vyctor Almeida](https://www.linkedin.com/in/pedro-vyctor-almeida-285b89273/) 
+**Professor:** [✨ Rooney Ribeiro Albuquerque Coelho](https://www.linkedin.com/in/rooney-coelho-320857182/)  
+**Authors:**  
+[Carlos Antonio Roth Gorham]()   • [Fabiana ⚡️ Campanari](https://linktr.ee/fabianacampanari)   •  [Pedro Vyctor Almeida](https://www.linkedin.com/in/pedro-vyctor-almeida-285b89273/) 
+
 
 <br><br>
 
@@ -162,9 +160,35 @@
 <!-- ========= END NOTE ========= -->
 
 
+<!-- =========START MAIN REPO =Projects REFERENCES ========= -->
+> [!TIP]
+>
+> This repository is part of the flagship ecosystem:
+>
+> ## 🧠 AI & Machine Learning — Main Hub
+>
+> Explore the complete collection of projects, notebooks, research materials, analyses, and interactive applications available in the central repository:
+>
+> 🔗 **[AI & Machine Learning — Hub](https://github.com/Mindful-AI-Assistants/1-AI_Machine-Learning_Hub)**
+>
+> #
+>
+> ### 🔗 Related Project in this Series
+>
+> **AI/ML Project 1 · Computer Vision · EMNIST Vision Intelligence**
+>
+> A deep learning system for handwritten character recognition using PyTorch and Streamlit.
+>
+> 🔗 *Foundational step in visual pattern recognition within this series*
+>
+> #
+>
+> ✨ Part of the *Humanistic AI & Machine Learning Series*
+>
+> *From handwriting to rooftops — simplicity was never in the roadmap.* ⚡️
 
-
-
+<br><br>
+<!-- =========ENDMAIN REPO =Projects REFERENCES ========= -->
 
 
 
@@ -265,6 +289,7 @@ flowchart TD
       V
     end
 ```
+
 
 
 
