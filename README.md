@@ -92,7 +92,7 @@
 <!-- ========= START React Presentation BADGE ========= -->
 <p align="center" style="margin: 0;">
 
-  <a href="" rel="noopener noreferrer">
+  <a href="https://canva.link/0781blpvt3td2li" rel="noopener noreferrer">
     <img 
       src="https://img.shields.io/badge/React%20Presentation-Slides%20and%20Overview-0f766e?style=for-the-badge&logo=jupyter&logoColor=white" 
       alt="React Presentation Slides and Overview"
