@@ -185,7 +185,7 @@
 >
 > ✨ Part of the *Humanistic AI & Machine Learning Series*
 >
-> *From handwriting to rooftops — simplicity was never in the roadmap.* ⚡️
+> [*From handwriting to rooftops — simplicity was never in the roadmap.*]() ⚡️
 
 <br><br>
 <!-- =========ENDMAIN REPO =Projects REFERENCES ========= -->
@@ -195,7 +195,8 @@
 >
 > This repository documents an end-to-end academic project in Computer Vision for automatic 
 > detection of **helipads on rooftops** using satellite images of the city of São Paulo.  
-> The focus goes beyond model training: it emphasizes **dataset construction**, **annotation governance**, **reproducibility**, and **evaluation on unseen neighborhoods**, in line with the briefing of Project 2 in the Machine Learning course.
+> The focus goes beyond model training: it emphasizes **dataset construction**, **annotation governance**, **reproducibility**, and
+> [**evaluation on unseen neighborhoods**](), in line with the briefing of Project 2 in the Machine Learning course.
 
 <br><br>
 
@@ -255,13 +256,13 @@ Rather than relying on a ready-made benchmark, the project emphasizes the constr
 
 The main objective is to build an **end-to-end system** capable of detecting helipads on rooftops in the city of São Paulo, following all model lifecycle stages defined in the briefing:
 
-- programmatic acquisition of satellite data  
-- visual curation and tile filtering  
-- annotation with well-defined bounding boxes  
-- preprocessing and augmentations  
-- training and monitoring in Colab  
-- quantitative evaluation and qualitative error analysis  
-- inference on an entire neighborhood not used during training  
+[-]() programmatic acquisition of satellite data  
+[-]() visual curation and tile filtering  
+[-]() annotation with well-defined bounding boxes  
+[-]()- preprocessing and augmentations  
+[-]() training and monitoring in Colab  
+[-]() quantitative evaluation and qualitative error analysis  
+[-]() inference on an entire neighborhood not used during training  
 
 From an educational perspective, the work was also designed to help students understand how a real AI pipeline is built, validated, and communicated. The project therefore integrates data collection, annotation, preprocessing, model training, evaluation, and simple deployment in one coherent workflow.
 
@@ -283,16 +284,16 @@ The project dataset was built from satellite imagery collected over São Paulo, 
 
 The geographical scope follows the briefing: **city of São Paulo**, focusing on neighborhoods near the PUC‑SP campus in Perdizes and regions with high helipad density, such as:
 
-- Perdizes, Higienópolis, Pacaembu and Sumaré  
-- Paulista Avenue, Itaim Bibi and Pinheiros  
-- Faria Lima, Berrini, Vila Olímpia and Brooklin  
-- other relevant urban areas such as Morumbi and adjacent regions  
+[-]() Perdizes, Higienópolis, Pacaembu and Sumaré  
+[-]() Paulista Avenue, Itaim Bibi and Pinheiros  
+[-]() Faria Lima, Berrini, Vila Olímpia and Brooklin  
+[-]() other relevant urban areas such as Morumbi and adjacent regions  
 
-### [Image sources]()
+### [***Image sources]***()
 
-- **ESRI World Imagery (XYZ tiles)** — main source, with sub-meter resolution and programmatic HTTP access  
-- **Google Earth Web** — complementary source, used only for punctual captures of specific targets, not for bulk collection  
-- **GeoSampa** — mentioned as an alternative high-resolution source, possible extra beyond the base scope  
+[-]() **ESRI World Imagery (XYZ tiles)** — main source, with sub-meter resolution and programmatic HTTP access  
+[-]()( **Google Earth Web** — complementary source, used only for punctual captures of specific targets, not for bulk collection  
+[-]() **GeoSampa** — mentioned as an alternative high-resolution source, possible extra beyond the base scope  
 
 Images are stored as `.jpg` or `.png`, as required by the project.
 
@@ -305,11 +306,11 @@ Whenever imagery or derived mosaics are reproduced, the required attribution is:
 
 The work was developed in the context of **Project 2 — Object Detection in Satellite Images with YOLO**, whose briefing requires each group to:
 
-- choose **a single target class**  
-- build an **original dataset**, without using pre-made sets  
-- use **ESRI World Imagery (XYZ tiles)** as the main image source  
-- perform programmatic collection, annotation, training, evaluation and inference on an unseen neighborhood  
-- deliver an annotated dataset, notebooks, model weights, report and presentation  
+[-]() choose **a single target class**  
+[-]() build an **original dataset**, without using pre-made sets  
+[-]() use **ESRI World Imagery (XYZ tiles)** as the main image source  
+[-]() perform programmatic collection, annotation, training, evaluation and inference on an unseen neighborhood  
+[-]() deliver an annotated dataset, notebooks, model weights, report and presentation  
 
 The central pedagogical message is that **around 80% of the effort in AI is in the data, not in the architecture**. The YOLO model is practically the same for all groups; the real differentiator comes from dataset quality, manual curation and annotation consistency.
 
@@ -321,10 +322,10 @@ Manually identifying helipads in dense urban environments is a slow, subjective 
 
 This project addresses that challenge with an **Object Detection** pipeline that turns raw geospatial imagery into structured visual intelligence, reducing manual effort and enabling:
 
-- faster, more systematic helipad localization  
-- assessment of the model’s generalization ability across different neighborhoods  
-- study of error patterns in real urban contexts  
-- organized and reproducible data, image and evidence handling  
+[-]() faster, more systematic helipad localization  
+[-]() assessment of the model’s generalization ability across different neighborhoods  
+[-]() study of error patterns in real urban contexts  
+[-]() organized and reproducible data, image and evidence handling  
 
 <br><br>
 
@@ -334,7 +335,7 @@ Beyond the minimum briefing requirements, the group developed an **extra geospat
 
 ### [Technical title of the contribution]()
 
-**Extra Resource — Automation System to Speed Up the Search for Geographic Points and Helipads**
+[**Extra Resource — Automation System to Speed Up the Search for Geographic Points and Helipads**]()
 
 ### [Core idea]()
 
