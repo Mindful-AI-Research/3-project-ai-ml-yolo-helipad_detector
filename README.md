@@ -453,7 +453,74 @@ flowchart TD
 ```
 
 
+<br>
 
+> [!TIP]
+>
+> The pipeline should be understood as a learning architecture as much as a software architecture. It shows how raw geospatial imagery is > > gradually transformed into a validated and demonstrable AI artifact.
+
+
+<br><br>
+
+## [Repository Structure]()
+
+The repository structure was organized to reflect pipeline stages, including geographic automation, image generation, training, inference, evaluation and documentation.
+
+<br>
+
+
+```bash
+Helipoint-Detector/
+│
+├── .devcontainer/                  # Dev environment configuration
+├── AI Training/                    # Trained weights, checkpoints and training artifacts
+├── Briefing/                       # Reference materials for Project 2
+├── New Images/                     # Unseen images used for inference and generalization tests
+├── Preprocessing Data/             # Inputs and intermediate preprocessing outputs
+├── runs/detect/                    # YOLO outputs (logs, curves, confusion matrices, weights)
+│
+├── Analise.ipynb                   # Main notebook for analysis, evaluation and inference
+├── Treinamento_YOLO.ipynb          # Notebook focused on YOLO model training
+├── Imagens.ipynb                   # Notebook for ESRI tile download and mosaic creation
+│
+├── BOTHELIPONTO.py                 # Selenium bot for helipad search automation
+├── Transformarcordenadas.py        # Coordinate conversion and geographic bounding box generation
+├── cordenadasheli.csv              # Consolidated helipad coordinates and metadata
+├── Site.py                         # Application script (optional web/interface layer)
+│
+├── requirements.txt                # Python dependencies
+├── packages.txt                    # Additional environment/system dependencies
+└── README.md                       # Main documentation
+```
+
+<br>
+
+> [!TIP]
+>
+> This organization facilitates navigation, reproducibility and project evolution, clearly separating collection, preprocessing, training, > inference and application.
+
+
+<br><br>
+
+## [What is `Heliponto.rar`?]()
+
+`Heliponto.rar` is the compressed annotated dataset used in the project workflow.
+
+It is not a prebuilt third-party benchmark. Instead, it represents the packaged output of the group’s own dataset-building process: programmatic tile acquisition, manual curation, annotation, export in YOLO-compatible format, and organization for training reuse.
+
+This distinction is academically important because it makes clear that the dataset itself is part of the project deliverable, not an external shortcut.
+
+<br><br>
+
+## [What is Roboflow in This Project?]()
+
+In this project, **Roboflow** was used as the annotation and dataset management platform rather than as the origin of the imagery.
+
+Its role was to support image upload, bounding-box labeling, dataset versioning, augmentation, train/validation/test splitting, and export in YOLOv8-compatible format. In practical terms, Roboflow bridges the gap between raw tiles and a training-ready object detection dataset.
+
+<br><br>
+
+## [Methodology]()
 
 
 
