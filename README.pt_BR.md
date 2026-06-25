@@ -1,7 +1,5 @@
 <br>
 
-\[[🇧🇷 Português](README.pt_BR.md)\] \[**[🇺🇸 English](README.md)**\]
-
 <br><br>
 
 # <p align="center">🧠 AI/ML Project 2 · Computer Vision · Helipoint Detector</p>
@@ -65,7 +63,9 @@
 
 **Professor:** [✨ Rooney Ribeiro Albuquerque Coelho](https://www.linkedin.com/in/rooney-coelho-320857182/)  
 **Authors:**  
-[Carlos Antonio Roth Gorham]()   • [Fabiana ⚡️ Campanari](https://linktr.ee/fabianacampanari)   •  [Pedro Vyctor Almeida](https://www.linkedin.com/in/pedro-vyctor-almeida-285b89273/) 
+- [Carlos Antonio Roth Gorham](https://github.com/RothGorham?tab=followers)   
+- [Fabiana ⚡️ Campanari](https://linktr.ee/fabianacampanari)   
+- [Pedro Vyctor Almeida](https://www.linkedin.com/in/pedro-vyctor-almeida-285b89273/) 
 
 
 <br><br>
@@ -106,7 +106,7 @@
 
 
 <!-- ========= START Data Analysis Report BADGE ========= -->
-  <a href="https://github.com/Mindful-AI-Assistants/3-project-ai-ml-yolo-helipoint-detector/blob/49294f616e9b64cf10ad45e29d2855f3a3f3b98b/data_analysing_execitiuve_%20report/%F0%9F%87%A7%F0%9F%87%B7Helipoint_Detector_Model_Performance_and_Data_Analysis.pdf">
+  <a href="https://github.com/Mindful-AI-Assistants/3-project-ai-ml-yolo-helipoint-detector/blob/7afaf4db4eeaa8c385a7dbb03d58ebbbf8879a6c/data_analysing_execitiuve_%20report/%F0%9F%87%AC%F0%9F%87%A7Helipoint_Detector_Model_Performance_and_Data_Analysis.pdf" target="_blank" rel="noopener noreferrer">
     <img 
       src="https://img.shields.io/badge/Data%20Analysis-Report%20and%20PDF-134e4a?style=for-the-badge&logo=streamlit&logoColor=white&labelColor=022c22" 
       alt="Data Analysis Report and PDF"
@@ -183,7 +183,17 @@
 >
 > ✨ Part of the *Humanistic AI & Machine Learning Series*
 >
-> *From handwriting to rooftops — simplicity was never in the roadmap.* ⚡️
+> [*From handwriting to rooftops — simplicity was never in the roadmap.*]() ⚡️
 
 <br><br>
 <!-- =========ENDMAIN REPO =Projects REFERENCES ========= -->
+
+
+> [!IMPORTANT]
+>
+> This repository documents an end-to-end academic project in Computer Vision for automatic 
+> detection of **helipads on rooftops** using satellite images of the city of São Paulo.  
+> The focus goes beyond model training: it emphasizes **dataset construction**, **annotation governance**, **reproducibility**, and
+> [**evaluation on unseen neighborhoods**](), in line with the briefing of Project 2 in the Machine Learning course.
+
+<br><br>
