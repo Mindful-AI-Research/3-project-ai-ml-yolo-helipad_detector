@@ -341,7 +341,7 @@ Beyond the minimum briefing requirements, the group developed an **extra geospat
 >
 > 👌🏻 [**Extra Resource — Automation System to Speed Up the Search for Geographic Points and Helipads**](https://github.com/Mindful-AI-Assistants/3-project-ai-ml-yolo-helipoint-detector/tree/2013898e5ed890337f05e5778c1ddf6bab1eb897/geographical_coordinates)
 
-<br>
+<br><br>
 
 ### [Core idea]()
 
@@ -354,7 +354,13 @@ Instead of relying solely on manual inspection in maps, the system:
 [5.]()  uses these boxes as input to download ESRI satellite tiles  
 [6.]()  generates mosaics ready for triage, annotation and upload to Roboflow  
 
-This resource drastically reduces target search time and strengthens construction of a broader, traceable dataset useful for future training cycles.
+<br>
+
+> [!WARNING]
+>
+> This resource drastically reduces target search time and strengthens construction of a broader, traceable dataset useful for future
+> training cycles.
+
 
 <br><br>
 
@@ -368,7 +374,7 @@ The solution can be viewed as an architecture with **seven main blocks**:
 4. [**Visual acquisition**]()  — download of ESRI World Imagery satellite tiles based on these boxes  
 5. [**Visual triage**]()  — manual selection of crops with clear helipad presence  
 6. [**Annotation and versioning**]()  — use of Roboflow for labeling, preprocessing, splits and augmentations  
-7.[ **Training, evaluation and inference**]()  — YOLO training in Colab, performance measurement and generalization tests on unseen neighborhoods  
+7.[**Training, evaluation and inference**]()  — YOLO training in Colab, performance measurement and generalization tests on unseen neighborhoods  
 
 <br><br>
 
@@ -467,7 +473,6 @@ flowchart TD
 >
 > The pipeline should be understood as a learning architecture as much as a software architecture. It shows how raw geospatial imagery is > > gradually transformed into a validated and demonstrable AI artifact.
 
-
 <br><br>
 
 ## [Repository Structure]()
@@ -501,7 +506,7 @@ Helipoint-Detector/
 └── README.md                       # Main documentation
 ```
 
-<br>
+<br><br>
 
 > [!TIP]
 >
@@ -533,14 +538,14 @@ Its role was to support image upload, bounding-box labeling, dataset versioning,
 
 The project follows an end-to-end methodology aligned with educational best practices in applied Computer Vision.
 
-1. **Data collection**: satellite tiles are collected programmatically from ESRI World Imagery.  
-2. **Manual curation**: irrelevant tiles are discarded to improve dataset quality.  
-3. **Annotation**: helipads are labeled with tight bounding boxes in Roboflow.  
-4. **Preprocessing**: the dataset is standardized and split into training, validation, and test subsets.  
-5. **Training**: a YOLO model is trained in a GPU-enabled environment.  
-6. **Evaluation**: performance is examined with metrics and qualitative error analysis.  
-7. **Inference**: the trained model is applied to unseen images and new geographic areas.  
-8. **Application layer**: a lightweight interface makes the model easier to demonstrate and inspect.  
+1. [**Data collection**:]() satellite tiles are collected programmatically from ESRI World Imagery.  
+2. [**Manual curation**:]() irrelevant tiles are discarded to improve dataset quality.  
+3. [**Annotation**:]() helipads are labeled with tight bounding boxes in Roboflow.  
+4. [**Preprocessing**:]() the dataset is standardized and split into training, validation, and test subsets.  
+5. [**Training**:]() a YOLO model is trained in a GPU-enabled environment.  
+6. [**Evaluation**: performance is examined with metrics and qualitative error analysis.  
+7. [**Inference**:]() the trained model is applied to unseen images and new geographic areas.  
+8. [**Application layer**:]() a lightweight interface makes the model easier to demonstrate and inspect.  
 
 This methodology highlights a key lesson in AI education: the quality of results is strongly influenced by data engineering and annotation decisions, not only by the network architecture.
 
@@ -550,20 +555,25 @@ This methodology highlights a key lesson in AI education: the quality of results
 
 The Helipoint Detector technical pipeline can be summarized in 12 steps:
 
-1. Discover helipad records on an aviation website
-2. Extract coordinates and location information
-3. Save and organize the data in `cordenadasheli.csv`
-4. Convert coordinates into geographic bounding boxes
-5. Download ESRI World Imagery satellite tiles
-6. Build mosaics per neighborhood or region
-7. Manually triage mosaics, keeping only images with helipads
-8. Upload selected images to Roboflow
-9. Annotate helipads with consistent bounding boxes
-10. Generate dataset versions with resize, splits and augmentations, exporting in YOLO format
-11. Train YOLO models in Colab, monitoring metrics and train/validation curves
-12. Run inference on unseen neighborhoods and analyze results
+[1.]() Discover helipad records on an aviation website
+[2.]() Extract coordinates and location information
+[3.]() Save and organize the data in `cordenadasheli.csv`
+[4.]() Convert coordinates into geographic bounding boxes
+[5.]() Download ESRI World Imagery satellite tiles
+[6.]() Build mosaics per neighborhood or region
+[7.]() Manually triage mosaics, keeping only images with helipads
+[8](). Upload selected images to Roboflow
+[9.]() Annotate helipads with consistent bounding boxes
+[10.]() Generate dataset versions with resize, splits and augmentations, exporting in YOLO format
+[11.]() Train YOLO models in Colab, monitoring metrics and train/validation curves
+[12.]() Run inference on unseen neighborhoods and analyze results
 
-This turns a manual, scattered search into a more scalable, traceable and reproducible process.
+<br><br>
+
+> [!TIP]
+>
+> This turns a manual, scattered search into a more scalable, traceable and reproducible process.
+
 
 <br><br>
 
