@@ -188,6 +188,88 @@
 <br><br>
 <!-- =========ENDMAIN REPO =Projects REFERENCES ========= -->
 
+<br><br>
+
+> [!IMPORTANT]
+>
+> This repository documents an end-to-end academic project in Computer Vision for automatic 
+> detection of **helipads on rooftops** using satellite images of the city of São Paulo.  
+> The focus goes beyond model training: it emphasizes **dataset construction**, **annotation governance**, **reproducibility**, and **evaluation on unseen neighborhoods**, in line with the briefing of Project 2 in the Machine Learning course.
+
+<br><br>
+
+
+## [Table of Contents]()
+
+- [Project Definition](#project-definition)
+- [Objective](#objective)
+- [Why Helipads?](#why-helipads)
+- [Data Source](#data-source)
+- [Project Context](#project-context)
+- [Business and Research Problem](#business-and-research-problem)
+- [Extra Automation Contribution](#extra-automation-contribution)
+- [Overall Flow Architecture](#overall-flow-architecture)
+- [AI/ML Ops Pipeline](#aiml-ops-pipeline)
+- [Repository Structure](#repository-structure)
+- [What is `Heliponto.rar`?](#what-is-helipontorar)
+- [What is Roboflow in This Project?](#what-is-roboflow-in-this-project)
+- [Methodology](#methodology)
+- [Full Technical Pipeline](#full-technical-pipeline)
+- [Image Collection and Generation](#image-collection-and-generation)
+- [Annotation and Roboflow](#annotation-and-roboflow)
+- [Modeling with YOLO](#modeling-with-yolo)
+- [Evaluation](#evaluation)
+- [Inference and Generalization](#inference-and-generalization)
+- [Web Application (Optional Layer)](#web-application-optional-layer)
+- [Gains from the Extra Resource](#gains-from-the-extra-resource)
+- [Educational Value](#educational-value)
+- [Image and Text Sources](#image-and-text-sources)
+- [Technologies Used](#technologies-used)
+- [How to Run](#how-to-run)
+- [Deliverables Covered](#deliverables-covered)
+- [Results Analysis](#results-analysis)
+- [Strengths, Limitations and Future Improvements](#strengths-limitations-and-future-improvements)
+- [Ethics, LGPD and Governance](#ethics-lgpd-and-governance)
+- [Image Attribution](#image-attribution)
+- [References](#references)
+- [Acknowledgements](#acknowledgements)
+- [Final Statement](#final-statement)
+
+<br><br>
+
+## [Project Definition]()
+
+The **Helipoint Detector** project implements a full **Object Detection** pipeline to identify helipads on rooftops in the city of São Paulo, using high-resolution aerial and orbital imagery and models from the **YOLOv8/YOLOv11** family.
+
+The repository covers the entire lifecycle of an applied AI system in computer vision: programmatic image collection, geospatial automation, dataset creation and curation, annotation, preprocessing, training, quantitative and qualitative evaluation, inference on unseen neighborhoods and, optionally, an application layer for demo purposes.
+
+The repository was designed to present the complete lifecycle of an AI application in a documented and academically transparent form, making it useful for professors, beginner practitioners, and students learning object detection with real urban imagery.
+
+Rather than relying on a ready-made benchmark, the project emphasizes the construction of an original dataset, reproducible experimentation, and inference on unseen regions.
+
+<br><br>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -287,14 +369,6 @@ flowchart TD
       V
     end
 ```
-
-
-
-
-
-
-
-
 
 
 
