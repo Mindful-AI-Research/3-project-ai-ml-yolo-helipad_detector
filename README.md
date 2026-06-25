@@ -251,6 +251,72 @@ Rather than relying on a ready-made benchmark, the project emphasizes the constr
 
 
 
+<br><br>
+
+## [Objective]()
+
+The main objective is to build an **end-to-end system** capable of detecting helipads on rooftops in the city of São Paulo, following all model lifecycle stages defined in the briefing:
+
+- programmatic acquisition of satellite data  
+- visual curation and tile filtering  
+- annotation with well-defined bounding boxes  
+- preprocessing and augmentations  
+- training and monitoring in Colab  
+- quantitative evaluation and qualitative error analysis  
+- inference on an entire neighborhood not used during training  
+
+From an educational perspective, the work was also designed to help students understand how a real AI pipeline is built, validated, and communicated. The project therefore integrates data collection, annotation, preprocessing, model training, evaluation, and simple deployment in one coherent workflow.
+
+Methodologically, the project reinforces that model performance is directly tied to **data quality**, annotation consistency and geographical diversity, rather than small tweaks to the architecture.
+
+<br><br>
+
+## [Why Helipads?]()
+
+Helipads are a compelling educational target because they often present a distinctive top-down geometric pattern while still being difficult enough to create realistic detection challenges.
+
+In urban satellite imagery, helipads may be confused with rooftop structures, sports markings, bright reflective surfaces, or architectural patterns. This makes them ideal for discussing false positives, annotation quality, and model generalization.
+
+<br><br>
+
+## [Data Source]()
+
+The project dataset was built from satellite imagery collected over São Paulo, with a focus on neighborhoods relevant to the academic briefing and regions where helipads are more likely to appear.
+
+The geographical scope follows the briefing: **city of São Paulo**, focusing on neighborhoods near the PUC‑SP campus in Perdizes and regions with high helipad density, such as:
+
+- Perdizes, Higienópolis, Pacaembu and Sumaré  
+- Paulista Avenue, Itaim Bibi and Pinheiros  
+- Faria Lima, Berrini, Vila Olímpia and Brooklin  
+- other relevant urban areas such as Morumbi and adjacent regions  
+
+### [Image sources]()
+
+- **ESRI World Imagery (XYZ tiles)** — main source, with sub-meter resolution and programmatic HTTP access  
+- **Google Earth Web** — complementary source, used only for punctual captures of specific targets, not for bulk collection  
+- **GeoSampa** — mentioned as an alternative high-resolution source, possible extra beyond the base scope  
+
+Images are stored as `.jpg` or `.png`, as required by the project.
+
+Whenever imagery or derived mosaics are reproduced, the required attribution is:  
+**Source: Esri, Maxar, Earthstar Geographics, and the GIS User Community**.
+
+<br><br>
+
+## [Project Context]()
+
+The work was developed in the context of **Project 2 — Object Detection in Satellite Images with YOLO**, whose briefing requires each group to:
+
+- choose **a single target class**  
+- build an **original dataset**, without using pre-made sets  
+- use **ESRI World Imagery (XYZ tiles)** as the main image source  
+- perform programmatic collection, annotation, training, evaluation and inference on an unseen neighborhood  
+- deliver an annotated dataset, notebooks, model weights, report and presentation  
+
+The central pedagogical message is that **around 80% of the effort in AI is in the data, not in the architecture**. The YOLO model is practically the same for all groups; the real differentiator comes from dataset quality, manual curation and annotation consistency.
+
+<br><br>
+
 
 
 
