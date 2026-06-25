@@ -538,7 +538,7 @@ Its role was to support image upload, bounding-box labeling, dataset versioning,
 
 The project follows an end-to-end methodology aligned with educational best practices in applied Computer Vision.
 
-1. [**Data collection**:]() satellite tiles are collected programmatically from ESRI World Imagery.  
+1. [**Data collection**:]() satellite tiles are collected programmatically from ESRI World Imagery.  <br>
 2. [**Manual curation**:]() irrelevant tiles are discarded to improve dataset quality.  
 3. [**Annotation**:]() helipads are labeled with tight bounding boxes in Roboflow.  
 4. [**Preprocessing**:]() the dataset is standardized and split into training, validation, and test subsets.  
@@ -555,17 +555,17 @@ This methodology highlights a key lesson in AI education: the quality of results
 
 The Helipoint Detector technical pipeline can be summarized in 12 steps:
 
-[1.]() Discover helipad records on an aviation website
-[2.]() Extract coordinates and location information
-[3.]() Save and organize the data in `cordenadasheli.csv`
-[4.]() Convert coordinates into geographic bounding boxes
-[5.]() Download ESRI World Imagery satellite tiles
-[6.]() Build mosaics per neighborhood or region
-[7.]() Manually triage mosaics, keeping only images with helipads
-[8](). Upload selected images to Roboflow
-[9.]() Annotate helipads with consistent bounding boxes
-[10.]() Generate dataset versions with resize, splits and augmentations, exporting in YOLO format
-[11.]() Train YOLO models in Colab, monitoring metrics and train/validation curves
+[1.]() Discover helipad records on an aviation website <br>
+[2.]() Extract coordinates and location information <br>
+[3.]() Save and organize the data in `cordenadasheli.csv` <br>
+[4.]() Convert coordinates into geographic bounding boxes <br>
+[5.]() Download ESRI World Imagery satellite tiles <br>
+[6.]() Build mosaics per neighborhood or region <br>
+[7.]() Manually triage mosaics, keeping only images with helipads <br>
+[8](). Upload selected images to Roboflow <br>
+[9.]() Annotate helipads with consistent bounding boxes <br>
+[10.]() Generate dataset versions with resize, splits and augmentations, exporting in YOLO format <br>
+[11.]() Train YOLO models in Colab, monitoring metrics and train/validation curves <br>
 [12.]() Run inference on unseen neighborhoods and analyze results
 
 <br><br>
