@@ -335,18 +335,22 @@ Beyond the minimum briefing requirements, the group developed an **extra geospat
 
 ### [Technical title of the contribution]()
 
-[**Extra Resource — Automation System to Speed Up the Search for Geographic Points and Helipads**]()
+> [!IMPORTANT]
+>
+> 👌🏻 **Extra Resource — Automation System to Speed Up the Search for Geographic Points and Helipads**
+
+<br>
 
 ### [Core idea]()
 
 Instead of relying solely on manual inspection in maps, the system:
 
-1. queries a public aviation website with airport and helipad records  
-2. automates navigation and scraping with Selenium  
-3. extracts geographic coordinates and metadata for each helipad  
-4. converts these coordinates into geographic bounding boxes  
-5. uses these boxes as input to download ESRI satellite tiles  
-6. generates mosaics ready for triage, annotation and upload to Roboflow  
+[1.]() queries a public aviation website with airport and helipad records  
+[2.]()  automates navigation and scraping with Selenium  
+[3.]()  extracts geographic coordinates and metadata for each helipad  
+[4.]()  converts these coordinates into geographic bounding boxes  
+[5.]()  uses these boxes as input to download ESRI satellite tiles  
+[6.]()  generates mosaics ready for triage, annotation and upload to Roboflow  
 
 This resource drastically reduces target search time and strengthens construction of a broader, traceable dataset useful for future training cycles.
 
@@ -356,13 +360,13 @@ This resource drastically reduces target search time and strengthens constructio
 
 The solution can be viewed as an architecture with **seven main blocks**:
 
-1. **Helipad discovery** — automation on an aviation website to locate records with coordinates  
-2. **Geographic extraction** — conversion and normalization of coordinates to usable decimal format  
-3. **Geographic perimeter generation** — creation of bounding boxes around each point  
-4. **Visual acquisition** — download of ESRI World Imagery satellite tiles based on these boxes  
-5. **Visual triage** — manual selection of crops with clear helipad presence  
-6. **Annotation and versioning** — use of Roboflow for labeling, preprocessing, splits and augmentations  
-7. **Training, evaluation and inference** — YOLO training in Colab, performance measurement and generalization tests on unseen neighborhoods  
+1. [**Helipad discovery**]()  — automation on an aviation website to locate records with coordinates  
+2. [**Geographic extraction**]()  — conversion and normalization of coordinates to usable decimal format  
+3. [**Geographic perimeter generation**]()  — creation of bounding boxes around each point  
+4. [**Visual acquisition**]()  — download of ESRI World Imagery satellite tiles based on these boxes  
+5. [**Visual triage**]()  — manual selection of crops with clear helipad presence  
+6. [**Annotation and versioning**]()  — use of Roboflow for labeling, preprocessing, splits and augmentations  
+7.[ **Training, evaluation and inference**]()  — YOLO training in Colab, performance measurement and generalization tests on unseen neighborhoods  
 
 <br><br>
 
