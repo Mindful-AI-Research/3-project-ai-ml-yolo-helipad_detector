@@ -577,9 +577,9 @@ The Helipoint Detector technical pipeline can be summarized in 12 steps:
 
 <br><br>
 
-## [Image Collection and Generation]()
+## [Image Collection and Generation***]()
 
-### [Programmatic collection (ESRI World Imagery)]()
+### [***Programmatic collection (ESRI World Imagery)]()
 
 Programmatic collection follows the XYZ tile pattern of the **ESRI World Imagery** public service, as recommended in the briefing:
 
@@ -596,7 +596,7 @@ Programmatic collection follows the XYZ tile pattern of the **ESRI World Imagery
 
 <br>
 
-### [Complementary manual collection (Google Earth Web)]()
+### [***Complementary manual collection (Google Earth Web***]()
 
 In some cases, **Google Earth Web** may be used as a complement:
 
@@ -604,11 +604,15 @@ In some cases, **Google Earth Web** may be used as a complement:
 [-]( preserving consistent zoom
 [-]( cropping approximately square areas and resizing to `640×640`
 
-Bulk screenshot collection from Google is not used, in line with usage restrictions and the briefing.
-
 <br>
 
-### [Curation and dataset volume]()
+> [!TIP]
+>
+> Bulk screenshot collection from Google is not used, in line with usage restrictions and the briefing.
+
+<br><br>
+
+### [***Curation and dataset volume***]()
 
 
 
