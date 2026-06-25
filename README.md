@@ -535,7 +535,6 @@ Its role was to support image upload, bounding-box labeling, dataset versioning,
 
 ## [Methodology]()
 
-
 The project follows an end-to-end methodology aligned with educational best practices in applied Computer Vision.
 
 1. [**Data collection**:]() satellite tiles are collected programmatically from ESRI World Imagery.  <br>
@@ -545,11 +544,19 @@ The project follows an end-to-end methodology aligned with educational best prac
 5. [**Training**:]() a YOLO model is trained in a GPU-enabled environment.  
 6. [**Evaluation**: performance is examined with metrics and qualitative error analysis.  
 7. [**Inference**:]() the trained model is applied to unseen images and new geographic areas.  
-8. [**Application layer**:]() a lightweight interface makes the model easier to demonstrate and inspect.  
+8. [**Application layer**:]() a lightweight interface makes the model easier to demonstrate and inspect.
 
-This methodology highlights a key lesson in AI education: the quality of results is strongly influenced by data engineering and annotation decisions, not only by the network architecture.
 
 <br><br>
+
+> [!IMPORTANT]
+>
+>   This methodology highlights a key lesson in AI education: the quality of results is strongly influenced by data engineering and
+>   annotation decisions, not only by the network architecture.
+
+
+<br><br>
+
 
 ## [Full Technical Pipeline]()
 
@@ -590,11 +597,13 @@ Programmatic collection follows the XYZ tile pattern of the **ESRI World Imagery
 [-]( download each tile, checking HTTP status and filtering placeholders
 [-]( organize tiles into folders by neighborhood and zoom
 
-<br>
+<br><br>
 
+> [!TIP]
+>
 > The `Imagens.ipynb` notebook generalizes this flow for multiple coordinates and bounding boxes, reading `cordenadasheli.csv` and producing > mosaics and crops ready for triage.
 
-<br>
+<br><br>
 
 ### [***Complementary manual collection (Google Earth Web***]()
 
