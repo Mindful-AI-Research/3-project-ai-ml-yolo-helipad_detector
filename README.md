@@ -524,7 +524,68 @@ Its role was to support image upload, bounding-box labeling, dataset versioning,
 ## [Methodology]()
 
 
+The project follows an end-to-end methodology aligned with educational best practices in applied Computer Vision.
 
+1. **Data collection**: satellite tiles are collected programmatically from ESRI World Imagery.  
+2. **Manual curation**: irrelevant tiles are discarded to improve dataset quality.  
+3. **Annotation**: helipads are labeled with tight bounding boxes in Roboflow.  
+4. **Preprocessing**: the dataset is standardized and split into training, validation, and test subsets.  
+5. **Training**: a YOLO model is trained in a GPU-enabled environment.  
+6. **Evaluation**: performance is examined with metrics and qualitative error analysis.  
+7. **Inference**: the trained model is applied to unseen images and new geographic areas.  
+8. **Application layer**: a lightweight interface makes the model easier to demonstrate and inspect.  
+
+This methodology highlights a key lesson in AI education: the quality of results is strongly influenced by data engineering and annotation decisions, not only by the network architecture.
+
+<br><br>
+
+## [Full Technical Pipeline]()
+
+The Helipoint Detector technical pipeline can be summarized in 12 steps:
+
+1. Discover helipad records on an aviation website
+2. Extract coordinates and location information
+3. Save and organize the data in `cordenadasheli.csv`
+4. Convert coordinates into geographic bounding boxes
+5. Download ESRI World Imagery satellite tiles
+6. Build mosaics per neighborhood or region
+7. Manually triage mosaics, keeping only images with helipads
+8. Upload selected images to Roboflow
+9. Annotate helipads with consistent bounding boxes
+10. Generate dataset versions with resize, splits and augmentations, exporting in YOLO format
+11. Train YOLO models in Colab, monitoring metrics and train/validation curves
+12. Run inference on unseen neighborhoods and analyze results
+
+This turns a manual, scattered search into a more scalable, traceable and reproducible process.
+
+<br><br>
+
+## [Image Collection and Generation]()
+
+### [Programmatic collection (ESRI World Imagery)]()
+
+Programmatic collection follows the XYZ tile pattern of the **ESRI World Imagery** public service, as recommended in the briefing:
+
+- define **zoom** by target type
+- use `z = 19` for helipads and other small targets
+- define **bounding boxes** per neighborhood `(lon_min, lat_min, lon_max, lat_max)`
+- convert bounding boxes to tile indices `(z, x, y)` via a `deg2tile` function
+- download each tile, checking HTTP status and filtering placeholders
+- organize tiles into folders by neighborhood and zoom
+
+The `Imagens.ipynb` notebook generalizes this flow for multiple coordinates and bounding boxes, reading `cordenadasheli.csv` and producing mosaics and crops ready for triage.
+
+### [Complementary manual collection (Google Earth Web)]()
+
+In some cases, **Google Earth Web** may be used as a complement:
+
+- only for specific helipad examples
+- preserving consistent zoom
+- cropping approximately square areas and resizing to `640×640`
+
+Bulk screenshot collection from Google is not used, in line with usage restrictions and the briefing.
+
+### [Curation and dataset volume]()
 
 
 
