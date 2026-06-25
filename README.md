@@ -65,7 +65,9 @@
 
 **Professor:** [✨ Rooney Ribeiro Albuquerque Coelho](https://www.linkedin.com/in/rooney-coelho-320857182/)  
 **Authors:**  
-[Carlos Antonio Roth Gorham]()   • [Fabiana ⚡️ Campanari](https://linktr.ee/fabianacampanari)   •  [Pedro Vyctor Almeida](https://www.linkedin.com/in/pedro-vyctor-almeida-285b89273/) 
+- [Carlos Antonio Roth Gorham]()   
+- [Fabiana ⚡️ Campanari](https://linktr.ee/fabianacampanari)   
+- [Pedro Vyctor Almeida](https://www.linkedin.com/in/pedro-vyctor-almeida-285b89273/) 
 
 
 <br><br>
