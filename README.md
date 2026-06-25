@@ -291,14 +291,14 @@ The geographical scope follows the briefing: **city of São Paulo**, focusing on
 
 ### [***Image sources]***()
 
-[-]() **ESRI World Imagery (XYZ tiles)** — main source, with sub-meter resolution and programmatic HTTP access  
-[-]()( **Google Earth Web** — complementary source, used only for punctual captures of specific targets, not for bulk collection  
-[-]() **GeoSampa** — mentioned as an alternative high-resolution source, possible extra beyond the base scope  
+- [**ESRI World Imagery (XYZ tiles)**]()  — main source, with sub-meter resolution and programmatic HTTP access  
+- [**Google Earth Web**()  — complementary source, used only for punctual captures of specific targets, not for bulk collection  
+- **GeoSampa**()  — mentioned as an alternative high-resolution source, possible extra beyond the base scope  
 
 Images are stored as `.jpg` or `.png`, as required by the project.
 
 Whenever imagery or derived mosaics are reproduced, the required attribution is:  
-**Source: Esri, Maxar, Earthstar Geographics, and the GIS User Community**.
+[***Source: Esri, Maxar, Earthstar Geographics, and the GIS User Community***.]()
 
 <br><br>
 
@@ -306,9 +306,9 @@ Whenever imagery or derived mosaics are reproduced, the required attribution is:
 
 The work was developed in the context of **Project 2 — Object Detection in Satellite Images with YOLO**, whose briefing requires each group to:
 
-[-]() choose **a single target class**  
-[-]() build an **original dataset**, without using pre-made sets  
-[-]() use **ESRI World Imagery (XYZ tiles)** as the main image source  
+[-]() choose [**a single target class**]()  
+[-]() build an [**original dataset**]() , without using pre-made sets  
+[-]() use [**ESRI World Imagery (XYZ tiles)**]()  as the main image source  
 [-]() perform programmatic collection, annotation, training, evaluation and inference on an unseen neighborhood  
 [-]() deliver an annotated dataset, notebooks, model weights, report and presentation  
 
@@ -335,9 +335,11 @@ Beyond the minimum briefing requirements, the group developed an **extra geospat
 
 ### [Technical title of the contribution]()
 
-> [!IMPORTANT]
+<br>
+
+> [!TIP]
 >
-> 👌🏻 **Extra Resource — Automation System to Speed Up the Search for Geographic Points and Helipads**
+> 👌🏻 [**Extra Resource — Automation System to Speed Up the Search for Geographic Points and Helipads**](https://github.com/Mindful-AI-Assistants/3-project-ai-ml-yolo-helipoint-detector/tree/2013898e5ed890337f05e5778c1ddf6bab1eb897/geographical_coordinates)
 
 <br>
 
@@ -459,7 +461,7 @@ flowchart TD
 ```
 
 
-<br>
+<br><br>
 
 > [!TIP]
 >
