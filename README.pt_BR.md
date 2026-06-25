@@ -4,38 +4,36 @@
 
 <br><br>
 
+# <p align="center">🧠 AI/ML Project 2 · Computer Vision · Helipoint Detector</p>
 
-
-#  <p align="center"> 3- 🧠 [AI /ML - Project 2]() /  [Computer Vision]() - [Helipoint Detector]()
-
-### <p align="center"> Automated Helipad Detection Using YOLO and Satellite Imagery of São Paulo, Brazil
-
-</p>
+### <p align="center">Automated Helipad Detection Using YOLO and Satellite Imagery of São Paulo, Brazil</p>
 
 <br>
 
 <div align="center">
 
-<a href="https://github.com/topics/satellite-imagery">Satellite Imagery</a> &nbsp;&nbsp;✦&nbsp;&nbsp;
-<a href="https://github.com/topics/data-visualization">Urban Analytics</a> &nbsp;&nbsp;✦&nbsp;&nbsp;
-<a href="https://github.com/topics/object-detection">Object Detection</a> &nbsp;&nbsp;✦&nbsp;&nbsp;
-<a href="https://github.com/topics/yolo">YOLOv8 / YOLOv11</a> &nbsp;&nbsp;✦&nbsp;&nbsp;
+<a href="https://github.com/topics/satellite-imagery">Satellite Imagery</a>
+&nbsp;&nbsp;✦&nbsp;&nbsp;
+<a href="https://github.com/topics/data-visualization">Urban Analytics</a>
+&nbsp;&nbsp;✦&nbsp;&nbsp;
+<a href="https://github.com/topics/object-detection">Object Detection</a>
+&nbsp;&nbsp;✦&nbsp;&nbsp;
+<a href="https://github.com/topics/yolo">YOLO (v8 / v11)</a>
+&nbsp;&nbsp;✦&nbsp;&nbsp;
 <a href="https://github.com/topics/geospatial">Geospatial Intelligence</a>
 
 </div>
 
-<br>
-
-
-#### <p align="center"> ✨ ***From Pixels to Geospatial Intelligence*** ✨
-
-
-<!--
-#### <p align="center"> Teaching YOLO to say: ***“Yup  !!! that's definitely an H !!*** 
-##### <p align="center"> ***Finding Hidden H's in the Concrete Jungle...*** ⚡️ One Rooftop at a Time.
--->
-
 <br><br>
+
+#### <p align="center">✨ <i>Teaching YOLO to spot the city's most exclusive landing spots.</i> ✨</p>
+
+<p align="center">
+<i>Finding hidden H’s in the concrete jungle</i><br><br>
+<b>One rooftop at a time.</b> 🚁⚡️
+</p>
+
+<br>
 
 #
 
@@ -58,12 +56,17 @@
 <!-- ========= END GIFR IMAGE ========= -->
 
 <!-- ======================================= Start Institutional INFO ===========================================  -->
-[**Institution:**]() Pontifical Catholic University of São Paulo (PUC-SP) • Humanistic AI & Data Science • 2026 <br>
-[**School:**]() Faculty of Interdisciplinary Studies  <br>
-[**Course Repo:**]() Integrated Project — Machine Learning  <br>
-**Project:**  P2 — Object Detection in Satellite Images with YOLO  <br>
-**Professor:**  [✨ Rooney Ribeiro Albuquerque Coelho](https://www.linkedin.com/in/rooney-coelho-320857182/)  <br>
-**Authors:**  [Fabiana ⚡️ Campanari](https://linktr.ee/fabianacampanari) and Pedro Vyctor Almeida  <br>  <br>
+## [Institutional Information]()
+
+[**Institution:**]() Pontifical Catholic University of São Paulo (PUC‑SP) — FACEI  
+[**Course:**]() BSc in Humanistic AI & Data Science — 5th semester — 2026  
+[**Subject:**]() Machine Learning / Computer Vision — YOLO  
+[**Project:**]() P2 — Object Detection in Satellite Images with YOLO  
+
+**Professor:** [✨ Rooney Ribeiro Albuquerque Coelho](https://www.linkedin.com/in/rooney-coelho-320857182/)  
+**Authors:**  
+[Carlos Antonio Roth Gorham]()   • [Fabiana ⚡️ Campanari](https://linktr.ee/fabianacampanari)   •  [Pedro Vyctor Almeida](https://www.linkedin.com/in/pedro-vyctor-almeida-285b89273/) 
+
 
 <br><br>
 
@@ -75,7 +78,7 @@
 
 <!-- ========= START Streamlit BADGE ========= -->
 <p align="center" style="margin: 0;">
-  <a href="" rel="noopener noreferrer">
+  <a href="https://helipoint-detector.streamlit.app" rel="noopener noreferrer">
     <img 
       src="https://img.shields.io/badge/Streamlit%20Repository-Helipoint%20Detector-0f172a?style=for-the-badge&logo=github&logoColor=white" 
       alt="Streamlit Repository Helipoint Detector"
@@ -90,7 +93,7 @@
 <!-- ========= START React Presentation BADGE ========= -->
 <p align="center" style="margin: 0;">
 
-  <a href="" rel="noopener noreferrer">
+  <a href="https://canva.link/0781blpvt3td2li" rel="noopener noreferrer">
     <img 
       src="https://img.shields.io/badge/React%20Presentation-Slides%20and%20Overview-0f766e?style=for-the-badge&logo=jupyter&logoColor=white" 
       alt="React Presentation Slides and Overview"
@@ -103,7 +106,7 @@
 
 
 <!-- ========= START Data Analysis Report BADGE ========= -->
-  <a href="" target="_blank" rel="noopener noreferrer">
+  <a href="https://github.com/Mindful-AI-Assistants/3-project-ai-ml-yolo-helipoint-detector/blob/49294f616e9b64cf10ad45e29d2855f3a3f3b98b/data_analysing_execitiuve_%20report/%F0%9F%87%A7%F0%9F%87%B7Helipoint_Detector_Model_Performance_and_Data_Analysis.pdf">
     <img 
       src="https://img.shields.io/badge/Data%20Analysis-Report%20and%20PDF-134e4a?style=for-the-badge&logo=streamlit&logoColor=white&labelColor=022c22" 
       alt="Data Analysis Report and PDF"
@@ -119,24 +122,68 @@
 
 <br><br>
 
-
-<!-- ========= START BADGES GROUP 2 ========= -->
+<!-- ========= START TECH STACK / PIPELINE BADGES ========= -->
 <p align="center">
-  <img src="https://img.shields.io/badge/Python-AI%20Pipeline-0f172a?style=for-the-badge&logo=python&logoColor=white" />
+  <img src="https://img.shields.io/badge/Python-Core%20Language-0f172a?style=for-the-badge&logo=python&logoColor=white" />
+  <img src="https://img.shields.io/badge/PyTorch-Deep%20Learning%20Framework-101f2f?style=for-the-badge&logo=pytorch&logoColor=white" />
+  <img src="https://img.shields.io/badge/YOLO-Ultralytics%20Object%20Detection-112a3a?style=for-the-badge&logo=ultralytics&logoColor=white" />
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Ultralytics-YOLOv8%20%2F%20YOLOv11-101f2f?style=for-the-badge&logo=pytorch&logoColor=white" />
-  <img src="https://img.shields.io/badge/Object%20Detection-Satellite%20Vision-112a3a?style=for-the-badge&logo=tensorflow&logoColor=white" />
+  <img src="https://img.shields.io/badge/Roboflow-Dataset%20%26%20Annotation-134a4a?style=for-the-badge&logo=roboflow&logoColor=white" />
+  <img src="https://img.shields.io/badge/Geospatial-Satellite%20Imagery-124050?style=for-the-badge&logo=googleearth&logoColor=white" />
+  <img src="https://img.shields.io/badge/Computer%20Vision-Object%20Detection-0f2a2a?style=for-the-badge&logo=opencv&logoColor=white" />
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/ESRI-World%20Imagery-124050?style=for-the-badge&logo=esri&logoColor=white" />
-  <img src="https://img.shields.io/badge/Roboflow-Annotation%20Workflow-134a4a?style=for-the-badge&logo=roboflow&logoColor=white" />
-  <img src="https://img.shields.io/badge/Google%20Colab-T4%20GPU-134e4a?style=for-the-badge&logo=googlecolab&logoColor=white" />
+  <img src="https://img.shields.io/badge/Google%20Colab-GPU%20Training-134e4a?style=for-the-badge&logo=googlecolab&logoColor=white" />
+  <img src="https://img.shields.io/badge/Evaluation-mAP%20%2F%20Precision%20Metrics-0f172a?style=for-the-badge&logo=githubactions&logoColor=white" />
 </p>
 
-<br><br><br>
-<!-- ========= END BADGES GROUP 2========= -->
+
+<br><br>
+
+#
+
+<br><br>
+<!-- =========END TECH STACK / PIPELINE BADGES========= -->
 
 
+<!-- ========= START NOTE ========= -->
+> [!WARNING]
+>
+> ⚠️ Projects may be publicly shared when permitted.  
+> The focus is on applied, hands-on learning with real datasets in AI governance and security contexts.  
+> All sensitive content remains protected in private repositories when required.
+>
+
+<br><br>
+<!-- ========= END NOTE ========= -->
+
+<!-- =========START MAIN REPO =Projects REFERENCES ========= -->
+> [!TIP]
+>
+> This repository is part of the flagship ecosystem:
+>
+> ## 🧠 AI & Machine Learning — Main Hub
+>
+> Explore the complete collection of projects, notebooks, research materials, analyses, and interactive applications available in the central repository:
+>
+> 🔗 **[AI & Machine Learning — Hub](https://github.com/Mindful-AI-Assistants/1-AI_Machine-Learning_Hub)**
+>
+> #
+>
+> ###  Related Project in this Series
+>
+> 🔗 **[AI/ML Project 1 · Computer Vision · EMNIST Vision Intelligence](https://github.com/Mindful-AI-Assistants/2-project-ai-ml-emnist-vision-intelligence)**
+>
+> A deep learning system for handwritten character recognition using PyTorch and Streamlit.
+>
+> #
+>
+> ✨ Part of the *Humanistic AI & Machine Learning Series*
+>
+> *From handwriting to rooftops — simplicity was never in the roadmap.* ⚡️
+
+<br><br>
+<!-- =========ENDMAIN REPO =Projects REFERENCES ========= -->
