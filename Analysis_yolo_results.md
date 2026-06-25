@@ -22,7 +22,14 @@
 ## 📈 Gráficos Gerados
 
 ### Figura 1 — Evolução das Losses por Época
-![Curvas de Loss](file:///Users/fabicampanari/.gemini/antigravity-ide/brain/5760042e-2127-41ec-a4da-9cab1095c97f/loss_curves.png)
+
+<br><br>
+
+
+<img width="2384" height="696" alt="Image" src="https://github.com/user-attachments/assets/908d3f06-f9f9-4d4c-aa91-aefdf11ba6f3" />
+
+<br><br>
+
 
 **O que observar:**
 
@@ -33,7 +40,13 @@
 <br><br>
 
 ### Figura 2 — Precision e Recall ao longo do Treino
-![Precision e Recall](file:///Users/fabicampanari/.gemini/antigravity-ide/brain/5760042e-2127-41ec-a4da-9cab1095c97f/precision_recall.png)
+
+<br><br>
+
+!<img width="1784" height="696" alt="Image" src="https://github.com/user-attachments/assets/aa55ed18-4704-456a-93eb-660a3f14115c" />
+
+<br><br>
+
 
 **O que observar:**
 
@@ -44,7 +57,16 @@
 <br><br>
 
 ### Figura 3 — mAP\@50 e mAP\@50–95
-![mAP Curves](file:///Users/fabicampanari/.gemini/antigravity-ide/brain/5760042e-2127-41ec-a4da-9cab1095c97f/map_curves.png)
+
+
+<br><br>
+
+
+<img width="1484" height="696" alt="Image" src="https://github.com/user-attachments/assets/ca3521c6-7027-4969-aa09-530d47c5a83b" />
+
+
+<br><br>
+
 
 **O que observar:**
 - **mAP\@50 = 0.994** na melhor época — praticamente perfeito no critério padrão de IoU 50%.
@@ -72,7 +94,7 @@ Use o seguinte roteiro ao exibir imagens de predição:
 ## 🛠️ Código Python Completo para Reproduzir os Gráficos
 
 Copie e cole diretamente no `Analysis.ipynb`:
-
+ 
 ```python
 import pandas as pd
 import matplotlib.pyplot as plt
