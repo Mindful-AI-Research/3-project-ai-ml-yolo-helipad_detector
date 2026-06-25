@@ -3,6 +3,7 @@
 \[[🇧🇷 Português](README.pt_BR.md)\] \[**[🇺🇸 English](README.md)**\]
 
 <br><br>
+
 # <p align="center">🧠 AI/ML Project 2 · Computer Vision · Helipoint Detector</p>
 
 ### <p align="center">Automated Helipad Detection Using YOLO and Satellite Imagery of São Paulo, Brazil</p>
