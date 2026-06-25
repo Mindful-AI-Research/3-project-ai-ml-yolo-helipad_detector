@@ -374,7 +374,7 @@ The solution can be viewed as an architecture with **seven main blocks**:
 4. [**Visual acquisition**]()  — download of ESRI World Imagery satellite tiles based on these boxes  
 5. [**Visual triage**]()  — manual selection of crops with clear helipad presence  
 6. [**Annotation and versioning**]()  — use of Roboflow for labeling, preprocessing, splits and augmentations  
-7.[**Training, evaluation and inference**]()  — YOLO training in Colab, performance measurement and generalization tests on unseen neighborhoods  
+7. [**Training, evaluation and inference**]()  — YOLO training in Colab, performance measurement and generalization tests on unseen neighborhoods  
 
 <br><br>
 
