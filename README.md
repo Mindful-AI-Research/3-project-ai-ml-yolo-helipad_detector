@@ -289,11 +289,11 @@ The geographical scope follows the briefing: **city of São Paulo**, focusing on
 [-]() Faria Lima, Berrini, Vila Olímpia and Brooklin  
 [-]() other relevant urban areas such as Morumbi and adjacent regions  
 
-### [***Image sources]***()
+### [***Image sources***]()
 
 - [**ESRI World Imagery (XYZ tiles)**]()  — main source, with sub-meter resolution and programmatic HTTP access  
-- [**Google Earth Web**()  — complementary source, used only for punctual captures of specific targets, not for bulk collection  
-- **GeoSampa**()  — mentioned as an alternative high-resolution source, possible extra beyond the base scope  
+- [**Google Earth Web**]()  — complementary source, used only for punctual captures of specific targets, not for bulk collection  
+- [**GeoSampa**]()  — mentioned as an alternative high-resolution source, possible extra beyond the base scope  
 
 Images are stored as `.jpg` or `.png`, as required by the project.
 
@@ -583,24 +583,30 @@ The Helipoint Detector technical pipeline can be summarized in 12 steps:
 
 Programmatic collection follows the XYZ tile pattern of the **ESRI World Imagery** public service, as recommended in the briefing:
 
-- define **zoom** by target type
-- use `z = 19` for helipads and other small targets
-- define **bounding boxes** per neighborhood `(lon_min, lat_min, lon_max, lat_max)`
-- convert bounding boxes to tile indices `(z, x, y)` via a `deg2tile` function
-- download each tile, checking HTTP status and filtering placeholders
-- organize tiles into folders by neighborhood and zoom
+[-]( define [**zoom**]() by target type
+[-]( use `z = 19` for helipads and other small targets
+[-]( define **bounding boxes** per neighborhood `(lon_min, lat_min, lon_max, lat_max)`
+[-]( convert bounding boxes to tile indices `(z, x, y)` via a `deg2tile` function
+[-]( download each tile, checking HTTP status and filtering placeholders
+[-]( organize tiles into folders by neighborhood and zoom
 
-The `Imagens.ipynb` notebook generalizes this flow for multiple coordinates and bounding boxes, reading `cordenadasheli.csv` and producing mosaics and crops ready for triage.
+<br>
+
+> The `Imagens.ipynb` notebook generalizes this flow for multiple coordinates and bounding boxes, reading `cordenadasheli.csv` and producing > mosaics and crops ready for triage.
+
+<br>
 
 ### [Complementary manual collection (Google Earth Web)]()
 
 In some cases, **Google Earth Web** may be used as a complement:
 
-- only for specific helipad examples
-- preserving consistent zoom
-- cropping approximately square areas and resizing to `640×640`
+[-](only for specific helipad examples
+[-]( preserving consistent zoom
+[-]( cropping approximately square areas and resizing to `640×640`
 
 Bulk screenshot collection from Google is not used, in line with usage restrictions and the briefing.
+
+<br>
 
 ### [Curation and dataset volume]()
 
