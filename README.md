@@ -65,7 +65,7 @@
 
 **Professor:** [✨ Rooney Ribeiro Albuquerque Coelho](https://www.linkedin.com/in/rooney-coelho-320857182/)  
 **Authors:**  
-- [Carlos Antonio Roth Gorham]()   
+- [Carlos Antonio Roth Gorham](https://github.com/RothGorham?tab=followers)   
 - [Fabiana ⚡️ Campanari](https://linktr.ee/fabianacampanari)   
 - [Pedro Vyctor Almeida](https://www.linkedin.com/in/pedro-vyctor-almeida-285b89273/) 
 
@@ -259,7 +259,7 @@ The main objective is to build an **end-to-end system** capable of detecting hel
 [-]() programmatic acquisition of satellite data  
 [-]() visual curation and tile filtering  
 [-]() annotation with well-defined bounding boxes  
-[-]()- preprocessing and augmentations  
+[-]() preprocessing and augmentations  
 [-]() training and monitoring in Colab  
 [-]() quantitative evaluation and qualitative error analysis  
 [-]() inference on an entire neighborhood not used during training  
