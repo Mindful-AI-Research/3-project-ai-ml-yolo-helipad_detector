@@ -250,9 +250,6 @@ Rather than relying on a ready-made benchmark, the project emphasizes the constr
 <br><br>
 
 
-
-<br><br>
-
 ## [Objective]()
 
 The main objective is to build an **end-to-end system** capable of detecting helipads on rooftops in the city of São Paulo, following all model lifecycle stages defined in the briefing:
@@ -317,35 +314,54 @@ The central pedagogical message is that **around 80% of the effort in AI is in t
 
 <br><br>
 
+## [Business and Research Problem]()
 
+Manually identifying helipads in dense urban environments is a slow, subjective and hard-to-scale task. On high-resolution imagery, rooftops with circular patterns, HVAC equipment, sport markings, shadows, reflections and urban geometry can visually resemble the characteristic helipad “H”.
 
+This project addresses that challenge with an **Object Detection** pipeline that turns raw geospatial imagery into structured visual intelligence, reducing manual effort and enabling:
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+- faster, more systematic helipad localization  
+- assessment of the model’s generalization ability across different neighborhoods  
+- study of error patterns in real urban contexts  
+- organized and reproducible data, image and evidence handling  
 
 <br><br>
+
+## [Extra Automation Contribution]()
+
+Beyond the minimum briefing requirements, the group developed an **extra geospatial automation resource** to speed up helipad discovery before the annotation stage.
+
+### [Technical title of the contribution]()
+
+**Extra Resource — Automation System to Speed Up the Search for Geographic Points and Helipads**
+
+### [Core idea]()
+
+Instead of relying solely on manual inspection in maps, the system:
+
+1. queries a public aviation website with airport and helipad records  
+2. automates navigation and scraping with Selenium  
+3. extracts geographic coordinates and metadata for each helipad  
+4. converts these coordinates into geographic bounding boxes  
+5. uses these boxes as input to download ESRI satellite tiles  
+6. generates mosaics ready for triage, annotation and upload to Roboflow  
+
+This resource drastically reduces target search time and strengthens construction of a broader, traceable dataset useful for future training cycles.
+
 <br><br>
-<br><br>
-<br><br>
-<br><br>
+
+## [Overall Flow Architecture]()
+
+The solution can be viewed as an architecture with **seven main blocks**:
+
+1. **Helipad discovery** — automation on an aviation website to locate records with coordinates  
+2. **Geographic extraction** — conversion and normalization of coordinates to usable decimal format  
+3. **Geographic perimeter generation** — creation of bounding boxes around each point  
+4. **Visual acquisition** — download of ESRI World Imagery satellite tiles based on these boxes  
+5. **Visual triage** — manual selection of crops with clear helipad presence  
+6. **Annotation and versioning** — use of Roboflow for labeling, preprocessing, splits and augmentations  
+7. **Training, evaluation and inference** — YOLO training in Colab, performance measurement and generalization tests on unseen neighborhoods  
+
 <br><br>
 
 ## [MLOps Pipeline Architecture]()
