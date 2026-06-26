@@ -620,6 +620,74 @@ In some cases, **Google Earth Web** may be used as a complement:
 
 ### [***Curation and dataset volume***]()
 
+In alignment with the project:
+
+- minimum volume of **200 images with the target object** after curation
+- geographical diversity with **at least 3 different neighborhoods** in training
+- holdout of at least **1 fully unseen neighborhood** for final generalization testing
+- manual triage of tiles, discarding crops without helipads
+
+Curation is not only an operational step; it is also part of the academic evaluation.
+
+<br><br>
+
+## [Annotation and Roboflow]()
+
+Image annotation was carried out with focus on consistency and alignment with course rules.
+
+### [Annotation tool]()
+
+**Roboflow** is used as the central platform for:
+
+- uploading selected images
+- drawing bounding boxes
+- standardizing labels (a single class: helipad)
+- resizing to `640×640`
+- data augmentation and version creation
+- splitting into `train / valid / test`
+- exporting in **YOLOv8/YOLOv11** format
+
+Other tools like CVAT.ai are compatible, but the main flow is structured around Roboflow for simplicity.
+
+### [Annotation standards]()
+
+- single target class
+- **tight** bounding boxes, without excessive area
+- written criteria for partially visible objects, shadows, reflections and ambiguous cases
+- annotation work shared across team members, not concentrated in a single person
+
+### [Preprocessing and splits]()
+
+In Roboflow, the following were configured:
+
+- resize to `640×640`
+- augmentations such as 90° rotations, horizontal/vertical flips and small brightness/contrast changes
+- standard splits:
+  - **70% train**
+  - **20% validation**
+  - **10% test**
+
+The final export produces the structure expected by YOLO:
+
+```bash
+dataset/
+├── data.yaml
+├── train/
+│   ├── images/
+│   └── labels/
+├── valid/
+│   ├── images/
+│   └── labels/
+└── test/
+    ├── images/
+    └── labels/
+```
+
+Each `.txt` in `labels/` contains, per line, normalized coordinates `(class_id, x_center, y_center, width, height)`.
+
+<br><br>
+
+## [Modeling with YOLO]()
 
 
 
