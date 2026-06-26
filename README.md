@@ -332,6 +332,8 @@ This project addresses that challenge with an **Object Detection** pipeline that
 
 Beyond the minimum briefing requirements, the group developed an **extra geospatial automation resource** to speed up helipad discovery before the annotation stage.
 
+<br>
+
 ### [Technical title of the contribution]()
 
 <br>
@@ -342,7 +344,7 @@ Beyond the minimum briefing requirements, the group developed an **extra geospat
 
 <br><br>
 
-## [Core idea]()
+## [Core Idea]()
 
 Instead of relying solely on manual inspection in maps, the system:
 
