@@ -587,12 +587,12 @@ The Helipoint Detector technical pipeline can be summarized in 12 steps:
 
 Programmatic collection follows the XYZ tile pattern of the **ESRI World Imagery** public service, as recommended in the briefing:
 
-[-]( define [**zoom**]() by target type
-[-]( use `z = 19` for helipads and other small targets
-[-]( define **bounding boxes** per neighborhood `(lon_min, lat_min, lon_max, lat_max)`
-[-]( convert bounding boxes to tile indices `(z, x, y)` via a `deg2tile` function
-[-]( download each tile, checking HTTP status and filtering placeholders
-[-]( organize tiles into folders by neighborhood and zoom
+[-]() define [**zoom**]() by target type
+[-]() use `z = 19` for helipads and other small targets
+[-]()define **bounding boxes** per neighborhood `(lon_min, lat_min, lon_max, lat_max)`
+[-]() convert bounding boxes to tile indices `(z, x, y)` via a `deg2tile` function
+[-]() download each tile, checking HTTP status and filtering placeholders
+[-]() organize tiles into folders by neighborhood and zoom
 
 <br><br>
 
@@ -606,9 +606,9 @@ Programmatic collection follows the XYZ tile pattern of the **ESRI World Imagery
 
 In some cases, **Google Earth Web** may be used as a complement:
 
-[-](only for specific helipad examples
-[-]( preserving consistent zoom
-[-]( cropping approximately square areas and resizing to `640×640`
+[-]() only for specific helipad examples
+[-]() preserving consistent zoom
+[-]() cropping approximately square areas and resizing to `640×640`
 
 <br>
 
@@ -622,10 +622,10 @@ In some cases, **Google Earth Web** may be used as a complement:
 
 In alignment with the project:
 
-- minimum volume of **200 images with the target object** after curation
-- geographical diversity with **at least 3 different neighborhoods** in training
-- holdout of at least **1 fully unseen neighborhood** for final generalization testing
-- manual triage of tiles, discarding crops without helipads
+[-]() minimum volume of **200 images with the target object** after curation
+[-]() geographical diversity with **at least 3 different neighborhoods** in training
+[-]() holdout of at least **1 fully unseen neighborhood** for final generalization testing
+[-]() manual triage of tiles, discarding crops without helipads
 
 Curation is not only an operational step; it is also part of the academic evaluation.
 
@@ -637,35 +637,43 @@ Image annotation was carried out with focus on consistency and alignment with co
 
 ### [Annotation tool]()
 
-**Roboflow** is used as the central platform for:
+[**Roboflow**]() is used as the central platform for:
 
-- uploading selected images
-- drawing bounding boxes
-- standardizing labels (a single class: helipad)
-- resizing to `640×640`
-- data augmentation and version creation
-- splitting into `train / valid / test`
-- exporting in **YOLOv8/YOLOv11** format
+[-]() uploading selected images
+[-]() drawing bounding boxes
+[-]() standardizing labels (a single class: helipad)
+[-]() resizing to `640×640`
+[-]() data augmentation and version creation
+[-]() splitting into `train / valid / test`
+[-]() exporting in **YOLOv8/YOLOv11** format
 
-Other tools like CVAT.ai are compatible, but the main flow is structured around Roboflow for simplicity.
+<br><br>
+
+> [!TIP]
+>
+> Other tools like CVAT.ai are compatible, but the main flow is structured around Roboflow for simplicity.
+
+<br><br>
 
 ### [Annotation standards]()
 
-- single target class
-- **tight** bounding boxes, without excessive area
-- written criteria for partially visible objects, shadows, reflections and ambiguous cases
-- annotation work shared across team members, not concentrated in a single person
+[-]() single target class
+[-]() [**tight**]() bounding boxes, without excessive area
+[-]() written criteria for partially visible objects, shadows, reflections and ambiguous cases
+[-]() annotation work shared across team members, not concentrated in a single person
 
 ### [Preprocessing and splits]()
 
 In Roboflow, the following were configured:
 
-- resize to `640×640`
-- augmentations such as 90° rotations, horizontal/vertical flips and small brightness/contrast changes
-- standard splits:
-  - **70% train**
-  - **20% validation**
-  - **10% test**
+[-]() resize to `640×640`
+[-]()augmentations such as 90° rotations, horizontal/vertical flips and small brightness/contrast changes
+[-]() standard splits:
+  - [**70% train**]()
+  - [**20% validation**]()
+  - [**10% test**]()
+ 
+<br><br>
 
 The final export produces the structure expected by YOLO:
 
@@ -683,7 +691,11 @@ dataset/
     └── labels/
 ```
 
-Each `.txt` in `labels/` contains, per line, normalized coordinates `(class_id, x_center, y_center, width, height)`.
+<br><br>
+
+> [!TIP]
+>
+> Each `.txt` in `labels/` contains, per line, normalized coordinates `(class_id, x_center, y_center, width, height)`.
 
 <br><br>
 
