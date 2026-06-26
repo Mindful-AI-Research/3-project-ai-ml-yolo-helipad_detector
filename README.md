@@ -719,7 +719,7 @@ Detector training was done with **Ultralytics YOLO** on Google Colab with a T4 G
 
 <br>
 
-### [**Training stack**]()
+### [***Training stack***]()
 
 [-]() Python 3.x <br>
 [-]() PyTorch <br>
@@ -729,7 +729,7 @@ Detector training was done with **Ultralytics YOLO** on Google Colab with a T4 G
 
 <br>
 
-### [**Base c\Configuration**]()
+### [***Base Configuration***]()
 
 Example snippet used in the notebooks:
 
@@ -756,7 +756,73 @@ results = model.train(
 
 <br>
 
-### [**Experiment strategy**]()
+### [***Experiment Strategy***]()
+
+n line with the briefing, **at least two experiments** were run, varying one hyperparameter at a time (for example, `epochs`, `batch` or `imgsz`) and comparing results.
+
+All relevant hyperparameters are recorded to allow pipeline re-execution, and YOLO automatically saves the best checkpoint to:
+
+```bash
+runs/detect/exp1/weights/best.pt
+```
+
+<br><br>
+
+## [Evaluation]()
+
+Model evaluation is carried out on two complementary fronts: [**quantitative metrics**](0 and [**qualitative analysis**]().
+
+<br>
+
+### [***Quantitative Metrics***]()
+
+The following are analyzed:
+
+- [**mAP@0.5**]()
+- [**mAP@0.5:0.95**]()
+- [**Precision (P)**]()
+- [**Recall (R)**]()
+- [**Confusion matrix**]()
+
+Additionally, curves are inspected for:
+
+- [**loss**]() (box, cls, dfl) per epoch
+- [**Precision / Recall**]() across training
+
+<br>
+
+### [***Key Concepts***]()
+
+- [**Precision**:]() proportion of positive detections that are correct
+- [**Recall**:]()  proortion of real objects detected by the model
+- [**mAP]()  mean Average Precision across IoU thresholds
+- [**IoU (Intersection over Union)**:]()  overlap between predicted and annotated boxes
+- [**False Positive (FP)**:]()  model detects a helipad where there is none
+- [**False Negative (FN)**:]()  model fails to detect a real helipad
+- [**Generalization**:]()  ability to work on new, unseen data
+
+<br>
+
+### [***Qualitative Analysis***]()
+
+In line with the briefing, the project performs visual analysis of:
+
+- at least [**5 clear hits**]()
+- [**3 false positives**]()
+- [**3 false negatives**]()
+
+Always with plausible explanations for each error pattern, relating background texture, “H” contrast, viewing angle, image quality and diversity of similar examples in training.
+
+This dual perspective is especially useful in educational settings because it helps beginners understand that model quality is not captured by a single number.
+
+<br><br>
+
+## [Inference and Generalization]()
+
+
+
+
+
 
 
 
@@ -776,9 +842,6 @@ results = model.train(
 <br><br>
 <br><br>
 <br><br>
-
-
-
 <br><br>
 
 
