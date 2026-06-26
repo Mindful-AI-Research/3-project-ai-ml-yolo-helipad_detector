@@ -340,7 +340,7 @@ Beyond the minimum briefing requirements, the group developed an **extra geospat
 
 <br><br>
 
-### [Core idea]()
+## [Core idea]()
 
 Instead of relying solely on manual inspection in maps, the system:
 
@@ -503,7 +503,7 @@ Helipoint-Detector/
 └── README.md                       # Main documentation
 ```
 
-<br><br>
+<br>
 
 > [!TIP]
 >
@@ -544,7 +544,7 @@ The project follows an end-to-end methodology aligned with educational best prac
 8. [**Application layer**:]() a lightweight interface makes the model easier to demonstrate and inspect.
 
 
-<br><br>
+<br>
 
 > [!IMPORTANT]
 >
@@ -572,7 +572,7 @@ The Helipoint Detector technical pipeline can be summarized in 12 steps:
 [11.]() Train YOLO models in Colab, monitoring metrics and train/validation curves <br>
 [12.]() Run inference on unseen neighborhoods and analyze results
 
-<br><br>
+<br>
 
 > [!TIP]
 >
@@ -594,7 +594,7 @@ Programmatic collection follows the XYZ tile pattern of the **ESRI World Imagery
 [-]() download each tile, checking HTTP status and filtering placeholders
 [-]() organize tiles into folders by neighborhood and zoom
 
-<br><br>
+<br>
 
 > [!TIP]
 >
@@ -627,7 +627,11 @@ In alignment with the project:
 [-]() holdout of at least **1 fully unseen neighborhood** for final generalization testing
 [-]() manual triage of tiles, discarding crops without helipads
 
-Curation is not only an operational step; it is also part of the academic evaluation.
+<br>
+
+> [!TIP]
+>
+> Curation is not only an operational step; it is also part of the academic evaluation.
 
 <br><br>
 
@@ -635,7 +639,7 @@ Curation is not only an operational step; it is also part of the academic evalua
 
 Image annotation was carried out with focus on consistency and alignment with course rules.
 
-### [Annotation tool]()
+### [***Annotation tool***]()
 
 [**Roboflow**]() is used as the central platform for:
 
@@ -647,35 +651,39 @@ Image annotation was carried out with focus on consistency and alignment with co
 [-]() splitting into `train / valid / test`
 [-]() exporting in **YOLOv8/YOLOv11** format
 
-<br><br>
+<br>
 
 > [!TIP]
 >
 > Other tools like CVAT.ai are compatible, but the main flow is structured around Roboflow for simplicity.
 
-<br><br>
+<br>
 
-### [Annotation standards]()
+### [***Annotation standards***]()
 
-[-]() single target class
-[-]() [**tight**]() bounding boxes, without excessive area
-[-]() written criteria for partially visible objects, shadows, reflections and ambiguous cases
+[-]() single target class <br>
+[-]() [**tight**]() bounding boxes, without excessive area <br>
+[-]() written criteria for partially visible objects, shadows, reflections and ambiguous cases <br>
 [-]() annotation work shared across team members, not concentrated in a single person
 
-### [Preprocessing and splits]()
+<br>
+
+### [***Preprocessing and splits***]()
 
 In Roboflow, the following were configured:
 
-[-]() resize to `640×640`
-[-]()augmentations such as 90° rotations, horizontal/vertical flips and small brightness/contrast changes
-[-]() standard splits:
+[-]() resize to `640×640` <br>
+[-]()augmentations such as 90° rotations, horizontal/vertical flips and small brightness/contrast changes <br>
+[-]() standard splits: <br>
   - [**70% train**]()
   - [**20% validation**]()
   - [**10% test**]()
  
-<br><br>
+<br>
 
-The final export produces the structure expected by YOLO:
+### [***The final export produces the structure expected by YOLO:***]()
+
+<b>
 
 ```bash
 dataset/
@@ -691,7 +699,7 @@ dataset/
     └── labels/
 ```
 
-<br><br>
+<br>
 
 > [!TIP]
 >
