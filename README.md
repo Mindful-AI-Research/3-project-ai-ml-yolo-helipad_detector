@@ -466,7 +466,7 @@ flowchart TD
 ```
 
 
-<br><br>
+<br>
 
 > [!TIP]
 >
@@ -640,6 +640,8 @@ In alignment with the project:
 ## [Annotation and Roboflow]()
 
 Image annotation was carried out with focus on consistency and alignment with course rules.
+
+<br>
 
 ### [***Annotation tool***]()
 
