@@ -286,7 +286,9 @@ The geographical scope follows the briefing: **city of São Paulo**, focusing on
 [-]() Faria Lima, Berrini, Vila Olímpia and Brooklin  
 [-]() other relevant urban areas such as Morumbi and adjacent regions  
 
-### [***Image sources***]()
+<br><br>
+
+## [Image sources]()
 
 - [**ESRI World Imagery (XYZ tiles)**]()  — main source, with sub-meter resolution and programmatic HTTP access  
 - [**Google Earth Web**]()  — complementary source, used only for punctual captures of specific targets, not for bulk collection  
