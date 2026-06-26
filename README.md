@@ -645,7 +645,7 @@ Image annotation was carried out with focus on consistency and alignment with co
 
 <br>
 
-### [***Annotation tool***]()
+### [***Annotation Tool***]()
 
 [**Roboflow**]() is used as the central platform for:
 
@@ -665,7 +665,7 @@ Image annotation was carried out with focus on consistency and alignment with co
 
 <br>
 
-### [***Annotation standards***]()
+### [***Annotation Standards***]()
 
 [-]() single target class <br>
 [-]() [**tight**]() bounding boxes, without excessive area <br>
@@ -674,7 +674,7 @@ Image annotation was carried out with focus on consistency and alignment with co
 
 <br>
 
-### [***Preprocessing and splits***]()
+### [***Preprocessing and Splits***]()
 
 In Roboflow, the following were configured:
 
@@ -715,7 +715,48 @@ dataset/
 
 ## [Modeling with YOLO]()
 
+Detector training was done with **Ultralytics YOLO** on Google Colab with a T4 GPU, following briefing recommendations.
 
+<br>
+
+### [**Training stack**]()
+
+[-]() Python 3.x <br>
+[-]() PyTorch <br>
+[-]() `ultralytics` library <br>
+[-]() `roboflow` library for dataset integration <br>
+[-]() Jupyter Notebook / Google Colab Free (T4 GPU)
+
+<br>
+
+### [**Base c\Configuration**]()
+
+Example snippet used in the notebooks:
+
+<br>
+
+```python
+!pip install -q ultralytics roboflow
+
+from ultralytics import YOLO
+
+model = YOLO('yolov8n.pt')  # or 'yolo11n.pt'
+
+results = model.train(
+    data='data.yaml',
+    epochs=30,
+    imgsz=640,
+    batch=16,
+    device=0,
+    seed=42,
+    project='runs',
+    name='exp1'
+)
+```
+
+<br>
+
+### [**Experiment strategy**]()
 
 
 
