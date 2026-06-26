@@ -1,16 +1,13 @@
-<br>
+Ficou bom, mas dá para deixá-lo com um visual mais sofisticado e parecido com READMEs de projetos open source de destaque.
 
-\[[🇧🇷 Português](README.pt_BR.md)\] \[**[🇺🇸 English](README.md)**\]
-
-<br><br>
-
-# <p align="center">🧠 AI/ML Project 2 · Computer Vision · Helipoint Detector</p>
-
-### <p align="center">Automated Helipad Detection Using YOLO and Satellite Imagery of São Paulo, Brazil 🚁</p>
-
-<br>
 
 <div align="center">
+
+<h1>🧠 AI/ML Project 2</h1>
+
+<h3>Computer Vision • YOLO • Helipoint Detector</h3>
+
+<br>
 
 <a href="https://github.com/topics/satellite-imagery">Satellite Imagery</a>
 &nbsp;&nbsp;✦&nbsp;&nbsp;
@@ -22,22 +19,32 @@
 &nbsp;&nbsp;✦&nbsp;&nbsp;
 <a href="https://github.com/topics/geospatial">Geospatial Intelligence</a>
 
-</div>
+<br><br>
+
+<i>✨ Teaching YOLO to spot the city's most exclusive landing spots. ✨</i>
 
 <br><br>
 
-#### <p align="center">✨ <i>Teaching YOLO to spot the city's most exclusive landing spots.</i> ✨</p>
+Finding hidden <b>H's</b> in the concrete jungle.<br>
+<b>One rooftop at a time.</b> 🚁⚡
 
-<p align="center">
-<i>Finding hidden H’s in the concrete jungle</i><br><br>
-<b>One rooftop at a time.</b> 🚁⚡️
-</p>
-
-<br>
+</div>
 
 #
 
-<br><br>
+<br>
+
+
+### O que melhora
+
+* **Título maior** (H1) cria uma identidade forte para o projeto.
+* **Subtítulo** destaca rapidamente a área e a tecnologia.
+* Remove excesso de `<br>` para deixar o README mais limpo.
+* O slogan fica centralizado e mais natural.
+* A linha horizontal (`---`) separa elegantemente o cabeçalho do restante do README.
+
+O resultado fica muito próximo do estilo usado em projetos populares de IA no GitHub, como YOLO, Ultralytics, Detectron2 e Segment Anything.
+ 
 <!-- ========= END REPO TITLE ========= -->
 
 <!-- ========= START SPONSOR BADGE ========= -->
