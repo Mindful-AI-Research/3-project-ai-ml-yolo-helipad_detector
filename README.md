@@ -35,16 +35,6 @@ Finding hidden <b>H's</b> in the concrete jungle.<br>
 <br>
 
 
-### O que melhora
-
-* **Título maior** (H1) cria uma identidade forte para o projeto.
-* **Subtítulo** destaca rapidamente a área e a tecnologia.
-* Remove excesso de `<br>` para deixar o README mais limpo.
-* O slogan fica centralizado e mais natural.
-* A linha horizontal (`---`) separa elegantemente o cabeçalho do restante do README.
-
-O resultado fica muito próximo do estilo usado em projetos populares de IA no GitHub, como YOLO, Ultralytics, Detectron2 e Segment Anything.
- 
 <!-- ========= END REPO TITLE ========= -->
 
 <!-- ========= START SPONSOR BADGE ========= -->
