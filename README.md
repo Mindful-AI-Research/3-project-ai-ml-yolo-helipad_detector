@@ -1,4 +1,3 @@
-Ficou bom, mas dá para deixá-lo com um visual mais sofisticado e parecido com READMEs de projetos open source de destaque.
 
 
 <div align="center">
