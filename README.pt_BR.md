@@ -1,6 +1,9 @@
 <br>
 
+\[**[🇧🇷 Português](README.pt_BR.md)**\] \[[🇬🇧 English](README.md)\]
+
 <br><br>
+<!--END 🇧🇷 Portuguese LANGUAGE BUTTON  -->
 
 # <p align="center">🧠 AI/ML Project 2 · Computer Vision · Helipoint Detector</p>
 
