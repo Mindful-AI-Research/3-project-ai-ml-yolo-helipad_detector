@@ -3,7 +3,7 @@
 ##### \[[🇧🇷 Português](README.pt_BR.md)\] \[**[🇬🇧 English](README.md)**\]   
 
 <br><br>
-<!--END LANGUAGE BUTTON  -->
+<!--END 🇬🇧English LANGUAGE BUTTON  -->>
 
 # <p align="center">🧠 AI/ML Project 2 · Computer Vision · Helipoint Detector</p>
 
