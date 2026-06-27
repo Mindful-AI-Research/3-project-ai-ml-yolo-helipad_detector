@@ -3,8 +3,10 @@
 ##### \[[🇧🇷 Português](README.pt_BR.md)\] \[**[🇬🇧 English](README.md)**\]   
 
 <br><br>
-<!- -END 🇬🇧English LANGUAGE BUTTON  -->
+<!-- -END 🇬🇧English LANGUAGE BUTTON  -->
 
+
+<!-- ========= START HEADRE ========= -->
 # <p align="center">🧠 AI/ML Project 2 · Computer Vision · Helipoint Detector</p>
 
 ### <p align="center">Automated Helipad Detection Using YOLO and Satellite Imagery of São Paulo, Brazil</p>
@@ -39,7 +41,7 @@
 #
 
 <br><br>
-<!-- ========= END REPO TITLE ========= -->
+<!-- ========= END HEADRE ========= -->
 
 <!-- ========= START SPONSOR BADGE ========= -->
 #### <p align="center"> [![Sponsor Mindful AI Assistants](https://img.shields.io/badge/Sponsor-%C2%B7%C2%B7%C2%B7%20Mindful%20AI%20Assistants%20%C2%B7%C2%B7%C2%B7-brightgreen?logo=GitHub)](https://github.com/sponsors/Mindful-AI-Assistants)
