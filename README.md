@@ -1,12 +1,16 @@
+<br>
 
+ \[[🇧🇷 Português](README.pt_BR.md)\] \[**[🇬🇧 English](README.md)**\]
 
-<div align="center">
+<br><br>
 
-<h1>🧠 AI/ML Project 2</h1>
+# <p align="center">🧠 AI/ML Project 2 · Computer Vision · Helipoint Detector</p>
 
-<h3>Computer Vision • YOLO • Helipoint Detector</h3>
+### <p align="center">Automated Helipad Detection Using YOLO and Satellite Imagery of São Paulo, Brazil</p>
 
 <br>
+
+<div align="center">
 
 <a href="https://github.com/topics/satellite-imagery">Satellite Imagery</a>
 &nbsp;&nbsp;✦&nbsp;&nbsp;
@@ -18,22 +22,22 @@
 &nbsp;&nbsp;✦&nbsp;&nbsp;
 <a href="https://github.com/topics/geospatial">Geospatial Intelligence</a>
 
-<br><br>
-
-<i>✨ Teaching YOLO to spot the city's most exclusive landing spots. ✨</i>
-
-<br><br>
-
-Finding hidden <b>H's</b> in the concrete jungle.<br>
-<b>One rooftop at a time.</b> 🚁⚡
-
 </div>
 
-#
+<br><br>
+
+#### <p align="center">✨ <i>Teaching YOLO to spot the city's most exclusive landing spots.</i> ✨</p>
+
+<p align="center">
+<i>Finding hidden H’s in the concrete jungle</i><br><br>
+<b>One rooftop at a time.</b> 🚁⚡️
+</p>
 
 <br>
 
+#
 
+<br><br>
 <!-- ========= END REPO TITLE ========= -->
 
 <!-- ========= START SPONSOR BADGE ========= -->
