@@ -826,6 +826,31 @@ This dual perspective is especially useful in educational settings because it he
 ## [Inference and Generalization]()
 
 
+ne of the most important parts of the project is testing whether the model generalizes to regions not seen during training.
+
+### [Inference on an unseen neighborhood]()
+
+The pipeline includes:
+
+1. generating mosaics for a **neighborhood entirely excluded from training**
+2. running the YOLO model on **all tiles** of this mosaic
+3. discussing in the report/notebook at least **5 tiles** with hits, false positives and false negatives
+
+Example inference code:
+
+```python
+from ultralytics import YOLO
+
+model = YOLO('runs/detect/exp1/weights/best.pt')
+
+results = model.predict(
+    source='New Images/',
+    save=True,
+    conf=0.25
+)
+```
+
+
 
 
 
