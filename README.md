@@ -478,7 +478,7 @@ linkStyle default stroke:#14b8a6,stroke-width:2.5px,opacity:0.95;
 
 > [!TIP]
 >
-> The pipeline should be understood as a learning architecture as much as a software architecture. It shows how raw geospatial imagery is > > gradually transformed into a validated and demonstrable AI artifact.
+> The pipeline should be understood as a learning architecture as much as a software architecture.It shows how raw geospatial imagery is gradually transformed into a validated and demonstrable AI artifact.
 
 <br><br>
 
