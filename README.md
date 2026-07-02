@@ -488,29 +488,83 @@ The repository structure was organized to reflect pipeline stages, including geo
 
 <br>
 
-
 ```bash
-Helipoint-Detector/
-│
-├── .devcontainer/                  # Dev environment configuration
-├── AI Training/                    # Trained weights, checkpoints and training artifacts
-├── Briefing/                       # Reference materials for Project 2
-├── New Images/                     # Unseen images used for inference and generalization tests
-├── Preprocessing Data/             # Inputs and intermediate preprocessing outputs
-├── runs/detect/                    # YOLO outputs (logs, curves, confusion matrices, weights)
-│
-├── Analise.ipynb                   # Main notebook for analysis, evaluation and inference
-├── Treinamento_YOLO.ipynb          # Notebook focused on YOLO model training
-├── Imagens.ipynb                   # Notebook for ESRI tile download and mosaic creation
-│
-├── BOTHELIPONTO.py                 # Selenium bot for helipad search automation
-├── Transformarcordenadas.py        # Coordinate conversion and geographic bounding box generation
-├── cordenadasheli.csv              # Consolidated helipad coordinates and metadata
-├── Site.py                         # Application script (optional web/interface layer)
-│
-├── requirements.txt                # Python dependencies
-├── packages.txt                    # Additional environment/system dependencies
-└── README.md                       # Main documentation
+helipoint-detector/
+├── .devcontainer/
+│   └── devcontainer.json
+├── .github/
+├── apps/
+│   └── streamlit_app/
+│       └── app.py                          # model selector (exp1 / exp2) in the sidebar
+├── artifacts/
+│   └── runs/
+│       └── detect/
+│           ├── exp1/                       # src/training/yolo_training_exp1.ipynb (dataset v1)
+│           │   ├── weights/{best.pt,last.pt}
+│           │   ├── results.csv
+│           │   └── *.png (loss curves, confusion matrix, labels.jpg, ...)
+│           └── exp2/                       # src/training/yolo_training_exp2.ipynb (dataset v2)
+│               ├── weights/{best.pt,last.pt}
+│               ├── results.csv
+│               └── *.png
+├── briefing/
+│   ├── geo_reference/
+│   │   ├── T_ORTO_3315-264_IRGB_1000.j2w
+│   │   └── T_ORTO_3315-264_IRGB_1000.jp2
+│   ├── briefing_pt.pdf
+│   ├── briefing_en.pdf
+│   └── notebooks/
+│       ├── mosaic_perdizes.ipynb
+│       └── mosaic_perdizes_hires.ipynb
+├── configs/
+│   └── data.yaml
+├── data/
+│   ├── README.dataset.txt
+│   ├── README.roboflow.txt
+│   ├── raw/
+│   │   └── helipad_dataset.rar
+│   ├── tiles/
+│   │   ├── center_hires_annotated_mosaic.png
+│   │   ├── center_hires_full_mosaic.jpg
+│   │   ├── center_hires_mosaic_preview.jpg
+│   │   ├── center_hires_tiles_sample.png
+│   │   ├── center_mosaic_tiles/
+│   │   └── tile_z19_x*_y*.jpg
+│   ├── inference/
+│   │   └── unseen_neighborhood/
+│   └── training/
+│       └── yolo_dataset/
+│           ├── data.yaml
+│           ├── train/{images,labels}
+│           ├── valid/{images,labels}
+│           └── test/{images,labels}
+├── docs/
+│   ├── mlops_architecture.md
+│   └── governance/
+│       └── agentic_web_economic_governance_global_south.pdf
+├── notebooks/
+│   └── model_analysis.ipynb
+├── reports/
+│   ├── executive_analysis/
+│   │   ├── helipoint_detector_performance_pt.pdf
+│   │   └── helipoint_detector_performance_en.pdf
+│   ├── model_outputs/
+│   │   └── detect/
+│   └── yolo_results_analysis.md
+├── src/
+│   ├── data_preparation/
+│   │   └── image_preprocessing.ipynb
+│   ├── geospatial/
+│   │   ├── geospatial_image_collection.ipynb
+│   │   ├── helipad_scraper.py
+│   │   ├── helipad_coordinates_raw.csv
+│   │   ├── helipad_coordinates_bbox.csv
+│   │   └── transform_coordinates.py
+│   └── training/
+│       ├── yolo_training_exp1.ipynb
+│       └── yolo_training_exp2.ipynb
+├── packages.txt
+├── requirements.txt
 ```
 
 <br>
