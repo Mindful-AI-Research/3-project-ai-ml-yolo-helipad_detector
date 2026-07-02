@@ -495,7 +495,7 @@ helipoint-detector/
 ├── .github/
 ├── apps/
 │   └── streamlit_app/
-│       └── app.py                          # model selector (exp1 / exp2) in the sidebar
+│       └── app.py                          # auto-discovers any experiment under artifacts/runs/detect/
 ├── artifacts/
 │   └── runs/
 │       └── detect/
@@ -503,10 +503,8 @@ helipoint-detector/
 │           │   ├── weights/{best.pt,last.pt}
 │           │   ├── results.csv
 │           │   └── *.png (loss curves, confusion matrix, labels.jpg, ...)
-│           └── exp2/                       # src/training/yolo_training_exp2.ipynb (dataset v2)
-│               ├── weights/{best.pt,last.pt}
-│               ├── results.csv
-│               └── *.png
+│           └── exp2/                       # optional: add a second experiment here later,
+│                                              # the app picks it up automatically, no code change needed
 ├── briefing/
 │   ├── geo_reference/
 │   │   ├── T_ORTO_3315-264_IRGB_1000.j2w
@@ -522,7 +520,7 @@ helipoint-detector/
 │   ├── README.dataset.txt
 │   ├── README.roboflow.txt
 │   ├── raw/
-│   │   └── helipad_dataset.rar
+│   │   └── helipad_dataset.rar             # originally "Heliponto.rar" before renaming
 │   ├── tiles/
 │   │   ├── center_hires_annotated_mosaic.png
 │   │   ├── center_hires_full_mosaic.jpg
@@ -561,8 +559,7 @@ helipoint-detector/
 │   │   ├── helipad_coordinates_bbox.csv
 │   │   └── transform_coordinates.py
 │   └── training/
-│       ├── yolo_training_exp1.ipynb
-│       └── yolo_training_exp2.ipynb
+│       └── yolo_training.ipynb
 ├── packages.txt
 ├── requirements.txt
 ```
