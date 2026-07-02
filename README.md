@@ -29,12 +29,21 @@
 
 <br><br>
 
-#### <p align="center">✨ <i>Teaching YOLO to spot the city's most exclusive landing spots.</i> ✨</p>
 
-<p align="center">
-<i>Finding hidden H’s in the concrete jungle</i><br><br>
-<b>One rooftop at a time.</b> 🚁⚡️
-</p>
+#### <p align="center"> 🚁 <i>Some rooftops hide swimming pools. Others hide helicopters.</i> ⟡
+
+<p align="center"> <i>Not every rooftop is just... a rooftop.</i> </b> 
+
+#### <p align="center"> ⟡ We're teaching <b>YOLO</b> to <b>spot the difference.⟡ 
+
+<br>
+
+<p align="center"> ⚡
+
+<br>
+
+###### <p align="center"> *Finding hidden H’s in the Concrete Jungle* </p>  <p align="center"> ⋆One rooftop at a time⋆
+
 
 <br>
 
@@ -42,6 +51,7 @@
 
 <br><br>
 <!-- ========= END HEADRE ========= -->
+
 
 <!-- ========= START SPONSOR BADGE ========= -->
 #### <p align="center"> [![Sponsor Mindful AI Assistants](https://img.shields.io/badge/Sponsor-%C2%B7%C2%B7%C2%B7%20Mindful%20AI%20Assistants%20%C2%B7%C2%B7%C2%B7-brightgreen?logo=GitHub)](https://github.com/sponsors/Mindful-AI-Assistants)
