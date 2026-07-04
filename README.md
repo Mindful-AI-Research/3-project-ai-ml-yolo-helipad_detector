@@ -242,7 +242,7 @@
 - [Deliverables Covered](#deliverables-covered)
 - [Results Analysis](#results-analysis)
 - [Strengths, Limitations and Future Improvements](#strengths-limitations-and-future-improvements)
-- [Ethics, LGPD and Governance](#ethics-lgpd-and-governance)
+- [Responsible AI, Data Governance and LGPD](#responsible-ai-data-governance-and-lgpd)
 - [Image Attribution](#image-attribution)
 - [References](#references)
 - [Acknowledgements](#acknowledgements)
