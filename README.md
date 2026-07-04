@@ -32,9 +32,9 @@
 <br><br>
 
 
-#### <p align="center"> ⟡ <i>Some rooftops hide swimming pools. Others hide helicopters.</i> ⟡
+##### <p align="center"> ⟡ ⋆Some rooftops hide swimming pools. Others hide helicopters.⋆ ⟡
 
-<p align="center"> <i>Not every rooftop is just... a rooftop.</i> </b> 
+###### <p align="center">  *Not every rooftop is just... a rooftop.*  </b> 
 
 <br>
 
