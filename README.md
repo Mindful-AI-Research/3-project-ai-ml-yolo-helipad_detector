@@ -398,99 +398,6 @@ The solution can be viewed as an architecture with **seven main blocks**:
 
 <br>
 
-```mermaid
-%%{
-  init: {
-    "theme": "dark",
-    "themeVariables": {
-      "background": "#020617",
-      "primaryTextColor": "#ffffff",
-      "lineColor": "#14b8a6",
-      "defaultLinkColor": "#14b8a6",
-      "fontFamily": "Inter, Segoe UI, Arial, sans-serif"
-    }
-  }
-}%%
-
-flowchart TD
-
-%% ===== CLASSES (SOFISTICADO) =====
-classDef navy fill:#020817,stroke:#0a1a2f,color:#ffffff,stroke-width:2px;
-classDef group fill:#020817,stroke:#0a1a2f,color:#ffffff,stroke-width:2px;
-
-%% ===== G1 =====
-subgraph G1["Geospatial Discovery"]
-A["FlightMarket / aviation website"]
-B["Selenium automation<br/>src/geospatial/helipad_scraper.py"]
-C["Helipad records + metadata"]
-D["Coordinates CSV"]
-E["Coordinate conversion"]
-F["Geographic bounding boxes"]
-
-A --> B --> C --> D --> E --> F
-end
-
-%% ===== G2 =====
-subgraph G2["Visual Acquisition"]
-G["ESRI World Imagery<br/>XYZ tile download"]
-H["Image mosaics by region"]
-I["Manual visual triage"]
-J["Selected images with helipads"]
-
-G --> H --> I --> J
-end
-
-%% ===== G3 =====
-subgraph G3["Dataset Engineering"]
-K["Roboflow upload"]
-L["Bounding box annotation"]
-M["Preprocessing + augmentations"]
-N["Dataset split"]
-O["YOLO export"]
-
-K --> L --> M --> N --> O
-end
-
-%% ===== G4 =====
-subgraph G4["Modeling and Validation"]
-P["Google Colab training<br/>YOLOv8 / YOLOv11"]
-Q["Runs, weights and metrics"]
-
-R["Quantitative evaluation"]
-S["Qualitative analysis"]
-T["Inference on unseen neighborhood"]
-U["Generalization assessment"]
-
-V["Optional web app"]
-
-P --> Q
-Q --> R
-Q --> S
-Q --> T
-T --> U
-Q --> V
-end
-
-%% ===== CONEXÕES =====
-F --> G
-J --> K
-O --> P
-
-%% ===== APLICAR CORES =====
-class A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V navy;
-class G1,G2,G3,G4 group;
-
-%% ===== LINK STYLE (TURQUESA + GLOW SIMULADO) =====
-linkStyle default stroke:#14b8a6,stroke-width:2.5px,opacity:0.95;
-```
-
-
-
-
-
-
-
-
 
 ```mermaid
 %%{
@@ -613,12 +520,6 @@ class G1,G2,G3,G4 group;
 
 linkStyle default stroke:#14b8a6,stroke-width:2.5px,opacity:0.95;
 ```
-
-
-
-
-
-
 
 <br>
 
