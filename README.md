@@ -215,6 +215,11 @@
 
 ## [Table of Contents]()
 
+
+<br><br>
+
+## [Table of Contents]()
+
 - [Project Definition](#project-definition)
 - [Objective](#objective)
 - [Why Helipads?](#why-helipads)
@@ -222,10 +227,11 @@
 - [Project Context](#project-context)
 - [Business and Research Problem](#business-and-research-problem)
 - [Extra Automation Contribution](#extra-automation-contribution)
+- [Geospatial Visualization (Kepler.gl)](#geospatial-visualization-keplergl)
 - [Overall Flow Architecture](#overall-flow-architecture)
 - [AI/ML Ops Pipeline](#aiml-ops-pipeline)
 - [Repository Structure](#repository-structure)
-- [What is `Heliponto.rar`?](#what-is-helipontorar)
+- [What is `data/raw/helipad_dataset.rar`?](#what-is-helipontorar)
 - [What is Roboflow in This Project?](#what-is-roboflow-in-this-project)
 - [Methodology](#methodology)
 - [Full Technical Pipeline](#full-technical-pipeline)
@@ -243,7 +249,7 @@
 - [Deliverables Covered](#deliverables-covered)
 - [Results Analysis](#results-analysis)
 - [Strengths, Limitations and Future Improvements](#strengths-limitations-and-future-improvements)
-- [Responsible AI, Data Governance and LGPD](#responsible-ai-data-governance-and-lgpd)
+- [Ethics, LGPD and Governance](#ethics-lgpd-and-governance)
 - [Image Attribution](#image-attribution)
 - [References](#references)
 - [Acknowledgements](#acknowledgements)
@@ -253,20 +259,18 @@
 
 ## [Project Definition]()
 
-The **Helipoint Detector** project implements a full **Object Detection** pipeline to identify helipads on rooftops in the city of São Paulo, using high-resolution aerial and orbital imagery and models from the **YOLOv8/YOLOv11** family.
+The **Helipoint Detector** project delivers an end-to-end **Object Detection** pipeline for identifying rooftop helipads across São Paulo using high-resolution aerial and satellite imagery with **YOLOv8/YOLOv11** models.
 
-The repository covers the entire lifecycle of an applied AI system in computer vision: programmatic image collection, geospatial automation, dataset creation and curation, annotation, preprocessing, training, quantitative and qualitative evaluation, inference on unseen neighborhoods and, optionally, an application layer for demo purposes.
+The repository documents the complete development workflow of an applied computer vision system, including geospatial image acquisition, automated data preparation, dataset construction, annotation, preprocessing, model training, performance evaluation, and inference on previously unseen urban areas. It also includes an optional application layer for interactive demonstrations.
 
-The repository was designed to present the complete lifecycle of an AI application in a documented and academically transparent form, making it useful for professors, beginner practitioners, and students learning object detection with real urban imagery.
-
-Rather than relying on a ready-made benchmark, the project emphasizes the construction of an original dataset, reproducible experimentation, and inference on unseen regions.
+Built with a focus on reproducibility and transparency, the project goes beyond the use of existing benchmarks by creating and curating an original urban dataset. The repository serves as a structured learning and research reference, demonstrating how modern object detection solutions can be designed, evaluated, and deployed using real-world geospatial data.
 
 <br><br>
 
 
 ## [Objective]()
 
-The main objective is to build an **end-to-end system** capable of detecting helipads on rooftops in the city of São Paulo, following all model lifecycle stages defined in the briefing:
+The main objective is to develop an end-to-end computer vision system capable of detecting rooftop helipads across São Paulo, covering the complete model lifecycle defined in the project scope:
 
 [-]() programmatic acquisition of satellite data  
 [-]() visual curation and tile filtering  
@@ -276,9 +280,9 @@ The main objective is to build an **end-to-end system** capable of detecting hel
 [-]() quantitative evaluation and qualitative error analysis  
 [-]() inference on an entire neighborhood not used during training  
 
-From an educational perspective, the work was also designed to help students understand how a real AI pipeline is built, validated, and communicated. The project therefore integrates data collection, annotation, preprocessing, model training, evaluation, and simple deployment in one coherent workflow.
+Beyond the technical implementation, the project was designed as an educational framework to demonstrate how real-world AI systems are built, validated, and communicated. The workflow integrates data acquisition, dataset creation, annotation, preprocessing, model development, evaluation, and lightweight deployment into a unified pipeline.
 
-Methodologically, the project reinforces that model performance is directly tied to **data quality**, annotation consistency and geographical diversity, rather than small tweaks to the architecture.
+Methodologically, the project highlights that reliable computer vision performance depends primarily on data quality, annotation consistency, and geographic diversity, rather than only on architectural adjustments or model complexity.
 
 <br><br>
 
