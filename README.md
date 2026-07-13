@@ -403,7 +403,7 @@ The solution can be viewed as an architecture with **seven main blocks**:
     "theme": "dark",
     "themeVariables": {
       "background": "#020617",
-      "primaryTextColor": "#14B8A6",
+      "primaryTextColor": "#D1D5DB",
       "lineColor": "#14b8a6",
       "defaultLinkColor": "#14b8a6",
       "fontFamily": "Inter, Segoe UI, Arial, sans-serif",
@@ -419,10 +419,8 @@ classDef navy fill:#020817,stroke:#0a1a2f,color:#D1D5DB,stroke-width:1.5px;
 classDef group fill:#000000,stroke:#0a1a2f,color:#F8FAFC,stroke-width:1px;
 
 
+%% ===== G1 =====
 subgraph G1["Geospatial Discovery"]
-A["Helipad data acquisition"]
-B["Coordinates + metadata"]
-C["Geographic bounding boxes"]
 
 A["FlightMarket aviation website"]
 B["Selenium automation<br/>helipad_bot.py"]
@@ -445,24 +443,12 @@ I["Manual visual triage"]
 J["Selected helipad images"]
 
 G --> H --> I --> J
-=======
-A --> B --> C
+
 end
 
 
-subgraph G2["Satellite Image Acquisition"]
-D["ESRI World Imagery"]
-E["Tile download + mosaics"]
-F["Visual image curation"]
-
-D --> E --> F
-end
-
-
+%% ===== G3 =====
 subgraph G3["Dataset Engineering"]
-G["Annotation<br/>Bounding boxes"]
-H["Preprocessing + Augmentation"]
-I["YOLO Dataset<br/>train / valid / test"]
 
 K["Roboflow upload"]
 L["Bounding boxes<br/>single class: helipad"]
@@ -483,7 +469,7 @@ Q["Weights + metrics<br/>runs/detect/.../best.pt"]
 R["Evaluation<br/>mAP • Precision • Recall<br/>confusion matrix"]
 S["Error analysis<br/>hits • FP • FN"]
 T["Inference<br/>New Images/"]
-U["Generalization<br/>Assessment"]
+U["Generalizationo<br>Assessment"]
 V["Web demo<br/>Site.py"]
 
 P --> Q
@@ -492,32 +478,25 @@ Q --> S
 Q --> T
 T --> U
 Q --> V
-G --> H --> I
 
 end
 
 
-subgraph G4["YOLO Training & Validation"]
-J["YOLOv8 / YOLOv11 Training"]
-K["Metrics + Error Analysis"]
-L["Unseen Region Inference"]
-M["Optional Web Demo"]
+%% ===== CONNECTIONS =====
 
-
-J --> K
-J --> L
-J --> M
-end
-
-
-C --> D
 F --> G
-I --> J
+J --> K
+O --> P
 
 
-class A,B,C,D,E,F,G,H,I,J,K,L,M navy;
+%% ===== COLORS =====
+
+class A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V navy;
+
 class G1,G2,G3,G4 group;
 
+
+%% ===== LINKS =====
 
 linkStyle default stroke:#14b8a6,stroke-width:2.5px,opacity:0.95;
 ```
