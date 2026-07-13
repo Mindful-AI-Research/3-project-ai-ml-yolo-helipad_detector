@@ -397,25 +397,26 @@ The solution can be viewed as an architecture with **seven main blocks**:
 
 <br>
 
-
 ```mermaid
 %%{
   init: {
     "theme": "dark",
     "themeVariables": {
       "background": "#020617",
-      "primaryTextColor": "#ffffff",
+      "primaryTextColor": "#14B8A6",
       "lineColor": "#14b8a6",
       "defaultLinkColor": "#14b8a6",
-      "fontFamily": "Inter, Segoe UI, Arial, sans-serif"
+      "fontFamily": "Inter, Segoe UI, Arial, sans-serif",
+      "fontSize": "11px"
     }
   }
 }%%
 
 flowchart TD
 
-classDef navy fill:#020817,stroke:#0a1a2f,color:#ffffff,stroke-width:2px;
-classDef group fill:#000000,stroke:#0a1a2f,color:#ffffff,stroke-width:2px;
+%% ===== CLASSES =====
+classDef navy fill:#020817,stroke:#0a1a2f,color:#D1D5DB,stroke-width:1.5px;
+classDef group fill:#000000,stroke:#0a1a2f,color:#F8FAFC,stroke-width:1px;
 
 
 subgraph G1["Geospatial Discovery"]
@@ -423,6 +424,28 @@ A["Helipad data acquisition"]
 B["Coordinates + metadata"]
 C["Geographic bounding boxes"]
 
+A["FlightMarket aviation website"]
+B["Selenium automation<br/>helipad_bot.py"]
+C["Helipad records + metadata"]
+D["Coordinates CSV<br/>helipad_coordinates.csv"]
+E["Coordinate conversion<br/>transform_coordinates.py"]
+F["Geographic bounding boxes"]
+
+A --> B --> C --> D --> E --> F
+
+end
+
+
+%% ===== G2 =====
+subgraph G2["Visual Acquisition"]
+
+G["ESRI World Imagery<br/>XYZ tiles"]
+H["Image mosaics<br/>geospatial_image_collection.ipynb"]
+I["Manual visual triage"]
+J["Selected helipad images"]
+
+G --> H --> I --> J
+=======
 A --> B --> C
 end
 
@@ -441,7 +464,36 @@ G["Annotation<br/>Bounding boxes"]
 H["Preprocessing + Augmentation"]
 I["YOLO Dataset<br/>train / valid / test"]
 
+K["Roboflow upload"]
+L["Bounding boxes<br/>single class: helipad"]
+M["Preprocessing + augmentation<br/>resize 640x640"]
+N["Dataset split<br/>train / valid / test"]
+O["YOLO export<br/>data.yaml + labels"]
+
+K --> L --> M --> N --> O
+
+end
+
+
+%% ===== G4 =====
+subgraph G4["Modeling & Validation"]
+
+P["Colab training<br/>Ultralytics YOLOv8 / YOLOv11"]
+Q["Weights + metrics<br/>runs/detect/.../best.pt"]
+R["Evaluation<br/>mAP • Precision • Recall<br/>confusion matrix"]
+S["Error analysis<br/>hits • FP • FN"]
+T["Inference<br/>New Images/"]
+U["Generalization<br/>Assessment"]
+V["Web demo<br/>Site.py"]
+
+P --> Q
+Q --> R
+Q --> S
+Q --> T
+T --> U
+Q --> V
 G --> H --> I
+
 end
 
 
@@ -450,6 +502,7 @@ J["YOLOv8 / YOLOv11 Training"]
 K["Metrics + Error Analysis"]
 L["Unseen Region Inference"]
 M["Optional Web Demo"]
+
 
 J --> K
 J --> L
