@@ -1,0 +1,11 @@
+Nome do Bairro,Coordenadas da Bounding Box,Fonte
+Itaim_Bibi,-46.685 -23.590 -46.665 -23.575,src/data_preparation/image_preprocessing.ipynb
+Av_Paulista (trecho 1),-46.660 -23.572 -46.640 -23.555,src/data_preparation/image_preprocessing.ipynb
+Av_Paulista (trecho 2),-46.655264 -23.576348 -46.638076 -23.558125,src/data_preparation/image_preprocessing.ipynb
+Vila_Olimpia,-46.690 -23.598 -46.670 -23.585,src/data_preparation/image_preprocessing.ipynb
+Pinheiros,-46.704205 -23.574847 -46.674487 -23.558183,src/data_preparation/image_preprocessing.ipynb
+Brooklin,-46.699949 -23.620544 -46.682294 -23.596478,src/data_preparation/image_preprocessing.ipynb
+Alphaville_Industrial,-46.860248 -23.505565 -46.840035 -23.490924,src/data_preparation/image_preprocessing.ipynb
+Vila_nova_Conceicao,-46.681131339 -23.5980107441 -46.6639652013 -23.585366627,src/data_preparation/image_preprocessing.ipynb
+Inter_Zonas,-46.692633 -23.596674 -46.680058 -23.581694,src/data_preparation/image_preprocessing.ipynb
+Faria_Lima,-46.703692 -23.575624 -46.683692 -23.558624,manually added -- real coordinates (Jardim Paulistano) not present in original bbox list
