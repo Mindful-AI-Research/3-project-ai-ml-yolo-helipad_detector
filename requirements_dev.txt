@@ -1,0 +1,27 @@
+# requirements_dev.txt
+# Python dependencies used ONLY for local development, automation, and
+# auxiliary tools (not required by the deployed Streamlit helipad app).
+# This file is NOT read automatically by Streamlit Community Cloud.
+#
+# Usage:
+# - Install locally via: `pip install -r requirements_dev.txt`
+# - Keep dev/testing/automation tools here to avoid bloating or complicating
+#   the production `requirements.txt` used by the Streamlit app.
+#
+# Typical contents:
+# - Web frameworks and mapping libraries for extra dashboards/APIs.
+# - Selenium and WebDriver-related packages for scraping/automation scripts.
+
+########################
+# Web, APIs and extra apps (dev only)
+########################
+flask>=2.0.0              # Optional REST/API server or extra web endpoints
+folium>=0.15.0            # Leaflet-based maps (for separate mapping dashboards)
+streamlit-folium>=0.20.0  # Integration of Folium maps inside Streamlit (dev use)
+
+########################
+# Selenium / automation (dev only)
+########################
+selenium>=4.0.0           # Browser automation and web scraping
+webdriver-manager>=3.8.0  # Automatic download/management of WebDriver binaries
+                          # (ChromeDriver, GeckoDriver, etc.) for Selenium.
