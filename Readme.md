@@ -426,7 +426,7 @@ The solution can be viewed as an architecture with [**seven main blocks**]():
 
 <br><br>
 
-## [MLOps Pipeline Architecture]()
+## [AI/ML Ops Pipeline]()
 
 ```mermaid
 %%{
@@ -527,31 +527,85 @@ flowchart TD
 
 The repository structure was organized to reflect pipeline stages, including geographic automation, image generation, training, inference, evaluation and documentation.
 
-<br>
-
-
 ```bash
-Helipoint-Detector/
-│
-├── .devcontainer/                  # Dev environment configuration
-├── AI Training/                    # Trained weights, checkpoints and training artifacts
-├── Briefing/                       # Reference materials for Project 2
-├── New Images/                     # Unseen images used for inference and generalization tests
-├── Preprocessing Data/             # Inputs and intermediate preprocessing outputs
-├── runs/detect/                    # YOLO outputs (logs, curves, confusion matrices, weights)
-│
-├── Analise.ipynb                   # Main notebook for analysis, evaluation and inference
-├── Treinamento_YOLO.ipynb          # Notebook focused on YOLO model training
-├── Imagens.ipynb                   # Notebook for ESRI tile download and mosaic creation
-│
-├── BOTHELIPONTO.py                 # Selenium bot for helipad search automation
-├── Transformarcordenadas.py        # Coordinate conversion and geographic bounding box generation
-├── cordenadasheli.csv              # Consolidated helipad coordinates and metadata
-├── Site.py                         # Application script (optional web/interface layer)
-│
-├── requirements.txt                # Python dependencies
-├── packages.txt                    # Additional environment/system dependencies
-└── README.md                       # Main documentation
+Helipoint Detector
+├── .devcontainer
+│   └── devcontainer.json
+├── analysis_yolo_results
+│   ├── Analysis.ipynb
+│   └── Analysis_yolo_results.md
+├── apps
+│   └── streamlit_app
+│       └── app.py
+├── artifacts
+│   └── runs
+│       ├── runs
+│       └── runs_zipped.zip
+├── briefing
+│   ├── 3315-264
+│   │   ├── T_ORTO_3315-264_IRGB_1000.j2w
+│   │   └── T_ORTO_3315-264_IRGB_1000.jp2
+│   ├── briefing_assets 
+│   │   ├── 3315-264
+│   │   ├── 🇧🇷1-Briefing.pdf
+│   │   └── 🇬🇧1-Briefing_en.pdf
+│   └── notebooks
+│       ├── Projeto_P2_Mosaico_Perdizes.ipynb
+│       └── Projeto_P2_Mosaico_Perdizes_HIRES.ipynb
+├── configs
+│   └── data.yaml
+├── data
+│   ├── README.dataset.txt
+│   ├── README.roboflow.txt
+│   ├── raw
+│   │   └── helipad_dataset.rar
+│   ├── tiles
+│   │   ├── center_hires_annotated_mosaic.png
+│   │   ├── center_hires_full_mosaic.jpg
+│   │   ├── center_hires_mosaic_preview.jpg
+│   │   ├── center_hires_tiles_sample.png
+│   │   ├── center_mosaic_tiles
+│   │   ├── tile_z19_x194543_y298181.jpg
+│   │   ├── tile_z19_x194545_y298183.jpg
+│   │   ├── tile_z19_x194545_y298184.jpg
+│   │   ├── tile_z19_x194546_y298177.jpg
+│   │   ├── tile_z19_x194546_y298178.jpg
+│   │   ├── tile_z19_x194546_y298179.jpg
+│   │   ├── tile_z19_x194546_y298180.jpg
+│   │   ├── tile_z19_x194547_y298176.jpg
+│   │   ├── tile_z19_x194548_y298180.jpg
+│   │   ├── tile_z19_x194548_y298181.jpg
+│   │   ├── tile_z19_x194548_y298183.jpg
+│   │   └── tile_z19_x194549_y298187.jpg
+│   └── training
+│       └── yolo_dataset
+├── docs
+│   ├── MLOps-Architecture.md
+│   └── governance
+│       └── On the Economic and Governance Mechanisms forthe Agentic Web -  A Global South Perspective.pdf
+├── notebooks
+│   └── model_analysis.ipynb
+├── packages.txt
+├── reports
+│   ├── executive_analysis
+│   │   ├── 🇧🇷Helipoint_Detector_Model_Performance_and_Data_Analysis.pages
+│   │   ├── 🇧🇷Helipoint_Detector_Model_Performance_and_Data_Analysis.pdf
+│   │   ├── 🇬🇧Helipoint_Detector_Model_Performance_and_Data_Analysis.pages
+│   │   └── 🇬🇧Helipoint_Detector_Model_Performance_and_Data_Analysis.pdf
+│   ├── model_outputs
+│   │   └── detect
+│   └── yolo_results_analysis.md
+├── requirements.txt
+├── src
+│   ├── data_preparation
+│   │   └── image_preprocessing.ipynb
+│   ├── geospatial
+│   │   ├── geospatial_image_collection.ipynb
+│   │   ├── helipad_bot.py
+│   │   ├── helipad_coordinates.csv
+│   │   └── transform_coordinates.py
+│   └── training
+│       └── yolo_training.ipynb
 ```
 
 <br>
