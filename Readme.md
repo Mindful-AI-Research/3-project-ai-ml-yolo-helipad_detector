@@ -644,7 +644,7 @@ The project follows an end-to-end methodology aligned with educational best prac
 3. [**Annotation**:]() helipads are labeled with tight bounding boxes in Roboflow.  
 4. [**Preprocessing**:]() the dataset is standardized and split into training, validation, and test subsets.  
 5. [**Training**:]() a YOLO model is trained in a GPU-enabled environment.  
-6. [**Evaluation**: performance is examined with metrics and qualitative error analysis.  
+6. [**Evaluation**:]() performance is examined with metrics and qualitative error analysis.  
 7. [**Inference**:]() the trained model is applied to unseen images and new geographic areas.  
 8. [**Application layer**:]() a lightweight interface makes the model easier to demonstrate and inspect.
 
@@ -666,7 +666,7 @@ The Helipoint Detector technical pipeline can be summarized in 12 steps:
 
 [1.]() Discover helipad records on an aviation website <br>
 [2.]() Extract coordinates and location information <br>
-[3.]() Save and organize the data in `cordenadasheli.csv` <br>
+3. Save and organize the data in `src/geospatial/helipad_coordinates.csv` <br>
 [4.]() Convert coordinates into geographic bounding boxes <br>
 [5.]() Download ESRI World Imagery satellite tiles <br>
 [6.]() Build mosaics per neighborhood or region <br>
