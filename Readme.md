@@ -619,7 +619,7 @@ Helipoint Detector
 
 ## [What is `Heliponto.rar`?]()
 
-`Heliponto.rar` is the compressed annotated dataset used in the project workflow.
+`data/raw/helipad_dataset.rar` is the compressed annotated dataset used in the project workflow.
 
 It is not a prebuilt third-party benchmark. Instead, it represents the packaged output of the group’s own dataset-building process: programmatic tile acquisition, manual curation, annotation, export in YOLO-compatible format, and organization for training reuse.
 
@@ -629,7 +629,7 @@ This distinction is academically important because it makes clear that the datas
 
 ## [What is Roboflow in This Project?]()
 
-In this project, **Roboflow** was used as the annotation and dataset management platform rather than as the origin of the imagery.
+In this project, [**Roboflow**]() was used as the annotation and dataset management platform rather than as the origin of the imagery.
 
 Its role was to support image upload, bounding-box labeling, dataset versioning, augmentation, train/validation/test splitting, and export in YOLOv8-compatible format. In practical terms, Roboflow bridges the gap between raw tiles and a training-ready object detection dataset.
 
