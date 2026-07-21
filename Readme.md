@@ -55,6 +55,20 @@
  </p>
 
 
+<br>
+
+###### <p align="center"> **HELIPAD DETECTION** · `YOLO11` · `MODEL TRAINING` · 🎥 **TRAINING DEMO**
+
+###### <p align="center"> *Where pixels become perception and data becomes intelligence* · 🎶 *Feel Good — Nina Simone (Remix)* · 🖤 *Creation by Fabi* ⚡️
+
+
+
+<br>
+
+#
+
+<br>
+
 <br><br><br>
 <!-- ========= END GIFR IMAGE ========= -->
 
