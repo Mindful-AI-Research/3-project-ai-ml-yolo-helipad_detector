@@ -50,12 +50,13 @@
 <!-- ========= END SPONSOR BADGE ========= -->
 
 <!-- ========= START GIFE ========= -->
+<!-- 
 <p align="center">
    <img src="https://github.com/user-attachments/assets/791a69e2-d09a-429f-9257-f6667fff5c04 ">
  </p>
+ -->
 
-
-<br>
+https://github.com/user-attachments/assets/5b7d581c-ab5e-416e-8471-d91136b2ada0
 
 ###### <p align="center"> **HELIPAD DETECTION** ✧ `YOLO11` ✧ `MODEL TRAINING` ✧ 🎥 **DEMO**
 ###### <p align="center"> *From pixels to perception ✦ Teaching AI to see what others overlook*
