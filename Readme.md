@@ -57,9 +57,9 @@
 
 <br>
 
-###### <p align="center"> **HELIPAD DETECTION** · `YOLO11` · `MODEL TRAINING` · 🎥 **TRAINING DEMO**
-
-###### <p align="center"> *Where pixels become perception and data becomes intelligence* · 🎶 *Feel Good — Nina Simone (Remix)* · 🖤 *Creation by Fabi* ⚡️
+###### <p align="center"> **HELIPAD DETECTION** ✧ `YOLO11` ✧ `MODEL TRAINING` ✧ 🎥 **TRAINING DEMO**
+###### <p align="center"> *From pixels to perception ✦ Teaching AI to see what others overlook*
+###### <p align="center"> 🎶 *Feel Good* by Nina Simone (Remix) ✧ *Creation by Fabi* ⚡️
 
 
 
