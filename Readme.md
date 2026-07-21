@@ -98,7 +98,7 @@ https://github.com/user-attachments/assets/5b7d581c-ab5e-416e-8471-d91136b2ada0
 
 <!-- ========= START Streamlit BADGE ========= -->
 <p align="center" style="margin: 0;">
-  <a href="https://helipoint-detector.streamlit.app" rel="noopener noreferrer">
+  <a href="https://helipad-detector.streamlit.app/" rel="noopener noreferrer">
     <img 
       src="https://img.shields.io/badge/Streamlit%20Repository-Helipoint%20Detector-0f172a?style=for-the-badge&logo=github&logoColor=white" 
       alt="Streamlit Repository Helipoint Detector"
