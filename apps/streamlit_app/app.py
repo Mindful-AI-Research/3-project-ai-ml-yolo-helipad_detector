@@ -33,6 +33,32 @@ st.markdown("""
     .subtitle {text-align: center; color: #64748B; font-size: 18px; margin-bottom: 30px;}
     .result-card {background-color: #f8fafc; padding: 15px; border-radius: 12px; border: 1px solid #e2e8f0;}
     .metric-card {background-color: #f8fafc; padding: 18px; border-radius: 14px; border: 1px solid #e2e8f0; text-align: center;}
+    .flow-step {
+        background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+        border: 1px solid #e2e8f0;
+        border-radius: 10px;
+        padding: 14px 12px 12px 12px;
+        text-align: left;
+        position: relative;
+        height: 100%;
+    }
+    .flow-step .flow-num {
+        position: absolute; top: 10px; right: 12px;
+        font-size: 10px; font-weight: 700; color: #94a3b8;
+        letter-spacing: 0.5px;
+    }
+    .flow-step .flow-icon {
+        font-size: 15px; opacity: 0.85; margin-bottom: 6px; display: block;
+    }
+    .flow-step .flow-title {
+        font-weight: 600; font-size: 12.5px; color: #1E293B; margin: 0 0 4px 0; line-height: 1.3;
+    }
+    .flow-step .flow-desc {
+        font-size: 10.5px; color: #64748B; margin: 0; line-height: 1.4;
+    }
+    .flow-arrow {
+        text-align: center; color: #cbd5e1; font-size: 16px; padding-top: 40px;
+    }
     .sample-btn > button {
         background: linear-gradient(135deg, #1E3A8A 0%, #3B82F6 100%);
         color: white;
@@ -266,9 +292,9 @@ model = get_selected_model()
 # panel at the bottom) — only the visual display moved, not the data load.
 metrics_df = load_experiment_metrics()
 
-tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs([
+tab1, tab2, tab3, tab4, tab5, tab6, tab7 = st.tabs([
     "📤 Upload Image", "🔎 Search by Region (Satellite)", "🖼️ Sample Images",
-    "🗺️ Map", "📖 Pipeline & Governance", "⬇️ Downloads",
+    "🗺️ Map", "📖 Pipeline", "🛡️ Governance", "⬇️ Downloads",
 ])
 
 # ====================== TAB 1: Upload ======================
@@ -476,7 +502,7 @@ with tab4:
         center_lat = pd.concat(lat_parts).mean() if lat_parts else -23.5505  # fallback: São Paulo center
         center_lon = pd.concat(lon_parts).mean() if lon_parts else -46.6333
 
-        fmap = folium.Map(location=[center_lat, center_lon], zoom_start=5, tiles="CartoDB positron")
+        fmap = folium.Map(location=[center_lat, center_lon], zoom_start=5, tiles="CartoDB dark_matter")
 
         sp_layer = folium.FeatureGroup(name=f"🟢 São Paulo ({len(sp_df)})", show=True)
         for _, row in sp_df.iterrows():
@@ -556,23 +582,26 @@ with tab5:
         ("🛰️", "Tile download", "ESRI World Imagery tiles are downloaded for each bounding box."),
         ("🖼️", "Manual triage", "A human reviews mosaics and keeps only tiles with a visible helipad."),
         ("🏷️", "Annotation (Roboflow)", "Bounding boxes are drawn, single class: helipad."),
-        ("🧠", "Training (Colab, GPU)", "YOLOv8n is trained on the annotated dataset."),
+        ("🧠", "Training (Colab, GPU)", "YOLOv8n/YOLO11n is trained on the annotated dataset."),
         ("📊", "Evaluation", "Precision, recall, mAP, and confusion matrix are computed."),
         ("🚁", "This app", "The trained model runs inference on new images or regions."),
     ]
 
-    cols = st.columns(len(pipeline_steps))
-    for col, (icon, title, desc) in zip(cols, pipeline_steps):
+    n = len(pipeline_steps)
+    cols = st.columns([1] * n)
+    for i, (col, (icon, title, desc)) in enumerate(zip(cols, pipeline_steps)):
         with col:
             st.markdown(f"""
-            <div class="metric-card" style="min-height:180px;">
-                <div style="font-size:28px;">{icon}</div>
-                <p style="font-weight:700; margin:8px 0 4px 0; font-size:13px;">{title}</p>
-                <p style="font-size:11px; color:#64748B; margin:0;">{desc}</p>
+            <div class="flow-step">
+                <span class="flow-num">{i+1:02d}</span>
+                <span class="flow-icon">{icon}</span>
+                <p class="flow-title">{title}</p>
+                <p class="flow-desc">{desc}</p>
             </div>
             """, unsafe_allow_html=True)
 
-    st.markdown("---")
+# ====================== TAB 6: Governance ======================
+with tab6:
     st.subheader("🛡️ Responsible AI")
     st.markdown("""
 - **Fairness & scope**: the model detects a single object class (helipad) on public-area satellite
@@ -597,8 +626,8 @@ with tab5:
   supported by this project.
 """)
 
-# ====================== TAB 6: Downloads ======================
-with tab6:
+# ====================== TAB 7: Downloads ======================
+with tab7:
     st.subheader("⬇️ Download Center")
     st.caption("Everything below is a real file already in this repository — nothing is generated on the fly with placeholder data.")
 
@@ -733,12 +762,12 @@ with st.expander("📊 Experiment Metrics", expanded=True):
                 if cm_path.exists():
                     st.image(str(cm_path), caption=f"{cm_exp} — confusion matrix", use_container_width=True)
                 else:
-                    st.info("confusion_matrix.png not found for this experiment.")
+                    st.info(f"confusion_matrix.png not found at: `{cm_path.resolve()}`")
             with cm_col2:
                 if cm_norm_path.exists():
                     st.image(str(cm_norm_path), caption=f"{cm_exp} — normalized", use_container_width=True)
                 else:
-                    st.info("confusion_matrix_normalized.png not found for this experiment.")
+                    st.info(f"confusion_matrix_normalized.png not found at: `{cm_norm_path.resolve()}`")
 
 # Footer
 st.markdown("---")
