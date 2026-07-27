@@ -14,7 +14,7 @@ from ultralytics import YOLO
 import shutil
 
 # ── CONFIG ──────────────────────────────────────────────────────────
-TILES_DIR = Path("src/geospatial")          # where the downloaded tiles live
+TILES_DIR = Path("src/geospatial/mosaico_Faria_Lima")  # where the downloaded tiles live
 MODEL_PATH = Path("artifacts/runs/runs/detect/exp2/weights/best.pt")  # best model
 OUTPUT_DIR = Path("data/samples")            # where the dashboard reads samples from
 CONF_THRESHOLD = 0.25
