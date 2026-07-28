@@ -1,0 +1,33 @@
+📍 10 region(s) found in src/geospatial/sp_neighborhoods_bbox.csv
+
+── Itaim_Bibi (Itaim_Bibi) — 750 tile(s) total, 750 already on disk
+   ✅ 750 OK  |  ❌ 0 failed
+
+── Av_Paulista (trecho 1) (Av_Paulista_trecho_1) — 840 tile(s) total, 745 already on disk
+   ✅ 840 OK  |  ❌ 0 failed
+
+── Av_Paulista (trecho 2) (Av_Paulista_trecho_2) — 780 tile(s) total, 0 already on disk
+   ✅ 780 OK  |  ❌ 0 failed
+
+── Vila_Olimpia (Vila_Olimpia) — 660 tile(s) total, 0 already on disk
+   ✅ 660 OK  |  ❌ 0 failed
+
+── Pinheiros (Pinheiros) — 1232 tile(s) total, 0 already on disk
+   ✅ 1232 OK  |  ❌ 0 failed
+
+── Brooklin (Brooklin) — 1014 tile(s) total, 0 already on disk
+   ✅ 1014 OK  |  ❌ 0 failed
+
+── Alphaville_Industrial (Alphaville_Industrial) — 775 tile(s) total, 0 already on disk
+   ✅ 775 OK  |  ❌ 0 failed
+
+── Vila_nova_Conceicao (Vila_nova_Conceicao) — 572 tile(s) total, 0 already on disk
+   ✅ 572 OK  |  ❌ 0 failed
+
+── Inter_Zonas (Inter_Zonas) — 480 tile(s) total, 0 already on disk
+   ✅ 480 OK  |  ❌ 0 failed
+
+── Faria_Lima (Faria_Lima) — 840 tile(s) total, 834 already on disk
+   ✅ 840 OK  |  ❌ 0 failed
+
+✅ All regions processed. Next step: run auto_triage_regions.py
