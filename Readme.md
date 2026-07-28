@@ -219,7 +219,7 @@ https://github.com/user-attachments/assets/5b7d581c-ab5e-416e-8471-d91136b2ada0
 <br><br>
 
 
-## [Table of Contents]()
+##  Table of Contents
 
 - [Project Definition](#project-definition)
 - [Objective](#objective)
@@ -228,10 +228,11 @@ https://github.com/user-attachments/assets/5b7d581c-ab5e-416e-8471-d91136b2ada0
 - [Project Context](#project-context)
 - [Business and Research Problem](#business-and-research-problem)
 - [Extra Automation Contribution](#extra-automation-contribution)
+- [Geospatial Visualization (Kepler.gl)](#geospatial-visualization-keplergl)
 - [Overall Flow Architecture](#overall-flow-architecture)
 - [AI/ML Ops Pipeline](#aiml-ops-pipeline)
 - [Repository Structure](#repository-structure)
-- [What is `Heliponto.rar`?](#what-is-helipontorar)
+- [What is `data/raw/helipad_dataset.rar`?](#what-is-helipontorar)
 - [What is Roboflow in This Project?](#what-is-roboflow-in-this-project)
 - [Methodology](#methodology)
 - [Full Technical Pipeline](#full-technical-pipeline)
@@ -248,6 +249,7 @@ https://github.com/user-attachments/assets/5b7d581c-ab5e-416e-8471-d91136b2ada0
 - [How to Run](#how-to-run)
 - [Deliverables Covered](#deliverables-covered)
 - [Results Analysis](#results-analysis)
+- [Field Validation — Real-World Detection Across 10 São Paulo Neighborhoods](#field-validation--real-world-detection-across-10-são-paulo-neighborhoods)
 - [Strengths, Limitations and Future Improvements](#strengths-limitations-and-future-improvements)
 - [Ethics, LGPD and Governance](#ethics-lgpd-and-governance)
 - [Image Attribution](#image-attribution)
