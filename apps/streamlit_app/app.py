@@ -36,42 +36,30 @@ st.markdown("""
     .result-card {background-color: #f8fafc; padding: 15px; border-radius: 12px; border: 1px solid #e2e8f0;}
     .metric-card {background-color: #f8fafc; padding: 18px; border-radius: 14px; border: 1px solid #e2e8f0; text-align: center;}
     .flow-step {
-        border-radius: 12px;
-        padding: 16px 14px 14px 14px;
+        background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+        border: 1px solid #e2e8f0;
+        border-radius: 10px;
+        padding: 14px 12px 12px 12px;
         text-align: left;
         position: relative;
         height: 100%;
-        border: 1px solid rgba(255,255,255,0.35);
-        box-shadow: 0 2px 8px rgba(15, 23, 42, 0.10);
-        transition: transform 0.15s ease, box-shadow 0.15s ease;
-    }
-    .flow-step:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 10px 22px rgba(15, 23, 42, 0.20);
     }
     .flow-step .flow-num {
         position: absolute; top: 10px; right: 12px;
-        font-size: 10px; font-weight: 700;
+        font-size: 10px; font-weight: 700; color: #94a3b8;
         letter-spacing: 0.5px;
     }
     .flow-step .flow-icon {
-        font-size: 15px; opacity: 0.9; margin-bottom: 6px; display: block;
+        font-size: 15px; opacity: 0.85; margin-bottom: 6px; display: block;
     }
     .flow-step .flow-title {
-        font-weight: 600; font-size: 12.5px; margin: 0 0 4px 0; line-height: 1.3;
+        font-weight: 600; font-size: 12.5px; color: #1E293B; margin: 0 0 4px 0; line-height: 1.3;
     }
     .flow-step .flow-desc {
-        font-size: 10.5px; margin: 0; line-height: 1.4;
+        font-size: 10.5px; color: #64748B; margin: 0; line-height: 1.4;
     }
     .flow-arrow {
         text-align: center; color: #cbd5e1; font-size: 16px; padding-top: 40px;
-    }
-    .repo-card {
-        background-color: #F0F2F6;
-        padding: 18px;
-        border-radius: 14px;
-        border: 1px solid #E2E8F0;
-        text-align: center;
     }
     .sample-btn > button {
         background: linear-gradient(135deg, #1E3A8A 0%, #3B82F6 100%);
@@ -89,23 +77,6 @@ st.markdown("""
     }
     </style>
 """, unsafe_allow_html=True)
-
-# ========================= COLOR HELPERS =========================
-def _hex_to_rgb(h):
-    h = h.lstrip("#")
-    return tuple(int(h[i:i + 2], 16) for i in (0, 2, 4))
-
-
-def _rgb_to_hex(rgb):
-    return "#{:02x}{:02x}{:02x}".format(*rgb)
-
-
-def blue_scale(t: float) -> str:
-    """Interpolates between light blue and deep navy, same family used across
-    the dashboard's blue-scale visuals (map detection-rate layer, metrics)."""
-    light, dark = _hex_to_rgb("#DBEAFE"), _hex_to_rgb("#1E3A8A")
-    return _rgb_to_hex(tuple(int(a + (b - a) * t) for a, b in zip(light, dark)))
-
 
 # ========================= AUTOMATIC MODEL DISCOVERY =========================
 # Instead of hardcoding "exp1"/"exp2" in the code, the app scans the runs folder
@@ -727,19 +698,13 @@ with tab5:
     n = len(pipeline_steps)
     cols = st.columns([1] * n)
     for i, (col, (icon, title, desc)) in enumerate(zip(cols, pipeline_steps)):
-        t = i / (n - 1) if n > 1 else 0.0
-        bg = blue_scale(t)
-        is_dark = t >= 0.55
-        title_color = "#FFFFFF" if is_dark else "#0F172A"
-        desc_color = "#DBEAFE" if is_dark else "#334155"
-        num_color = "#93C5FD" if is_dark else "#64748B"
         with col:
             st.markdown(f"""
-            <div class="flow-step" style="background:{bg};">
-                <span class="flow-num" style="color:{num_color};">{i+1:02d}</span>
+            <div class="flow-step">
+                <span class="flow-num">{i+1:02d}</span>
                 <span class="flow-icon">{icon}</span>
-                <p class="flow-title" style="color:{title_color};">{title}</p>
-                <p class="flow-desc" style="color:{desc_color};">{desc}</p>
+                <p class="flow-title">{title}</p>
+                <p class="flow-desc">{desc}</p>
             </div>
             """, unsafe_allow_html=True)
 
@@ -826,8 +791,8 @@ with tab7:
 
     st.markdown("---")
     st.markdown("""
-    <div class="repo-card">
-        <h4 style="margin:0 0 8px 0;">🚁 Explore the full source code</h4>
+    <div class="metric-card">
+        <h4 style="margin:0 0 8px 0;">🐙 Explore the full source code</h4>
         <p style="color:#64748B; font-size:14px;">
             Architecture, datasets, notebooks, and the complete AI pipeline are all on GitHub.
         </p>
