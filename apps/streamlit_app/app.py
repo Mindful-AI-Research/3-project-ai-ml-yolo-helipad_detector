@@ -34,7 +34,19 @@ st.markdown("""
     .main-title {font-size: 42px !important; font-weight: bold; color: #1E3A8A; text-align: center;}
     .subtitle {text-align: center; color: #64748B; font-size: 18px; margin-bottom: 30px;}
     .result-card {background-color: #f8fafc; padding: 15px; border-radius: 12px; border: 1px solid #e2e8f0;}
-    .metric-card {background-color: #f8fafc; padding: 18px; border-radius: 14px; border: 1px solid #e2e8f0; text-align: center;}
+    .metric-card {
+        background-color: #f8fafc;
+        padding: 18px;
+        border-radius: 14px;
+        border: 1px solid #e2e8f0;
+        text-align: center;
+        box-shadow: 0 3px 10px rgba(15, 23, 42, 0.08);
+        transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+    .metric-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 12px 24px rgba(15, 23, 42, 0.16);
+    }
     .flow-step {
         border-radius: 14px;
         padding: 20px 20px 18px 20px;
@@ -171,7 +183,7 @@ def discover_models() -> dict[str, Path]:
     return found
 
 
-@st.cache_resource(show_spinner="Loading model...")
+@st.cache_resource(show_spinner="🚁 Loading YOLO weights and warming up the detector...")
 def load_model(model_path: str) -> YOLO:
     return YOLO(model_path)
 
@@ -797,6 +809,31 @@ with tab6:
   supported by this project.
 """)
 
+    st.divider()
+    st.subheader("👥 About & Team")
+    st.markdown("""
+    <div class="repo-card" style="text-align:left;">
+        <p style="margin:0 0 10px 0; font-size:14px; color:#334155;">
+            <b>Helipad Detector</b> is an academic Computer Vision project (Project P2) developed for the
+            Machine Learning / Computer Vision course.
+        </p>
+        <table style="width:100%; font-size:13.5px; color:#334155; border-collapse:collapse;">
+            <tr><td style="padding:4px 0; color:#64748B; width:150px;">Institution</td>
+                <td style="padding:4px 0;"><b>PUC-SP — FACEI</b></td></tr>
+            <tr><td style="padding:4px 0; color:#64748B;">Program</td>
+                <td style="padding:4px 0;">BSc in Human Centered-AI & Data Science</td></tr>
+            <tr><td style="padding:4px 0; color:#64748B;">Professor</td>
+                <td style="padding:4px 0;">Rooney Ribeiro Albuquerque Coelho</td></tr>
+            <tr><td style="padding:4px 0; color:#64748B; vertical-align:top;">Authors</td>
+                <td style="padding:4px 0;">
+                    Carlos Antonio dos Santos Roth Gorham<br>
+                    Fabiana Campanari<br>
+                    Pedro Vyctor Almeida
+                </td></tr>
+        </table>
+    </div>
+    """, unsafe_allow_html=True)
+
 # ====================== TAB 7: Downloads ======================
 with tab7:
     st.subheader("⬇️ Download Center")
@@ -962,6 +999,11 @@ with tab_metrics:
 with tab_field:
     st.subheader("🌍 Field Detections by Region (real-world tiles)")
     field_summary = load_field_detection_summary()
+
+    if FIELD_SUMMARY_PATH.exists():
+        last_updated = datetime.fromtimestamp(FIELD_SUMMARY_PATH.stat().st_mtime)
+        st.caption(f"🕒 Last updated: {last_updated.strftime('%b %d, %Y at %H:%M')} "
+                   f"(based on `{FIELD_SUMMARY_PATH.name}`)")
 
     if field_summary is None:
         st.info(
