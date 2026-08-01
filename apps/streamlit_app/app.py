@@ -34,78 +34,44 @@ st.markdown("""
     .main-title {font-size: 42px !important; font-weight: bold; color: #1E3A8A; text-align: center;}
     .subtitle {text-align: center; color: #64748B; font-size: 18px; margin-bottom: 30px;}
     .result-card {background-color: #f8fafc; padding: 15px; border-radius: 12px; border: 1px solid #e2e8f0;}
-    .metric-card {
-        background-color: #f8fafc;
-        padding: 18px;
-        border-radius: 14px;
-        border: 1px solid #e2e8f0;
-        text-align: center;
-        box-shadow: 0 3px 10px rgba(15, 23, 42, 0.08);
-        transition: transform 0.15s ease, box-shadow 0.15s ease;
-    }
-    .metric-card:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 12px 24px rgba(15, 23, 42, 0.16);
-    }
+    .metric-card {background-color: #f8fafc; padding: 18px; border-radius: 14px; border: 1px solid #e2e8f0; text-align: center;}
     .flow-step {
-        border-radius: 14px;
-        padding: 20px 20px 18px 20px;
+        border-radius: 12px;
+        padding: 16px 14px 14px 14px;
         text-align: left;
         position: relative;
-        min-height: 176px;
-        display: flex;
-        flex-direction: column;
-        border: 1px solid rgba(255,255,255,0.25);
-        box-shadow: 0 3px 10px rgba(15, 23, 42, 0.12);
+        height: 100%;
+        border: 1px solid rgba(255,255,255,0.35);
+        box-shadow: 0 2px 8px rgba(15, 23, 42, 0.10);
         transition: transform 0.15s ease, box-shadow 0.15s ease;
-        margin-bottom: 18px;
     }
     .flow-step:hover {
         transform: translateY(-3px);
-        box-shadow: 0 12px 26px rgba(15, 23, 42, 0.22);
+        box-shadow: 0 10px 22px rgba(15, 23, 42, 0.20);
     }
-    .flow-step .flow-badge {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        width: 30px;
-        height: 30px;
-        border-radius: 8px;
-        font-size: 13px;
-        font-weight: 700;
-        margin-bottom: 12px;
+    .flow-step .flow-num {
+        position: absolute; top: 10px; right: 12px;
+        font-size: 10px; font-weight: 700;
+        letter-spacing: 0.5px;
     }
     .flow-step .flow-icon {
-        font-size: 26px;
-        margin-bottom: 8px;
-        display: block;
+        font-size: 15px; opacity: 0.9; margin-bottom: 6px; display: block;
     }
     .flow-step .flow-title {
-        font-weight: 700; font-size: 15px; margin: 0 0 6px 0; line-height: 1.3;
+        font-weight: 600; font-size: 12.5px; margin: 0 0 4px 0; line-height: 1.3;
     }
     .flow-step .flow-desc {
-        font-size: 12.5px; margin: 0; line-height: 1.5; flex-grow: 1;
+        font-size: 10.5px; margin: 0; line-height: 1.4;
     }
     .flow-arrow {
         text-align: center; color: #cbd5e1; font-size: 16px; padding-top: 40px;
     }
     .repo-card {
         background-color: #F0F2F6;
-        padding: 28px 18px;
+        padding: 18px;
         border-radius: 14px;
         border: 1px solid #E2E8F0;
         text-align: center;
-    }
-    .repo-card .repo-icon {
-        font-size: 44px;
-        display: block;
-        text-align: center;
-        margin: 0 auto 10px auto;
-        line-height: 1;
-    }
-    .repo-card h4 {
-        text-align: center;
-        margin: 0 0 8px 0;
     }
     .sample-btn > button {
         background: linear-gradient(135deg, #1E3A8A 0%, #3B82F6 100%);
@@ -135,11 +101,10 @@ def _rgb_to_hex(rgb):
 
 
 def blue_scale(t: float) -> str:
-    """Interpolates from vivid blue (t=0, first step) to white (t=1, last step),
-    the same blue family used across the dashboard's other blue-scale visuals
-    (map detection-rate layer, metrics)."""
-    blue, white = _hex_to_rgb("#1E3A8A"), _hex_to_rgb("#FFFFFF")
-    return _rgb_to_hex(tuple(int(a + (b - a) * t) for a, b in zip(blue, white)))
+    """Interpolates between light blue and deep navy, same family used across
+    the dashboard's blue-scale visuals (map detection-rate layer, metrics)."""
+    light, dark = _hex_to_rgb("#DBEAFE"), _hex_to_rgb("#1E3A8A")
+    return _rgb_to_hex(tuple(int(a + (b - a) * t) for a, b in zip(light, dark)))
 
 
 # ========================= AUTOMATIC MODEL DISCOVERY =========================
@@ -183,7 +148,7 @@ def discover_models() -> dict[str, Path]:
     return found
 
 
-@st.cache_resource(show_spinner="🚁 Loading YOLO weights and warming up the detector...")
+@st.cache_resource(show_spinner="Loading model...")
 def load_model(model_path: str) -> YOLO:
     return YOLO(model_path)
 
@@ -760,28 +725,23 @@ with tab5:
     ]
 
     n = len(pipeline_steps)
-    rows = [pipeline_steps[i:i + 3] for i in range(0, n, 3)]
-    step_idx = 0
-    for row in rows:
-        row_cols = st.columns(3)
-        for col, (icon, title, desc) in zip(row_cols, row):
-            t = step_idx / (n - 1) if n > 1 else 0.0
-            bg = blue_scale(t)
-            is_light = t >= 0.6
-            title_color = "#0F172A" if is_light else "#FFFFFF"
-            desc_color = "#334155" if is_light else "#DBEAFE"
-            badge_bg = "rgba(15,23,42,0.08)" if is_light else "rgba(255,255,255,0.18)"
-            badge_color = "#1E3A8A" if is_light else "#FFFFFF"
-            with col:
-                st.markdown(f"""
-                <div class="flow-step" style="background:{bg};">
-                    <span class="flow-badge" style="background:{badge_bg}; color:{badge_color};">{step_idx+1:02d}</span>
-                    <span class="flow-icon">{icon}</span>
-                    <p class="flow-title" style="color:{title_color};">{title}</p>
-                    <p class="flow-desc" style="color:{desc_color};">{desc}</p>
-                </div>
-                """, unsafe_allow_html=True)
-            step_idx += 1
+    cols = st.columns([1] * n)
+    for i, (col, (icon, title, desc)) in enumerate(zip(cols, pipeline_steps)):
+        t = i / (n - 1) if n > 1 else 0.0
+        bg = blue_scale(t)
+        is_dark = t >= 0.55
+        title_color = "#FFFFFF" if is_dark else "#0F172A"
+        desc_color = "#DBEAFE" if is_dark else "#334155"
+        num_color = "#93C5FD" if is_dark else "#64748B"
+        with col:
+            st.markdown(f"""
+            <div class="flow-step" style="background:{bg};">
+                <span class="flow-num" style="color:{num_color};">{i+1:02d}</span>
+                <span class="flow-icon">{icon}</span>
+                <p class="flow-title" style="color:{title_color};">{title}</p>
+                <p class="flow-desc" style="color:{desc_color};">{desc}</p>
+            </div>
+            """, unsafe_allow_html=True)
 
 # ====================== TAB 6: Governance ======================
 with tab6:
@@ -808,31 +768,6 @@ with tab6:
 - The scope is strictly academic/technical — no individual surveillance use case is intended or
   supported by this project.
 """)
-
-    st.divider()
-    st.subheader("👥 About & Team")
-    st.markdown("""
-    <div class="repo-card" style="text-align:left;">
-        <p style="margin:0 0 10px 0; font-size:14px; color:#334155;">
-            <b>Helipad Detector</b> is an academic Computer Vision project (Project P2) developed for the
-            Machine Learning / Computer Vision course.
-        </p>
-        <table style="width:100%; font-size:13.5px; color:#334155; border-collapse:collapse;">
-            <tr><td style="padding:4px 0; color:#64748B; width:150px;">Institution</td>
-                <td style="padding:4px 0;"><b>PUC-SP — FACEI</b></td></tr>
-            <tr><td style="padding:4px 0; color:#64748B;">Program</td>
-                <td style="padding:4px 0;">BSc in Human Centered-AI & Data Science</td></tr>
-            <tr><td style="padding:4px 0; color:#64748B;">Professor</td>
-                <td style="padding:4px 0;">Rooney Ribeiro Albuquerque Coelho</td></tr>
-            <tr><td style="padding:4px 0; color:#64748B; vertical-align:top;">Authors</td>
-                <td style="padding:4px 0;">
-                    Carlos Antonio dos Santos Roth Gorham<br>
-                    Fabiana Campanari<br>
-                    Pedro Vyctor Almeida
-                </td></tr>
-        </table>
-    </div>
-    """, unsafe_allow_html=True)
 
 # ====================== TAB 7: Downloads ======================
 with tab7:
@@ -892,8 +827,7 @@ with tab7:
     st.markdown("---")
     st.markdown("""
     <div class="repo-card">
-        <span class="repo-icon">🚁</span>
-        <h4>Explore the full source code</h4>
+        <h4 style="margin:0 0 8px 0;">🚁 Explore the full source code</h4>
         <p style="color:#64748B; font-size:14px;">
             Architecture, datasets, notebooks, and the complete AI pipeline are all on GitHub.
         </p>
@@ -999,11 +933,6 @@ with tab_metrics:
 with tab_field:
     st.subheader("🌍 Field Detections by Region (real-world tiles)")
     field_summary = load_field_detection_summary()
-
-    if FIELD_SUMMARY_PATH.exists():
-        last_updated = datetime.fromtimestamp(FIELD_SUMMARY_PATH.stat().st_mtime)
-        st.caption(f"🕒 Last updated: {last_updated.strftime('%b %d, %Y at %H:%M')} "
-                   f"(based on `{FIELD_SUMMARY_PATH.name}`)")
 
     if field_summary is None:
         st.info(
