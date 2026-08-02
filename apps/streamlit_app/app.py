@@ -168,15 +168,30 @@ CARTO_ATTR = (
 
 
 def _force_leaflet_resize(fmap: folium.Map) -> None:
-    """Leaflet maps rendered inside an initially-hidden container (like a
-    Streamlit tab that isn't active on first load) compute a 0-size viewport
-    and stay blank until something forces a relayout. Dispatching a resize
-    event shortly after mount makes Leaflet recalculate its size correctly —
-    this is what was happening when the Density view map only appeared after
-    toggling Dark mode (that toggle causes a rerun that happens to fix it)."""
-    fmap.get_root().html.add_child(folium.Element(
-        "<script>setTimeout(function(){window.dispatchEvent(new Event('resize'));}, 300);</script>"
-    ))
+    """Leaflet maps rendered inside a container that isn't fully laid out yet
+    (e.g. below a heavier component that's still mounting, like the main map
+    above this one) can compute a 0-size viewport and stay blank until
+    something forces a relayout — this is what was happening with the
+    Density view map, which only appeared after toggling Dark mode (that
+    toggle triggers a rerun that happens to fix it). A single delayed resize
+    event wasn't reliable enough, so this calls invalidateSize() directly on
+    the actual Leaflet map instance, retried at a few increasing delays and
+    again on window 'load', to reliably catch whichever moment the container
+    finishes settling."""
+    map_var = fmap.get_name()
+    fmap.get_root().html.add_child(folium.Element(f"""
+    <script>
+    (function() {{
+        function fixSize() {{
+            if (typeof {map_var} !== 'undefined') {{
+                {map_var}.invalidateSize();
+            }}
+        }}
+        [100, 300, 700, 1200, 2000].forEach(function(ms) {{ setTimeout(fixSize, ms); }});
+        window.addEventListener('load', fixSize);
+    }})();
+    </script>
+    """))
 
 
 # ========================= AUTOMATIC MODEL DISCOVERY =========================
