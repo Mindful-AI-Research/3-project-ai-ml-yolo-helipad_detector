@@ -1,4 +1,3 @@
-
 import streamlit as st
 from ultralytics import YOLO
 from PIL import Image
@@ -152,6 +151,32 @@ def blue_scale(t: float) -> str:
     (map detection-rate layer, metrics)."""
     blue, white = _hex_to_rgb("#1E3A8A"), _hex_to_rgb("#FFFFFF")
     return _rgb_to_hex(tuple(int(a + (b - a) * t) for a, b in zip(blue, white)))
+
+
+# ========================= MAP TILE PROVIDERS =========================
+# Using explicit URL templates (instead of Folium's built-in preset strings
+# like "CartoDB dark_matter") because Folium ignores the custom `name=` we
+# pass for known presets and falls back to its own internal identifier
+# (e.g. "cartodbdarkmatter") in the layer control. A raw URL template has no
+# such special-casing, so our friendly name is always used.
+CARTO_DARK_URL = "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
+CARTO_LIGHT_URL = "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
+CARTO_ATTR = (
+    '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> '
+    'contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
+)
+
+
+def _force_leaflet_resize(fmap: folium.Map) -> None:
+    """Leaflet maps rendered inside an initially-hidden container (like a
+    Streamlit tab that isn't active on first load) compute a 0-size viewport
+    and stay blank until something forces a relayout. Dispatching a resize
+    event shortly after mount makes Leaflet recalculate its size correctly —
+    this is what was happening when the Density view map only appeared after
+    toggling Dark mode (that toggle causes a rerun that happens to fix it)."""
+    fmap.get_root().html.add_child(folium.Element(
+        "<script>setTimeout(function(){window.dispatchEvent(new Event('resize'));}, 300);</script>"
+    ))
 
 
 # ========================= AUTOMATIC MODEL DISCOVERY =========================
@@ -429,10 +454,10 @@ model = get_selected_model()
 # panel at the bottom) — only the visual display moved, not the data load.
 metrics_df = load_experiment_metrics()
 
-tab_metrics, tab_field, tab4, tab2, tab3, tab1, tab5, tab6, tab7 = st.tabs([
+tab_metrics, tab_field, tab4, tab2, tab3, tab1, tab5, tab6, tab_about, tab7 = st.tabs([
     "📊 Experiment Metrics", "🌍 Field Detections by Region", "🗺️ Map",
     "🔎 Search by Region (Satellite)", "🖼️ Sample Images", "📤 Upload Image",
-    "📖 Pipeline", "🛡️ Governance", "⬇️ Downloads",
+    "📖 Pipeline", "🛡️ Governance", "👥 About & Team", "⬇️ Downloads",
 ])
 
 # ====================== TAB 1: Upload ======================
@@ -632,6 +657,7 @@ with tab4:
         dark_mode = st.toggle("🌙 Dark mode", value=True, key="map_theme")
 
     map_tiles = "CartoDB dark_matter" if dark_mode else "CartoDB positron"
+    map_tiles_label = "🌙 Dark base map" if dark_mode else "☀️ Light base map"
 
     sp_df = load_helipad_locations(SP_COORDS_CSV)
     other_df = load_helipad_locations(COORDS_CSV)
@@ -647,7 +673,13 @@ with tab4:
         center_lat = pd.concat(lat_parts).mean() if lat_parts else -23.5505  # fallback: São Paulo center
         center_lon = pd.concat(lon_parts).mean() if lon_parts else -46.6333
 
-        fmap = folium.Map(location=[center_lat, center_lon], zoom_start=5, tiles=map_tiles)
+        # tiles=None avoids Folium auto-adding a base layer with an internal,
+        # unreadable name (e.g. "cartodbdarkmatter") to the layer control —
+        # we add our own TileLayer below, built from an explicit URL template
+        # (not a Folium preset string) so our friendly `name=` is always honored.
+        tile_url = CARTO_DARK_URL if dark_mode else CARTO_LIGHT_URL
+        fmap = folium.Map(location=[center_lat, center_lon], zoom_start=5, tiles=None)
+        folium.TileLayer(tiles=tile_url, attr=CARTO_ATTR, name=map_tiles_label, control=True).add_to(fmap)
 
         sp_layer = folium.FeatureGroup(name=f"🟢 São Paulo ({len(sp_df)})", show=True)
         for _, row in sp_df.iterrows():
@@ -710,6 +742,7 @@ with tab4:
                 detection_layer.add_to(fmap)
 
         folium.LayerControl(collapsed=False).add_to(fmap)
+        _force_leaflet_resize(fmap)
 
         st.write(f"**{len(sp_df)} São Paulo region(s)** 🟢  ·  **{len(other_df)} other-state helipad(s)** 🔵")
         st_folium(fmap, use_container_width=True, height=520, key=f"main_map_{map_tiles}")
@@ -738,6 +771,7 @@ with tab4:
             density_dark_mode = st.toggle("🌙 Dark mode", value=True, key="density_map_theme")
 
         density_tiles = "CartoDB dark_matter" if density_dark_mode else "CartoDB positron"
+        density_tile_url = CARTO_DARK_URL if density_dark_mode else CARTO_LIGHT_URL
 
         if other_df.empty:
             st.info(f"No coordinates found at `{COORDS_CSV}` to render a density view.")
@@ -745,8 +779,9 @@ with tab4:
             dark_map = folium.Map(
                 location=[other_df["lat"].mean(), other_df["lon"].mean()],
                 zoom_start=5,
-                tiles=density_tiles,
+                tiles=None,
             )
+            folium.TileLayer(tiles=density_tile_url, attr=CARTO_ATTR, control=False).add_to(dark_map)
             for _, row in other_df.iterrows():
                 folium.CircleMarker(
                     location=[row["lat"], row["lon"]],
@@ -763,6 +798,7 @@ with tab4:
                 blur=22,
                 gradient={"0.2": "#FFF8DC", "0.5": "#FFA855", "0.8": "#FF7804", "1.0": "#FF6800"},
             ).add_to(dark_map)
+            _force_leaflet_resize(dark_map)
             # Key includes the tile style so Streamlit fully remounts the map iframe on toggle,
             # instead of reusing a stale cached render from the previous theme.
             st_folium(dark_map, use_container_width=True, height=550, key=f"density_map_{density_tiles}")
@@ -839,7 +875,8 @@ with tab6:
   supported by this project.
 """)
 
-    st.divider()
+# ====================== TAB: About & Team ======================
+with tab_about:
     st.header("👥 About & Team")
     st.markdown(
         "**Helipad Detector** started from a straightforward observation: rooftop helipads have a "
