@@ -29,6 +29,18 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
+# streamlit-folium's map components (used in the Map tab) are unreliable on
+# the very first script execution of a session — they can mount with a 0-size
+# viewport and stay blank until something triggers another rerun (this is why
+# toggling Dark mode "fixed" it: the toggle itself causes a rerun). Rather
+# than rely on the user accidentally triggering that fix, force exactly one
+# automatic rerun on the first load of each session, before anything heavy
+# renders, so every map is already past that broken first pass by the time
+# the user actually sees the page.
+if "_warmed_up" not in st.session_state:
+    st.session_state["_warmed_up"] = True
+    st.rerun()
+
 st.markdown("""
     <style>
     .main-title {font-size: 42px !important; font-weight: bold; color: #1E3A8A; text-align: center;}
