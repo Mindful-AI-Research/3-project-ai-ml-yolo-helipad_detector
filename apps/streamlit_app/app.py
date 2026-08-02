@@ -89,25 +89,23 @@ st.markdown("""
     .flow-arrow {
         text-align: center; color: #cbd5e1; font-size: 16px; padding-top: 40px;
     }
-    .dark-card {
-        background: linear-gradient(135deg, #16213E 0%, #1E3A8A 100%);
-        padding: 28px 26px;
+    .repo-card {
+        background-color: #F0F2F6;
+        padding: 28px 18px;
         border-radius: 14px;
-        border: 1px solid rgba(147, 197, 253, 0.25);
-        box-shadow: 0 6px 22px rgba(15, 23, 42, 0.35), inset 0 1px 0 rgba(255,255,255,0.06);
+        border: 1px solid #E2E8F0;
         text-align: center;
     }
-    .dark-card .repo-icon {
+    .repo-card .repo-icon {
         font-size: 44px;
         display: block;
         text-align: center;
         margin: 0 auto 10px auto;
         line-height: 1;
     }
-    .dark-card h4 {
+    .repo-card h4 {
         text-align: center;
         margin: 0 0 8px 0;
-        color: #FFFFFF;
     }
     .sample-btn > button {
         background: linear-gradient(135deg, #1E3A8A 0%, #3B82F6 100%);
@@ -134,15 +132,6 @@ def _hex_to_rgb(h):
 
 def _rgb_to_hex(rgb):
     return "#{:02x}{:02x}{:02x}".format(*rgb)
-
-
-def _shade(hex_color: str, amount: float) -> str:
-    """amount > 0 lightens toward white; amount < 0 darkens toward deep navy."""
-    rgb = _hex_to_rgb(hex_color)
-    target = _hex_to_rgb("#FFFFFF") if amount > 0 else _hex_to_rgb("#0B1220")
-    factor = abs(amount)
-    blended = tuple(int(c + (t - c) * factor) for c, t in zip(rgb, target))
-    return _rgb_to_hex(blended)
 
 
 def blue_scale(t: float) -> str:
@@ -711,40 +700,29 @@ with tab4:
         folium.LayerControl(collapsed=False).add_to(fmap)
 
         st.write(f"**{len(sp_df)} São Paulo region(s)** 🟢  ·  **{len(other_df)} other-state helipad(s)** 🔵")
-        st_folium(fmap, use_container_width=True, height=520, key=f"main_map_{map_tiles}")
+        st_folium(fmap, use_container_width=True, height=520)
 
         with st.expander("📋 Raw coordinate data"):
             t1, t2 = st.tabs(["São Paulo", "Other states"])
             with t1:
-                sp_df_display = sp_df.copy()
-                if "Nome do Bairro" in sp_df_display.columns:
-                    sp_df_display["Nome do Bairro"] = sp_df_display["Nome do Bairro"].astype(str).str.replace(
-                        r"\btrecho\b", "Segment", regex=True, case=False
-                    )
-                st.dataframe(sp_df_display, use_container_width=True)
+                st.dataframe(sp_df, use_container_width=True)
             with t2:
                 st.dataframe(other_df, use_container_width=True)
 
         st.divider()
-        col_density_title, col_density_toggle = st.columns([4, 1])
-        with col_density_title:
-            st.subheader("🌡️ Density view")
-            st.caption(
-                "Discovery dataset (other states), rendered as a point + heatmap "
-                "view — generated live with Folium/CartoDB, no API key or account required."
-            )
-        with col_density_toggle:
-            density_dark_mode = st.toggle("🌙 Dark mode", value=True, key="density_map_theme")
-
-        density_tiles = "CartoDB dark_matter" if density_dark_mode else "CartoDB positron"
-
+        st.subheader("🌡️ Density view")
+        st.caption(
+            "Discovery dataset (other states), rendered as a point + heatmap "
+            "view — generated live with Folium/CartoDB, no API key or account required. "
+            "Follows the same 🌙 Dark mode toggle above."
+        )
         if other_df.empty:
             st.info(f"No coordinates found at `{COORDS_CSV}` to render a density view.")
         else:
             dark_map = folium.Map(
                 location=[other_df["lat"].mean(), other_df["lon"].mean()],
                 zoom_start=5,
-                tiles=density_tiles,
+                tiles=map_tiles,
             )
             for _, row in other_df.iterrows():
                 folium.CircleMarker(
@@ -762,9 +740,7 @@ with tab4:
                 blur=22,
                 gradient={"0.2": "#FFF8DC", "0.5": "#FFA855", "0.8": "#FF7804", "1.0": "#FF6800"},
             ).add_to(dark_map)
-            # Key includes the tile style so Streamlit fully remounts the map iframe on toggle,
-            # instead of reusing a stale cached render from the previous theme.
-            st_folium(dark_map, use_container_width=True, height=550, key=f"density_map_{density_tiles}")
+            st_folium(dark_map, use_container_width=True, height=550, key="density_map")
 
 # ====================== TAB 5: Pipeline & Governance ======================
 with tab5:
@@ -790,20 +766,15 @@ with tab5:
         row_cols = st.columns(3)
         for col, (icon, title, desc) in zip(row_cols, row):
             t = step_idx / (n - 1) if n > 1 else 0.0
-            base = blue_scale(t)
-            bg_light = _shade(base, 0.22)
-            bg_dark = _shade(base, -0.22)
-            gradient = f"linear-gradient(135deg, {bg_light} 0%, {base} 55%, {bg_dark} 100%)"
-            accent_rgb = _hex_to_rgb(base)
-            glow = f"rgba({accent_rgb[0]},{accent_rgb[1]},{accent_rgb[2]},0.38)"
+            bg = blue_scale(t)
             is_light = t >= 0.6
             title_color = "#0F172A" if is_light else "#FFFFFF"
             desc_color = "#334155" if is_light else "#DBEAFE"
-            badge_bg = "rgba(15,23,42,0.10)" if is_light else "rgba(255,255,255,0.20)"
+            badge_bg = "rgba(15,23,42,0.08)" if is_light else "rgba(255,255,255,0.18)"
             badge_color = "#1E3A8A" if is_light else "#FFFFFF"
             with col:
                 st.markdown(f"""
-                <div class="flow-step" style="background:{gradient}; border-top:3px solid {bg_dark}; box-shadow: 0 4px 16px {glow};">
+                <div class="flow-step" style="background:{bg};">
                     <span class="flow-badge" style="background:{badge_bg}; color:{badge_color};">{step_idx+1:02d}</span>
                     <span class="flow-icon">{icon}</span>
                     <p class="flow-title" style="color:{title_color};">{title}</p>
@@ -839,34 +810,22 @@ with tab6:
 """)
 
     st.divider()
-    st.header("👥 About & Team")
-    st.markdown(
-        "**Helipad Detector** started from a straightforward observation: rooftop helipads have a "
-        "distinctive top-down shape, but they're genuinely easy to confuse with pools, sports courts, "
-        "and other rooftop structures in dense urban satellite imagery — which makes them a good "
-        "real-world target for practicing the full Computer Vision lifecycle, not just model training. "
-        "The project was built end-to-end by the team: scraping and geocoding public helipad records, "
-        "converting coordinates into satellite tile downloads, manually triaging and annotating a "
-        "dataset from scratch in Roboflow, training and comparing multiple YOLOv8n/YOLOv11n "
-        "experiments in Google Colab, and — beyond the course's minimum requirement — running a field "
-        "validation pass across 7,900+ real, uncurated tiles from ten São Paulo neighborhoods to check "
-        "how the model holds up outside the curated test set. This dashboard is the public-facing layer "
-        "of that work, built so the model, the data, and the documented failure modes are all directly "
-        "inspectable rather than hidden behind a single accuracy number."
-    )
+    st.subheader("👥 About & Team")
     st.markdown("""
-    <div class="dark-card" style="text-align:left;">
-        <table style="width:100%; font-size:14px; color:#E2E8F0; border-collapse:collapse;">
-            <tr><td style="padding:6px 0; color:#93C5FD; width:160px; vertical-align:top;">Institution</td>
-                <td style="padding:6px 0;"><b>PUC-SP — FACEI</b></td></tr>
-            <tr><td style="padding:6px 0; color:#93C5FD; vertical-align:top;">Program</td>
-                <td style="padding:6px 0;">BSc in Human Centered-AI & Data Science</td></tr>
-            <tr><td style="padding:6px 0; color:#93C5FD; vertical-align:top;">Course</td>
-                <td style="padding:6px 0;">Machine Learning / Computer Vision — Project P2</td></tr>
-            <tr><td style="padding:6px 0; color:#93C5FD; vertical-align:top;">Professor</td>
-                <td style="padding:6px 0;">Rooney Ribeiro Albuquerque Coelho</td></tr>
-            <tr><td style="padding:6px 0; color:#93C5FD; vertical-align:top;">Authors</td>
-                <td style="padding:6px 0;">
+    <div class="repo-card" style="text-align:left;">
+        <p style="margin:0 0 10px 0; font-size:14px; color:#334155;">
+            <b>Helipad Detector</b> is an academic Computer Vision project (Project P2) developed for the
+            Machine Learning / Computer Vision course.
+        </p>
+        <table style="width:100%; font-size:13.5px; color:#334155; border-collapse:collapse;">
+            <tr><td style="padding:4px 0; color:#64748B; width:150px;">Institution</td>
+                <td style="padding:4px 0;"><b>PUC-SP — FACEI</b></td></tr>
+            <tr><td style="padding:4px 0; color:#64748B;">Program</td>
+                <td style="padding:4px 0;">BSc in Human Centered-AI & Data Science</td></tr>
+            <tr><td style="padding:4px 0; color:#64748B;">Professor</td>
+                <td style="padding:4px 0;">Rooney Ribeiro Albuquerque Coelho</td></tr>
+            <tr><td style="padding:4px 0; color:#64748B; vertical-align:top;">Authors</td>
+                <td style="padding:4px 0;">
                     Carlos Antonio dos Santos Roth Gorham<br>
                     Fabiana Campanari<br>
                     Pedro Vyctor Almeida
@@ -932,13 +891,13 @@ with tab7:
 
     st.markdown("---")
     st.markdown("""
-    <div class="dark-card">
+    <div class="repo-card">
         <span class="repo-icon">🚁</span>
         <h4>Explore the full source code</h4>
-        <p style="color:#CBD5E1; font-size:14px;">
+        <p style="color:#64748B; font-size:14px;">
             Architecture, datasets, notebooks, and the complete AI pipeline are all on GitHub.
         </p>
-        <a href="https://github.com/Mindful-AI-Research/3-project-ai-ml-yolo-helipad_detector" target="_blank" style="color:#93C5FD; font-weight:600;">
+        <a href="https://github.com/Mindful-AI-Research/3-project-ai-ml-yolo-helipad_detector" target="_blank">
             github.com/Mindful-AI-Research/3-project-ai-ml-yolo-helipad_detector
         </a>
     </div>
