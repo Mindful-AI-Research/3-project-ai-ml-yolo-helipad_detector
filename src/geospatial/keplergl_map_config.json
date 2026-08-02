@@ -1,0 +1,120 @@
+{
+  "mapState": {
+    "latitude": -18.44939047947455,
+    "longitude": -46.62683939787369,
+    "zoom": 10
+  },
+  "visState": {
+    "layers": [
+      {
+        "id": "helipad_points",
+        "type": "point",
+        "config": {
+          "dataId": "Helipad Coords",
+          "label": "Heliportos \u2014 Centroides",
+          "color": [
+            0,
+            206,
+            209
+          ],
+          "columns": {
+            "lat": "center_latitude",
+            "lng": "center_longitude"
+          },
+          "isVisible": true,
+          "visConfig": {
+            "radius": 10,
+            "opacity": 0.8,
+            "outline": false,
+            "colorRange": {
+              "name": "Global Warming",
+              "type": "sequential",
+              "colors": [
+                "#5A1846",
+                "#900C3F",
+                "#C70039",
+                "#E3611C",
+                "#F1920E",
+                "#FFC300"
+              ]
+            },
+            "radiusRange": [
+              0,
+              50
+            ]
+          }
+        }
+      },
+      {
+        "id": "helipad_heatmap",
+        "type": "heatmap",
+        "config": {
+          "dataId": "Helipad Coords",
+          "label": "Densidade de Heliportos",
+          "color": [
+            255,
+            0,
+            0
+          ],
+          "columns": {
+            "lat": "center_latitude",
+            "lng": "center_longitude"
+          },
+          "isVisible": true,
+          "visConfig": {
+            "opacity": 0.8,
+            "radius": 10,
+            "colorRange": {
+              "name": "Custom Hot",
+              "type": "sequential",
+              "colors": [
+                "#FFF8DC",
+                "#FFE8C1",
+                "#FFD8A6",
+                "#FFC88B",
+                "#FFB870",
+                "#FFA855",
+                "#FF983A",
+                "#FF881F",
+                "#FF7804",
+                "#FF6800"
+              ]
+            }
+          }
+        }
+      }
+    ],
+    "interactionConfig": {
+      "tooltip": {
+        "fieldsToShow": {
+          "Helipad Coords": [
+            "Nome do Bairro",
+            "Coordenadas da Bounding Box"
+          ]
+        }
+      }
+    }
+  },
+  "mapStyle": {
+    "styleType": "dark",
+    "topLayerGroups": {},
+    "visibleLayerGroups": {
+      "label": true,
+      "road": true,
+      "border": false,
+      "building": true,
+      "water": true,
+      "land": true
+    },
+    "buildingColor": [
+      19,
+      19,
+      19
+    ],
+    "backgroundColor": [
+      19,
+      19,
+      19
+    ]
+  }
+}
