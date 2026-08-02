@@ -1,4 +1,4 @@
-import streamlit as st
+ import streamlit as st
 from ultralytics import YOLO
 from PIL import Image
 import numpy as np
@@ -716,7 +716,12 @@ with tab4:
         with st.expander("📋 Raw coordinate data"):
             t1, t2 = st.tabs(["São Paulo", "Other states"])
             with t1:
-                st.dataframe(sp_df, use_container_width=True)
+                sp_df_display = sp_df.copy()
+                if "Nome do Bairro" in sp_df_display.columns:
+                    sp_df_display["Nome do Bairro"] = sp_df_display["Nome do Bairro"].astype(str).str.replace(
+                        r"\btrecho\b", "Segment", regex=True, case=False
+                    )
+                st.dataframe(sp_df_display, use_container_width=True)
             with t2:
                 st.dataframe(other_df, use_container_width=True)
 
