@@ -826,9 +826,15 @@ with tab4:
                 gradient={"0.2": "#FFF8DC", "0.5": "#FFA855", "0.8": "#FF7804", "1.0": "#FF6800"},
             ).add_to(dark_map)
             _force_leaflet_resize(dark_map)
-            # Key includes the tile style so Streamlit fully remounts the map iframe on toggle,
-            # instead of reusing a stale cached render from the previous theme.
-            st_folium(dark_map, use_container_width=True, height=550, key=f"density_map_{density_tiles}")
+            # Rendered as a plain HTML embed (not st_folium) because this view never
+            # needs the map's returned click/data — st_folium is a bidirectional custom
+            # component that negotiates its iframe height with the browser on mount, and
+            # that handshake was unreliable as the *second* such component on this tab
+            # (it kept rendering at 0 height until some later rerun, e.g. toggling Dark
+            # mode, happened to re-trigger it). components.html() just embeds static HTML
+            # in a fixed-height iframe, no handshake needed, so it always paints on the
+            # very first render.
+            components.html(dark_map.get_root().render(), height=550, scrolling=False)
 
 # ====================== TAB 5: Pipeline & Governance ======================
 with tab5:
