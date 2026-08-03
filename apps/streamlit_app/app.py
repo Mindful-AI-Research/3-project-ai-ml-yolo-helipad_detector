@@ -592,7 +592,7 @@ with tab3:
     st.subheader("🖼️ Test with Sample Images")
     st.caption(
         "Don't have your own image handy? Use the satellite images already included in the "
-        f"repository at `{SAMPLES_DIR}/` to test the detector right away."
+        "repository to test the detector right away."
     )
 
     sample_files = []
@@ -675,10 +675,9 @@ with tab4:
     col_caption, col_toggle = st.columns([4, 1])
     with col_caption:
         st.caption(
-            "🟢 **São Paulo training neighborhoods** (region-level bounding boxes from "
-            "`src/data_preparation/image_preprocessing.ipynb`) · "
-            "🔵 **Discovery dataset** — helipad candidates found by "
-            "`src/geospatial/helipad_scraper.py` across other Brazilian states."
+            "🟢 **São Paulo training neighborhoods** — region-level bounding boxes used for "
+            "training · 🔵 **Discovery dataset** — helipad candidates found across other "
+            "Brazilian states."
         )
     with col_toggle:
         dark_mode = st.toggle("🌙 Dark mode", value=True, key="map_theme")
@@ -1114,8 +1113,7 @@ with tab_field:
 
     if FIELD_SUMMARY_PATH.exists():
         last_updated = datetime.fromtimestamp(FIELD_SUMMARY_PATH.stat().st_mtime)
-        st.caption(f"🕒 Last updated: {last_updated.strftime('%b %d, %Y at %H:%M')} "
-                   f"(based on `{FIELD_SUMMARY_PATH.name}`)")
+        st.caption(f"🕒 Last updated: {last_updated.strftime('%b %d, %Y at %H:%M')}")
 
     if field_summary is None:
         st.info(
