@@ -125,7 +125,7 @@ https://github.com/user-attachments/assets/5b7d581c-ab5e-416e-8471-d91136b2ada0
 
 
 <!-- ========= START Data Analysis Report BADGE ========= -->
-  <a href="https://github.com/Mindful-AI-Assistants/3-project-ai-ml-yolo-helipoint-detector/blob/7afaf4db4eeaa8c385a7dbb03d58ebbbf8879a6c/data_analysing_execitiuve_%20report/%F0%9F%87%AC%F0%9F%87%A7Helipoint_Detector_Model_Performance_and_Data_Analysis.pdf" target="_blank" rel="noopener noreferrer">
+  <a href="https://github.com/Mindful-AI-Research/3-project-ai-ml-yolo-helipad_detector/blob/9b8ce0e1daec129bc45d74cb03826f3b557d7eed/reports/helipad_detector_full_report/%F0%9F%87%AC%F0%9F%87%A7Helipad_Detector_Full_Report.pdf" target="_blank" rel="noopener noreferrer">
     <img 
       src="https://img.shields.io/badge/Data%20Analysis-Report%20and%20PDF-134e4a?style=for-the-badge&logo=streamlit&logoColor=white&labelColor=022c22" 
       alt="Data Analysis Report and PDF"
