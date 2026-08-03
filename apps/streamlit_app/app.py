@@ -21,7 +21,414 @@ from pathlib import Path
 import tempfile
 import shutil
 
-# ========================= PAGE CONFIG =========================
+# ========================= LANGUAGE / i18n =========================
+# Only static UI copy (labels, headers, captions, button text, messages) is
+# translated. Anything that comes from data at runtime — experiment names,
+# region names from CSV/JSON, raw dataframe columns (already in Portuguese
+# in the source CSVs), file paths — is left as-is, since translating it
+# would mean rewriting the underlying data, not just the UI.
+if "lang" not in st.session_state:
+    st.session_state["lang"] = "en"
+
+
+def t(key: str) -> str:
+    entry = TR.get(key)
+    if entry is None:
+        return key
+    return entry.get(st.session_state["lang"], entry.get("en", key))
+
+
+TR = {
+    # ---- Sidebar ----
+    "sidebar.model": {"en": "⚙️ Model", "pt": "⚙️ Modelo"},
+    "sidebar.no_model.warning": {
+        "en": "No trained model found at `artifacts/runs/detect/*/weights/best.pt` (or `artifacts/runs/runs/detect/*/...`) yet. "
+              "Detection features (Upload, Search by Region, Sample Images) are disabled until "
+              "one is available — but the Map, Pipeline & Governance, and Downloads tabs below "
+              "don't need a model and work right now.",
+        "pt": "Nenhum modelo treinado encontrado em `artifacts/runs/detect/*/weights/best.pt` (ou `artifacts/runs/runs/detect/*/...`) ainda. "
+              "As funcionalidades de detecção (Upload, Search by Region, Sample Images) ficam desabilitadas até "
+              "que um modelo esteja disponível — mas as abas Map, Pipeline & Governance e Downloads abaixo "
+              "não precisam de modelo e já funcionam.",
+    },
+    "sidebar.choose_experiment": {"en": "Choose the trained experiment", "pt": "Escolha o experimento treinado"},
+    "sidebar.choose_experiment.help": {
+        "en": "Every folder under artifacts/runs/detect/ (or artifacts/runs/runs/detect/) with a ready best.pt shows up here "
+              "automatically — including future experiments, no app edits needed.",
+        "pt": "Toda pasta em artifacts/runs/detect/ (ou artifacts/runs/runs/detect/) com um best.pt pronto aparece aqui "
+              "automaticamente — inclusive experimentos futuros, sem precisar editar o app.",
+    },
+    "sidebar.confidence": {"en": "Minimum detection confidence", "pt": "Confiança mínima de detecção"},
+
+    # ---- Main header ----
+    "main.title": {"en": "🚁 Helipad Detection", "pt": "🚁 Detecção de Helipontos"},
+    "main.subtitle": {"en": "AI + Satellite Imagery • São Paulo", "pt": "IA + Imagens de Satélite • São Paulo"},
+    "main.active_model": {"en": "Active model:", "pt": "Modelo ativo:"},
+    "main.active_model.none": {"en": "_none yet — detection tabs disabled_", "pt": "_nenhum ainda — abas de detecção desabilitadas_"},
+
+    # ---- Tab labels ----
+    "tabs.metrics": {"en": "📊 Experiment Metrics", "pt": "📊 Métricas dos Experimentos"},
+    "tabs.field": {"en": "🌍 Field Detections by Region", "pt": "🌍 Detecções de Campo por Região"},
+    "tabs.map": {"en": "🗺️ Map", "pt": "🗺️ Mapa"},
+    "tabs.search": {"en": "🔎 Search by Region (Satellite)", "pt": "🔎 Buscar por Região (Satélite)"},
+    "tabs.samples": {"en": "🖼️ Sample Images", "pt": "🖼️ Imagens de Exemplo"},
+    "tabs.upload": {"en": "📤 Upload Image", "pt": "📤 Enviar Imagem"},
+    "tabs.pipeline": {"en": "📖 Pipeline", "pt": "📖 Pipeline"},
+    "tabs.governance": {"en": "🛡️ Governance", "pt": "🛡️ Governança"},
+    "tabs.about": {"en": "👥 About & Team", "pt": "👥 Sobre & Equipe"},
+    "tabs.downloads": {"en": "⬇️ Downloads", "pt": "⬇️ Downloads"},
+
+    # ---- Tab 1: Upload ----
+    "upload.no_model.info": {
+        "en": "⚠️ No trained model yet — train exp1/exp2/exp3 and this tab will activate automatically.",
+        "pt": "⚠️ Ainda não há um modelo treinado — treine exp1/exp2/exp3 e esta aba ativa sozinha.",
+    },
+    "upload.uploader.label": {"en": "Upload aerial images", "pt": "Envie imagens aéreas"},
+    "upload.uploader.help": {
+        "en": "Satellite or drone images with good resolution, as close to the target as possible, are recommended.",
+        "pt": "Recomenda-se imagens de satélite ou drone com boa resolução, o mais próximas possível do alvo.",
+    },
+    "upload.original_caption": {"en": "Original", "pt": "Original"},
+    "upload.detection_caption": {"en": "Detection", "pt": "Detecção"},
+    "upload.success": {"en": "✅ Helipad detected!", "pt": "✅ Heliponto detectado!"},
+    "upload.warning_none": {"en": "No helipad found.", "pt": "Nenhum heliponto encontrado."},
+
+    # ---- Tab 2: Search by Region ----
+    "search.subheader": {"en": "🔎 Search for Helipads in a Region", "pt": "🔎 Buscar Helipontos em uma Região"},
+    "search.caption": {
+        "en": "Use the coordinates of the desired region (e.g. Downtown São Paulo)",
+        "pt": "Use as coordenadas da região desejada (ex.: Centro de São Paulo)",
+    },
+    "search.lon_min": {"en": "Min Longitude", "pt": "Longitude Mínima"},
+    "search.lat_min": {"en": "Min Latitude", "pt": "Latitude Mínima"},
+    "search.lon_max": {"en": "Max Longitude", "pt": "Longitude Máxima"},
+    "search.lat_max": {"en": "Max Latitude", "pt": "Latitude Máxima"},
+    "search.zoom": {"en": "Zoom (recommended: 19)", "pt": "Zoom (recomendado: 19)"},
+    "search.button": {"en": "🚀 Search and Analyze Region", "pt": "🚀 Buscar e Analisar Região"},
+    "search.no_model.error": {
+        "en": "⚠️ No trained model yet — this feature needs a model to run detection.",
+        "pt": "⚠️ Ainda não há um modelo treinado — esta funcionalidade precisa de um modelo para detectar.",
+    },
+    "search.spinner": {
+        "en": "Downloading satellite tiles and analyzing with AI... (this may take a while)",
+        "pt": "Baixando tiles de satélite e analisando com IA... (pode demorar um pouco)",
+    },
+    "search.processing": {"en": "Processing", "pt": "Processando"},
+    "search.satellite_tiles": {"en": "satellite tiles...", "pt": "tiles de satélite..."},
+    "search.progress": {"en": "Progress:", "pt": "Progresso:"},
+    "search.found": {"en": "helipad(s) found", "pt": "heliponto(s) encontrado(s)"},
+    "search.in_region": {"en": "in the region!", "pt": "na região!"},
+    "search.download": {"en": "⬇️ Download", "pt": "⬇️ Baixar"},
+    "search.download_individually": {
+        "en": "Use the buttons above to download individually.",
+        "pt": "Use os botões acima para baixar individualmente.",
+    },
+    "search.none_found": {"en": "No helipad was found in this region.", "pt": "Nenhum heliponto foi encontrado nesta região."},
+
+    # ---- Tab 3: Sample Images ----
+    "samples.subheader": {"en": "🖼️ Test with Sample Images", "pt": "🖼️ Testar com Imagens de Exemplo"},
+    "samples.caption": {
+        "en": "Don't have your own image handy? Use the satellite images already included in the "
+              "repository to test the detector right away.",
+        "pt": "Não tem uma imagem sua à mão? Use as imagens de satélite já incluídas no "
+              "repositório para testar o detector agora mesmo.",
+    },
+    "samples.none_found": {
+        "en": "No sample images found at `{dir}/`. "
+              "If you're running this app outside the cloned repository, download the sample "
+              "images directly from GitHub and place them in that folder.",
+        "pt": "Nenhuma imagem de exemplo encontrada em `{dir}/`. "
+              "Se você está rodando este app fora do repositório clonado, baixe as imagens de exemplo "
+              "diretamente do GitHub e coloque-as nessa pasta.",
+    },
+    "samples.available": {"en": "sample image(s) available.", "pt": "imagem(ns) de exemplo disponível(is)."},
+    "samples.more": {"en": "...and {n} more image(s).", "pt": "...e mais {n} imagem(ns)."},
+    "samples.run_button": {
+        "en": "🚀 Run detection on all sample images",
+        "pt": "🚀 Rodar detecção em todas as imagens de exemplo",
+    },
+    "samples.download_zip": {
+        "en": "⬇️ Download all sample images (.zip)",
+        "pt": "⬇️ Baixar todas as imagens de exemplo (.zip)",
+    },
+    "samples.no_model.error": {
+        "en": "⚠️ No trained model yet — this feature needs a model to run detection.",
+        "pt": "⚠️ Ainda não há um modelo treinado — esta funcionalidade precisa de um modelo para detectar.",
+    },
+    "samples.analyzing": {"en": "Analyzing", "pt": "Analisando"},
+    "samples.sample_images": {"en": "sample image(s)...", "pt": "imagem(ns) de exemplo..."},
+    "samples.detected": {"en": "✅ Detected", "pt": "✅ Detectado"},
+    "samples.no_detection": {"en": "No detection", "pt": "Nenhuma detecção"},
+    "samples.summary": {
+        "en": "**Summary:** helipad detected in {hits} of {total} sample image(s).",
+        "pt": "**Resumo:** heliponto detectado em {hits} de {total} imagem(ns) de exemplo.",
+    },
+
+    # ---- Tab 4: Map ----
+    "map.subheader": {"en": "🗺️ Helipad Locations — two layers", "pt": "🗺️ Localizações de Helipontos — duas camadas"},
+    "map.caption": {
+        "en": "🟢 **São Paulo training neighborhoods** — region-level bounding boxes used for "
+              "training · 🔵 **Discovery dataset** — helipad candidates found across other "
+              "Brazilian states.",
+        "pt": "🟢 **Bairros de treino em São Paulo** — bounding boxes por região usadas no "
+              "treino · 🔵 **Dataset de descoberta** — candidatos a heliponto encontrados em outros "
+              "estados brasileiros.",
+    },
+    "map.dark_mode": {"en": "🌙 Dark mode", "pt": "🌙 Modo escuro"},
+    "map.dark_base": {"en": "🌙 Dark base map", "pt": "🌙 Mapa base escuro"},
+    "map.light_base": {"en": "☀️ Light base map", "pt": "☀️ Mapa base claro"},
+    "map.no_coords.info": {
+        "en": "No coordinates found at `{sp}` or `{other}`. See the Execution Guide to generate them.",
+        "pt": "Nenhuma coordenada encontrada em `{sp}` ou `{other}`. Veja o Guia de Execução para gerá-las.",
+    },
+    "map.sp_layer": {"en": "São Paulo", "pt": "São Paulo"},
+    "map.other_layer": {"en": "Other states", "pt": "Outros estados"},
+    "map.training_region": {"en": "São Paulo training region", "pt": "Região de treino em São Paulo"},
+    "map.detection_rate_layer": {"en": "🔵 Field detection rate", "pt": "🔵 Taxa de detecção em campo"},
+    "map.tiles_detected": {"en": "tiles detected", "pt": "tiles detectados"},
+    "map.rate": {"en": "Rate", "pt": "Taxa"},
+    "map.summary": {
+        "en": "**{sp} São Paulo region(s)** 🟢  ·  **{other} other-state helipad(s)** 🔵",
+        "pt": "**{sp} região(ões) de São Paulo** 🟢  ·  **{other} heliponto(s) de outros estados** 🔵",
+    },
+    "map.raw_data_expander": {"en": "📋 Raw coordinate data", "pt": "📋 Dados brutos de coordenadas"},
+    "map.raw_data.sp_tab": {"en": "São Paulo", "pt": "São Paulo"},
+    "map.raw_data.other_tab": {"en": "Other states", "pt": "Outros estados"},
+    "map.density.subheader": {"en": "🌡️ Density view", "pt": "🌡️ Visão de Densidade"},
+    "map.density.caption": {
+        "en": "Discovery dataset (other states), rendered as a point + heatmap "
+              "view — generated live with Folium/CartoDB, no API key or account required.",
+        "pt": "Dataset de descoberta (outros estados), exibido como pontos + mapa de calor — "
+              "gerado ao vivo com Folium/CartoDB, sem precisar de chave de API ou conta.",
+    },
+    "map.density.no_coords": {
+        "en": "No coordinates found at `{path}` to render a density view.",
+        "pt": "Nenhuma coordenada encontrada em `{path}` para renderizar a visão de densidade.",
+    },
+
+    # ---- Tab 5: Pipeline ----
+    "pipeline.subheader": {"en": "📖 Project Pipeline", "pt": "📖 Pipeline do Projeto"},
+    "pipeline.caption": {
+        "en": "How raw satellite imagery becomes a validated helipad detector.",
+        "pt": "Como imagens de satélite brutas se tornam um detector de helipontos validado.",
+    },
+    "pipeline.step1.title": {"en": "Discovery", "pt": "Descoberta"},
+    "pipeline.step1.desc": {
+        "en": "Selenium scrapes a public aviation website for helipad records and coordinates.",
+        "pt": "O Selenium coleta registros de helipontos e coordenadas de um site público de aviação.",
+    },
+    "pipeline.step2.title": {"en": "Coordinate conversion", "pt": "Conversão de coordenadas"},
+    "pipeline.step2.desc": {
+        "en": "Each point becomes a geographic bounding box (±0.0005°).",
+        "pt": "Cada ponto vira uma bounding box geográfica (±0,0005°).",
+    },
+    "pipeline.step3.title": {"en": "Tile download", "pt": "Download de tiles"},
+    "pipeline.step3.desc": {
+        "en": "ESRI World Imagery tiles are downloaded for each bounding box.",
+        "pt": "Tiles do ESRI World Imagery são baixados para cada bounding box.",
+    },
+    "pipeline.step4.title": {"en": "Manual triage", "pt": "Triagem manual"},
+    "pipeline.step4.desc": {
+        "en": "A human reviews mosaics and keeps only tiles with a visible helipad.",
+        "pt": "Uma pessoa revisa os mosaicos e mantém só os tiles com heliponto visível.",
+    },
+    "pipeline.step5.title": {"en": "Annotation (Roboflow)", "pt": "Anotação (Roboflow)"},
+    "pipeline.step5.desc": {
+        "en": "Bounding boxes are drawn, single class: helipad.",
+        "pt": "As bounding boxes são desenhadas, classe única: heliponto.",
+    },
+    "pipeline.step6.title": {"en": "Training (Colab, GPU)", "pt": "Treinamento (Colab, GPU)"},
+    "pipeline.step6.desc": {
+        "en": "YOLOv8n/YOLO11n is trained on the annotated dataset.",
+        "pt": "O YOLOv8n/YOLO11n é treinado no dataset anotado.",
+    },
+    "pipeline.step7.title": {"en": "Evaluation", "pt": "Avaliação"},
+    "pipeline.step7.desc": {
+        "en": "Precision, recall, mAP, and confusion matrix are computed.",
+        "pt": "Precision, recall, mAP e matriz de confusão são calculados.",
+    },
+    "pipeline.step8.title": {"en": "Field validation", "pt": "Validação de campo"},
+    "pipeline.step8.desc": {
+        "en": "The best model is run across 7,900+ real tiles from 10 SP neighborhoods to measure real-world detection rates.",
+        "pt": "O melhor modelo roda em 7.900+ tiles reais de 10 bairros de SP para medir taxas de detecção reais.",
+    },
+    "pipeline.step9.title": {"en": "This app", "pt": "Este app"},
+    "pipeline.step9.desc": {
+        "en": "The trained model runs inference on new images or regions.",
+        "pt": "O modelo treinado roda inferência em novas imagens ou regiões.",
+    },
+
+    # ---- Tab 6: Governance ----
+    "gov.responsible_ai": {"en": "🛡️ Responsible AI", "pt": "🛡️ IA Responsável"},
+    "gov.responsible_ai.body": {
+        "en": (
+            "- **Fairness & scope**: the model detects a single object class (helipad) on public-area satellite\n"
+            "  imagery; it does not identify, track, or profile individuals.\n"
+            "- **Transparency**: this dashboard shows the real precision/recall/mAP of the model, including its\n"
+            "  known false-positive patterns (rooftop structures, pools, sports courts resembling the helipad \"H\").\n"
+            "- **Human oversight**: detections are a decision-support signal, not an automated final judgment —\n"
+            "  qualitative review of hits, false positives, and false negatives is part of the evaluation process.\n"
+            "- **Known limitations**: trained on a small dataset (~150 images) from specific São Paulo\n"
+            "  neighborhoods; generalization to other cities/architectural styles is untested.\n"
+        ),
+        "pt": (
+            "- **Justiça & escopo**: o modelo detecta uma única classe de objeto (heliponto) em imagens de satélite\n"
+            "  de área pública; ele não identifica, rastreia nem cria perfis de pessoas.\n"
+            "- **Transparência**: este dashboard mostra o precision/recall/mAP real do modelo, incluindo seus\n"
+            "  padrões conhecidos de falso positivo (estruturas de telhado, piscinas, quadras esportivas parecidas com o \"H\" do heliponto).\n"
+            "- **Supervisão humana**: as detecções são um sinal de apoio à decisão, não um julgamento final automatizado —\n"
+            "  a revisão qualitativa de acertos, falsos positivos e falsos negativos faz parte do processo de avaliação.\n"
+            "- **Limitações conhecidas**: treinado em um dataset pequeno (~150 imagens) de bairros específicos de São Paulo;\n"
+            "  a generalização para outras cidades/estilos arquitetônicos não foi testada.\n"
+        ),
+    },
+    "gov.lgpd": {"en": "⚖️ LGPD & Data Governance", "pt": "⚖️ LGPD & Governança de Dados"},
+    "gov.lgpd.body": {
+        "en": (
+            "- Only **public-area** satellite imagery is used — no private property interiors, no people, no\n"
+            "  license plates are annotated.\n"
+            "- Attribution is preserved for all imagery: *Source: Esri, Maxar, Earthstar Geographics, and the\n"
+            "  GIS User Community.*\n"
+            "- Data collection, annotation criteria, and experiment seeds are documented for reproducibility\n"
+            "  and audit purposes (see `README.md`, section \"Ethics, LGPD and Governance\").\n"
+            "- The scope is strictly academic/technical — no individual surveillance use case is intended or\n"
+            "  supported by this project.\n"
+        ),
+        "pt": (
+            "- Somente imagens de satélite de **área pública** são usadas — nenhum interior de propriedade privada, pessoa ou\n"
+            "  placa de veículo é anotado.\n"
+            "- A atribuição é preservada em todas as imagens: *Fonte: Esri, Maxar, Earthstar Geographics, e a\n"
+            "  GIS User Community.*\n"
+            "- A coleta de dados, os critérios de anotação e as seeds dos experimentos são documentados para reprodutibilidade\n"
+            "  e fins de auditoria (veja `README.md`, seção \"Ethics, LGPD and Governance\").\n"
+            "- O escopo é estritamente acadêmico/técnico — nenhum uso de vigilância individual é pretendido ou\n"
+            "  suportado por este projeto.\n"
+        ),
+    },
+
+    # ---- Tab: About & Team ----
+    "about.header": {"en": "👥 About & Team", "pt": "👥 Sobre & Equipe"},
+    "about.body": {
+        "en": (
+            "**Helipad Detector** started from a straightforward observation: rooftop helipads have a "
+            "distinctive top-down shape, but they're genuinely easy to confuse with pools, sports courts, "
+            "and other rooftop structures in dense urban satellite imagery — which makes them a good "
+            "real-world target for practicing the full Computer Vision lifecycle, not just model training. "
+            "The project was built end-to-end by the team: scraping and geocoding public helipad records, "
+            "converting coordinates into satellite tile downloads, manually triaging and annotating a "
+            "dataset from scratch in Roboflow, training and comparing multiple YOLOv8n/YOLOv11n "
+            "experiments in Google Colab, and — beyond the course's minimum requirement — running a field "
+            "validation pass across 7,900+ real, uncurated tiles from ten São Paulo neighborhoods to check "
+            "how the model holds up outside the curated test set. This dashboard is the public-facing layer "
+            "of that work, built so the model, the data, and the documented failure modes are all directly "
+            "inspectable rather than hidden behind a single accuracy number."
+        ),
+        "pt": (
+            "O **Helipad Detector** nasceu de uma observação simples: helipontos em telhados têm um formato "
+            "característico visto de cima, mas são genuinamente fáceis de confundir com piscinas, quadras "
+            "esportivas e outras estruturas de telhado em imagens de satélite de áreas urbanas densas — o que os torna "
+            "um bom alvo real para praticar o ciclo completo de Visão Computacional, não só o treino do modelo. "
+            "O projeto foi construído de ponta a ponta pela equipe: coleta e geocodificação de registros públicos de helipontos, "
+            "conversão de coordenadas em downloads de tiles de satélite, triagem manual e anotação de um "
+            "dataset construído do zero no Roboflow, treinamento e comparação de múltiplos experimentos "
+            "YOLOv8n/YOLOv11n no Google Colab, e — além do mínimo exigido pelo curso — uma etapa de validação "
+            "de campo em mais de 7.900 tiles reais e não curados de dez bairros de São Paulo, para checar "
+            "como o modelo se comporta fora do conjunto de teste curado. Este dashboard é a camada pública "
+            "desse trabalho, construída para que o modelo, os dados e os modos de falha documentados sejam todos "
+            "diretamente inspecionáveis, em vez de escondidos atrás de um único número de acurácia."
+        ),
+    },
+    "about.institution": {"en": "Institution", "pt": "Instituição"},
+    "about.program": {"en": "Program", "pt": "Curso"},
+    "about.course": {"en": "Course", "pt": "Disciplina"},
+    "about.professor": {"en": "Professor", "pt": "Professor"},
+    "about.authors": {"en": "Authors", "pt": "Autores"},
+
+    # ---- Tab 7: Downloads ----
+    "dl.subheader": {"en": "⬇️ Download Center", "pt": "⬇️ Central de Downloads"},
+    "dl.caption": {
+        "en": "Everything below is a real file already in this repository — nothing is generated on the fly with placeholder data.",
+        "pt": "Tudo abaixo é um arquivo real já presente neste repositório — nada é gerado na hora com dados de exemplo.",
+    },
+    "dl.executive_report": {"en": "**📄 Executive Report**", "pt": "**📄 Relatório Executivo**"},
+    "dl.exec_en_button": {"en": "⬇️ Executive Report (English, PDF)", "pt": "⬇️ Relatório Executivo (Inglês, PDF)"},
+    "dl.exec_pt_button": {"en": "⬇️ Relatório Executivo (Português, PDF)", "pt": "⬇️ Relatório Executivo (Português, PDF)"},
+    "dl.not_found": {"en": "Not found: `{path}`", "pt": "Não encontrado: `{path}`"},
+    "dl.dataset_metrics": {"en": "**📦 Dataset & Metrics**", "pt": "**📦 Dataset & Métricas**"},
+    "dl.dataset_button": {"en": "⬇️ Annotated Dataset (.rar)", "pt": "⬇️ Dataset Anotado (.rar)"},
+    "dl.metrics_button": {"en": "⬇️ Experiment Metrics (.csv)", "pt": "⬇️ Métricas dos Experimentos (.csv)"},
+    "dl.no_metrics": {
+        "en": "No experiment metrics available yet to export.",
+        "pt": "Ainda não há métricas de experimentos disponíveis para exportar.",
+    },
+    "dl.field_validation": {"en": "**🌍 Field Validation**", "pt": "**🌍 Validação de Campo**"},
+    "dl.field_json_button": {"en": "⬇️ Detection Summary by Region (.json)", "pt": "⬇️ Resumo de Detecção por Região (.json)"},
+    "dl.field_log_button": {"en": "⬇️ Field Triage Log (.txt)", "pt": "⬇️ Log de Triagem de Campo (.txt)"},
+    "dl.repo_title": {"en": "Explore the full source code", "pt": "Explore o código-fonte completo"},
+    "dl.repo_desc": {
+        "en": "Architecture, datasets, notebooks, and the complete AI pipeline are all on GitHub.",
+        "pt": "Arquitetura, datasets, notebooks e o pipeline completo de IA estão todos no GitHub.",
+    },
+
+    # ---- Metrics tab ----
+    "metrics.subheader": {"en": "📊 Experiment Metrics", "pt": "📊 Métricas dos Experimentos"},
+    "metrics.no_csv": {
+        "en": "No `results.csv` found yet under `artifacts/runs/detect/*/` (or `artifacts/runs/runs/detect/*/`).",
+        "pt": "Nenhum `results.csv` encontrado ainda em `artifacts/runs/detect/*/` (ou `artifacts/runs/runs/detect/*/`).",
+    },
+    "metrics.best_epoch": {"en": "Best epoch:", "pt": "Melhor época:"},
+    "metrics.outperformed": {
+        "en": "**{exp}** outperformed exp1 on mAP@50-95 ({delta}).",
+        "pt": "**{exp}** superou o exp1 em mAP@50-95 ({delta}).",
+    },
+    "metrics.underperformed": {
+        "en": "**{exp}** scored lower than exp1 on mAP@50-95 ({delta}) — possible overfitting.",
+        "pt": "**{exp}** teve resultado inferior ao exp1 em mAP@50-95 ({delta}) — possível overfitting.",
+    },
+    "metrics.tied": {
+        "en": "**{exp}** is essentially tied with exp1 (Δ {delta}).",
+        "pt": "**{exp}** está essencialmente empatado com o exp1 (Δ {delta}).",
+    },
+    "metrics.evolution": {"en": "#### 📈 Metric evolution per epoch", "pt": "#### 📈 Evolução da métrica por época"},
+    "metrics.metric_label": {"en": "Metric", "pt": "Métrica"},
+    "metrics.epoch": {"en": "Epoch", "pt": "Época"},
+    "metrics.confusion_matrix": {"en": "#### 🔀 Confusion matrix", "pt": "#### 🔀 Matriz de confusão"},
+    "metrics.experiment_label": {"en": "Experiment", "pt": "Experimento"},
+    "metrics.cm_not_found": {"en": "confusion_matrix.png not found at: `{path}`", "pt": "confusion_matrix.png não encontrado em: `{path}`"},
+    "metrics.cm_norm_not_found": {"en": "confusion_matrix_normalized.png not found at: `{path}`", "pt": "confusion_matrix_normalized.png não encontrado em: `{path}`"},
+    "metrics.cm_caption": {"en": "confusion matrix", "pt": "matriz de confusão"},
+    "metrics.cm_norm_caption": {"en": "normalized", "pt": "normalizada"},
+
+    # ---- Field detections tab ----
+    "field.subheader": {"en": "🌍 Field Detections by Region (real-world tiles)", "pt": "🌍 Detecções de Campo por Região (tiles reais)"},
+    "field.last_updated": {"en": "🕒 Last updated: {date}", "pt": "🕒 Última atualização: {date}"},
+    "field.no_summary": {
+        "en": "No field-detection summary found yet at `{path}`. Run `src/geospatial/auto_triage_regions.py` to generate it.",
+        "pt": "Nenhum resumo de detecção de campo encontrado ainda em `{path}`. Rode `src/geospatial/auto_triage_regions.py` para gerá-lo.",
+    },
+    "field.detected_total": {"en": "Helipads detected (total)", "pt": "Helipontos detectados (total)"},
+    "field.tiles_processed": {"en": "Tiles processed", "pt": "Tiles processados"},
+    "field.overall_rate": {"en": "Overall detection rate", "pt": "Taxa de detecção geral"},
+    "field.detection_rate_pct": {"en": "Detection rate (%)", "pt": "Taxa de detecção (%)"},
+    "field.region_col": {"en": "Region", "pt": "Região"},
+    "field.tiles_col": {"en": "Tiles", "pt": "Tiles"},
+    "field.detected_col": {"en": "Detected", "pt": "Detectado"},
+    "field.rate_col": {"en": "Rate", "pt": "Taxa"},
+    "field.top_confidence_col": {"en": "Top Confidence", "pt": "Confiança Máxima"},
+    "field.inter_zone_note": {
+        "en": "ℹ️ **Inter-Zone Corridor**: a bounding box covering the transition area between "
+              "neighboring corporate districts, rather than a single named neighborhood.",
+        "pt": "ℹ️ **Inter-Zone Corridor**: uma bounding box cobrindo a área de transição entre "
+              "distritos corporativos vizinhos, em vez de um único bairro nomeado.",
+    },
+
+    # ---- Footer ----
+    "footer.tagline": {"en": "🚁 *Finding hidden H's in the Concrete Jungle*", "pt": "🚁 *Encontrando \"H\"s escondidos na Selva de Pedra*"},
+    "footer.line2": {"en": "One rooftop at a time. ⚡", "pt": "Um telhado de cada vez. ⚡"},
+    "footer.line3": {"en": "SÃO PAULO • YOLO • ESRI WORLD IMAGERY", "pt": "SÃO PAULO • YOLO • ESRI WORLD IMAGERY"},
+}
+
+
 st.set_page_config(
     page_title="Helipad Detector • São Paulo",
     page_icon="🚁",
@@ -412,28 +819,32 @@ def load_field_detection_summary():
 
 MODEL_OPTIONS = discover_models()
 
-# ========================= SIDEBAR: MODEL SELECTION =========================
+# ========================= SIDEBAR: LANGUAGE + MODEL SELECTION =========================
 with st.sidebar:
-    st.markdown("### ⚙️ Model")
+    lang_choice = st.radio(
+        "Language / Idioma",
+        options=["🇬🇧 English", "🇧🇷 Português"],
+        index=0 if st.session_state["lang"] == "en" else 1,
+        horizontal=True,
+        label_visibility="collapsed",
+        key="lang_radio",
+    )
+    st.session_state["lang"] = "en" if lang_choice.startswith("🇬🇧") else "pt"
+
+    st.markdown(f"### {t('sidebar.model')}")
     if not MODEL_OPTIONS:
-        st.warning(
-            "No trained model found at `artifacts/runs/detect/*/weights/best.pt` (or `artifacts/runs/runs/detect/*/...`) yet. "
-            "Detection features (Upload, Search by Region, Sample Images) are disabled until "
-            "one is available — but the Map, Pipeline & Governance, and Downloads tabs below "
-            "don't need a model and work right now."
-        )
+        st.warning(t("sidebar.no_model.warning"))
         st.session_state["model_choice"] = None
         conf_threshold = 0.25
     else:
         st.selectbox(
-            "Choose the trained experiment",
+            t("sidebar.choose_experiment"),
             options=list(MODEL_OPTIONS.keys()),
             key="model_choice",
-            help="Every folder under artifacts/runs/detect/ (or artifacts/runs/runs/detect/) with a ready best.pt shows up here "
-                 "automatically — including future experiments, no app edits needed."
+            help=t("sidebar.choose_experiment.help"),
         )
         conf_threshold = st.slider(
-            "Minimum detection confidence", min_value=0.05, max_value=0.95, value=0.25, step=0.05
+            t("sidebar.confidence"), min_value=0.05, max_value=0.95, value=0.25, step=0.05
         )
 
 # ========================= TILE HELPERS =========================
@@ -468,12 +879,12 @@ def detect_helipad(image, model: YOLO, conf: float):
     return plotted, len(result.boxes) > 0
 
 # ========================= INTERFACE =========================
-st.markdown('<h1 class="main-title">🚁 Helipad Detection</h1>', unsafe_allow_html=True)
-st.markdown('<p class="subtitle">AI + Satellite Imagery • São Paulo</p>', unsafe_allow_html=True)
+st.markdown(f'<h1 class="main-title">{t("main.title")}</h1>', unsafe_allow_html=True)
+st.markdown(f'<p class="subtitle">{t("main.subtitle")}</p>', unsafe_allow_html=True)
 if MODEL_OPTIONS:
-    st.caption(f"Active model: **{st.session_state.get('model_choice') or list(MODEL_OPTIONS)[0]}**")
+    st.caption(f"{t('main.active_model')} **{st.session_state.get('model_choice') or list(MODEL_OPTIONS)[0]}**")
 else:
-    st.caption("Active model: _none yet — detection tabs disabled_")
+    st.caption(f"{t('main.active_model')} {t('main.active_model.none')}")
 
 model = get_selected_model()
 
@@ -482,19 +893,19 @@ model = get_selected_model()
 metrics_df = load_experiment_metrics()
 
 tab_metrics, tab_field, tab4, tab2, tab3, tab1, tab5, tab6, tab_about, tab7 = st.tabs([
-    "📊 Experiment Metrics", "🌍 Field Detections by Region", "🗺️ Map",
-    "🔎 Search by Region (Satellite)", "🖼️ Sample Images", "📤 Upload Image",
-    "📖 Pipeline", "🛡️ Governance", "👥 About & Team", "⬇️ Downloads",
+    t("tabs.metrics"), t("tabs.field"), t("tabs.map"),
+    t("tabs.search"), t("tabs.samples"), t("tabs.upload"),
+    t("tabs.pipeline"), t("tabs.governance"), t("tabs.about"), t("tabs.downloads"),
 ])
 
 # ====================== TAB 1: Upload ======================
 with tab1:
     if model is None:
-        st.info("⚠️ No trained model yet — train exp1/exp2/exp3 and this tab will activate automatically.")
+        st.info(t("upload.no_model.info"))
     else:
-        images = st.file_uploader("Upload aerial images",
+        images = st.file_uploader(t("upload.uploader.label"),
                                    type=["jpg", "jpeg", "png"],
-                                   accept_multiple_files=True, max_upload_size=10, help="Satellite or drone images with good resolution, as close to the target as possible, are recommended.")
+                                   accept_multiple_files=True, max_upload_size=10, help=t("upload.uploader.help"))
 
         if images:
             for idx, image_file in enumerate(images):
@@ -502,37 +913,37 @@ with tab1:
                 original = Image.open(image_file)
 
                 with col1:
-                    st.image(original, caption="Original", use_container_width=True)
+                    st.image(original, caption=t("upload.original_caption"), use_container_width=True)
 
                 with col2:
                     result_img, has_helipad = detect_helipad(original, model, conf_threshold)
-                    st.image(result_img, caption="Detection", use_container_width=True)
+                    st.image(result_img, caption=t("upload.detection_caption"), use_container_width=True)
                     if has_helipad:
-                        st.success("✅ Helipad detected!")
+                        st.success(t("upload.success"))
                     else:
-                        st.warning("No helipad found.")
+                        st.warning(t("upload.warning_none"))
 
 # ====================== TAB 2: Bounding Box Search ======================
 with tab2:
-    st.subheader("🔎 Search for Helipads in a Region")
-    st.caption("Use the coordinates of the desired region (e.g. Downtown São Paulo)")
+    st.subheader(t("search.subheader"))
+    st.caption(t("search.caption"))
 
     col_a, col_b = st.columns(2)
     with col_a:
-        lon_min = st.number_input("Min Longitude", value=-46.6583, format="%.6f")
-        lat_min = st.number_input("Min Latitude", value=-23.5827, format="%.6f")
+        lon_min = st.number_input(t("search.lon_min"), value=-46.6583, format="%.6f")
+        lat_min = st.number_input(t("search.lat_min"), value=-23.5827, format="%.6f")
     with col_b:
-        lon_max = st.number_input("Max Longitude", value=-46.6311, format="%.6f")
-        lat_max = st.number_input("Max Latitude", value=-23.5536, format="%.6f")
+        lon_max = st.number_input(t("search.lon_max"), value=-46.6311, format="%.6f")
+        lat_max = st.number_input(t("search.lat_max"), value=-23.5536, format="%.6f")
 
-    zoom = st.slider("Zoom (recommended: 19)", 16, 20, 19)
-    search_btn = st.button("🚀 Search and Analyze Region", type="primary", use_container_width=True)
+    zoom = st.slider(t("search.zoom"), 16, 20, 19)
+    search_btn = st.button(t("search.button"), type="primary", use_container_width=True)
 
     if search_btn:
         if model is None:
-            st.error("⚠️ No trained model yet — this feature needs a model to run detection.")
+            st.error(t("search.no_model.error"))
         else:
-          with st.spinner("Downloading satellite tiles and analyzing with AI... (this may take a while)"):
+          with st.spinner(t("search.spinner")):
             temp_dir = Path(tempfile.mkdtemp())
 
             try:
@@ -541,13 +952,13 @@ with tab2:
 
                 jobs = [(zoom, x, y) for x in range(x_min, x_max+1) for y in range(y_min, y_max+1)]
 
-                st.info(f"Processing **{len(jobs)}** satellite tiles...")
-                progress = st.progress(0, "Progress: ")
+                st.info(f"{t('search.processing')} **{len(jobs)}** {t('search.satellite_tiles')}")
+                progress = st.progress(0, f"{t('search.progress')} ")
 
                 detected_tiles = []
 
                 for i, (z, x, y) in enumerate(jobs):
-                    progress.progress((i+1)/len(jobs), f"Progress: {i+1}/{len(jobs)} tiles")
+                    progress.progress((i+1)/len(jobs), f"{t('search.progress')} {i+1}/{len(jobs)} tiles")
 
                     tile_path = download_tile(z, x, y, temp_dir)
                     if not tile_path:
@@ -560,7 +971,7 @@ with tab2:
                         detected_tiles.append((result_img, f"tile_z{z}_x{x}_y{y}.jpg"))
 
                 if detected_tiles:
-                    st.success(f"🎯 **{len(detected_tiles)} helipad(s) found** in the region!")
+                    st.success(f"🎯 **{len(detected_tiles)} {t('search.found')}** {t('search.in_region')}")
 
                     cols = st.columns(3)
                     for idx, (img_array, filename) in enumerate(detected_tiles):
@@ -572,7 +983,7 @@ with tab2:
                             buf.seek(0)
 
                             st.download_button(
-                                label="⬇️ Download",
+                                label=t("search.download"),
                                 data=buf,
                                 file_name=filename.replace(".jpg", "_detected.png"),
                                 mime="image/png",
@@ -580,20 +991,17 @@ with tab2:
                             )
 
                     if len(detected_tiles) > 1:
-                        st.info("Use the buttons above to download individually.")
+                        st.info(t("search.download_individually"))
                 else:
-                    st.warning("No helipad was found in this region.")
+                    st.warning(t("search.none_found"))
 
             finally:
                 shutil.rmtree(temp_dir, ignore_errors=True)
 
 # ====================== TAB 3: Sample Images ======================
 with tab3:
-    st.subheader("🖼️ Test with Sample Images")
-    st.caption(
-        "Don't have your own image handy? Use the satellite images already included in the "
-        "repository to test the detector right away."
-    )
+    st.subheader(t("samples.subheader"))
+    st.caption(t("samples.caption"))
 
     sample_files = []
     if SAMPLES_DIR.exists():
@@ -602,27 +1010,23 @@ with tab3:
         )
 
     if not sample_files:
-        st.info(
-            f"No sample images found at `{SAMPLES_DIR}/`. "
-            "If you're running this app outside the cloned repository, download the sample "
-            "images directly from GitHub and place them in that folder."
-        )
+        st.info(t("samples.none_found").format(dir=SAMPLES_DIR))
     else:
-        st.write(f"**{len(sample_files)} sample image(s) available.**")
+        st.write(f"**{len(sample_files)} {t('samples.available')}**")
 
         preview_cols = st.columns(min(len(sample_files), 6))
         for i, path in enumerate(sample_files[:6]):
             with preview_cols[i % len(preview_cols)]:
                 st.image(str(path), use_container_width=True, caption=path.name)
         if len(sample_files) > 6:
-            st.caption(f"...and {len(sample_files) - 6} more image(s).")
+            st.caption(t("samples.more").format(n=len(sample_files) - 6))
 
         col_run, col_dl = st.columns(2)
 
         with col_run:
             st.markdown('<div class="sample-btn">', unsafe_allow_html=True)
             run_samples = st.button(
-                "🚀 Run detection on all sample images",
+                t("samples.run_button"),
                 use_container_width=True,
             )
             st.markdown('</div>', unsafe_allow_html=True)
@@ -637,7 +1041,7 @@ with tab3:
             zip_buffer.seek(0)
 
             st.download_button(
-                "⬇️ Download all sample images (.zip)",
+                t("samples.download_zip"),
                 data=zip_buffer,
                 file_name="helipad_sample_images.zip",
                 mime="application/zip",
@@ -646,15 +1050,15 @@ with tab3:
 
         if run_samples:
             if model is None:
-                st.error("⚠️ No trained model yet — this feature needs a model to run detection.")
+                st.error(t("samples.no_model.error"))
             else:
-              with st.spinner(f"Analyzing {len(sample_files)} sample image(s)..."):
-                progress = st.progress(0, "Progress:")
+              with st.spinner(f"{t('samples.analyzing')} {len(sample_files)} {t('samples.sample_images')}"):
+                progress = st.progress(0, t("search.progress"))
                 result_cols = st.columns(3)
                 hits = 0
 
                 for i, path in enumerate(sample_files):
-                    progress.progress((i + 1) / len(sample_files), f"Progress: {i+1}/{len(sample_files)}")
+                    progress.progress((i + 1) / len(sample_files), f"{t('search.progress')} {i+1}/{len(sample_files)}")
                     img = Image.open(path)
                     result_img, has_detection = detect_helipad(img, model, conf_threshold)
                     if has_detection:
@@ -662,37 +1066,30 @@ with tab3:
                     with result_cols[i % 3]:
                         st.image(result_img, caption=path.name, use_container_width=True)
                         if has_detection:
-                            st.success("✅ Detected")
+                            st.success(t("samples.detected"))
                         else:
-                            st.warning("No detection")
+                            st.warning(t("samples.no_detection"))
 
-                st.info(f"**Summary:** helipad detected in {hits} of {len(sample_files)} sample image(s).")
+                st.info(t("samples.summary").format(hits=hits, total=len(sample_files)))
 
 # ====================== TAB 4: Interactive Map ======================
 with tab4:
-    st.subheader("🗺️ Helipad Locations — two layers")
+    st.subheader(t("map.subheader"))
 
     col_caption, col_toggle = st.columns([4, 1])
     with col_caption:
-        st.caption(
-            "🟢 **São Paulo training neighborhoods** — region-level bounding boxes used for "
-            "training · 🔵 **Discovery dataset** — helipad candidates found across other "
-            "Brazilian states."
-        )
+        st.caption(t("map.caption"))
     with col_toggle:
-        dark_mode = st.toggle("🌙 Dark mode", value=True, key="map_theme")
+        dark_mode = st.toggle(t("map.dark_mode"), value=True, key="map_theme")
 
     map_tiles = "CartoDB dark_matter" if dark_mode else "CartoDB positron"
-    map_tiles_label = "🌙 Dark base map" if dark_mode else "☀️ Light base map"
+    map_tiles_label = t("map.dark_base") if dark_mode else t("map.light_base")
 
     sp_df = load_helipad_locations(SP_COORDS_CSV)
     other_df = load_helipad_locations(COORDS_CSV)
 
     if sp_df.empty and other_df.empty:
-        st.info(
-            f"No coordinates found at `{SP_COORDS_CSV}` or `{COORDS_CSV}`. "
-            "See the Execution Guide to generate them."
-        )
+        st.info(t("map.no_coords.info").format(sp=SP_COORDS_CSV, other=COORDS_CSV))
     else:
         lat_parts = [df["lat"] for df in (sp_df, other_df) if not df.empty]
         lon_parts = [df["lon"] for df in (sp_df, other_df) if not df.empty]
@@ -707,18 +1104,18 @@ with tab4:
         fmap = folium.Map(location=[center_lat, center_lon], zoom_start=5, tiles=None)
         folium.TileLayer(tiles=tile_url, attr=CARTO_ATTR, name=map_tiles_label, control=True).add_to(fmap)
 
-        sp_layer = folium.FeatureGroup(name=f"🟢 São Paulo ({len(sp_df)})", show=True)
+        sp_layer = folium.FeatureGroup(name=f"🟢 {t('map.sp_layer')} ({len(sp_df)})", show=True)
         for _, row in sp_df.iterrows():
             name = format_region_display(row.get("Nome do Bairro", "Unknown"))
             folium.Marker(
                 location=[row["lat"], row["lon"]],
-                popup=folium.Popup(f"<b>{name}</b><br>São Paulo training region", max_width=250),
+                popup=folium.Popup(f"<b>{name}</b><br>{t('map.training_region')}", max_width=250),
                 tooltip=name,
                 icon=folium.Icon(color="green", icon="home"),
             ).add_to(sp_layer)
         sp_layer.add_to(fmap)
 
-        other_layer = folium.FeatureGroup(name=f"🔵 Other states ({len(other_df)})", show=True)
+        other_layer = folium.FeatureGroup(name=f"🔵 {t('map.other_layer')} ({len(other_df)})", show=True)
         for _, row in other_df.iterrows():
             neighborhood = row.get("Nome do Bairro", "Unknown")
             timestamp = row.get("Carimbo de data/hora", "")
@@ -737,7 +1134,7 @@ with tab4:
             rates = [r["detection_rate"] for r in regions_by_slug.values()]
             min_rate, max_rate = (min(rates), max(rates)) if rates else (0.0, 1.0)
 
-            detection_layer = folium.FeatureGroup(name="🔵 Field detection rate", show=True)
+            detection_layer = folium.FeatureGroup(name=t("map.detection_rate_layer"), show=True)
             matched = 0
             for _, row in sp_df.iterrows():
                 name = row.get("Nome do Bairro", "")
@@ -759,8 +1156,8 @@ with tab4:
                     tooltip=f"{display_name}: {region_stats['tiles_detected']}/{region_stats['tiles_total']} ({rate*100:.1f}%)",
                     popup=folium.Popup(
                         f"<b>{display_name}</b><br>"
-                        f"{region_stats['tiles_detected']} of {region_stats['tiles_total']} tiles detected<br>"
-                        f"Rate: {rate*100:.1f}%",
+                        f"{region_stats['tiles_detected']} {t('map.tiles_detected')}<br>"
+                        f"{t('map.rate')}: {rate*100:.1f}%",
                         max_width=250,
                     ),
                 ).add_to(detection_layer)
@@ -770,11 +1167,11 @@ with tab4:
         folium.LayerControl(collapsed=False).add_to(fmap)
         _force_leaflet_resize(fmap)
 
-        st.write(f"**{len(sp_df)} São Paulo region(s)** 🟢  ·  **{len(other_df)} other-state helipad(s)** 🔵")
+        st.write(t("map.summary").format(sp=len(sp_df), other=len(other_df)))
         st_folium(fmap, use_container_width=True, height=520, key=f"main_map_{map_tiles}")
 
-        with st.expander("📋 Raw coordinate data"):
-            t1, t2 = st.tabs(["São Paulo", "Other states"])
+        with st.expander(t("map.raw_data_expander")):
+            t1, t2 = st.tabs([t("map.raw_data.sp_tab"), t("map.raw_data.other_tab")])
             with t1:
                 sp_df_display = sp_df.copy()
                 if "Nome do Bairro" in sp_df_display.columns:
@@ -788,19 +1185,16 @@ with tab4:
         st.divider()
         col_density_title, col_density_toggle = st.columns([4, 1])
         with col_density_title:
-            st.subheader("🌡️ Density view")
-            st.caption(
-                "Discovery dataset (other states), rendered as a point + heatmap "
-                "view — generated live with Folium/CartoDB, no API key or account required."
-            )
+            st.subheader(t("map.density.subheader"))
+            st.caption(t("map.density.caption"))
         with col_density_toggle:
-            density_dark_mode = st.toggle("🌙 Dark mode", value=True, key="density_map_theme")
+            density_dark_mode = st.toggle(t("map.dark_mode"), value=True, key="density_map_theme")
 
         density_tiles = "CartoDB dark_matter" if density_dark_mode else "CartoDB positron"
         density_tile_url = CARTO_DARK_URL if density_dark_mode else CARTO_LIGHT_URL
 
         if other_df.empty:
-            st.info(f"No coordinates found at `{COORDS_CSV}` to render a density view.")
+            st.info(t("map.density.no_coords").format(path=COORDS_CSV))
         else:
             dark_map = folium.Map(
                 location=[other_df["lat"].mean(), other_df["lon"].mean()],
@@ -837,19 +1231,19 @@ with tab4:
 
 # ====================== TAB 5: Pipeline & Governance ======================
 with tab5:
-    st.subheader("📖 Project Pipeline")
-    st.caption("How raw satellite imagery becomes a validated helipad detector.")
+    st.subheader(t("pipeline.subheader"))
+    st.caption(t("pipeline.caption"))
 
     pipeline_steps = [
-        ("🔍", "Discovery", "Selenium scrapes a public aviation website for helipad records and coordinates."),
-        ("📐", "Coordinate conversion", "Each point becomes a geographic bounding box (±0.0005°)."),
-        ("🛰️", "Tile download", "ESRI World Imagery tiles are downloaded for each bounding box."),
-        ("🖼️", "Manual triage", "A human reviews mosaics and keeps only tiles with a visible helipad."),
-        ("🏷️", "Annotation (Roboflow)", "Bounding boxes are drawn, single class: helipad."),
-        ("🧠", "Training (Colab, GPU)", "YOLOv8n/YOLO11n is trained on the annotated dataset."),
-        ("📊", "Evaluation", "Precision, recall, mAP, and confusion matrix are computed."),
-        ("🌍", "Field validation", "The best model is run across 7,900+ real tiles from 10 SP neighborhoods to measure real-world detection rates."),
-        ("🚁", "This app", "The trained model runs inference on new images or regions."),
+        ("🔍", t("pipeline.step1.title"), t("pipeline.step1.desc")),
+        ("📐", t("pipeline.step2.title"), t("pipeline.step2.desc")),
+        ("🛰️", t("pipeline.step3.title"), t("pipeline.step3.desc")),
+        ("🖼️", t("pipeline.step4.title"), t("pipeline.step4.desc")),
+        ("🏷️", t("pipeline.step5.title"), t("pipeline.step5.desc")),
+        ("🧠", t("pipeline.step6.title"), t("pipeline.step6.desc")),
+        ("📊", t("pipeline.step7.title"), t("pipeline.step7.desc")),
+        ("🌍", t("pipeline.step8.title"), t("pipeline.step8.desc")),
+        ("🚁", t("pipeline.step9.title"), t("pipeline.step9.desc")),
     ]
 
     n = len(pipeline_steps)
@@ -858,14 +1252,14 @@ with tab5:
     for row in rows:
         row_cols = st.columns(3)
         for col, (icon, title, desc) in zip(row_cols, row):
-            t = step_idx / (n - 1) if n > 1 else 0.0
-            base = blue_scale(t)
+            frac = step_idx / (n - 1) if n > 1 else 0.0
+            base = blue_scale(frac)
             bg_light = _shade(base, 0.22)
             bg_dark = _shade(base, -0.22)
             gradient = f"linear-gradient(135deg, {bg_light} 0%, {base} 55%, {bg_dark} 100%)"
             accent_rgb = _hex_to_rgb(base)
             glow = f"rgba({accent_rgb[0]},{accent_rgb[1]},{accent_rgb[2]},0.38)"
-            is_light = t >= 0.6
+            is_light = frac >= 0.6
             title_color = "#0F172A" if is_light else "#FFFFFF"
             desc_color = "#334155" if is_light else "#DBEAFE"
             badge_bg = "rgba(15,23,42,0.10)" if is_light else "rgba(255,255,255,0.20)"
@@ -883,59 +1277,28 @@ with tab5:
 
 # ====================== TAB 6: Governance ======================
 with tab6:
-    st.subheader("🛡️ Responsible AI")
-    st.markdown("""
-- **Fairness & scope**: the model detects a single object class (helipad) on public-area satellite
-  imagery; it does not identify, track, or profile individuals.
-- **Transparency**: this dashboard shows the real precision/recall/mAP of the model, including its
-  known false-positive patterns (rooftop structures, pools, sports courts resembling the helipad "H").
-- **Human oversight**: detections are a decision-support signal, not an automated final judgment —
-  qualitative review of hits, false positives, and false negatives is part of the evaluation process.
-- **Known limitations**: trained on a small dataset (~150 images) from specific São Paulo
-  neighborhoods; generalization to other cities/architectural styles is untested.
-""")
+    st.subheader(t("gov.responsible_ai"))
+    st.markdown(t("gov.responsible_ai.body"))
 
-    st.subheader("⚖️ LGPD & Data Governance")
-    st.markdown("""
-- Only **public-area** satellite imagery is used — no private property interiors, no people, no
-  license plates are annotated.
-- Attribution is preserved for all imagery: *Source: Esri, Maxar, Earthstar Geographics, and the
-  GIS User Community.*
-- Data collection, annotation criteria, and experiment seeds are documented for reproducibility
-  and audit purposes (see `README.md`, section "Ethics, LGPD and Governance").
-- The scope is strictly academic/technical — no individual surveillance use case is intended or
-  supported by this project.
-""")
+    st.subheader(t("gov.lgpd"))
+    st.markdown(t("gov.lgpd.body"))
 
 # ====================== TAB: About & Team ======================
 with tab_about:
-    st.header("👥 About & Team")
-    st.markdown(
-        "**Helipad Detector** started from a straightforward observation: rooftop helipads have a "
-        "distinctive top-down shape, but they're genuinely easy to confuse with pools, sports courts, "
-        "and other rooftop structures in dense urban satellite imagery — which makes them a good "
-        "real-world target for practicing the full Computer Vision lifecycle, not just model training. "
-        "The project was built end-to-end by the team: scraping and geocoding public helipad records, "
-        "converting coordinates into satellite tile downloads, manually triaging and annotating a "
-        "dataset from scratch in Roboflow, training and comparing multiple YOLOv8n/YOLOv11n "
-        "experiments in Google Colab, and — beyond the course's minimum requirement — running a field "
-        "validation pass across 7,900+ real, uncurated tiles from ten São Paulo neighborhoods to check "
-        "how the model holds up outside the curated test set. This dashboard is the public-facing layer "
-        "of that work, built so the model, the data, and the documented failure modes are all directly "
-        "inspectable rather than hidden behind a single accuracy number."
-    )
-    st.markdown("""
+    st.header(t("about.header"))
+    st.markdown(t("about.body"))
+    st.markdown(f"""
     <div class="dark-card" style="text-align:left;">
         <table style="width:100%; font-size:14px; color:#E2E8F0; border-collapse:collapse;">
-            <tr><td style="padding:6px 0; color:#93C5FD; width:160px; vertical-align:top;">Institution</td>
+            <tr><td style="padding:6px 0; color:#93C5FD; width:160px; vertical-align:top;">{t("about.institution")}</td>
                 <td style="padding:6px 0;"><b>PUC-SP — FACEI</b></td></tr>
-            <tr><td style="padding:6px 0; color:#93C5FD; vertical-align:top;">Program</td>
+            <tr><td style="padding:6px 0; color:#93C5FD; vertical-align:top;">{t("about.program")}</td>
                 <td style="padding:6px 0;">BSc in Human Centered-AI & Data Science</td></tr>
-            <tr><td style="padding:6px 0; color:#93C5FD; vertical-align:top;">Course</td>
+            <tr><td style="padding:6px 0; color:#93C5FD; vertical-align:top;">{t("about.course")}</td>
                 <td style="padding:6px 0;">Machine Learning / Computer Vision — Project P2</td></tr>
-            <tr><td style="padding:6px 0; color:#93C5FD; vertical-align:top;">Professor</td>
+            <tr><td style="padding:6px 0; color:#93C5FD; vertical-align:top;">{t("about.professor")}</td>
                 <td style="padding:6px 0;">Rooney Ribeiro Albuquerque Coelho</td></tr>
-            <tr><td style="padding:6px 0; color:#93C5FD; vertical-align:top;">Authors</td>
+            <tr><td style="padding:6px 0; color:#93C5FD; vertical-align:top;">{t("about.authors")}</td>
                 <td style="padding:6px 0;">
                     Carlos Antonio dos Santos Roth Gorham<br>
                     Fabiana Campanari<br>
@@ -947,66 +1310,66 @@ with tab_about:
 
 # ====================== TAB 7: Downloads ======================
 with tab7:
-    st.subheader("⬇️ Download Center")
-    st.caption("Everything below is a real file already in this repository — nothing is generated on the fly with placeholder data.")
+    st.subheader(t("dl.subheader"))
+    st.caption(t("dl.caption"))
 
     dl_col1, dl_col2 = st.columns(2)
 
     with dl_col1:
-        st.markdown("**📄 Executive Report**")
+        st.markdown(t("dl.executive_report"))
         if EXEC_REPORT_EN.exists():
             with open(EXEC_REPORT_EN, "rb") as f:
-                st.download_button("⬇️ Executive Report (English, PDF)", f, file_name=EXEC_REPORT_EN.name,
+                st.download_button(t("dl.exec_en_button"), f, file_name=EXEC_REPORT_EN.name,
                                     mime="application/pdf", use_container_width=True)
         else:
-            st.caption(f"Not found: `{EXEC_REPORT_EN}`")
+            st.caption(t("dl.not_found").format(path=EXEC_REPORT_EN))
 
         if EXEC_REPORT_PT.exists():
             with open(EXEC_REPORT_PT, "rb") as f:
-                st.download_button("⬇️ Relatório Executivo (Português, PDF)", f, file_name=EXEC_REPORT_PT.name,
+                st.download_button(t("dl.exec_pt_button"), f, file_name=EXEC_REPORT_PT.name,
                                     mime="application/pdf", use_container_width=True)
         else:
-            st.caption(f"Not found: `{EXEC_REPORT_PT}`")
+            st.caption(t("dl.not_found").format(path=EXEC_REPORT_PT))
 
     with dl_col2:
-        st.markdown("**📦 Dataset & Metrics**")
+        st.markdown(t("dl.dataset_metrics"))
         if DATASET_RAR.exists():
             with open(DATASET_RAR, "rb") as f:
-                st.download_button("⬇️ Annotated Dataset (.rar)", f, file_name=DATASET_RAR.name,
+                st.download_button(t("dl.dataset_button"), f, file_name=DATASET_RAR.name,
                                     mime="application/octet-stream", use_container_width=True)
         else:
-            st.caption(f"Not found: `{DATASET_RAR}`")
+            st.caption(t("dl.not_found").format(path=DATASET_RAR))
 
         if not metrics_df.empty:
             csv_bytes = metrics_df.drop(columns=["_dir"], errors="ignore").to_csv(index=False).encode("utf-8")
-            st.download_button("⬇️ Experiment Metrics (.csv)", csv_bytes, file_name="experiment_metrics.csv",
+            st.download_button(t("dl.metrics_button"), csv_bytes, file_name="experiment_metrics.csv",
                                 mime="text/csv", use_container_width=True)
         else:
-            st.caption("No experiment metrics available yet to export.")
+            st.caption(t("dl.no_metrics"))
 
-        st.markdown("**🌍 Field Validation**")
+        st.markdown(t("dl.field_validation"))
         if FIELD_SUMMARY_PATH.exists():
             with open(FIELD_SUMMARY_PATH, "rb") as f:
-                st.download_button("⬇️ Detection Summary by Region (.json)", f, file_name=FIELD_SUMMARY_PATH.name,
+                st.download_button(t("dl.field_json_button"), f, file_name=FIELD_SUMMARY_PATH.name,
                                     mime="application/json", use_container_width=True)
         else:
-            st.caption(f"Not found: `{FIELD_SUMMARY_PATH}`")
+            st.caption(t("dl.not_found").format(path=FIELD_SUMMARY_PATH))
 
         TRIAGE_LOG_PATH = Path("reports/auto_triage_regions_log.txt")
         if TRIAGE_LOG_PATH.exists():
             with open(TRIAGE_LOG_PATH, "rb") as f:
-                st.download_button("⬇️ Field Triage Log (.txt)", f, file_name=TRIAGE_LOG_PATH.name,
+                st.download_button(t("dl.field_log_button"), f, file_name=TRIAGE_LOG_PATH.name,
                                     mime="text/plain", use_container_width=True)
         else:
-            st.caption(f"Not found: `{TRIAGE_LOG_PATH}`")
+            st.caption(t("dl.not_found").format(path=TRIAGE_LOG_PATH))
 
     st.markdown("---")
-    st.markdown("""
+    st.markdown(f"""
     <div class="dark-card">
         <span class="repo-icon">🚁</span>
-        <h4>Explore the full source code</h4>
+        <h4>{t("dl.repo_title")}</h4>
         <p style="color:#CBD5E1; font-size:14px;">
-            Architecture, datasets, notebooks, and the complete AI pipeline are all on GitHub.
+            {t("dl.repo_desc")}
         </p>
         <a href="https://github.com/Mindful-AI-Research/3-project-ai-ml-yolo-helipad_detector" target="_blank" style="color:#93C5FD; font-weight:600;">
             github.com/Mindful-AI-Research/3-project-ai-ml-yolo-helipad_detector
@@ -1016,9 +1379,9 @@ with tab7:
 
 # ========================= METRICS DASHBOARD =========================
 with tab_metrics:
-    st.subheader("📊 Experiment Metrics")
+    st.subheader(t("metrics.subheader"))
     if metrics_df.empty:
-        st.info("No `results.csv` found yet under `artifacts/runs/detect/*/` (or `artifacts/runs/runs/detect/*/`).")
+        st.info(t("metrics.no_csv"))
     else:
         n_exp = len(metrics_df)
         cols = st.columns(n_exp) if n_exp <= 4 else [st.container()]
@@ -1030,7 +1393,7 @@ with tab_metrics:
                 <div class="metric-card">
                     <h4 style="margin:0 0 8px 0;">{row['Experiment']}</h4>
                     <p style="margin:2px 0; color:#64748B; font-size:13px;">
-                        Best epoch: {row['Best Epoch']} / {row['Total Epochs']}
+                        {t('metrics.best_epoch')} {row['Best Epoch']} / {row['Total Epochs']}
                     </p>
                     <p style="margin:6px 0; font-size:22px; font-weight:700; color:#1E3A8A;">
                         {row['mAP@50-95']:.3f}
@@ -1055,18 +1418,18 @@ with tab_metrics:
                     continue
                 delta = row["mAP@50-95"] - exp1_row["mAP@50-95"]
                 if delta > 0.005:
-                    st.success(f"**{row['Experiment']}** outperformed exp1 on mAP@50-95 ({delta:+.4f}).")
+                    st.success(t("metrics.outperformed").format(exp=row['Experiment'], delta=f"{delta:+.4f}"))
                 elif delta < -0.005:
-                    st.warning(f"**{row['Experiment']}** scored lower than exp1 on mAP@50-95 ({delta:+.4f}) — possible overfitting.")
+                    st.warning(t("metrics.underperformed").format(exp=row['Experiment'], delta=f"{delta:+.4f}"))
                 else:
-                    st.info(f"**{row['Experiment']}** is essentially tied with exp1 (Δ {delta:+.4f}).")
+                    st.info(t("metrics.tied").format(exp=row['Experiment'], delta=f"{delta:+.4f}"))
 
         # ---- Per-epoch metric evolution (real data from results.csv) ----
         curves = load_experiment_curves()
         if curves:
-            st.markdown("#### 📈 Metric evolution per epoch")
+            st.markdown(t("metrics.evolution"))
             metric_choice = st.selectbox(
-                "Metric",
+                t("metrics.metric_label"),
                 ["metrics/mAP50-95(B)", "metrics/mAP50(B)", "metrics/precision(B)", "metrics/recall(B)"],
                 format_func=lambda m: m.replace("metrics/", "").replace("(B)", ""),
                 key="metric_choice_curve",
@@ -1079,7 +1442,7 @@ with tab_metrics:
                         mode="lines", name=exp_name,
                     ))
             fig.update_layout(
-                xaxis_title="Epoch", yaxis_title=metric_choice.replace("metrics/", "").replace("(B)", ""),
+                xaxis_title=t("metrics.epoch"), yaxis_title=metric_choice.replace("metrics/", "").replace("(B)", ""),
                 height=320, margin=dict(l=10, r=10, t=10, b=10),
                 legend=dict(orientation="h", yanchor="bottom", y=1.02),
             )
@@ -1087,9 +1450,9 @@ with tab_metrics:
 
         # ---- Confusion matrix per experiment (real image already generated by YOLO) ----
         if not metrics_df.empty and "_dir" in metrics_df.columns:
-            st.markdown("#### 🔀 Confusion matrix")
+            st.markdown(t("metrics.confusion_matrix"))
             cm_exp = st.selectbox(
-                "Experiment", metrics_df["Experiment"].tolist(), key="cm_exp_choice"
+                t("metrics.experiment_label"), metrics_df["Experiment"].tolist(), key="cm_exp_choice"
             )
             exp_dir_str = metrics_df.loc[metrics_df["Experiment"] == cm_exp, "_dir"].iloc[0]
             cm_path = Path(exp_dir_str) / "confusion_matrix.png"
@@ -1097,29 +1460,26 @@ with tab_metrics:
             cm_col1, cm_col2 = st.columns(2)
             with cm_col1:
                 if cm_path.exists():
-                    st.image(str(cm_path), caption=f"{cm_exp} — confusion matrix", use_container_width=True)
+                    st.image(str(cm_path), caption=f"{cm_exp} — {t('metrics.cm_caption')}", use_container_width=True)
                 else:
-                    st.info(f"confusion_matrix.png not found at: `{cm_path.resolve()}`")
+                    st.info(t("metrics.cm_not_found").format(path=cm_path.resolve()))
             with cm_col2:
                 if cm_norm_path.exists():
-                    st.image(str(cm_norm_path), caption=f"{cm_exp} — normalized", use_container_width=True)
+                    st.image(str(cm_norm_path), caption=f"{cm_exp} — {t('metrics.cm_norm_caption')}", use_container_width=True)
                 else:
-                    st.info(f"confusion_matrix_normalized.png not found at: `{cm_norm_path.resolve()}`")
+                    st.info(t("metrics.cm_norm_not_found").format(path=cm_norm_path.resolve()))
 
 # ========================= FIELD DETECTIONS BY REGION =========================
 with tab_field:
-    st.subheader("🌍 Field Detections by Region (real-world tiles)")
+    st.subheader(t("field.subheader"))
     field_summary = load_field_detection_summary()
 
     if FIELD_SUMMARY_PATH.exists():
         last_updated = datetime.fromtimestamp(FIELD_SUMMARY_PATH.stat().st_mtime)
-        st.caption(f"🕒 Last updated: {last_updated.strftime('%b %d, %Y at %H:%M')}")
+        st.caption(t("field.last_updated").format(date=last_updated.strftime('%b %d, %Y at %H:%M')))
 
     if field_summary is None:
-        st.info(
-            f"No field-detection summary found yet at `{FIELD_SUMMARY_PATH}`. "
-            "Run `src/geospatial/auto_triage_regions.py` to generate it."
-        )
+        st.info(t("field.no_summary").format(path=FIELD_SUMMARY_PATH))
     else:
         totals = field_summary.get("totals", {})
         regions = field_summary.get("regions", [])
@@ -1133,21 +1493,21 @@ with tab_field:
             st.markdown(f"""
             <div class="metric-card">
                 <p style="margin:6px 0; font-size:26px; font-weight:700; color:#1E3A8A;">{total_detected}</p>
-                <p style="margin:0; color:#64748B; font-size:12px;">Helipads detected (total)</p>
+                <p style="margin:0; color:#64748B; font-size:12px;">{t("field.detected_total")}</p>
             </div>
             """, unsafe_allow_html=True)
         with card_cols[1]:
             st.markdown(f"""
             <div class="metric-card">
                 <p style="margin:6px 0; font-size:26px; font-weight:700; color:#1E3A8A;">{total_tiles}</p>
-                <p style="margin:0; color:#64748B; font-size:12px;">Tiles processed</p>
+                <p style="margin:0; color:#64748B; font-size:12px;">{t("field.tiles_processed")}</p>
             </div>
             """, unsafe_allow_html=True)
         with card_cols[2]:
             st.markdown(f"""
             <div class="metric-card">
                 <p style="margin:6px 0; font-size:26px; font-weight:700; color:#1E3A8A;">{total_rate*100:.1f}%</p>
-                <p style="margin:0; color:#64748B; font-size:12px;">Overall detection rate</p>
+                <p style="margin:0; color:#64748B; font-size:12px;">{t("field.overall_rate")}</p>
             </div>
             """, unsafe_allow_html=True)
 
@@ -1156,40 +1516,37 @@ with tab_field:
             regions_df = pd.DataFrame(regions).sort_values("detection_rate", ascending=False)
             regions_df["region"] = regions_df["region"].apply(format_region_display)
             regions_df_display = regions_df.rename(columns={
-                "region": "Region", "tiles_total": "Tiles",
-                "tiles_detected": "Detected", "detection_rate": "Rate",
-                "top_confidence": "Top Confidence",
+                "region": t("field.region_col"), "tiles_total": t("field.tiles_col"),
+                "tiles_detected": t("field.detected_col"), "detection_rate": t("field.rate_col"),
+                "top_confidence": t("field.top_confidence_col"),
             })
 
             fig_regions = go.Figure(go.Bar(
                 x=regions_df["region"],
                 y=regions_df["detection_rate"] * 100,
                 marker_color="#1E3A8A",
-                text=[f"{v}/{t}" for v, t in zip(regions_df["tiles_detected"], regions_df["tiles_total"])],
+                text=[f"{v}/{tot}" for v, tot in zip(regions_df["tiles_detected"], regions_df["tiles_total"])],
                 textposition="outside",
             ))
             fig_regions.update_layout(
-                yaxis_title="Detection rate (%)", xaxis_title="",
+                yaxis_title=t("field.detection_rate_pct"), xaxis_title="",
                 height=340, margin=dict(l=10, r=10, t=10, b=10),
             )
             st.plotly_chart(fig_regions, use_container_width=True)
 
             st.dataframe(
-                regions_df_display.set_index("Region").style.format({
-                    "Rate": "{:.1%}", "Top Confidence": "{:.2f}",
-                }).background_gradient(cmap="Blues", subset=["Rate"]),
+                regions_df_display.set_index(t("field.region_col")).style.format({
+                    t("field.rate_col"): "{:.1%}", t("field.top_confidence_col"): "{:.2f}",
+                }).background_gradient(cmap="Blues", subset=[t("field.rate_col")]),
                 use_container_width=True,
             )
 
             if "Inter-Zone Corridor" in regions_df["region"].values:
-                st.caption(
-                    "ℹ️ **Inter-Zone Corridor**: a bounding box covering the transition area between "
-                    "neighboring corporate districts, rather than a single named neighborhood."
-                )
+                st.caption(t("field.inter_zone_note"))
 
         generated_at = field_summary.get("generated_at")
         if generated_at:
-            st.caption(f"Last updated: {generated_at}")
+            st.caption(f"{t('field.last_updated').format(date=generated_at)}")
 
 # Footer
 st.markdown("---")
