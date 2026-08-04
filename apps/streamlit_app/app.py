@@ -386,24 +386,38 @@ TR = {
 "about.body": {
     "en": (
         "**Helipad Detector** is an end-to-end Artificial Intelligence and Computer Vision platform "
-        "designed to automatically detect rooftop helipads in satellite imagery. The project focuses on "
-        "São Paulo, Brazil, home to the world's largest helicopter fleet, with an estimated **2,200 "
-        "takeoffs and landings per day** and **one operation every 45 seconds during peak hours**. The "
-        "platform covers the complete AI lifecycle, including public data collection, satellite imagery "
-        "acquisition, manual annotation in Roboflow, YOLOv8n/YOLOv11n training, and field validation on "
-        "more than **7,900** real satellite tiles. This dashboard provides transparent access to the AI "
-        "pipeline, dataset, model performance, and documented limitations."
+        "designed to automatically detect and map rooftop helipads from satellite imagery. The project "
+        "focuses on São Paulo, Brazil, a unique urban environment with the world's largest helicopter "
+        "fleet, approximately **2,200 takeoffs and landings per day**, and **one operation every 45 "
+        "seconds during peak hours**. The city also operates **HELICONTROL**, a dedicated helicopter air "
+        "traffic control system created to manage this high-density urban air mobility scenario. "
+        "This combination of intense helicopter activity and complex urban infrastructure makes São Paulo "
+        "a relevant real-world environment for developing AI-based geospatial intelligence solutions. "
+        "By transforming satellite imagery into structured spatial information, the project demonstrates "
+        "how Computer Vision can support urban analysis, infrastructure mapping, and data-driven decision "
+        "making for future smart city applications. The complete AI workflow includes public data "
+        "collection, satellite imagery acquisition, manual annotation in Roboflow, YOLOv8n/YOLOv11n "
+        "training, and field validation on more than **7,900** real satellite tiles. This dashboard "
+        "provides transparent access to the AI pipeline, dataset, model performance, and documented "
+        "limitations."
     ),
     "pt": (
-        "O **Helipad Detector** é uma plataforma de Inteligência Artificial e Visão Computacional "
-        "desenvolvida para detectar automaticamente helipontos em imagens de satélite. O projeto tem como "
-        "foco a cidade de São Paulo, que possui a maior frota de helicópteros do mundo, com cerca de "
-        "**2.200 pousos e decolagens por dia** e **uma operação a cada 45 segundos nos horários de pico**. "
-        "A plataforma cobre todo o ciclo de vida da IA, incluindo coleta de dados públicos, obtenção de "
-        "imagens de satélite, anotação manual no Roboflow, treinamento de modelos YOLOv8n/YOLOv11n e "
-        "validação em campo com mais de **7.900** mosaicos reais. Este dashboard apresenta de forma "
-        "transparente o pipeline de IA, o conjunto de dados, o desempenho do modelo e suas limitações "
-        "documentadas."
+        "O **Helipad Detector** é uma plataforma completa de Inteligência Artificial e Visão "
+        "Computacional desenvolvida para detectar e mapear automaticamente helipontos em imagens de "
+        "satélite. O projeto tem como foco São Paulo, um ambiente urbano único que possui a maior frota "
+        "de helicópteros do mundo, com cerca de **2.200 pousos e decolagens por dia** e **uma operação "
+        "a cada 45 segundos nos horários de pico**. A cidade também possui o **HELICONTROL**, um sistema "
+        "dedicado de controle de tráfego aéreo para helicópteros, criado para organizar esse cenário de "
+        "alta densidade de mobilidade aérea urbana. Essa combinação entre intensa atividade de "
+        "helicópteros e complexidade da infraestrutura urbana torna São Paulo um ambiente relevante para "
+        "o desenvolvimento de soluções de inteligência geoespacial baseadas em IA. Ao transformar imagens "
+        "de satélite em informações espaciais estruturadas, o projeto demonstra como a Visão Computacional "
+        "pode contribuir para análise urbana, mapeamento de infraestrutura e apoio à tomada de decisão "
+        "em aplicações futuras de cidades inteligentes. O fluxo completo de IA inclui coleta de dados "
+        "públicos, obtenção de imagens de satélite, anotação manual no Roboflow, treinamento de modelos "
+        "YOLOv8n/YOLOv11n e validação em campo com mais de **7.900** mosaicos reais. Este dashboard "
+        "apresenta de forma transparente o pipeline de IA, o conjunto de dados, o desempenho do modelo e "
+        "suas limitações documentadas."
     ),
 },
 "about.institution": {"en": "Institution", "pt": "Instituição"},
@@ -411,7 +425,7 @@ TR = {
 "about.course": {"en": "Course", "pt": "Disciplina"},
 "about.professor": {"en": "Professor", "pt": "Professor"},
 "about.authors": {"en": "Authors", "pt": "Autores"},
-
+    
     # ---- Tab 7: Downloads ----
     "dl.subheader": {"en": "⬇️ Download Center", "pt": "⬇️ Central de Downloads"},
     "dl.caption": {
