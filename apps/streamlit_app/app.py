@@ -1551,16 +1551,16 @@ with tab_field:
 # Footer
 st.markdown("---")
 
-st.markdown("""
+st.markdown(f"""
 <p style="text-align:center; color:rgba(255,255,255,0.30); margin:0;">
-🚁 <em>Finding hidden H's in the Concrete Jungle</em>
+{t("footer.tagline")}
 </p>
 
 <p style="text-align:center; color:rgba(255,255,255,0.35); margin:4px 0;">
-One rooftop at a time. ⚡
+{t("footer.line2")}
 </p>
 
 <p style="text-align:center; color:rgba(255,255,255,0.30); margin:6px 0 0 0; font-size:12px;">
-SÃO PAULO • YOLO • ESRI WORLD IMAGERY
+{t("footer.line3")}
 </p>
 """, unsafe_allow_html=True)
