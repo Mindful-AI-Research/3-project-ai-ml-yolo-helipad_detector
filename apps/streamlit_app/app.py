@@ -338,8 +338,8 @@ TR = {
     "pt": "Dashboard Interativo",
 },
 "pipeline.step9.desc": {
-    "en": "The final model powers this interactive dashboard, enabling inference, visualization, and exploration of predictions on new satellite imagery.",
-    "pt": "O modelo final alimenta este dashboard interativo, permitindo executar inferências, visualizar resultados e explorar predições em novas imagens de satélite.",
+    "en": "The final model powers this interactive dashboard, enabling inference, visualization, and exploration of predictions on new satellite imagery, with a modular architecture that can be extended to drone imagery and other aerial platforms.",
+    "pt": "O modelo final alimenta este dashboard interativo, permitindo executar inferências, visualizar resultados e explorar predições em novas imagens de satélite, com uma arquitetura modular que pode ser estendida para imagens capturadas por drones e outras plataformas aéreas.",
 },
 
 # ---- Tab 6: Governance ----
