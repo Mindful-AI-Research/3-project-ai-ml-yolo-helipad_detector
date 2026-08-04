@@ -306,43 +306,46 @@ TR = {
         ),
     },
 
-    # ---- Tab: About & Team ----
-    "about.header": {"en": "👥 About & Team", "pt": "👥 Sobre & Equipe"},
-    "about.body": {
-        "en": (
-            "**Helipad Detector** started from a straightforward observation: rooftop helipads have a "
-            "distinctive top-down shape, but they're genuinely easy to confuse with pools, sports courts, "
-            "and other rooftop structures in dense urban satellite imagery — which makes them a good "
-            "real-world target for practicing the full Computer Vision lifecycle, not just model training. "
-            "The project was built end-to-end by the team: scraping and geocoding public helipad records, "
-            "converting coordinates into satellite tile downloads, manually triaging and annotating a "
-            "dataset from scratch in Roboflow, training and comparing multiple YOLOv8n/YOLOv11n "
-            "experiments in Google Colab, and — beyond the course's minimum requirement — running a field "
-            "validation pass across 7,900+ real, uncurated tiles from ten São Paulo neighborhoods to check "
-            "how the model holds up outside the curated test set. This dashboard is the public-facing layer "
-            "of that work, built so the model, the data, and the documented failure modes are all directly "
-            "inspectable rather than hidden behind a single accuracy number."
-        ),
-        "pt": (
-            "O **Helipad Detector** nasceu de uma observação simples: helipontos em telhados têm um formato "
-            "característico visto de cima, mas são genuinamente fáceis de confundir com piscinas, quadras "
-            "esportivas e outras estruturas de telhado em imagens de satélite de áreas urbanas densas — o que os torna "
-            "um bom alvo real para praticar o ciclo completo de Visão Computacional, não só o treino do modelo. "
-            "O projeto foi construído de ponta a ponta pela equipe: coleta e geocodificação de registros públicos de helipontos, "
-            "conversão de coordenadas em downloads de tiles de satélite, triagem manual e anotação de um "
-            "dataset construído do zero no Roboflow, treinamento e comparação de múltiplos experimentos "
-            "YOLOv8n/YOLOv11n no Google Colab, e — além do mínimo exigido pelo curso — uma etapa de validação "
-            "de campo em mais de 7.900 tiles reais e não curados de dez bairros de São Paulo, para checar "
-            "como o modelo se comporta fora do conjunto de teste curado. Este dashboard é a camada pública "
-            "desse trabalho, construída para que o modelo, os dados e os modos de falha documentados sejam todos "
-            "diretamente inspecionáveis, em vez de escondidos atrás de um único número de acurácia."
-        ),
-    },
-    "about.institution": {"en": "Institution", "pt": "Instituição"},
-    "about.program": {"en": "Program", "pt": "Curso"},
-    "about.course": {"en": "Course", "pt": "Disciplina"},
-    "about.professor": {"en": "Professor", "pt": "Professor"},
-    "about.authors": {"en": "Authors", "pt": "Autores"},
+# ---- Tab: About & Team ----
+"about.header": {"en": "👥 About & Team", "pt": "👥 Sobre & Equipe"},
+"about.body": {
+    "en": (
+        "**Helipad Detector** started from a straightforward observation: rooftop helipads have a "
+        "distinctive top-down shape, but they are genuinely easy to confuse with swimming pools, sports "
+        "courts, and other rooftop structures in dense urban satellite imagery. This makes them an "
+        "excellent real-world target for practicing the complete Computer Vision lifecycle rather than "
+        "focusing only on model training. The project was built end to end by the team, including scraping "
+        "and geocoding public helipad records, converting coordinates into satellite tile downloads, "
+        "manually triaging and annotating a dataset from scratch in Roboflow, training and comparing "
+        "multiple YOLOv8n and YOLOv11n experiments in Google Colab, and, beyond the course's minimum "
+        "requirements, conducting a field validation across more than 7,900 real, uncurated satellite "
+        "tiles from ten São Paulo neighborhoods to evaluate how well the model generalizes outside the "
+        "curated test set. This dashboard serves as the public-facing interface for the project, allowing "
+        "the model, the dataset, and the documented failure cases to be inspected transparently instead of "
+        "being reduced to a single accuracy metric."
+    ),
+    "pt": (
+        "O **Helipad Detector** surgiu de uma observação simples: helipontos em telhados possuem um formato "
+        "característico visto de cima, mas são facilmente confundidos com piscinas, quadras esportivas e "
+        "outras estruturas presentes em imagens de satélite de áreas urbanas densas. Isso os torna um "
+        "excelente problema do mundo real para praticar todo o ciclo de vida de um projeto de Visão "
+        "Computacional, e não apenas o treinamento de modelos. O projeto foi desenvolvido de ponta a ponta "
+        "pela equipe, incluindo a coleta e geocodificação de registros públicos de helipontos, a conversão "
+        "das coordenadas em downloads de mosaicos de imagens de satélite, a triagem e anotação manual de um "
+        "conjunto de dados criado do zero no Roboflow, o treinamento e a comparação de diferentes "
+        "experimentos com YOLOv8n e YOLOv11n no Google Colab e, além dos requisitos mínimos da disciplina, "
+        "uma validação em campo utilizando mais de 7.900 mosaicos reais e não selecionados de dez bairros "
+        "da cidade de São Paulo para avaliar como o modelo se comporta fora do conjunto de teste curado. "
+        "Este dashboard representa a camada pública desse trabalho, permitindo inspecionar de forma "
+        "transparente o modelo, os dados e os casos de falha documentados, em vez de resumir todo o projeto "
+        "a um único número de acurácia."
+    ),
+},
+"about.institution": {"en": "Institution", "pt": "Instituição"},
+"about.program": {"en": "Program", "pt": "Curso"},
+"about.course": {"en": "Course", "pt": "Disciplina"},
+"about.professor": {"en": "Professor", "pt": "Professor"},
+"about.authors": {"en": "Authors", "pt": "Autores"},
 
     # ---- Tab 7: Downloads ----
     "dl.subheader": {"en": "⬇️ Download Center", "pt": "⬇️ Central de Downloads"},
