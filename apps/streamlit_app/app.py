@@ -164,47 +164,101 @@ TR = {
         "pt": "**Resumo:** heliponto detectado em {hits} de {total} imagem(ns) de exemplo.",
     },
 
-    # ---- Tab 4: Map ----
-    "map.subheader": {"en": "🗺️ Helipad Locations — two layers", "pt": "🗺️ Localizações de Helipontos — duas camadas"},
-    "map.caption": {
-        "en": "🟢 **São Paulo training neighborhoods** — region-level bounding boxes used for "
-              "training · 🔵 **Discovery dataset** — helipad candidates found across other "
-              "Brazilian states.",
-        "pt": "🟢 **Bairros de treino em São Paulo** — bounding boxes por região usadas no "
-              "treino · 🔵 **Dataset de descoberta** — candidatos a heliponto encontrados em outros "
-              "estados brasileiros.",
-    },
-    "map.dark_mode": {"en": "🌙 Dark mode", "pt": "🌙 Modo escuro"},
-    "map.dark_base": {"en": "🌙 Dark base map", "pt": "🌙 Mapa base escuro"},
-    "map.light_base": {"en": "☀️ Light base map", "pt": "☀️ Mapa base claro"},
-    "map.no_coords.info": {
-        "en": "No coordinates found at `{sp}` or `{other}`. See the Execution Guide to generate them.",
-        "pt": "Nenhuma coordenada encontrada em `{sp}` ou `{other}`. Veja o Guia de Execução para gerá-las.",
-    },
-    "map.sp_layer": {"en": "São Paulo", "pt": "São Paulo"},
-    "map.other_layer": {"en": "Other states", "pt": "Outros estados"},
-    "map.training_region": {"en": "São Paulo training region", "pt": "Região de treino em São Paulo"},
-    "map.detection_rate_layer": {"en": "🔵 Field detection rate", "pt": "🔵 Taxa de detecção em campo"},
-    "map.tiles_detected": {"en": "tiles detected", "pt": "tiles detectados"},
-    "map.rate": {"en": "Rate", "pt": "Taxa"},
-    "map.summary": {
-        "en": "**{sp} São Paulo region(s)** 🟢  ·  **{other} other-state helipad(s)** 🔵",
-        "pt": "**{sp} região(ões) de São Paulo** 🟢  ·  **{other} heliponto(s) de outros estados** 🔵",
-    },
-    "map.raw_data_expander": {"en": "📋 Raw coordinate data", "pt": "📋 Dados brutos de coordenadas"},
-    "map.raw_data.sp_tab": {"en": "São Paulo", "pt": "São Paulo"},
-    "map.raw_data.other_tab": {"en": "Other states", "pt": "Outros estados"},
-    "map.density.subheader": {"en": "🌡️ Density view", "pt": "🌡️ Visão de Densidade"},
-    "map.density.caption": {
-        "en": "Discovery dataset (other states), rendered as a point + heatmap "
-              "view — generated live with Folium/CartoDB, no API key or account required.",
-        "pt": "Dataset de descoberta (outros estados), exibido como pontos + mapa de calor — "
-              "gerado ao vivo com Folium/CartoDB, sem precisar de chave de API ou conta.",
-    },
-    "map.density.no_coords": {
-        "en": "No coordinates found at `{path}` to render a density view.",
-        "pt": "Nenhuma coordenada encontrada em `{path}` para renderizar a visão de densidade.",
-    },
+# ---- Tab 4: Map ----
+"map.subheader": {
+    "en": "🗺️ Helipad Location Map",
+    "pt": "🗺️ Mapa de Localização dos Helipontos",
+},
+
+"map.caption": {
+    "en": "🟢 **Training Areas (São Paulo)**: regional bounding boxes used to build and validate the training dataset. 🔵 **Discovery Dataset**: helipad candidates identified across other Brazilian states.",
+    "pt": "🟢 **Áreas de Treinamento (São Paulo)**: regiões delimitadas por bounding boxes utilizadas na construção e validação do conjunto de treinamento. 🔵 **Dataset de Descoberta**: candidatos a helipontos identificados em outros estados brasileiros.",
+},
+
+"map.dark_mode": {
+    "en": "🌙 Dark mode",
+    "pt": "🌙 Modo escuro",
+},
+
+"map.dark_base": {
+    "en": "🌙 Dark basemap",
+    "pt": "🌙 Mapa-base escuro",
+},
+
+"map.light_base": {
+    "en": "☀️ Light basemap",
+    "pt": "☀️ Mapa-base claro",
+},
+
+"map.no_coords.info": {
+    "en": "No coordinate files were found at `{sp}` or `{other}`. Please follow the Execution Guide to generate them.",
+    "pt": "Nenhum arquivo de coordenadas foi encontrado em `{sp}` ou `{other}`. Consulte o Guia de Execução para gerá-los.",
+},
+
+"map.sp_layer": {
+    "en": "São Paulo training areas",
+    "pt": "Áreas de treinamento em São Paulo",
+},
+
+"map.other_layer": {
+    "en": "Discovery dataset",
+    "pt": "Dataset de descoberta",
+},
+
+"map.training_region": {
+    "en": "Training region",
+    "pt": "Região de treinamento",
+},
+
+"map.detection_rate_layer": {
+    "en": "🔵 Field detection rate",
+    "pt": "🔵 Taxa de detecção em campo",
+},
+
+"map.tiles_detected": {
+    "en": "Detected tiles",
+    "pt": "Tiles detectados",
+},
+
+"map.rate": {
+    "en": "Detection rate",
+    "pt": "Taxa de detecção",
+},
+
+"map.summary": {
+    "en": "**{sp} training region(s)** 🟢 · **{other} discovered helipad(s)** 🔵",
+    "pt": "**{sp} região(ões) de treinamento** 🟢 · **{other} heliponto(s) descoberto(s)** 🔵",
+},
+
+"map.raw_data_expander": {
+    "en": "📋 Coordinate data",
+    "pt": "📋 Dados de coordenadas",
+},
+
+"map.raw_data.sp_tab": {
+    "en": "São Paulo",
+    "pt": "São Paulo",
+},
+
+"map.raw_data.other_tab": {
+    "en": "Other states",
+    "pt": "Outros estados",
+},
+
+"map.density.subheader": {
+    "en": "🌡️ Density Map",
+    "pt": "🌡️ Mapa de Densidade",
+},
+
+"map.density.caption": {
+    "en": "Interactive point and heatmap visualization of the Discovery Dataset from other Brazilian states. Rendered locally with Folium and CartoDB—no API key or account required.",
+    "pt": "Visualização interativa em pontos e mapa de calor do Dataset de Descoberta em outros estados brasileiros. Renderizada localmente com Folium e CartoDB, sem necessidade de chave de API ou conta.",
+},
+
+"map.density.no_coords": {
+    "en": "No coordinates were found in `{path}` to generate the density map.",
+    "pt": "Nenhuma coordenada foi encontrada em `{path}` para gerar o mapa de densidade.",
+},
 
     # ---- Tab 5: Pipeline ----
     "pipeline.subheader": {"en": "📖 Project Pipeline", "pt": "📖 Pipeline do Projeto"},
