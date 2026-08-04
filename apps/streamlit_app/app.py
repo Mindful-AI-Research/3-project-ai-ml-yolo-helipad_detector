@@ -348,7 +348,7 @@ TR = {
     "dl.subheader": {"en": "⬇️ Download Center", "pt": "⬇️ Central de Downloads"},
     "dl.caption": {
         "en": "Every file below is a real project artifact available for download directly from this repository. No placeholders, mock files, or dynamically generated content are used.",
-        "pt": > "Cada arquivo abaixo é um artefato real do projeto, disponível para download diretamente deste repositório. Nenhum placeholder, arquivo fictício ou conteúdo gerado dinamicamente é utilizado.",
+        "pt": "Cada arquivo abaixo é um artefato real do projeto, disponível para download diretamente deste repositório. Nenhum placeholder, arquivo fictício ou conteúdo gerado dinamicamente é utilizado.",
     },
     "dl.executive_report": {"en": "**📄 Executive Report**", "pt": "**📄 Relatório Executivo**"},
     "dl.exec_en_button": {"en": "⬇️ Executive Report (English, PDF)", "pt": "⬇️ Relatório Executivo (Inglês, PDF)"},
