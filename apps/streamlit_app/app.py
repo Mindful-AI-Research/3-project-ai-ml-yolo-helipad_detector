@@ -260,105 +260,126 @@ TR = {
     "pt": "Nenhuma coordenada foi encontrada em `{path}` para gerar o mapa de densidade.",
 },
 
-    # ---- Tab 5: Pipeline ----
-    "pipeline.subheader": {"en": "📖 Project Pipeline", "pt": "📖 Pipeline do Projeto"},
-    "pipeline.caption": {
-        "en": "How raw satellite imagery becomes a validated helipad detector.",
-        "pt": "Como imagens de satélite brutas se tornam um detector de helipontos validado.",
-    },
-    "pipeline.step1.title": {"en": "Discovery", "pt": "Descoberta"},
-    "pipeline.step1.desc": {
-        "en": "Selenium scrapes a public aviation website for helipad records and coordinates.",
-        "pt": "O Selenium coleta registros de helipontos e coordenadas de um site público de aviação.",
-    },
-    "pipeline.step2.title": {"en": "Coordinate conversion", "pt": "Conversão de coordenadas"},
-    "pipeline.step2.desc": {
-        "en": "Each point becomes a geographic bounding box (±0.0005°).",
-        "pt": "Cada ponto vira uma bounding box geográfica (±0,0005°).",
-    },
-    "pipeline.step3.title": {"en": "Tile download", "pt": "Download de tiles"},
-    "pipeline.step3.desc": {
-        "en": "ESRI World Imagery tiles are downloaded for each bounding box.",
-        "pt": "Tiles do ESRI World Imagery são baixados para cada bounding box.",
-    },
-    "pipeline.step4.title": {"en": "Manual triage", "pt": "Triagem manual"},
-    "pipeline.step4.desc": {
-        "en": "A human reviews mosaics and keeps only tiles with a visible helipad.",
-        "pt": "Uma pessoa revisa os mosaicos e mantém só os tiles com heliponto visível.",
-    },
-    "pipeline.step5.title": {"en": "Annotation (Roboflow)", "pt": "Anotação (Roboflow)"},
-    "pipeline.step5.desc": {
-        "en": "Bounding boxes are drawn, single class: helipad.",
-        "pt": "As bounding boxes são desenhadas, classe única: heliponto.",
-    },
-    "pipeline.step6.title": {"en": "Training (Colab, GPU)", "pt": "Treinamento (Colab, GPU)"},
-    "pipeline.step6.desc": {
-        "en": "YOLOv8n/YOLO11n is trained on the annotated dataset.",
-        "pt": "O YOLOv8n/YOLO11n é treinado no dataset anotado.",
-    },
-    "pipeline.step7.title": {"en": "Evaluation", "pt": "Avaliação"},
-    "pipeline.step7.desc": {
-        "en": "Precision, recall, mAP, and confusion matrix are computed.",
-        "pt": "Precision, recall, mAP e matriz de confusão são calculados.",
-    },
-    "pipeline.step8.title": {"en": "Field validation", "pt": "Validação de campo"},
-    "pipeline.step8.desc": {
-        "en": "The best model is run across 7,900+ real tiles from 10 SP neighborhoods to measure real-world detection rates.",
-        "pt": "O melhor modelo roda em 7.900+ tiles reais de 10 bairros de SP para medir taxas de detecção reais.",
-    },
-    "pipeline.step9.title": {"en": "This app", "pt": "Este app"},
-    "pipeline.step9.desc": {
-        "en": "The trained model runs inference on new images or regions.",
-        "pt": "O modelo treinado roda inferência em novas imagens ou regiões.",
-    },
+    ## ---- Tab 5: Pipeline ----
+"pipeline.subheader": {
+    "en": "📖 End-to-End Project Pipeline",
+    "pt": "📖 Pipeline Completo do Projeto",
+},
+"pipeline.caption": {
+    "en": "Follow the complete workflow from public aviation records to a validated Computer Vision model for helipad detection.",
+    "pt": "Acompanhe todo o fluxo de trabalho, desde registros públicos de aviação até um modelo de Visão Computacional validado para detecção de helipontos.",
+},
+"pipeline.step1.title": {
+    "en": "Discovery",
+    "pt": "Descoberta",
+},
+"pipeline.step1.desc": {
+    "en": "Public aviation records are collected with Selenium, including helipad metadata and geographic coordinates.",
+    "pt": "Registros públicos de aviação são coletados com Selenium, incluindo metadados dos helipontos e suas coordenadas geográficas.",
+},
+"pipeline.step2.title": {
+    "en": "Coordinate Conversion",
+    "pt": "Conversão de Coordenadas",
+},
+"pipeline.step2.desc": {
+    "en": "Each geographic coordinate is converted into a bounding box defining the satellite imagery extraction area.",
+    "pt": "Cada coordenada geográfica é convertida em uma bounding box que define a área de extração da imagem de satélite.",
+},
+"pipeline.step3.title": {
+    "en": "Satellite Imagery",
+    "pt": "Imagens de Satélite",
+},
+"pipeline.step3.desc": {
+    "en": "Satellite tiles are downloaded from ESRI World Imagery for every bounding box.",
+    "pt": "Imagens de satélite são baixadas do ESRI World Imagery para cada bounding box.",
+},
+"pipeline.step4.title": {
+    "en": "Manual Triage",
+    "pt": "Triagem Manual",
+},
+"pipeline.step4.desc": {
+    "en": "Each mosaic is visually inspected, and only images containing visible helipads are retained.",
+    "pt": "Cada mosaico é inspecionado visualmente, mantendo apenas as imagens que contêm helipontos visíveis.",
+},
+"pipeline.step5.title": {
+    "en": "Annotation (Roboflow)",
+    "pt": "Anotação (Roboflow)",
+},
+"pipeline.step5.desc": {
+    "en": "Helipads are manually annotated with bounding boxes using a single object class.",
+    "pt": "Os helipontos são anotados manualmente com bounding boxes utilizando uma única classe de objeto.",
+},
+"pipeline.step6.title": {
+    "en": "Model Training",
+    "pt": "Treinamento do Modelo",
+},
+"pipeline.step6.desc": {
+    "en": "Multiple YOLOv8n and YOLOv11n models are trained and compared using Google Colab with GPU acceleration.",
+    "pt": "Múltiplos modelos YOLOv8n e YOLOv11n são treinados e comparados utilizando Google Colab com aceleração por GPU.",
+},
+"pipeline.step7.title": {
+    "en": "Model Evaluation",
+    "pt": "Avaliação do Modelo",
+},
+"pipeline.step7.desc": {
+    "en": "Performance is measured using Precision, Recall, mAP, confusion matrices, and additional evaluation metrics.",
+    "pt": "O desempenho é avaliado por meio de Precision, Recall, mAP, matriz de confusão e outras métricas de avaliação.",
+},
+"pipeline.step8.title": {
+    "en": "Field Validation",
+    "pt": "Validação em Campo",
+},
+"pipeline.step8.desc": {
+    "en": "The best-performing model is validated on more than 7,900 real, uncurated satellite tiles collected from ten São Paulo neighborhoods to assess real-world generalization.",
+    "pt": "O modelo com melhor desempenho é validado em mais de 7.900 mosaicos reais e não selecionados de dez bairros da cidade de São Paulo para avaliar sua capacidade de generalização em cenários reais.",
+},
+"pipeline.step9.title": {
+    "en": "Interactive Dashboard",
+    "pt": "Dashboard Interativo",
+},
+"pipeline.step9.desc": {
+    "en": "The final model powers this interactive dashboard, enabling inference, visualization, and exploration of predictions on new satellite imagery.",
+    "pt": "O modelo final alimenta este dashboard interativo, permitindo executar inferências, visualizar resultados e explorar predições em novas imagens de satélite.",
+},
 
-    # ---- Tab 6: Governance ----
-    "gov.responsible_ai": {"en": "🛡️ Responsible AI", "pt": "🛡️ IA Responsável"},
-    "gov.responsible_ai.body": {
-        "en": (
-            "- **Fairness & scope**: the model detects a single object class (helipad) on public-area satellite\n"
-            "  imagery; it does not identify, track, or profile individuals.\n"
-            "- **Transparency**: this dashboard shows the real precision/recall/mAP of the model, including its\n"
-            "  known false-positive patterns (rooftop structures, pools, sports courts resembling the helipad \"H\").\n"
-            "- **Human oversight**: detections are a decision-support signal, not an automated final judgment —\n"
-            "  qualitative review of hits, false positives, and false negatives is part of the evaluation process.\n"
-            "- **Known limitations**: trained on a small dataset (~150 images) from specific São Paulo\n"
-            "  neighborhoods; generalization to other cities/architectural styles is untested.\n"
-        ),
-        "pt": (
-            "- **Justiça & escopo**: o modelo detecta uma única classe de objeto (heliponto) em imagens de satélite\n"
-            "  de área pública; ele não identifica, rastreia nem cria perfis de pessoas.\n"
-            "- **Transparência**: este dashboard mostra o precision/recall/mAP real do modelo, incluindo seus\n"
-            "  padrões conhecidos de falso positivo (estruturas de telhado, piscinas, quadras esportivas parecidas com o \"H\" do heliponto).\n"
-            "- **Supervisão humana**: as detecções são um sinal de apoio à decisão, não um julgamento final automatizado —\n"
-            "  a revisão qualitativa de acertos, falsos positivos e falsos negativos faz parte do processo de avaliação.\n"
-            "- **Limitações conhecidas**: treinado em um dataset pequeno (~150 imagens) de bairros específicos de São Paulo;\n"
-            "  a generalização para outras cidades/estilos arquitetônicos não foi testada.\n"
-        ),
-    },
-    "gov.lgpd": {"en": "⚖️ LGPD & Data Governance", "pt": "⚖️ LGPD & Governança de Dados"},
-    "gov.lgpd.body": {
-        "en": (
-            "- Only **public-area** satellite imagery is used — no private property interiors, no people, no\n"
-            "  license plates are annotated.\n"
-            "- Attribution is preserved for all imagery: *Source: Esri, Maxar, Earthstar Geographics, and the\n"
-            "  GIS User Community.*\n"
-            "- Data collection, annotation criteria, and experiment seeds are documented for reproducibility\n"
-            "  and audit purposes (see `README.md`, section \"Ethics, LGPD and Governance\").\n"
-            "- The scope is strictly academic/technical — no individual surveillance use case is intended or\n"
-            "  supported by this project.\n"
-        ),
-        "pt": (
-            "- Somente imagens de satélite de **área pública** são usadas — nenhum interior de propriedade privada, pessoa ou\n"
-            "  placa de veículo é anotado.\n"
-            "- A atribuição é preservada em todas as imagens: *Fonte: Esri, Maxar, Earthstar Geographics, e a\n"
-            "  GIS User Community.*\n"
-            "- A coleta de dados, os critérios de anotação e as seeds dos experimentos são documentados para reprodutibilidade\n"
-            "  e fins de auditoria (veja `README.md`, seção \"Ethics, LGPD and Governance\").\n"
-            "- O escopo é estritamente acadêmico/técnico — nenhum uso de vigilância individual é pretendido ou\n"
-            "  suportado por este projeto.\n"
-        ),
-    },
+# ---- Tab 6: Governance ----
+"gov.responsible_ai": {
+    "en": "🛡️ Responsible AI",
+    "pt": "🛡️ IA Responsável",
+},
+"gov.responsible_ai.body": {
+    "en": (
+        "- **Purpose & Scope:** The model detects a single object class (helipad) in publicly available satellite imagery. It does not identify, track, or profile individuals.\n"
+        "- **Transparency:** This dashboard reports the model's real Precision, Recall, and mAP, together with its known false-positive patterns, including rooftop structures, swimming pools, and sports courts that resemble helipad markings.\n"
+        "- **Human Oversight:** Model predictions are intended to support human decision-making rather than replace it. All detections should be reviewed qualitatively as part of the evaluation process.\n"
+        "- **Known Limitations:** The model was trained on a relatively small dataset (approximately 150 annotated images) collected from specific neighborhoods in São Paulo. Its performance in other cities or architectural contexts has not yet been systematically evaluated.\n"
+    ),
+    "pt": (
+        "- **Propósito e Escopo:** O modelo detecta apenas uma classe de objeto (heliponto) em imagens de satélite de domínio público. Ele não identifica, rastreia nem cria perfis de pessoas.\n"
+        "- **Transparência:** Este dashboard apresenta os valores reais de Precision, Recall e mAP do modelo, além de seus principais padrões conhecidos de falsos positivos, como estruturas de telhado, piscinas e quadras esportivas semelhantes à marcação de um heliponto.\n"
+        "- **Supervisão Humana:** As detecções servem como apoio à decisão e não substituem a análise humana. Todos os resultados devem ser revisados qualitativamente durante o processo de avaliação.\n"
+        "- **Limitações Conhecidas:** O modelo foi treinado com um conjunto relativamente pequeno de dados (aproximadamente 150 imagens anotadas), proveniente de bairros específicos da cidade de São Paulo. Seu desempenho em outras cidades ou estilos arquitetônicos ainda não foi avaliado de forma sistemática.\n"
+    ),
+},
+
+"gov.lgpd": {
+    "en": "⚖️ LGPD & Data Governance",
+    "pt": "⚖️ LGPD e Governança de Dados",
+},
+"gov.lgpd.body": {
+    "en": (
+        "- Only publicly available satellite imagery is used. No private property interiors, identifiable individuals, or vehicle license plates are collected or annotated.\n"
+        "- Image attribution is preserved in accordance with the original provider: *Source: Esri, Maxar, Earthstar Geographics, and the GIS User Community.*\n"
+        "- Data collection procedures, annotation criteria, preprocessing steps, and experimental settings are documented to support reproducibility and independent auditing (see `README.md`, section **Ethics, LGPD and Governance**).\n"
+        "- This project is intended exclusively for academic research and technical education. It is not designed or supported for surveillance or monitoring of individuals.\n"
+    ),
+    "pt": (
+        "- São utilizadas apenas imagens de satélite de acesso público. Nenhum interior de propriedade privada, pessoa identificável ou placa de veículo é coletado ou anotado.\n"
+        "- A atribuição das imagens é preservada conforme o provedor original: *Fonte: Esri, Maxar, Earthstar Geographics e GIS User Community.*\n"
+        "- Os procedimentos de coleta, os critérios de anotação, as etapas de pré-processamento e as configurações dos experimentos são documentados para garantir reprodutibilidade e possibilitar auditorias independentes (consulte o `README.md`, seção **Ethics, LGPD and Governance**).\n"
+        "- Este projeto possui finalidade exclusivamente acadêmica e educacional, não sendo desenvolvido nem destinado para aplicações de vigilância ou monitoramento de indivíduos.\n"
+    ),
+},
 
 # ---- Tab: About & Team ----
 "about.header": {"en": "👥 About & Team", "pt": "👥 Sobre & Equipe"},
