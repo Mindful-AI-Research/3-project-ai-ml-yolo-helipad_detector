@@ -1,15 +1,17 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Helipad Detector — Executive Presentation</title>
+  <title>Helipad Detector — Apresentação Executiva</title>
   <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
   <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/pptxgenjs@3.12.0/dist/pptxgen.bundle.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
   <link
     href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
     rel="stylesheet" />
@@ -155,7 +157,6 @@
 
     .footer-tag { position: absolute; left: 100px; bottom: 34px; font-family: var(--mono); font-size: .62rem; color: var(--w20); letter-spacing: .08em; z-index: 2 }
 
-    /* ── Cover / helicopter scene ── */
     .hero-stage { position: absolute; inset: 0; overflow: hidden; pointer-events: none }
     .hero-glow { position: absolute; right: -6%; top: 46%; transform: translateY(-50%); width: 560px; height: 560px; background: radial-gradient(circle, rgba(14,117,109,.14) 0%, transparent 70%); border-radius: 50%; border: 1px solid var(--border) }
     .hero-glow::after { content: ''; position: absolute; inset: 60px; border: 1px solid rgba(14,117,109,.12); border-radius: 50% }
@@ -171,18 +172,29 @@
       86%  { top: 60%; left: 82%;  transform: rotate(0deg) scale(.85); }
       100% { top: 62%; left: 84%;  transform: rotate(0deg) scale(.8); }
     }
-    .rotor { display: inline-block; animation: rotorSpin .18s linear infinite }
-    @keyframes rotorSpin { from { filter: hue-rotate(0deg) } to { filter: hue-rotate(2deg) } }
     .cover-scan { position: absolute; inset: 0; background: repeating-linear-gradient(0deg, rgba(14,117,109,.05) 0px, transparent 1px, transparent 3px); pointer-events: none; opacity: .5 }
 
-    /* ── Bars ── */
+    .three-cover { position: absolute; inset: 0; z-index: 1; cursor: grab }
+    .three-cover:active { cursor: grabbing }
+    .three-cover canvas { display: block; width: 100% !important; height: 100% !important }
+
+    .heli-ambient { position: fixed; inset: 0; pointer-events: none; z-index: 1; opacity: .5 }
+    .heli-ambient .heli-a { position: absolute; font-size: 1.5rem; opacity: .22; filter: drop-shadow(0 0 8px rgba(14,117,109,.4)) grayscale(.15); animation: heliFlyAmbient 42s linear infinite }
+    .heli-ambient .heli-a.h2 { animation-duration: 55s; animation-delay: -20s; font-size: 1.1rem; opacity: .14 }
+    @keyframes heliFlyAmbient {
+      0%   { top: 14%; left: -8%;  transform: rotate(1deg) scale(.7) }
+      25%  { top: 42%; left: 26%;  transform: rotate(-1deg) scale(.85) }
+      50%  { top: 18%; left: 56%;  transform: rotate(1deg) scale(.75) }
+      75%  { top: 66%; left: 82%;  transform: rotate(-1deg) scale(.65) }
+      100% { top: 30%; left: 110%; transform: rotate(0deg) scale(.6) }
+    }
+
     .bar-row { display: flex; align-items: center; gap: 12px; margin-bottom: 9px }
     .bar-label { font-size: .74rem; color: var(--w70); min-width: 168px }
     .bar-track { flex: 1; height: 6px; background: var(--w10); border-radius: 3px; overflow: hidden }
     .bar-fill { height: 100%; background: linear-gradient(90deg, var(--teal), var(--red)); border-radius: 3px }
     .bar-val { font-family: var(--mono); font-size: .66rem; color: var(--teal); min-width: 40px; text-align: right }
 
-    /* ── Shortcuts modal ── */
     .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.6); backdrop-filter: blur(6px); z-index: 2000; display: flex; align-items: center; justify-content: center }
     .modal { background: var(--surface); border: 1px solid var(--border2); border-radius: 18px; padding: 32px 36px; max-width: 420px; width: 90%; box-shadow: 0 30px 80px rgba(0,0,0,.5) }
     .modal h3 { font-size: 1.1rem; margin-bottom: 18px; color: var(--teal) }
@@ -209,245 +221,243 @@
   <script type="text/babel">
     const { useState, useEffect, useRef, useCallback } = React;
 
-    /* ═══════════════════════ CONTENT (EN) ═══════════════════════ */
-    const LANG = 'en';
+    const LANG = 'pt';
     const UI = {
-      restart: 'Restart (R)', fullscreen: 'Fullscreen (F)', theme: 'Toggle theme',
-      shortcuts: 'Keyboard shortcuts (?)', exit: 'Exit presentation', pptx: '⬇ Download PPTX',
-      prev: 'Previous', next: 'Next', home: 'Home',
-      shortcutsTitle: 'Keyboard Shortcuts',
+      restart: 'Reiniciar (R)', fullscreen: 'Tela cheia (F)', theme: 'Alternar tema',
+      shortcuts: 'Atalhos de teclado (?)', exit: 'Sair da apresentação', pptx: '⬇ Baixar PPTX',
+      prev: 'Anterior', next: 'Próximo', home: 'Início',
+      shortcutsTitle: 'Atalhos de Teclado',
       shortcutsList: [
-        ['→ / ↓', 'Next slide'], ['← / ↑', 'Previous slide'], ['F', 'Toggle fullscreen'],
-        ['R', 'Restart from cover'], ['?', 'Toggle this panel'], ['Esc', 'Close panel / exit fullscreen'],
+        ['→ / ↓', 'Próximo slide'], ['← / ↑', 'Slide anterior'], ['F', 'Alternar tela cheia'],
+        ['R', 'Reiniciar da capa'], ['?', 'Alternar este painel'], ['Esc', 'Fechar painel / sair da tela cheia'],
       ],
-      close: 'Close', swipeHint: 'USE ← → KEYS OR SWIPE TO NAVIGATE', footer: 'by ॐ Mindful AI · github.com/Mindful-AI-Research',
-      pptxFile: 'Helipad_Detector_Presentation_EN.pptx',
-      exitConfirm: 'Exit the presentation? This will close the fullscreen view.',
+      close: 'Fechar', swipeHint: 'USE AS SETAS ← → OU DESLIZE PARA NAVEGAR', footer: 'by ॐ Mindful AI · github.com/Mindful-AI-Research',
+      pptxFile: 'Helipad_Detector_Apresentacao_PT.pptx',
+      exitConfirm: 'Sair da apresentação? Isso fechará a visualização em tela cheia.',
     };
 
     const SLIDES = [
-      { id:'cover', type:'cover', label:'Cover', eyebrow:'CAPSTONE PROJECT · PUC-SP · 2026',
-        title:'Helipad Detector', titleAccent:'Seeing São Paulo\u2019s Rooftops from Above',
-        subtitle:'An end-to-end computer vision system that detects rooftop helipads in São Paulo satellite imagery — from geospatial data collection to a live detection dashboard.',
+      { id:'cover', type:'cover', label:'Capa', eyebrow:'PROJETO DE CONCLUSÃO · PUC-SP · 2026',
+        title:'Helipad Detector', titleAccent:'Enxergando os Telhados de São Paulo do Alto',
+        subtitle:'Um sistema de visão computacional de ponta a ponta que detecta helipontos em telhados a partir de imagens de satélite de São Paulo — da coleta geoespacial de dados a um dashboard de detecção ao vivo.',
         professor:'Professor Rooney Ribeiro Albuquerque Coelho',
         authors:['Carlos Antonio dos Santos Roth Gorham','Fabiana Campanari','Pedro Vyctor Almeida'],
         badges:['YOLOv8n / YOLOv11n','Roboflow','ESRI World Imagery','Streamlit','Selenium','Google Colab T4'] },
 
-      { id:'institutional', type:'info', label:'Institutional', eyebrow:'INSTITUTIONAL',
-        title:'A Machine Learning capstone,', titleAccent:'built like a product',
+      { id:'institutional', type:'info', label:'Institucional', eyebrow:'INSTITUCIONAL',
+        title:'Um trabalho de Machine Learning,', titleAccent:'construído como um produto',
         facts:[
-          ['Institution','Pontifical Catholic University of São Paulo (PUC-SP) — FACEI'],
-          ['Course','BSc in Human-Centered AI & Data Science — 5th semester — 2026'],
-          ['Subject','Machine Learning / Computer Vision — YOLO'],
-          ['Project','P2 — Object Detection in Satellite Images with YOLO'],
+          ['Instituição','Pontifícia Universidade Católica de São Paulo (PUC-SP) — FACEI'],
+          ['Curso','Bacharelado em Human-Centered AI & Data Science — 5º semestre — 2026'],
+          ['Disciplina','Machine Learning / Visão Computacional — YOLO'],
+          ['Projeto','P2 — Detecção de Objetos em Imagens de Satélite com YOLO'],
           ['Professor','Rooney Ribeiro Albuquerque Coelho'],
-          ['Authors','Carlos Antonio dos Santos Roth Gorham · Fabiana Campanari · Pedro Vyctor Almeida'],
+          ['Autores','Carlos Antonio dos Santos Roth Gorham · Fabiana Campanari · Pedro Vyctor Almeida'],
         ] },
 
-      { id:'problem', type:'stats', label:'Problem', eyebrow:'THE PROBLEM',
-        title:'São Paulo runs on helicopters —', titleAccent:'and nobody maps the rooftops',
-        text:'São Paulo operates the world\u2019s largest urban helicopter fleet, coordinated by a dedicated air-traffic-control system, HELICONTROL. Manually identifying rooftop helipads across a dense metropolitan skyline is slow, subjective, and impossible to scale.',
-        stats:[['~2,200','take-offs & landings / day'],['1 every 45s','during peak hours'],['HELICONTROL','dedicated helicopter ATC system'],['0','public, systematic helipad maps']] },
+      { id:'problem', type:'stats', label:'Problema', eyebrow:'O PROBLEMA',
+        title:'São Paulo funciona a base de helicópteros —', titleAccent:'e ninguém mapeia os telhados',
+        text:'São Paulo opera a maior frota de helicópteros urbana do mundo, coordenada por um sistema dedicado de controle de tráfego aéreo, o HELICONTROL. Identificar manualmente helipontos em telhados por um skyline metropolitano denso é lento, subjetivo e impossível de escalar.',
+        stats:[['~2.200','pousos e decolagens / dia'],['1 a cada 45s','nos horários de pico'],['HELICONTROL','sistema dedicado de controle de tráfego aéreo'],['0','mapas públicos e sistemáticos de helipontos']] },
 
-      { id:'audience', type:'cards', label:'Audience', eyebrow:'WHO THIS IS FOR',
-        title:'Built for people who plan', titleAccent:'cities from above',
+      { id:'audience', type:'cards', label:'Público-Alvo', eyebrow:'PARA QUEM É ISSO',
+        title:'Construído para quem planeja', titleAccent:'cidades vistas do alto',
         cards:[
-          ['🏙️','Urban planners','Rooftop infrastructure mapping for dense corporate corridors'],
-          ['🚁','Aviation & air-mobility authorities','Situational-awareness input alongside systems like HELICONTROL'],
-          ['🎓','Academic reviewers','A transparent, reproducible computer-vision pipeline'],
-          ['🧭','Smart-city / GIS teams','A template for geospatial AI on public satellite imagery'],
+          ['🏙️','Planejadores urbanos','Mapeamento de infraestrutura de telhados em corredores corporativos densos'],
+          ['🚁','Autoridades de aviação e mobilidade aérea','Insumo de consciência situacional, ao lado de sistemas como o HELICONTROL'],
+          ['🎓','Avaliadores acadêmicos','Um pipeline de visão computacional transparente e reproduzível'],
+          ['🧭','Equipes de smart city / GIS','Um modelo de IA geoespacial sobre imagens de satélite públicas'],
         ] },
 
-      { id:'product', type:'info', label:'Product', eyebrow:'THE PRODUCT',
-        title:'Helipad Detector —', titleAccent:'satellite imagery in, structured intelligence out',
-        text:'A YOLOv8n/YOLOv11n object-detection system trained on a purpose-built São Paulo dataset, wrapped in a 9-tab Streamlit dashboard for search, upload, field-validation review, and reporting.',
-        badges:['Single-class detector: helipad','640×640 tiles','Auto-discovered experiments','Live map + search'] },
+      { id:'product', type:'info', label:'Produto', eyebrow:'O PRODUTO',
+        title:'Helipad Detector —', titleAccent:'imagem de satélite entra, inteligência estruturada sai',
+        text:'Um sistema de detecção de objetos YOLOv8n/YOLOv11n treinado em um dataset de São Paulo construído sob medida, embutido em um dashboard Streamlit de 9 abas para busca, upload, revisão de validação de campo e relatórios.',
+        badges:['Detector de classe única: helipad','Tiles 640×640','Experimentos auto-descobertos','Mapa + busca ao vivo'] },
 
-      { id:'why', type:'stats', label:'Why it Matters', eyebrow:'WHY THIS MATTERS',
-        title:'From dense urban airspace to', titleAccent:'structured spatial data',
-        text:'São Paulo\u2019s helicopter density and HELICONTROL\u2019s air-traffic role make it a uniquely relevant real-world environment for geospatial AI. Turning satellite pixels into structured rooftop intelligence supports infrastructure mapping and data-driven smart-city decisions.',
-        stats:[['80%','of AI effort is data, not architecture'],['7,943','real tiles field-validated'],['10','São Paulo neighborhoods covered']] },
+      { id:'why', type:'stats', label:'Por que Importa', eyebrow:'POR QUE ISSO IMPORTA',
+        title:'De um espaço aéreo urbano denso a', titleAccent:'dados espaciais estruturados',
+        text:'A densidade de helicópteros de São Paulo e o papel do HELICONTROL no controle de tráfego aéreo tornam a cidade um ambiente real e singularmente relevante para IA geoespacial. Transformar pixels de satélite em inteligência estruturada de telhados apoia o mapeamento de infraestrutura e decisões de smart city baseadas em dados.',
+        stats:[['80%','do esforço em IA está nos dados, não na arquitetura'],['7.943','tiles reais validados em campo'],['10','bairros de São Paulo cobertos']] },
 
-      { id:'objectives', type:'splitlist', label:'Objectives', eyebrow:'OBJECTIVES',
-        title:'One end-to-end system,', titleAccent:'seven required capabilities',
-        text:'The course briefing — Project 2: Object Detection in Satellite Images with YOLO — defines the full lifecycle the system must cover.',
-        list:['Programmatic acquisition of satellite data','Visual curation and tile filtering','Annotation with well-defined bounding boxes','Preprocessing and augmentations','Training and monitoring in Colab','Quantitative evaluation and qualitative error analysis','Inference on an entire neighborhood not used in training'] },
+      { id:'objectives', type:'splitlist', label:'Objetivos', eyebrow:'OBJETIVOS',
+        title:'Um sistema de ponta a ponta,', titleAccent:'sete capacidades exigidas',
+        text:'O briefing do curso — Projeto 2: Detecção de Objetos em Imagens de Satélite com YOLO — define o ciclo de vida completo que o sistema deve cobrir.',
+        list:['Aquisição programática de dados de satélite','Curadoria visual e filtragem de tiles','Anotação com bounding boxes bem definidas','Pré-processamento e augmentations','Treinamento e monitoramento no Colab','Avaliação quantitativa e análise qualitativa de erros','Inferência em um bairro inteiro não usado no treino'] },
 
-      { id:'concepts', type:'cards', label:'Key Concepts', eyebrow:'KEY CONCEPTS',
-        title:'The vocabulary behind', titleAccent:'the metrics',
+      { id:'concepts', type:'cards', label:'Conceitos-Chave', eyebrow:'CONCEITOS-CHAVE',
+        title:'O vocabulário por trás', titleAccent:'das métricas',
         cards:[
-          ['📦','Bounding box','Rectangle marking where an object is in an image'],
-          ['🎯','Precision','Of all detections made, how many were correct'],
-          ['🔍','Recall','Of all real helipads, how many were found'],
-          ['📐','IoU','Overlap between the predicted and ground-truth box'],
-          ['📊','mAP','Mean Average Precision across IoU thresholds'],
-          ['⚠️','Overfitting','Model memorizes training data instead of generalizing'],
+          ['📦','Bounding box','Retângulo que marca onde um objeto está na imagem'],
+          ['🎯','Precision','De todas as detecções feitas, quantas estavam corretas'],
+          ['🔍','Recall','De todos os helipontos reais, quantos foram encontrados'],
+          ['📐','IoU','Sobreposição entre a caixa prevista e a caixa real'],
+          ['📊','mAP','Average Precision média ao longo dos limiares de IoU'],
+          ['⚠️','Overfitting','O modelo decora os dados de treino em vez de generalizar'],
         ] },
 
-      { id:'definitions', type:'splitlist', label:'Definitions', eyebrow:'DEFINITIONS',
-        title:'What is Object Detection —', titleAccent:'and why YOLO',
-        text:'Object Detection answers two questions per image at once: does the target object exist, and exactly where? YOLO (\u201cYou Only Look Once\u201d) scans the whole image in a single pass and returns boxes with confidence scores — fast enough for real time, light enough to train on a free Colab GPU.',
-        list:['YOLOv8n — \u201cnano\u201d variant, ~3M parameters, this project\u2019s primary model','YOLOv11n — newer variant, benchmarked as a suggested next step','Single class: helipad','Training = repeatedly showing labeled images across epochs until predictions converge'] },
+      { id:'definitions', type:'splitlist', label:'Definições', eyebrow:'DEFINIÇÕES',
+        title:'O que é Detecção de Objetos —', titleAccent:'e por que o YOLO',
+        text:'A Detecção de Objetos responde a duas perguntas por imagem ao mesmo tempo: o objeto-alvo existe, e onde exatamente? O YOLO (\u201cYou Only Look Once\u201d) examina a imagem inteira em uma única passada e devolve caixas com grau de confiança — rápido o bastante para tempo real, leve o bastante para treinar em uma GPU gratuita do Colab.',
+        list:['YOLOv8n — variante \u201cnano\u201d, ~3M parâmetros, modelo principal deste projeto','YOLOv11n — variante mais recente, testada como próximo passo sugerido','Classe única: helipad','Treinamento = mostrar repetidamente imagens rotuladas ao longo de épocas até as predições convergirem'] },
 
-      { id:'solution', type:'pipeline', label:'Solution', eyebrow:'SOLUTION OVERVIEW',
-        title:'Seven blocks,', titleAccent:'one traceable pipeline', cols:4,
+      { id:'solution', type:'pipeline', label:'Solução', eyebrow:'VISÃO GERAL DA SOLUÇÃO',
+        title:'Sete blocos,', titleAccent:'um pipeline rastreável', cols:4,
         steps:[
-          ['01','Helipad discovery','Aviation site automation'],
-          ['02','Geographic extraction','Coordinates → decimal degrees'],
-          ['03','Perimeter generation','Bounding boxes per point'],
-          ['04','Visual acquisition','ESRI tile download'],
-          ['05','Visual triage','Manual selection'],
-          ['06','Annotation','Roboflow labeling + splits'],
-          ['07','Train / eval / infer','YOLO in Colab'],
+          ['01','Descoberta de helipontos','Automação em site de aviação'],
+          ['02','Extração geográfica','Coordenadas → graus decimais'],
+          ['03','Geração de perímetro','Bounding boxes por ponto'],
+          ['04','Aquisição visual','Download de tiles ESRI'],
+          ['05','Triagem visual','Seleção manual'],
+          ['06','Anotação','Rotulagem no Roboflow + splits'],
+          ['07','Treino / avaliação / inferência','YOLO no Colab'],
         ] },
 
-      { id:'scenario', type:'info', label:'AI Scenario', eyebrow:'AI SCENARIO',
-        title:'A supervised, single-class', titleAccent:'object-detection problem',
-        text:'The task is framed as supervised object detection on aerial imagery: one target class (helipad), transfer-learned from COCO-pretrained YOLO weights, fine-tuned on a small, purpose-built dataset.',
-        badges:['Supervised learning','Transfer learning (COCO → São Paulo)','Single class: helipad','Small-data regime (~150 images)','GPU fine-tuning (Colab T4)'] },
+      { id:'scenario', type:'info', label:'Cenário de IA', eyebrow:'CENÁRIO DE IA',
+        title:'Um problema supervisionado', titleAccent:'de detecção de objetos, classe única',
+        text:'A tarefa é enquadrada como detecção de objetos supervisionada em imagens aéreas: uma classe-alvo (helipad), com transfer learning a partir de pesos YOLO pré-treinados no COCO, ajustados finamente em um dataset pequeno e construído sob medida.',
+        badges:['Aprendizado supervisionado','Transfer learning (COCO → São Paulo)','Classe única: helipad','Regime de poucos dados (~150 imagens)','Fine-tuning em GPU (Colab T4)'] },
 
-      { id:'architecture', type:'arch', label:'Architecture', eyebrow:'ARCHITECTURE',
-        title:'Four stages,', titleAccent:'one AI/ML Ops pipeline',
+      { id:'architecture', type:'arch', label:'Arquitetura', eyebrow:'ARQUITETURA',
+        title:'Quatro estágios,', titleAccent:'um pipeline de AI/ML Ops',
         groups:[
-          ['Geospatial Discovery',['Aviation-site scraping (Selenium)','Coordinate CSV','Bounding-box conversion']],
-          ['Visual Acquisition',['ESRI XYZ tile download','Mosaics by region','Manual triage']],
-          ['Dataset Engineering',['Roboflow upload & annotation','Preprocessing + augmentation','Train/valid/test export']],
-          ['Modeling & Validation',['Colab training (YOLOv8/11)','Quantitative + qualitative evaluation','Unseen-neighborhood inference','Streamlit app']],
+          ['Descoberta Geoespacial',['Scraping de site de aviação (Selenium)','CSV de coordenadas','Conversão em bounding box']],
+          ['Aquisição Visual',['Download de tiles XYZ do ESRI','Mosaicos por região','Triagem manual']],
+          ['Engenharia de Dataset',['Upload e anotação no Roboflow','Pré-processamento + augmentation','Exportação train/valid/test']],
+          ['Modelagem e Validação',['Treinamento no Colab (YOLOv8/11)','Avaliação quantitativa + qualitativa','Inferência em bairro não visto','App Streamlit']],
         ] },
 
-      { id:'datapipeline', type:'pipeline', label:'Data Pipeline', eyebrow:'DATA PIPELINE',
-        title:'From an aviation website', titleAccent:'to training-ready tiles', cols:5,
+      { id:'datapipeline', type:'pipeline', label:'Pipeline de Dados', eyebrow:'PIPELINE DE DADOS',
+        title:'De um site de aviação', titleAccent:'a tiles prontos para treino', cols:5,
         steps:[
-          ['01','Scrape','Selenium bot — helipad_bot.py'],
-          ['02','Convert','DMS coordinates → bounding boxes'],
-          ['03','Download','ESRI XYZ tiles, zoom 19'],
-          ['04','Mosaic','Stitch tiles per region'],
-          ['05','Triage','Manual keep / discard'],
+          ['01','Scraping','Bot Selenium — helipad_bot.py'],
+          ['02','Converter','Coordenadas DMS → bounding boxes'],
+          ['03','Baixar','Tiles ESRI XYZ, zoom 19'],
+          ['04','Mosaico','Unir tiles por região'],
+          ['05','Triagem','Manter / descartar manualmente'],
         ] },
 
-      { id:'mlpipeline', type:'pipeline', label:'ML Pipeline', eyebrow:'ML / AI PIPELINE',
-        title:'Three experiments,', titleAccent:'one consistent story', cols:5,
+      { id:'mlpipeline', type:'pipeline', label:'Pipeline de ML', eyebrow:'PIPELINE DE ML / IA',
+        title:'Três experimentos,', titleAccent:'uma história consistente', cols:5,
         steps:[
-          ['01','Annotate','Roboflow, single class'],
-          ['02','Split','70/20/10 train/valid/test'],
-          ['03','Train','YOLOv8n, Colab T4'],
-          ['04','Evaluate','mAP, Precision, Recall'],
-          ['05','Compare','exp1 / exp2 / exp3'],
+          ['01','Anotar','Roboflow, classe única'],
+          ['02','Dividir','70/20/10 train/valid/test'],
+          ['03','Treinar','YOLOv8n, Colab T4'],
+          ['04','Avaliar','mAP, Precision, Recall'],
+          ['05','Comparar','exp1 / exp2 / exp3'],
         ],
-        note:'exp1 (60 epochs) vs. exp2 (100 epochs) — same dataset, the briefing-required ablation. exp3 runs a separately augmented (\u201cfork\u201d) dataset, kept as a distinct data point.' },
+        note:'exp1 (60 épocas) vs. exp2 (100 épocas) — mesmo dataset, a ablação exigida pelo briefing. O exp3 roda um dataset separadamente aumentado (\u201cfork\u201d), mantido como um ponto de dado distinto.' },
 
-      { id:'api', type:'code', label:'API', eyebrow:'MODEL INTERFACE',
-        title:'No network API —', titleAccent:'a direct Python inference call',
-        text:'This project does not expose a REST API. Inference is called directly through the Ultralytics Python API, wrapped by a single function reused across every dashboard tab.',
+      { id:'api', type:'code', label:'API', eyebrow:'INTERFACE DO MODELO',
+        title:'Sem API de rede —', titleAccent:'uma chamada direta de inferência em Python',
+        text:'Este projeto não expõe uma API REST. A inferência é chamada diretamente pela API Python da Ultralytics, encapsulada em uma única função reutilizada em todas as abas do dashboard.',
         code:'def detect_helipad(image, model, conf):\n    result = model.predict(source=image, conf=conf, verbose=False)[0]\n    plotted = result.plot()[:, :, ::-1]  # BGR -> RGB\n    return plotted, len(result.boxes) > 0',
-        list:['Model auto-discovered from artifacts/runs/detect/*/weights/best.pt','Confidence threshold adjustable live in the sidebar','Same function powers Upload, Search-by-Region, and Sample-Images tabs'] },
+        list:['Modelo auto-descoberto em artifacts/runs/detect/*/weights/best.pt','Limiar de confiança ajustável ao vivo na barra lateral','A mesma função alimenta as abas Upload, Search-by-Region e Sample Images'] },
 
       { id:'dashboard', type:'table', label:'Dashboard', eyebrow:'DASHBOARD',
-        title:'Nine tabs,', titleAccent:'one Streamlit app',
-        headers:['Tab','What it shows'],
+        title:'Nove abas,', titleAccent:'um app Streamlit',
+        headers:['Aba','O que mostra'],
         rows:[
-          ['📊 Experiment Metrics','Auto-discovers every trained experiment, compares Precision/Recall/mAP live'],
-          ['🌍 Field Detections by Region','Real-world validation cards, bar chart and table across 10 neighborhoods'],
-          ['🗺️ Map','Dark-mode Folium layers: training neighborhoods, discovery dataset, detection rate'],
-          ['🔎 Search by Region','Enter a bounding box, download ESRI tiles live, run the model on the fly'],
-          ['🖼️ Sample Images','Pre-selected real detections for instant demoing'],
-          ['📤 Upload Image','Upload any aerial/satellite image, get an annotated detection back'],
-          ['📖 Pipeline','Visual walkthrough of the full pipeline'],
-          ['🛡️ Governance','Fairness, transparency, LGPD, and known-limitations statements'],
-          ['⬇️ Downloads','Executive reports, dataset, metrics, and field-validation artifacts'],
+          ['📊 Experiment Metrics','Descobre automaticamente todo experimento treinado, compara Precision/Recall/mAP ao vivo'],
+          ['🌍 Field Detections by Region','Cards de validação em dados reais, gráfico de barras e tabela em 10 bairros'],
+          ['🗺️ Map','Camadas Folium em modo escuro: bairros de treino, dataset de descoberta, taxa de detecção'],
+          ['🔎 Search by Region','Informe uma bounding box, baixe tiles do ESRI ao vivo e rode o modelo na hora'],
+          ['🖼️ Sample Images','Detecções reais pré-selecionadas para demonstração instantânea'],
+          ['📤 Upload Image','Faça upload de qualquer imagem aérea/satélite e receba uma detecção anotada'],
+          ['📖 Pipeline','Passo a passo visual do pipeline completo'],
+          ['🛡️ Governance','Declarações de justiça, transparência, LGPD e limitações conhecidas'],
+          ['⬇️ Downloads','Relatórios executivos, dataset, métricas e artefatos de validação de campo'],
         ] },
 
-      { id:'demo', type:'cards2', label:'Demo', eyebrow:'DEMONSTRATION',
-        title:'Two ways to see it', titleAccent:'detect a helipad',
+      { id:'demo', type:'cards2', label:'Demonstração', eyebrow:'DEMONSTRAÇÃO',
+        title:'Duas formas de ver', titleAccent:'um heliponto sendo detectado',
         cards:[
-          ['📤','Upload Image','Drop any aerial/satellite photo, get an annotated detection back instantly'],
-          ['🔎','Search by Region','Enter a bounding box — the app downloads ESRI tiles live and runs the model on the fly'],
+          ['📤','Upload Image','Envie qualquer foto aérea/satélite e receba uma detecção anotada instantaneamente'],
+          ['🔎','Search by Region','Informe uma bounding box — o app baixa tiles do ESRI ao vivo e roda o modelo na hora'],
         ] },
 
-      { id:'testing', type:'splitlist', label:'Testing', eyebrow:'TESTING & VALIDATION',
-        title:'Proven beyond the', titleAccent:'training set',
-        text:'Two layers of testing go past the standard train/valid/test split: inference on a confirmed unseen region, and a large-scale field validation.',
-        list:['Baixada Santista tiles verified 70–90 km outside every training bounding box (deg2tile inversion)','7,943 real satellite tiles run across 10 São Paulo neighborhoods, unfiltered','Detection rate consistent with real urban land-use patterns'] },
+      { id:'testing', type:'splitlist', label:'Testes', eyebrow:'TESTES E VALIDAÇÃO',
+        title:'Comprovado além do', titleAccent:'conjunto de treino',
+        text:'Duas camadas de teste vão além do split padrão train/valid/test: inferência em uma região confirmadamente não vista, e uma validação de campo em larga escala.',
+        list:['Tiles da Baixada Santista verificados a 70–90km de distância de toda bounding box de treino (inversão do deg2tile)','7.943 tiles reais de satélite rodados em 10 bairros de São Paulo, sem filtragem prévia','Taxa de detecção consistente com padrões reais de uso do solo urbano'] },
 
-      { id:'results1', type:'table', label:'Results · Data', eyebrow:'RESULTS · DATA ANALYSIS',
-        title:'exp1 vs. exp2 —', titleAccent:'same dataset, more epochs',
-        headers:['','exp1 · Best (ep. 54)','exp1 · Final (ep. 60)','exp2 · Best (ep. 81)'],
+      { id:'results1', type:'table', label:'Resultados · Dados', eyebrow:'RESULTADOS · ANÁLISE DE DADOS',
+        title:'exp1 vs. exp2 —', titleAccent:'mesmo dataset, mais épocas',
+        headers:['','exp1 · Melhor (ép. 54)','exp1 · Final (ép. 60)','exp2 · Melhor (ép. 81)'],
         rows:[
           ['Precision','1.000','0.992','0.982'],
           ['Recall','0.963','0.971','0.971'],
           ['mAP@50','0.994','0.994','0.993'],
           ['mAP@50-95','0.881','0.841','0.888'],
         ],
-        note:'exp2 slightly outperforms exp1 on mAP@50-95 (+0.0065) with 100 epochs; both are within noise of each other given the small dataset (~150 images) — more epochs did not overfit.' },
+        note:'O exp2 supera levemente o exp1 em mAP@50-95 (+0,0065) com 100 épocas; ambos estão dentro da margem de ruído esperada dado o dataset pequeno (~150 imagens) — mais épocas não causaram overfitting.' },
 
-      { id:'results2', type:'bars', label:'Results · Decisions', eyebrow:'RESULTS · DECISION MAKING',
-        title:'Detection rate as a proxy', titleAccent:'for corporate density',
+      { id:'results2', type:'bars', label:'Resultados · Decisões', eyebrow:'RESULTADOS · DECISION MAKING',
+        title:'Taxa de detecção como proxy', titleAccent:'de densidade corporativa',
         bars:[
           ['Inter-Zone Corridor',27.7],['Itaim Bibi',25.5],['Brooklin',22.8],['Vila Olímpia',23.9],
-          ['Av. Paulista (Seg. 1)',21.3],['Faria Lima',20.2],['Av. Paulista (Seg. 2)',20.1],
+          ['Av. Paulista (Trecho 1)',21.3],['Faria Lima',20.2],['Av. Paulista (Trecho 2)',20.1],
           ['Pinheiros',19.8],['Vila Nova Conceição',19.1],['Alphaville Industrial',13.6],
         ],
-        text:'Inter-Zone Corridor and Itaim Bibi — dense corporate corridors — show the highest detection rates; Alphaville Industrial, the lowest. That alignment with known urban zoning is itself a signal the model is learning a real pattern, not noise — useful input for prioritizing where a human review pass matters most.' },
+        text:'Inter-Zone Corridor e Itaim Bibi — corredores corporativos densos — apresentam as maiores taxas de detecção; Alphaville Industrial, a menor. Esse alinhamento com o zoneamento urbano conhecido é, em si, um sinal de que o modelo está aprendendo um padrão real, não ruído — um insumo útil para priorizar onde uma revisão humana importa mais.' },
 
-      { id:'advantages', type:'cards', label:'Advantages', eyebrow:'ADVANTAGES',
-        title:'What this project', titleAccent:'gets right',
+      { id:'advantages', type:'cards', label:'Vantagens', eyebrow:'VANTAGENS',
+        title:'O que este projeto', titleAccent:'acerta',
         cards:[
-          ['🔁','End-to-end coverage','The full computer-vision lifecycle, not just a trained model'],
-          ['🗂️','Data-first focus','Explicit emphasis on dataset engineering, not only architecture'],
-          ['🛰️','Geospatial automation','Increases scale and productivity of target discovery'],
-          ['🧪','Clear experiment trail','Runs and artifacts organized under artifacts/runs/runs/detect/'],
-          ['💻','A real application layer','9-tab dashboard reinforcing practical applicability'],
+          ['🔁','Cobertura de ponta a ponta','O ciclo de vida completo de visão computacional, não apenas um modelo treinado'],
+          ['🗂️','Foco em dados primeiro','Ênfase explícita em engenharia de dataset, não apenas em arquitetura'],
+          ['🛰️','Automação geoespacial','Aumenta escala e produtividade na descoberta de alvos'],
+          ['🧪','Trilha clara de experimentos','Runs e artefatos organizados em artifacts/runs/runs/detect/'],
+          ['💻','Uma camada de aplicação real','Dashboard de 9 abas reforçando a aplicabilidade prática'],
         ] },
 
-      { id:'limitations', type:'cards', label:'Limitations', eyebrow:'LIMITATIONS',
-        title:'What still needs', titleAccent:'more work',
+      { id:'limitations', type:'cards', label:'Limitações', eyebrow:'LIMITAÇÕES',
+        title:'O que ainda precisa', titleAccent:'de mais trabalho',
         cards:[
-          ['🏊','Visual confusion','Pools and sports courts can resemble the helipad \u201cH\u201d pattern'],
-          ['✍️','Annotation dependency','Results rely on consistency across team annotators'],
-          ['🗺️','Generalization risk','Limited if neighborhood and rooftop-pattern diversity is too narrow'],
+          ['🏊','Confusão visual','Piscinas e quadras esportivas podem se assemelhar ao padrão \u201cH\u201d do heliponto'],
+          ['✍️','Dependência de anotação','Os resultados dependem da consistência entre os anotadores da equipe'],
+          ['🗺️','Risco de generalização','Limitado se a diversidade de bairros e padrões de telhado for estreita demais'],
         ] },
 
-      { id:'security', type:'splitlist', label:'Security', eyebrow:'SECURITY & SCALABILITY',
-        title:'One real incident,', titleAccent:'caught and fixed',
-        text:'A Roboflow API key was found hardcoded in a training notebook — a real secrets-management lapse, identified and corrected by the team.',
-        list:['Hardcoded API key found and removed from source, moved to environment variables / Colab Secrets','Field-validation scripts are resumable (download_all_regions.py → auto_triage_regions.py)','Streamlit Cloud deploy requires libgl1 / libglib2.0-0t64 for headless OpenCV'] },
+      { id:'security', type:'splitlist', label:'Segurança', eyebrow:'SEGURANÇA E ESCALABILIDADE',
+        title:'Um incidente real,', titleAccent:'identificado e corrigido',
+        text:'Uma chave de API do Roboflow foi encontrada hardcoded em um notebook de treino — uma falha real de gestão de segredos, identificada e corrigida pela equipe.',
+        list:['Chave de API hardcoded encontrada e removida do código-fonte, movida para variáveis de ambiente / Colab Secrets','Scripts de validação de campo são retomáveis (download_all_regions.py → auto_triage_regions.py)','Deploy no Streamlit Cloud exige libgl1 / libglib2.0-0t64 para OpenCV headless'] },
 
-      { id:'responsible', type:'roadmap', label:'Responsible AI', eyebrow:'RESPONSIBLE AI',
-        title:'Ethics by construction,', titleAccent:'not as an afterthought',
+      { id:'responsible', type:'roadmap', label:'IA Responsável', eyebrow:'IA RESPONSÁVEL',
+        title:'Ética por construção,', titleAccent:'não como reflexão tardia',
         items:[
-          ['Public-area imagery only','No use of private, non-public satellite sources'],
-          ['No personal identifiers','No annotation of people, license plates, or other identifiers'],
-          ['Disclosed generative-AI use','Any AI assistance used is documented in the report'],
-          ['Educational, non-surveillance intent','No individual tracking or surveillance use case'],
+          ['Apenas imagens de área pública','Sem uso de fontes de satélite privadas ou não públicas'],
+          ['Nenhum identificador pessoal','Nenhuma anotação de pessoas, placas ou outros identificadores'],
+          ['Uso de IA generativa divulgado','Qualquer apoio de IA usado está documentado no relatório'],
+          ['Intenção educacional, sem vigilância','Nenhum caso de uso de rastreamento ou vigilância individual'],
         ] },
 
-      { id:'governance', type:'splitlist', label:'AI Governance', eyebrow:'AI GOVERNANCE',
-        title:'Practices that echo', titleAccent:'emerging AI-Act principles',
-        text:'The project does not claim regulatory certification, but several of its practices mirror principles the EU AI Act asks of higher-risk AI systems: documentation, human oversight, and data governance.',
-        list:['Documentation → full technical pipeline, glossary, and governance section in the report','Human oversight → manual triage before annotation; qualitative review of hits/FP/FN','Data governance → public-area imagery only, no personal identifiers, LGPD-aligned minimization','Transparency → auto-discovered experiment metrics, visible live in the dashboard'] },
+      { id:'governance', type:'splitlist', label:'AI Governance', eyebrow:'GOVERNANÇA DE IA',
+        title:'Práticas que ecoam', titleAccent:'princípios emergentes do AI Act',
+        text:'O projeto não reivindica certificação regulatória, mas várias de suas práticas espelham princípios que o AI Act da União Europeia exige de sistemas de IA de maior risco: documentação, supervisão humana e governança de dados.',
+        list:['Documentação → pipeline técnico completo, glossário e seção de governança no relatório','Supervisão humana → triagem manual antes da anotação; revisão qualitativa de acertos/FP/FN','Governança de dados → apenas imagens de área pública, sem identificadores pessoais, minimização alinhada à LGPD','Transparência → métricas de experimento auto-descobertas, visíveis ao vivo no dashboard'] },
 
-      { id:'conclusion', type:'quote', label:'Conclusion', eyebrow:'CONCLUSION',
-        title:'Data quality before', titleAccent:'model complexity',
-        text:'Helipad Detector reaches professional-grade metrics — mAP@50 near 99% and mAP@50-95 near 88% — on a dataset built entirely from scratch. The deeper contribution is what that result proves: that a small, well-curated, well-governed dataset can outweigh architectural sophistication, and that transparent documentation of both successes and mistakes is itself part of responsible AI practice.' },
+      { id:'conclusion', type:'quote', label:'Conclusão', eyebrow:'CONCLUSÃO',
+        title:'Qualidade de dado antes da', titleAccent:'complexidade do modelo',
+        text:'O Helipad Detector atinge métricas de nível profissional — mAP@50 próximo de 99% e mAP@50-95 próximo de 88% — em um dataset construído inteiramente do zero. A contribuição mais profunda é o que esse resultado prova: que um dataset pequeno, bem curado e bem governado pode superar sofisticação arquitetural, e que documentar com transparência tanto os acertos quanto os erros é, em si, parte de uma prática responsável de IA.' },
 
-      { id:'nextsteps', type:'roadmap', label:'Next Steps', eyebrow:'NEXT STEPS',
-        title:'What comes', titleAccent:'after this deck',
+      { id:'nextsteps', type:'roadmap', label:'Próximos Passos', eyebrow:'PRÓXIMOS PASSOS',
+        title:'O que vem', titleAccent:'depois desta apresentação',
         items:[
-          ['Expand field validation','More neighborhoods, more unseen-region tests'],
-          ['YOLOv8n vs. YOLOv11n','A systematic head-to-head comparison'],
-          ['Modularize the codebase','Move logic out of notebooks into reusable modules'],
-          ['Grow the dashboard','Evolve apps/streamlit_app/app.py into a more robust application'],
-          ['Active learning cycles','Re-annotate the hardest field-validation examples'],
+          ['Expandir a validação de campo','Mais bairros, mais testes em regiões não vistas'],
+          ['YOLOv8n vs. YOLOv11n','Uma comparação sistemática cabeça a cabeça'],
+          ['Modularizar o código','Mover a lógica dos notebooks para módulos reutilizáveis'],
+          ['Evoluir o dashboard','Transformar apps/streamlit_app/app.py em uma aplicação mais robusta'],
+          ['Ciclos de active learning','Re-anotar os exemplos mais difíceis da validação de campo'],
         ] },
 
-      { id:'thanks', type:'closing', label:'Thanks', eyebrow:'ACKNOWLEDGEMENTS',
-        title:'Thank you,', titleAccent:'Professor Coelho',
-        text:'Special thanks to Prof. Rooney Ribeiro Albuquerque Coelho for a project structure that emphasizes the full lifecycle of applied Computer Vision, and to PUC-SP and the open-source communities behind Ultralytics, PyTorch, Roboflow, Streamlit, and Jupyter.',
+      { id:'thanks', type:'closing', label:'Agradecimentos', eyebrow:'AGRADECIMENTOS',
+        title:'Obrigado,', titleAccent:'Professor Coelho',
+        text:'Agradecimentos especiais ao Prof. Rooney Ribeiro Albuquerque Coelho por uma estrutura de projeto que enfatiza o ciclo de vida completo da Visão Computacional aplicada, e à PUC-SP e às comunidades open-source por trás de Ultralytics, PyTorch, Roboflow, Streamlit e Jupyter.',
         repoLabel:'github.com/Mindful-AI-Research/3-project-ai-ml-yolo-helipad_detector',
         repoUrl:'https://github.com/Mindful-AI-Research/3-project-ai-ml-yolo-helipad_detector' },
     ];
 
-    /* ═══════════════════════ SHARED COMPONENTS ═══════════════════════ */
     function Eyebrow({ n, label }) {
       return (
         <div className="eyebrow animate">
@@ -463,11 +473,183 @@
         </h2>
       );
     }
-    function Footer({ n }) {
+    function Footer() {
       return <div className="footer-tag">{UI.footer}</div>;
     }
 
-    /* ═══════════════════════ SLIDE RENDERER ═══════════════════════ */
+    function ThreeCoverScene() {
+      const mountRef = useRef(null);
+      useEffect(() => {
+        const mount = mountRef.current;
+        if (!mount || !window.THREE || !window.THREE.OrbitControls) return;
+        const THREE = window.THREE;
+        let width = mount.clientWidth, height = mount.clientHeight;
+
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 100);
+        camera.position.set(0.4, 1.1, 9);
+
+        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+        renderer.setSize(width, height);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        mount.appendChild(renderer.domElement);
+
+        const controls = new THREE.OrbitControls(camera, renderer.domElement);
+        controls.enableDamping = true;
+        controls.dampingFactor = 0.06;
+        controls.enableZoom = false;
+        controls.enablePan = false;
+        controls.autoRotate = true;
+        controls.autoRotateSpeed = 0.45;
+        controls.minPolarAngle = Math.PI / 3;
+        controls.maxPolarAngle = Math.PI / 1.7;
+        controls.target.set(0.3, 0.1, 0);
+
+        scene.add(new THREE.AmbientLight(0x2a3d3a, 1.3));
+        const key = new THREE.PointLight(0x14b8a6, 3.2, 22);
+        key.position.set(3, 3, 4);
+        scene.add(key);
+        const rim = new THREE.PointLight(0xff2500, 1.3, 18);
+        rim.position.set(-4, -1, -3);
+        scene.add(rim);
+
+        const starGeo = new THREE.BufferGeometry();
+        const starCount = 850;
+        const starPos = new Float32Array(starCount * 3);
+        for (let i = 0; i < starCount; i++) {
+          starPos[i*3]   = (Math.random() - 0.5) * 60;
+          starPos[i*3+1] = (Math.random() - 0.5) * 60;
+          starPos[i*3+2] = (Math.random() - 0.5) * 60 - 10;
+        }
+        starGeo.setAttribute('position', new THREE.BufferAttribute(starPos, 3));
+        const starMat = new THREE.PointsMaterial({ color: 0xffffff, size: 0.055, transparent: true, opacity: 0.75 });
+        const stars = new THREE.Points(starGeo, starMat);
+        scene.add(stars);
+
+        const partGeo = new THREE.BufferGeometry();
+        const partCount = 200;
+        const partPos = new Float32Array(partCount * 3);
+        for (let i = 0; i < partCount; i++) {
+          partPos[i*3]   = (Math.random() - 0.5) * 14;
+          partPos[i*3+1] = (Math.random() - 0.5) * 8;
+          partPos[i*3+2] = (Math.random() - 0.5) * 10;
+        }
+        partGeo.setAttribute('position', new THREE.BufferAttribute(partPos, 3));
+        const partMat = new THREE.PointsMaterial({ color: 0x2fe8d4, size: 0.05, transparent: true, opacity: 0.85, blending: THREE.AdditiveBlending });
+        const particles = new THREE.Points(partGeo, partMat);
+        scene.add(particles);
+
+        const auroraGeo = new THREE.PlaneGeometry(42, 20, 1, 1);
+        const auroraMat = new THREE.ShaderMaterial({
+          transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, side: THREE.DoubleSide,
+          uniforms: { uTime: { value: 0 } },
+          vertexShader: `
+            varying vec2 vUv;
+            void main() {
+              vUv = uv;
+              gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+            }
+          `,
+          fragmentShader: `
+            varying vec2 vUv;
+            uniform float uTime;
+            void main() {
+              float t = uTime * 0.15;
+              float y = vUv.y;
+              float wave1 = sin(vUv.x * 6.0 + t * 2.0) * 0.09;
+              float wave2 = sin(vUv.x * 11.0 - t * 1.4) * 0.05;
+              float band = smoothstep(0.0, 0.5, y + wave1) - smoothstep(0.5, 1.0, y + wave1 + wave2);
+              vec3 teal = vec3(0.055, 0.46, 0.43);
+              vec3 green = vec3(0.24, 0.85, 0.55);
+              vec3 col = mix(teal, green, sin(vUv.x * 4.0 + t) * 0.5 + 0.5);
+              float alpha = band * 0.55 * smoothstep(0.0, 0.15, y) * smoothstep(1.0, 0.7, y);
+              gl_FragColor = vec4(col, alpha);
+            }
+          `,
+        });
+        const aurora = new THREE.Mesh(auroraGeo, auroraMat);
+        aurora.position.set(0, 4, -14);
+        scene.add(aurora);
+
+        const heli = new THREE.Group();
+        const bodyMat = new THREE.MeshStandardMaterial({ color: 0x0d2b28, emissive: 0x0E756D, emissiveIntensity: 0.55, metalness: 0.4, roughness: 0.35 });
+        const accentMat = new THREE.MeshStandardMaterial({ color: 0x111315, metalness: 0.6, roughness: 0.4 });
+
+        const body = new THREE.Mesh(new THREE.SphereGeometry(0.62, 20, 16), bodyMat);
+        body.scale.set(1.35, 0.85, 1);
+        heli.add(body);
+
+        const tailBoom = new THREE.Mesh(new THREE.CylinderGeometry(0.09, 0.05, 1.5, 10), accentMat);
+        tailBoom.rotation.z = Math.PI / 2;
+        tailBoom.position.set(-1.35, 0.05, 0);
+        heli.add(tailBoom);
+
+        const tailFin = new THREE.Mesh(new THREE.ConeGeometry(0.22, 0.5, 8), bodyMat);
+        tailFin.rotation.z = Math.PI / 2.4;
+        tailFin.position.set(-2.05, 0.28, 0);
+        heli.add(tailFin);
+
+        const skidGeo = new THREE.CylinderGeometry(0.03, 0.03, 1.3, 6);
+        const skidL = new THREE.Mesh(skidGeo, accentMat); skidL.rotation.z = Math.PI / 2; skidL.position.set(0, -0.62, 0.35);
+        const skidR = skidL.clone(); skidR.position.z = -0.35;
+        heli.add(skidL, skidR);
+
+        const rotorGroup = new THREE.Group();
+        const bladeGeo = new THREE.BoxGeometry(2.6, 0.03, 0.12);
+        const blade1 = new THREE.Mesh(bladeGeo, accentMat);
+        const blade2 = blade1.clone(); blade2.rotation.y = Math.PI / 2;
+        rotorGroup.add(blade1, blade2);
+        rotorGroup.position.set(0, 0.62, 0);
+        heli.add(rotorGroup);
+
+        const tailRotorGroup = new THREE.Group();
+        const tBladeGeo = new THREE.BoxGeometry(0.05, 0.5, 0.06);
+        const tBlade1 = new THREE.Mesh(tBladeGeo, accentMat);
+        const tBlade2 = tBlade1.clone(); tBlade2.rotation.x = Math.PI / 2;
+        tailRotorGroup.add(tBlade1, tBlade2);
+        tailRotorGroup.position.set(-2.05, 0.28, 0.18);
+        heli.add(tailRotorGroup);
+
+        heli.scale.setScalar(0.85);
+        heli.position.set(0.6, 0, 0);
+        scene.add(heli);
+
+        let raf;
+        const clock = new THREE.Clock();
+        const animate = () => {
+          raf = requestAnimationFrame(animate);
+          const t = clock.getElapsedTime();
+          rotorGroup.rotation.y += 0.9;
+          tailRotorGroup.rotation.x += 1.1;
+          heli.position.y = Math.sin(t * 0.8) * 0.18;
+          heli.rotation.y += 0.0025;
+          particles.rotation.y += 0.0006;
+          stars.rotation.y += 0.00015;
+          auroraMat.uniforms.uTime.value = t;
+          controls.update();
+          renderer.render(scene, camera);
+        };
+        animate();
+
+        const onResize = () => {
+          width = mount.clientWidth; height = mount.clientHeight;
+          camera.aspect = width / height; camera.updateProjectionMatrix();
+          renderer.setSize(width, height);
+        };
+        window.addEventListener('resize', onResize);
+
+        return () => {
+          cancelAnimationFrame(raf);
+          window.removeEventListener('resize', onResize);
+          controls.dispose();
+          renderer.dispose();
+          if (mount.contains(renderer.domElement)) mount.removeChild(renderer.domElement);
+        };
+      }, []);
+
+      return <div ref={mountRef} className="three-cover" title="Arraste para orbitar" />;
+    }
+
     function Slide({ data, n, className }) {
       const cls = className || 'slide';
       const body = (() => {
@@ -477,9 +659,7 @@
             <>
               <div className="hero-stage">
                 <div className="cover-scan" />
-                <div className="hero-glow" />
-                <div className="heli-pad" />
-                <div className="heli">🚁</div>
+                <ThreeCoverScene />
               </div>
               <Eyebrow n={n} label={data.eyebrow} />
               <h1 className="headline animate d1" style={{ maxWidth: 860 }}>
@@ -592,7 +772,7 @@
               <div className="pipeline animate d2" style={{ gridTemplateColumns: `repeat(${data.cols || data.steps.length}, 1fr)` }}>
                 {data.steps.map(([nb, t, d]) => (
                   <div key={nb} className="pipe">
-                    <div className="pipe-nb">STEP {nb}</div>
+                    <div className="pipe-nb">ETAPA {nb}</div>
                     <div className="pipe-t">{t}</div>
                     <div className="pipe-d">{d}</div>
                   </div>
@@ -722,12 +902,11 @@
       return (
         <div className={cls} id={data.id}>
           {body}
-          <Footer n={n} />
+          <Footer />
         </div>
       );
     }
 
-    /* ═══════════════════════ SHORTCUTS MODAL ═══════════════════════ */
     function ShortcutsModal({ onClose }) {
       return (
         <div className="modal-overlay" onClick={onClose}>
@@ -742,7 +921,6 @@
       );
     }
 
-    /* ═══════════════════════ APP ═══════════════════════ */
     function App() {
       const [cur, setCur] = useState(0);
       const [theme, setTheme] = useState('dark');
@@ -809,7 +987,12 @@
 
       return (
         <>
-          <div className="timeline-track" onClick={onScrub} title="Drag / click to jump to a section">
+          <div className="heli-ambient" aria-hidden="true">
+            <span className="heli-a">🚁</span>
+            <span className="heli-a h2">🚁</span>
+          </div>
+
+          <div className="timeline-track" onClick={onScrub} title="Arraste / clique para pular de seção">
             <div className="timeline-fill" style={{ width: `${pct}%` }} />
           </div>
 
