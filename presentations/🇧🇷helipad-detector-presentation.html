@@ -2,1563 +2,1075 @@
 <html lang="pt-BR">
 
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Helipad Detector — Apresentação Executiva</title>
-    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/pptxgenjs@3.12.0/dist/pptxgen.bundle.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
-        rel="stylesheet" />
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box
-        }
-
-        :root {
-            --bg: #050506;
-            --surface: #0d0f10;
-            --surface2: #16191b;
-            --teal: #0E756D;
-            --teal-dim: #0a5b55;
-            --teal-glow: rgba(14, 117, 109, .18);
-            --red: #FF2500;
-            --red-glow: rgba(255, 37, 0, .16);
-            --white: #fff;
-            --w90: rgba(255, 255, 255, .9);
-            --w70: rgba(255, 255, 255, .7);
-            --w50: rgba(255, 255, 255, .5);
-            --w20: rgba(255, 255, 255, .12);
-            --w10: rgba(255, 255, 255, .06);
-            --border: rgba(14, 117, 109, .30);
-            --border2: rgba(14, 117, 109, .55);
-            --font: 'Inter', system-ui, sans-serif;
-            --mono: 'JetBrains Mono', monospace;
-            --slide-transition: .55s cubic-bezier(.4, 0, .2, 1);
-        }
-
-        [data-theme="light"] {
-            --bg: #f5f5f7;
-            --surface: #fff;
-            --surface2: #f0f0f5;
-            --white: #14181a;
-            --w90: rgba(0, 0, 0, .85);
-            --w70: rgba(0, 0, 0, .65);
-            --w50: rgba(0, 0, 0, .45);
-            --w20: rgba(0, 0, 0, .1);
-            --w10: rgba(0, 0, 0, .04);
-            --border: rgba(14, 117, 109, .30);
-            --border2: rgba(14, 117, 109, .55);
-        }
-
-        html,
-        body {
-            height: 100%;
-            overflow: hidden;
-            font-family: var(--font)
-        }
-
-        body {
-            background: var(--bg);
-            color: var(--white);
-            transition: background .4s, color .4s
-        }
-
-        #stage {
-            position: fixed;
-            inset: 0;
-            background: var(--bg)
-        }
-
-        .slide {
-            position: absolute;
-            inset: 0;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            padding: 80px 100px 108px;
-            opacity: 0;
-            pointer-events: none;
-            transform: translateY(24px);
-            transition: opacity var(--slide-transition), transform var(--slide-transition);
-            overflow: hidden;
-        }
-
-        .slide.active {
-            opacity: 1;
-            pointer-events: all;
-            transform: translateY(0)
-        }
-
-        .slide.exit-up {
-            opacity: 0;
-            transform: translateY(-24px)
-        }
-
-        .slide.exit-down {
-            opacity: 0;
-            transform: translateY(24px)
-        }
-
-        body::before {
-            content: '';
-            position: fixed;
-            inset: 0;
-            pointer-events: none;
-            z-index: 0;
-            background: radial-gradient(ellipse 80% 60% at 50% -10%, rgba(14, 117, 109, .10) 0%, transparent 60%);
-        }
-
-        .hud {
-            position: fixed;
-            bottom: 28px;
-            left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            background: rgba(13, 15, 16, .84);
-            border: 1px solid var(--border);
-            border-radius: 100px;
-            padding: 10px 18px;
-            backdrop-filter: blur(20px);
-            z-index: 1000;
-            transition: opacity .3s;
-            max-width: 92vw;
-            overflow-x: auto;
-        }
-
-        .hud-dots {
-            display: flex;
-            gap: 6px;
-            align-items: center
-        }
-
-        .hud-dot {
-            width: 7px;
-            height: 7px;
-            border-radius: 50%;
-            background: var(--w20);
-            border: none;
-            cursor: pointer;
-            transition: all .3s;
-            flex: none
-        }
-
-        .hud-dot.on {
-            background: var(--teal);
-            box-shadow: 0 0 8px var(--teal);
-            transform: scale(1.4)
-        }
-
-        .hud-dot:hover:not(.on) {
-            background: var(--w50)
-        }
-
-        .hud-sep {
-            width: 1px;
-            height: 18px;
-            background: var(--w20);
-            flex: none
-        }
-
-        .hud-btn {
-            background: none;
-            border: none;
-            cursor: pointer;
-            color: var(--w50);
-            font-size: 15px;
-            line-height: 1;
-            padding: 4px 7px;
-            border-radius: 6px;
-            transition: color .2s, background .2s;
-            white-space: nowrap;
-            font-family: var(--font)
-        }
-
-        .hud-btn:hover {
-            color: var(--teal);
-            background: var(--teal-glow)
-        }
-
-        .hud-btn:disabled {
-            opacity: .3;
-            cursor: default
-        }
-
-        .hud-btn.danger:hover {
-            color: var(--red);
-            background: var(--red-glow)
-        }
-
-        .slide-counter {
-            position: fixed;
-            top: 28px;
-            right: 36px;
-            font-family: var(--mono);
-            font-size: .72rem;
-            color: var(--w50);
-            letter-spacing: .1em;
-            z-index: 1000;
-            text-align: right
-        }
-
-        .slide-counter span {
-            color: var(--teal)
-        }
-
-        .timeline-track {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: var(--w10);
-            z-index: 1001;
-            cursor: pointer
-        }
-
-        .timeline-fill {
-            height: 100%;
-            background: linear-gradient(90deg, var(--teal), var(--red));
-            transition: width .4s cubic-bezier(.4, 0, .2, 1)
-        }
-
-        .timeline-track:hover {
-            height: 8px
-        }
-
-        .eyebrow {
-            font-family: var(--mono);
-            font-size: .68rem;
-            color: var(--teal);
-            letter-spacing: .22em;
-            text-transform: uppercase;
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            gap: 12px
-        }
-
-        .eyebrow::after {
-            content: '';
-            flex: 1;
-            max-width: 48px;
-            height: 1px;
-            background: var(--teal-dim)
-        }
-
-        .headline {
-            font-size: clamp(2.2rem, 5vw, 4.6rem);
-            font-weight: 700;
-            line-height: 1.08;
-            letter-spacing: -.02em;
-            margin-bottom: 18px
-        }
-
-        .accent {
-            color: var(--teal)
-        }
-
-        .accent-red {
-            color: var(--red)
-        }
-
-        .subline {
-            font-size: clamp(.92rem, 1.5vw, 1.14rem);
-            color: var(--w70);
-            line-height: 1.7;
-            font-weight: 300;
-            max-width: 660px
-        }
-
-        .card {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 18px;
-            padding: 22px 24px;
-            transition: border-color .3s, transform .3s, box-shadow .3s
-        }
-
-        .card:hover {
-            border-color: var(--border2);
-            transform: translateY(-3px);
-            box-shadow: 0 16px 40px rgba(14, 117, 109, .10)
-        }
-
-        .card-icon {
-            font-size: 1.5rem;
-            margin-bottom: 10px
-        }
-
-        .card-title {
-            font-size: .98rem;
-            font-weight: 600;
-            color: var(--teal);
-            margin-bottom: 7px
-        }
-
-        .card-body {
-            font-size: .85rem;
-            color: var(--w70);
-            line-height: 1.6
-        }
-
-        .g2 {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px
-        }
-
-        .g3 {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 16px
-        }
-
-        .g4 {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 14px
-        }
-
-        .kpi {
-            text-align: center;
-            background: rgba(14, 117, 109, .05);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 22px 10px;
-            transition: all .3s
-        }
-
-        .kpi:hover {
-            background: rgba(14, 117, 109, .09);
-            transform: translateY(-2px)
-        }
-
-        .kpi-value {
-            font-size: 2.1rem;
-            font-weight: 700;
-            color: var(--teal);
-            line-height: 1;
-            margin-bottom: 6px
-        }
-
-        .kpi-label {
-            font-size: .66rem;
-            color: var(--w50);
-            text-transform: uppercase;
-            letter-spacing: .09em
-        }
-
-        .tbl {
-            width: 100%;
-            border-collapse: collapse
-        }
-
-        .tbl th {
-            font-family: var(--mono);
-            font-size: .6rem;
-            color: var(--teal);
-            letter-spacing: .1em;
-            text-transform: uppercase;
-            padding: 9px 12px;
-            border-bottom: 1px solid var(--border);
-            text-align: left
-        }
-
-        .tbl td {
-            padding: 10px 12px;
-            font-size: .82rem;
-            color: var(--w70);
-            border-bottom: 1px solid var(--w10)
-        }
-
-        .tbl tr:hover td {
-            background: rgba(14, 117, 109, .04)
-        }
-
-        .tbl td.num,
-        .tbl th.num {
-            text-align: center
-        }
-
-        .pipeline {
-            display: grid;
-            gap: 0;
-            margin: 22px 0
-        }
-
-        .pipe {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-right: none;
-            padding: 16px 12px;
-            text-align: center;
-            position: relative;
-            transition: all .3s
-        }
-
-        .pipe:last-child {
-            border-right: 1px solid var(--border)
-        }
-
-        .pipe:hover {
-            background: rgba(14, 117, 109, .06);
-            border-color: var(--border2)
-        }
-
-        .pipe::after {
-            content: '→';
-            position: absolute;
-            right: -12px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--teal);
-            font-size: .85rem;
-            z-index: 2
-        }
-
-        .pipe:last-child::after {
-            content: ''
-        }
-
-        .pipe-nb {
-            font-family: var(--mono);
-            font-size: .56rem;
-            color: var(--teal);
-            letter-spacing: .14em;
-            margin-bottom: 6px
-        }
-
-        .pipe-t {
-            font-weight: 600;
-            font-size: .84rem;
-            margin-bottom: 4px
-        }
-
-        .pipe-d {
-            font-size: .68rem;
-            color: var(--w50);
-            line-height: 1.5
-        }
-
-        .badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-            background: rgba(14, 117, 109, .12);
-            border: 1px solid var(--border);
-            border-radius: 999px;
-            padding: 4px 12px;
-            font-family: var(--mono);
-            font-size: .66rem;
-            color: var(--teal)
-        }
-
-        .badge-row {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin-top: 20px
-        }
-
-        .roadmap-item {
-            display: flex;
-            gap: 16px;
-            align-items: flex-start;
-            padding: 12px 0;
-            border-bottom: 1px solid var(--w10)
-        }
-
-        .roadmap-item:last-child {
-            border-bottom: none
-        }
-
-        .roadmap-dot {
-            width: 10px;
-            height: 10px;
-            min-width: 10px;
-            border-radius: 50%;
-            background: var(--teal);
-            margin-top: 4px;
-            box-shadow: 0 0 8px var(--teal)
-        }
-
-        .roadmap-title {
-            font-size: .88rem;
-            font-weight: 500;
-            margin-bottom: 3px
-        }
-
-        .roadmap-desc {
-            font-size: .78rem;
-            color: var(--w50)
-        }
-
-        .code {
-            background: var(--surface2);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 18px 20px;
-            font-family: var(--mono);
-            font-size: .74rem;
-            color: #8fe0d8;
-            line-height: 1.7;
-            overflow-x: auto;
-            white-space: pre
-        }
-
-        .hl {
-            background: rgba(14, 117, 109, .06);
-            border: 1px solid var(--border);
-            border-left: 3px solid var(--red);
-            border-radius: 10px;
-            padding: 13px 17px;
-            font-size: .86rem;
-            color: var(--w70);
-            line-height: 1.6
-        }
-
-        @keyframes fadeUp {
-            from {
-                opacity: 0;
-                transform: translateY(18px)
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0)
-            }
-        }
-
-        .animate {
-            animation: fadeUp .6s cubic-bezier(.22, 1, .36, 1) both
-        }
-
-        .d1 {
-            animation-delay: .08s
-        }
-
-        .d2 {
-            animation-delay: .16s
-        }
-
-        .d3 {
-            animation-delay: .24s
-        }
-
-        .d4 {
-            animation-delay: .32s
-        }
-
-        .d5 {
-            animation-delay: .4s
-        }
-
-        .footer-tag {
-            position: absolute;
-            left: 100px;
-            bottom: 34px;
-            font-family: var(--mono);
-            font-size: .62rem;
-            color: var(--w20);
-            letter-spacing: .08em;
-            z-index: 2
-        }
-
-        .hero-stage {
-            position: absolute;
-            inset: 0;
-            overflow: hidden;
-            pointer-events: none
-        }
-
-        .hero-glow {
-            position: absolute;
-            right: -6%;
-            top: 46%;
-            transform: translateY(-50%);
-            width: 560px;
-            height: 560px;
-            background: radial-gradient(circle, rgba(14, 117, 109, .14) 0%, transparent 70%);
-            border-radius: 50%;
-            border: 1px solid var(--border)
-        }
-
-        .hero-glow::after {
-            content: '';
-            position: absolute;
-            inset: 60px;
-            border: 1px solid rgba(14, 117, 109, .12);
-            border-radius: 50%
-        }
-
-        .heli-pad {
-            position: absolute;
-            right: 8%;
-            top: 62%;
-            width: 210px;
-            height: 210px;
-            border: 1px solid var(--border2);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            opacity: .55
-        }
-
-        .heli-pad::before {
-            content: 'H';
-            font-family: var(--mono);
-            font-size: 2.6rem;
-            color: var(--teal-dim);
-            font-weight: 700
-        }
-
-        .heli-pad::after {
-            content: '';
-            position: absolute;
-            inset: 22px;
-            border: 1px dashed rgba(14, 117, 109, .35);
-            border-radius: 50%
-        }
-
-        .heli {
-            position: absolute;
-            font-size: 2.4rem;
-            filter: drop-shadow(0 0 18px rgba(14, 117, 109, .55));
-            animation: heliFly 13s ease-in-out infinite;
-            will-change: transform
-        }
-
-        @keyframes heliFly {
-            0% {
-                top: 18%;
-                left: -6%;
-                transform: rotate(2deg) scale(.9);
-            }
-
-            22% {
-                top: 30%;
-                left: 30%;
-                transform: rotate(-2deg) scale(1);
-            }
-
-            46% {
-                top: 22%;
-                left: 62%;
-                transform: rotate(3deg) scale(1.05);
-            }
-
-            68% {
-                top: 55%;
-                left: 74%;
-                transform: rotate(-1deg) scale(.95);
-            }
-
-            86% {
-                top: 60%;
-                left: 82%;
-                transform: rotate(0deg) scale(.85);
-            }
-
-            100% {
-                top: 62%;
-                left: 84%;
-                transform: rotate(0deg) scale(.8);
-            }
-        }
-
-        .cover-scan {
-            position: absolute;
-            inset: 0;
-            background: repeating-linear-gradient(0deg, rgba(14, 117, 109, .05) 0px, transparent 1px, transparent 3px);
-            pointer-events: none;
-            opacity: .5
-        }
-
-        .bar-row {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 9px
-        }
-
-        .bar-label {
-            font-size: .74rem;
-            color: var(--w70);
-            min-width: 168px
-        }
-
-        .bar-track {
-            flex: 1;
-            height: 6px;
-            background: var(--w10);
-            border-radius: 3px;
-            overflow: hidden
-        }
-
-        .bar-fill {
-            height: 100%;
-            background: linear-gradient(90deg, var(--teal), var(--red));
-            border-radius: 3px
-        }
-
-        .bar-val {
-            font-family: var(--mono);
-            font-size: .66rem;
-            color: var(--teal);
-            min-width: 40px;
-            text-align: right
-        }
-
-        .modal-overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, .6);
-            backdrop-filter: blur(6px);
-            z-index: 2000;
-            display: flex;
-            align-items: center;
-            justify-content: center
-        }
-
-        .modal {
-            background: var(--surface);
-            border: 1px solid var(--border2);
-            border-radius: 18px;
-            padding: 32px 36px;
-            max-width: 420px;
-            width: 90%;
-            box-shadow: 0 30px 80px rgba(0, 0, 0, .5)
-        }
-
-        .modal h3 {
-            font-size: 1.1rem;
-            margin-bottom: 18px;
-            color: var(--teal)
-        }
-
-        .modal-row {
-            display: flex;
-            justify-content: space-between;
-            padding: 8px 0;
-            border-bottom: 1px solid var(--w10);
-            font-size: .84rem;
-            color: var(--w70)
-        }
-
-        .modal-row kbd {
-            font-family: var(--mono);
-            background: var(--surface2);
-            border: 1px solid var(--border);
-            border-radius: 6px;
-            padding: 2px 8px;
-            color: var(--teal);
-            font-size: .74rem
-        }
-
-        .modal-close {
-            margin-top: 20px;
-            width: 100%;
-            background: var(--teal);
-            color: #fff;
-            border: none;
-            border-radius: 10px;
-            padding: 10px;
-            font-family: var(--font);
-            font-weight: 600;
-            cursor: pointer
-        }
-
-        @media(max-width:900px) {
-            .slide {
-                padding: 64px 26px 100px
-            }
-
-            .g2,
-            .g3,
-            .g4 {
-                grid-template-columns: 1fr
-            }
-
-            .pipeline {
-                grid-template-columns: 1fr !important
-            }
-
-            .pipe {
-                border-right: 1px solid var(--border);
-                border-bottom: none
-            }
-
-            .pipe:last-child {
-                border-bottom: 1px solid var(--border)
-            }
-
-            .pipe::after {
-                content: '↓';
-                right: 50%;
-                bottom: -12px;
-                top: auto;
-                transform: translateX(50%)
-            }
-
-            .pipe:last-child::after {
-                content: ''
-            }
-
-            .footer-tag {
-                left: 26px
-            }
-
-            .heli-pad {
-                display: none
-            }
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Helipad Detector — Apresentação Executiva</title>
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/pptxgenjs@3.12.0/dist/pptxgen.bundle.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+    rel="stylesheet" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box }
+
+    :root {
+      --bg: #050506;
+      --surface: #0d0f10;
+      --surface2: #16191b;
+      --teal: #0E756D;
+      --teal-dim: #0a5b55;
+      --teal-glow: rgba(14, 117, 109, .18);
+      --red: #FF2500;
+      --red-glow: rgba(255, 37, 0, .16);
+      --white: #fff;
+      --w90: rgba(255, 255, 255, .9);
+      --w70: rgba(255, 255, 255, .7);
+      --w50: rgba(255, 255, 255, .5);
+      --w20: rgba(255, 255, 255, .12);
+      --w10: rgba(255, 255, 255, .06);
+      --border: rgba(14, 117, 109, .30);
+      --border2: rgba(14, 117, 109, .55);
+      --font: 'Inter', system-ui, sans-serif;
+      --mono: 'JetBrains Mono', monospace;
+      --slide-transition: .55s cubic-bezier(.4, 0, .2, 1);
+    }
+
+    [data-theme="light"] {
+      --bg: #f5f5f7;
+      --surface: #fff;
+      --surface2: #f0f0f5;
+      --white: #14181a;
+      --w90: rgba(0, 0, 0, .85);
+      --w70: rgba(0, 0, 0, .65);
+      --w50: rgba(0, 0, 0, .45);
+      --w20: rgba(0, 0, 0, .1);
+      --w10: rgba(0, 0, 0, .04);
+      --border: rgba(14, 117, 109, .30);
+      --border2: rgba(14, 117, 109, .55);
+    }
+
+    html, body { height: 100%; overflow: hidden; font-family: var(--font) }
+    body { background: var(--bg); color: var(--white); transition: background .4s, color .4s }
+
+    #stage { position: fixed; inset: 0; background: var(--bg) }
+
+    .slide {
+      position: absolute; inset: 0;
+      display: flex; flex-direction: column; justify-content: center;
+      padding: 80px 100px 108px;
+      opacity: 0; pointer-events: none; transform: translateY(24px);
+      transition: opacity var(--slide-transition), transform var(--slide-transition);
+      overflow: hidden;
+    }
+    .slide.active { opacity: 1; pointer-events: all; transform: translateY(0) }
+    .slide.exit-up { opacity: 0; transform: translateY(-24px) }
+    .slide.exit-down { opacity: 0; transform: translateY(24px) }
+
+    body::before {
+      content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 0;
+      background: radial-gradient(ellipse 80% 60% at 50% -10%, rgba(14, 117, 109, .10) 0%, transparent 60%);
+    }
+
+    .hud {
+      position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%);
+      display: flex; align-items: center; gap: 14px;
+      background: rgba(13, 15, 16, .84); border: 1px solid var(--border);
+      border-radius: 100px; padding: 10px 18px; backdrop-filter: blur(20px);
+      z-index: 1000; transition: opacity .3s; max-width: 92vw; overflow-x: auto;
+    }
+    .hud-dots { display: flex; gap: 6px; align-items: center }
+    .hud-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--w20); border: none; cursor: pointer; transition: all .3s; flex: none }
+    .hud-dot.on { background: var(--teal); box-shadow: 0 0 8px var(--teal); transform: scale(1.4) }
+    .hud-dot:hover:not(.on) { background: var(--w50) }
+    .hud-sep { width: 1px; height: 18px; background: var(--w20); flex: none }
+    .hud-btn { background: none; border: none; cursor: pointer; color: var(--w50); font-size: 15px; line-height: 1; padding: 4px 7px; border-radius: 6px; transition: color .2s, background .2s; white-space: nowrap; font-family: var(--font) }
+    .hud-btn:hover { color: var(--teal); background: var(--teal-glow) }
+    .hud-btn:disabled { opacity: .3; cursor: default }
+    .hud-btn.danger:hover { color: var(--red); background: var(--red-glow) }
+
+    .slide-counter { position: fixed; top: 28px; right: 36px; font-family: var(--mono); font-size: .72rem; color: var(--w50); letter-spacing: .1em; z-index: 1000; text-align: right }
+    .slide-counter span { color: var(--teal) }
+
+    .timeline-track { position: fixed; top: 0; left: 0; right: 0; height: 4px; background: var(--w10); z-index: 1001; cursor: pointer }
+    .timeline-fill { height: 100%; background: linear-gradient(90deg, var(--teal), var(--red)); transition: width .4s cubic-bezier(.4,0,.2,1) }
+    .timeline-track:hover { height: 8px }
+
+    .eyebrow { font-family: var(--mono); font-size: .68rem; color: var(--teal); letter-spacing: .22em; text-transform: uppercase; margin-bottom: 20px; display: flex; align-items: center; gap: 12px }
+    .eyebrow::after { content: ''; flex: 1; max-width: 48px; height: 1px; background: var(--teal-dim) }
+    .headline { font-size: clamp(2.2rem, 5vw, 4.6rem); font-weight: 700; line-height: 1.08; letter-spacing: -.02em; margin-bottom: 18px }
+    .accent { color: var(--teal) }
+    .accent-red { color: var(--red) }
+    .subline { font-size: clamp(.92rem, 1.5vw, 1.14rem); color: var(--w70); line-height: 1.7; font-weight: 300; max-width: 660px }
+
+    .card { background: var(--surface); border: 1px solid var(--border); border-radius: 18px; padding: 22px 24px; transition: border-color .3s, transform .3s, box-shadow .3s }
+    .card:hover { border-color: var(--border2); transform: translateY(-3px); box-shadow: 0 16px 40px rgba(14, 117, 109, .10) }
+    .card-icon { font-size: 1.5rem; margin-bottom: 10px }
+    .card-title { font-size: .98rem; font-weight: 600; color: var(--teal); margin-bottom: 7px }
+    .card-body { font-size: .85rem; color: var(--w70); line-height: 1.6 }
+
+    .g2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px }
+    .g3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px }
+    .g4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px }
+
+    .kpi { text-align: center; background: rgba(14, 117, 109, .05); border: 1px solid var(--border); border-radius: 16px; padding: 22px 10px; transition: all .3s }
+    .kpi:hover { background: rgba(14, 117, 109, .09); transform: translateY(-2px) }
+    .kpi-value { font-size: 2.1rem; font-weight: 700; color: var(--teal); line-height: 1; margin-bottom: 6px }
+    .kpi-label { font-size: .66rem; color: var(--w50); text-transform: uppercase; letter-spacing: .09em }
+
+    .tbl { width: 100%; border-collapse: collapse }
+    .tbl th { font-family: var(--mono); font-size: .6rem; color: var(--teal); letter-spacing: .1em; text-transform: uppercase; padding: 9px 12px; border-bottom: 1px solid var(--border); text-align: left }
+    .tbl td { padding: 10px 12px; font-size: .82rem; color: var(--w70); border-bottom: 1px solid var(--w10) }
+    .tbl tr:hover td { background: rgba(14, 117, 109, .04) }
+    .tbl td.num, .tbl th.num { text-align: center }
+
+    .pipeline { display: grid; gap: 0; margin: 22px 0 }
+    .pipe { background: var(--surface); border: 1px solid var(--border); border-right: none; padding: 16px 12px; text-align: center; position: relative; transition: all .3s }
+    .pipe:last-child { border-right: 1px solid var(--border) }
+    .pipe:hover { background: rgba(14, 117, 109, .06); border-color: var(--border2) }
+    .pipe::after { content: '→'; position: absolute; right: -12px; top: 50%; transform: translateY(-50%); color: var(--teal); font-size: .85rem; z-index: 2 }
+    .pipe:last-child::after { content: '' }
+    .pipe-nb { font-family: var(--mono); font-size: .56rem; color: var(--teal); letter-spacing: .14em; margin-bottom: 6px }
+    .pipe-t { font-weight: 600; font-size: .84rem; margin-bottom: 4px }
+    .pipe-d { font-size: .68rem; color: var(--w50); line-height: 1.5 }
+
+    .badge { display: inline-flex; align-items: center; gap: 5px; background: rgba(14, 117, 109, .12); border: 1px solid var(--border); border-radius: 999px; padding: 4px 12px; font-family: var(--mono); font-size: .66rem; color: var(--teal) }
+    .badge-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 20px }
+
+    .roadmap-item { display: flex; gap: 16px; align-items: flex-start; padding: 12px 0; border-bottom: 1px solid var(--w10) }
+    .roadmap-item:last-child { border-bottom: none }
+    .roadmap-dot { width: 10px; height: 10px; min-width: 10px; border-radius: 50%; background: var(--teal); margin-top: 4px; box-shadow: 0 0 8px var(--teal) }
+    .roadmap-title { font-size: .88rem; font-weight: 500; margin-bottom: 3px }
+    .roadmap-desc { font-size: .78rem; color: var(--w50) }
+
+    .code { background: var(--surface2); border: 1px solid var(--border); border-radius: 12px; padding: 18px 20px; font-family: var(--mono); font-size: .74rem; color: #8fe0d8; line-height: 1.7; overflow-x: auto; white-space: pre }
+    .hl { background: rgba(14, 117, 109, .06); border: 1px solid var(--border); border-left: 3px solid var(--red); border-radius: 10px; padding: 13px 17px; font-size: .86rem; color: var(--w70); line-height: 1.6 }
+
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(18px) } to { opacity: 1; transform: translateY(0) } }
+    .animate { animation: fadeUp .6s cubic-bezier(.22, 1, .36, 1) both }
+    .d1 { animation-delay: .08s } .d2 { animation-delay: .16s } .d3 { animation-delay: .24s }
+    .d4 { animation-delay: .32s } .d5 { animation-delay: .4s }
+
+    .footer-tag { position: absolute; left: 100px; bottom: 34px; font-family: var(--mono); font-size: .62rem; color: var(--w20); letter-spacing: .08em; z-index: 2 }
+
+    .hero-stage { position: absolute; inset: 0; overflow: hidden; pointer-events: none }
+    .hero-glow { position: absolute; right: -6%; top: 46%; transform: translateY(-50%); width: 560px; height: 560px; background: radial-gradient(circle, rgba(14,117,109,.14) 0%, transparent 70%); border-radius: 50%; border: 1px solid var(--border) }
+    .hero-glow::after { content: ''; position: absolute; inset: 60px; border: 1px solid rgba(14,117,109,.12); border-radius: 50% }
+    .heli-pad { position: absolute; right: 8%; top: 62%; width: 210px; height: 210px; border: 1px solid var(--border2); border-radius: 50%; display: flex; align-items: center; justify-content: center; opacity: .55 }
+    .heli-pad::before { content: 'H'; font-family: var(--mono); font-size: 2.6rem; color: var(--teal-dim); font-weight: 700 }
+    .heli-pad::after { content: ''; position: absolute; inset: 22px; border: 1px dashed rgba(14,117,109,.35); border-radius: 50% }
+    .heli { position: absolute; font-size: 2.4rem; filter: drop-shadow(0 0 18px rgba(14,117,109,.55)); animation: heliFly 13s ease-in-out infinite; will-change: transform }
+    @keyframes heliFly {
+      0%   { top: 18%; left: -6%;  transform: rotate(2deg) scale(.9); }
+      22%  { top: 30%; left: 30%;  transform: rotate(-2deg) scale(1); }
+      46%  { top: 22%; left: 62%;  transform: rotate(3deg) scale(1.05); }
+      68%  { top: 55%; left: 74%;  transform: rotate(-1deg) scale(.95); }
+      86%  { top: 60%; left: 82%;  transform: rotate(0deg) scale(.85); }
+      100% { top: 62%; left: 84%;  transform: rotate(0deg) scale(.8); }
+    }
+    .cover-scan { position: absolute; inset: 0; background: repeating-linear-gradient(0deg, rgba(14,117,109,.05) 0px, transparent 1px, transparent 3px); pointer-events: none; opacity: .5 }
+
+    .three-cover { position: absolute; inset: 0; z-index: 1; cursor: grab }
+    .three-cover:active { cursor: grabbing }
+    .three-cover canvas { display: block; width: 100% !important; height: 100% !important }
+
+    .heli-ambient { position: fixed; inset: 0; pointer-events: none; z-index: 1; opacity: .5 }
+    .heli-ambient .heli-a { position: absolute; font-size: 1.5rem; opacity: .22; filter: drop-shadow(0 0 8px rgba(14,117,109,.4)) grayscale(.15); animation: heliFlyAmbient 42s linear infinite }
+    .heli-ambient .heli-a.h2 { animation-duration: 55s; animation-delay: -20s; font-size: 1.1rem; opacity: .14 }
+    @keyframes heliFlyAmbient {
+      0%   { top: 14%; left: -8%;  transform: rotate(1deg) scale(.7) }
+      25%  { top: 42%; left: 26%;  transform: rotate(-1deg) scale(.85) }
+      50%  { top: 18%; left: 56%;  transform: rotate(1deg) scale(.75) }
+      75%  { top: 66%; left: 82%;  transform: rotate(-1deg) scale(.65) }
+      100% { top: 30%; left: 110%; transform: rotate(0deg) scale(.6) }
+    }
+
+    .bar-row { display: flex; align-items: center; gap: 12px; margin-bottom: 9px }
+    .bar-label { font-size: .74rem; color: var(--w70); min-width: 168px }
+    .bar-track { flex: 1; height: 6px; background: var(--w10); border-radius: 3px; overflow: hidden }
+    .bar-fill { height: 100%; background: linear-gradient(90deg, var(--teal), var(--red)); border-radius: 3px }
+    .bar-val { font-family: var(--mono); font-size: .66rem; color: var(--teal); min-width: 40px; text-align: right }
+
+    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.6); backdrop-filter: blur(6px); z-index: 2000; display: flex; align-items: center; justify-content: center }
+    .modal { background: var(--surface); border: 1px solid var(--border2); border-radius: 18px; padding: 32px 36px; max-width: 420px; width: 90%; box-shadow: 0 30px 80px rgba(0,0,0,.5) }
+    .modal h3 { font-size: 1.1rem; margin-bottom: 18px; color: var(--teal) }
+    .modal-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--w10); font-size: .84rem; color: var(--w70) }
+    .modal-row kbd { font-family: var(--mono); background: var(--surface2); border: 1px solid var(--border); border-radius: 6px; padding: 2px 8px; color: var(--teal); font-size: .74rem }
+    .modal-close { margin-top: 20px; width: 100%; background: var(--teal); color: #fff; border: none; border-radius: 10px; padding: 10px; font-family: var(--font); font-weight: 600; cursor: pointer }
+
+    @media(max-width:900px) {
+      .slide { padding: 64px 26px 100px }
+      .g2, .g3, .g4 { grid-template-columns: 1fr }
+      .pipeline { grid-template-columns: 1fr !important }
+      .pipe { border-right: 1px solid var(--border); border-bottom: none }
+      .pipe:last-child { border-bottom: 1px solid var(--border) }
+      .pipe::after { content: '↓'; right: 50%; bottom: -12px; top: auto; transform: translateX(50%) }
+      .pipe:last-child::after { content: '' }
+      .footer-tag { left: 26px }
+      .heli-pad { display: none }
+    }
+  </style>
 </head>
 
 <body data-theme="dark">
-    <div id="stage"></div>
-    <script type="text/babel">
-        const { useState, useEffect, useRef, useCallback } = React;
+  <div id="stage"></div>
+  <script type="text/babel">
+    const { useState, useEffect, useRef, useCallback } = React;
 
-        const LANG = 'pt';
-        const UI = {
-            restart: 'Reiniciar (R)', fullscreen: 'Tela cheia (F)', theme: 'Alternar tema',
-            shortcuts: 'Atalhos de teclado (?)', exit: 'Sair da apresentação', pptx: '⬇ Baixar PPTX',
-            prev: 'Anterior', next: 'Próximo', home: 'Início',
-            shortcutsTitle: 'Atalhos de Teclado',
-            shortcutsList: [
-                ['→ / ↓', 'Próximo slide'], ['← / ↑', 'Slide anterior'], ['F', 'Alternar tela cheia'],
-                ['R', 'Reiniciar da capa'], ['?', 'Alternar este painel'], ['Esc', 'Fechar painel / sair da tela cheia'],
-            ],
-            close: 'Fechar', swipeHint: 'USE AS SETAS ← → OU DESLIZE PARA NAVEGAR', footer: 'by ॐ Mindful AI · github.com/Mindful-AI-Research',
-            pptxFile: 'Helipad_Detector_Apresentacao_PT.pptx',
-            exitConfirm: 'Sair da apresentação? Isso fechará a visualização em tela cheia.',
-        };
+    const LANG = 'pt';
+    const UI = {
+      restart: 'Reiniciar (R)', fullscreen: 'Tela cheia (F)', theme: 'Alternar tema',
+      shortcuts: 'Atalhos de teclado (?)', exit: 'Sair da apresentação', pptx: '⬇ Baixar PPTX',
+      prev: 'Anterior', next: 'Próximo', home: 'Início',
+      shortcutsTitle: 'Atalhos de Teclado',
+      shortcutsList: [
+        ['→ / ↓', 'Próximo slide'], ['← / ↑', 'Slide anterior'], ['F', 'Alternar tela cheia'],
+        ['R', 'Reiniciar da capa'], ['?', 'Alternar este painel'], ['Esc', 'Fechar painel / sair da tela cheia'],
+      ],
+      close: 'Fechar', swipeHint: 'USE AS SETAS ← → OU DESLIZE PARA NAVEGAR', footer: 'by ॐ Mindful AI · github.com/Mindful-AI-Research',
+      pptxFile: 'Helipad_Detector_Apresentacao_PT.pptx',
+      exitConfirm: 'Sair da apresentação? Isso fechará a visualização em tela cheia.',
+    };
 
-        const SLIDES = [
-            {
-                id: 'cover', type: 'cover', label: 'Capa', eyebrow: 'PROJETO DE CONCLUSÃO · PUC-SP · 2026',
-                title: 'Helipad Detector', titleAccent: 'Enxergando os Telhados de São Paulo do Alto',
-                subtitle: 'Um sistema de visão computacional de ponta a ponta que detecta helipontos em telhados a partir de imagens de satélite de São Paulo — da coleta geoespacial de dados a um dashboard de detecção ao vivo.',
-                professor: 'Professor Rooney Ribeiro Albuquerque Coelho',
-                authors: ['Carlos Antonio dos Santos Roth Gorham', 'Fabiana Campanari', 'Pedro Vyctor Almeida'],
-                badges: ['YOLOv8n / YOLOv11n', 'Roboflow', 'ESRI World Imagery', 'Streamlit', 'Selenium', 'Google Colab T4']
-            },
+    const SLIDES = [
+      { id:'cover', type:'cover', label:'Capa', eyebrow:'PROJETO DE CONCLUSÃO · PUC-SP · 2026',
+        title:'Helipad Detector', titleAccent:'Enxergando os Telhados de São Paulo do Alto',
+        subtitle:'Um sistema de visão computacional de ponta a ponta que detecta helipontos em telhados a partir de imagens de satélite de São Paulo — da coleta geoespacial de dados a um dashboard de detecção ao vivo.',
+        professor:'Professor Rooney Ribeiro Albuquerque Coelho',
+        authors:['Carlos Antonio dos Santos Roth Gorham','Fabiana Campanari','Pedro Vyctor Almeida'],
+        badges:['YOLOv8n / YOLOv11n','Roboflow','ESRI World Imagery','Streamlit','Selenium','Google Colab T4'] },
 
-            {
-                id: 'institutional', type: 'info', label: 'Institucional', eyebrow: 'INSTITUCIONAL',
-                title: 'Um trabalho de Machine Learning,', titleAccent: 'construído como um produto',
-                facts: [
-                    ['Instituição', 'Pontifícia Universidade Católica de São Paulo (PUC-SP) — FACEI'],
-                    ['Curso', 'Bacharelado em Human-Centered AI & Data Science — 5º semestre — 2026'],
-                    ['Disciplina', 'Machine Learning / Visão Computacional — YOLO'],
-                    ['Projeto', 'P2 — Detecção de Objetos em Imagens de Satélite com YOLO'],
-                    ['Professor', 'Rooney Ribeiro Albuquerque Coelho'],
-                    ['Autores', 'Carlos Antonio dos Santos Roth Gorham · Fabiana Campanari · Pedro Vyctor Almeida'],
-                ]
-            },
+      { id:'institutional', type:'info', label:'Institucional', eyebrow:'INSTITUCIONAL',
+        title:'Um trabalho de Machine Learning,', titleAccent:'construído como um produto',
+        facts:[
+          ['Instituição','Pontifícia Universidade Católica de São Paulo (PUC-SP) — FACEI'],
+          ['Curso','Bacharelado em Human-Centered AI & Data Science — 5º semestre — 2026'],
+          ['Disciplina','Machine Learning / Visão Computacional — YOLO'],
+          ['Projeto','P2 — Detecção de Objetos em Imagens de Satélite com YOLO'],
+          ['Professor','Rooney Ribeiro Albuquerque Coelho'],
+          ['Autores','Carlos Antonio dos Santos Roth Gorham · Fabiana Campanari · Pedro Vyctor Almeida'],
+        ] },
 
-            {
-                id: 'problem', type: 'stats', label: 'Problema', eyebrow: 'O PROBLEMA',
-                title: 'São Paulo funciona a base de helicópteros —', titleAccent: 'e ninguém mapeia os telhados',
-                text: 'São Paulo opera a maior frota de helicópteros urbana do mundo, coordenada por um sistema dedicado de controle de tráfego aéreo, o HELICONTROL. Identificar manualmente helipontos em telhados por um skyline metropolitano denso é lento, subjetivo e impossível de escalar.',
-                stats: [['~2.200', 'pousos e decolagens / dia'], ['1 a cada 45s', 'nos horários de pico'], ['HELICONTROL', 'sistema dedicado de controle de tráfego aéreo'], ['0', 'mapas públicos e sistemáticos de helipontos']]
-            },
+      { id:'problem', type:'stats', label:'Problema', eyebrow:'O PROBLEMA',
+        title:'São Paulo funciona a base de helicópteros —', titleAccent:'e ninguém mapeia os telhados',
+        text:'São Paulo opera a maior frota de helicópteros urbana do mundo, coordenada por um sistema dedicado de controle de tráfego aéreo, o HELICONTROL. Identificar manualmente helipontos em telhados por um skyline metropolitano denso é lento, subjetivo e impossível de escalar.',
+        stats:[['~2.200','pousos e decolagens / dia'],['1 a cada 45s','nos horários de pico'],['HELICONTROL','sistema dedicado de controle de tráfego aéreo'],['0','mapas públicos e sistemáticos de helipontos']] },
 
-            {
-                id: 'audience', type: 'cards', label: 'Público-Alvo', eyebrow: 'PARA QUEM É ISSO',
-                title: 'Construído para quem planeja', titleAccent: 'cidades vistas do alto',
-                cards: [
-                    ['🏙️', 'Planejadores urbanos', 'Mapeamento de infraestrutura de telhados em corredores corporativos densos'],
-                    ['🚁', 'Autoridades de aviação e mobilidade aérea', 'Insumo de consciência situacional, ao lado de sistemas como o HELICONTROL'],
-                    ['🎓', 'Avaliadores acadêmicos', 'Um pipeline de visão computacional transparente e reproduzível'],
-                    ['🧭', 'Equipes de smart city / GIS', 'Um modelo de IA geoespacial sobre imagens de satélite públicas'],
-                ]
-            },
+      { id:'audience', type:'cards', label:'Público-Alvo', eyebrow:'PARA QUEM É ISSO',
+        title:'Construído para quem planeja', titleAccent:'cidades vistas do alto',
+        cards:[
+          ['🏙️','Planejadores urbanos','Mapeamento de infraestrutura de telhados em corredores corporativos densos'],
+          ['🚁','Autoridades de aviação e mobilidade aérea','Insumo de consciência situacional, ao lado de sistemas como o HELICONTROL'],
+          ['🎓','Avaliadores acadêmicos','Um pipeline de visão computacional transparente e reproduzível'],
+          ['🧭','Equipes de smart city / GIS','Um modelo de IA geoespacial sobre imagens de satélite públicas'],
+        ] },
 
-            {
-                id: 'product', type: 'info', label: 'Produto', eyebrow: 'O PRODUTO',
-                title: 'Helipad Detector —', titleAccent: 'imagem de satélite entra, inteligência estruturada sai',
-                text: 'Um sistema de detecção de objetos YOLOv8n/YOLOv11n treinado em um dataset de São Paulo construído sob medida, embutido em um dashboard Streamlit de 9 abas para busca, upload, revisão de validação de campo e relatórios.',
-                badges: ['Detector de classe única: helipad', 'Tiles 640×640', 'Experimentos auto-descobertos', 'Mapa + busca ao vivo']
-            },
+      { id:'product', type:'info', label:'Produto', eyebrow:'O PRODUTO',
+        title:'Helipad Detector —', titleAccent:'imagem de satélite entra, inteligência estruturada sai',
+        text:'Um sistema de detecção de objetos YOLOv8n/YOLOv11n treinado em um dataset de São Paulo construído sob medida, embutido em um dashboard Streamlit de 9 abas para busca, upload, revisão de validação de campo e relatórios.',
+        badges:['Detector de classe única: helipad','Tiles 640×640','Experimentos auto-descobertos','Mapa + busca ao vivo'] },
 
-            {
-                id: 'why', type: 'stats', label: 'Por que Importa', eyebrow: 'POR QUE ISSO IMPORTA',
-                title: 'De um espaço aéreo urbano denso a', titleAccent: 'dados espaciais estruturados',
-                text: 'A densidade de helicópteros de São Paulo e o papel do HELICONTROL no controle de tráfego aéreo tornam a cidade um ambiente real e singularmente relevante para IA geoespacial. Transformar pixels de satélite em inteligência estruturada de telhados apoia o mapeamento de infraestrutura e decisões de smart city baseadas em dados.',
-                stats: [['80%', 'do esforço em IA está nos dados, não na arquitetura'], ['7.943', 'tiles reais validados em campo'], ['10', 'bairros de São Paulo cobertos']]
-            },
+      { id:'why', type:'stats', label:'Por que Importa', eyebrow:'POR QUE ISSO IMPORTA',
+        title:'De um espaço aéreo urbano denso a', titleAccent:'dados espaciais estruturados',
+        text:'A densidade de helicópteros de São Paulo e o papel do HELICONTROL no controle de tráfego aéreo tornam a cidade um ambiente real e singularmente relevante para IA geoespacial. Transformar pixels de satélite em inteligência estruturada de telhados apoia o mapeamento de infraestrutura e decisões de smart city baseadas em dados.',
+        stats:[['80%','do esforço em IA está nos dados, não na arquitetura'],['7.943','tiles reais validados em campo'],['10','bairros de São Paulo cobertos']] },
 
-            {
-                id: 'objectives', type: 'splitlist', label: 'Objetivos', eyebrow: 'OBJETIVOS',
-                title: 'Um sistema de ponta a ponta,', titleAccent: 'sete capacidades exigidas',
-                text: 'O briefing do curso — Projeto 2: Detecção de Objetos em Imagens de Satélite com YOLO — define o ciclo de vida completo que o sistema deve cobrir.',
-                list: ['Aquisição programática de dados de satélite', 'Curadoria visual e filtragem de tiles', 'Anotação com bounding boxes bem definidas', 'Pré-processamento e augmentations', 'Treinamento e monitoramento no Colab', 'Avaliação quantitativa e análise qualitativa de erros', 'Inferência em um bairro inteiro não usado no treino']
-            },
+      { id:'objectives', type:'splitlist', label:'Objetivos', eyebrow:'OBJETIVOS',
+        title:'Um sistema de ponta a ponta,', titleAccent:'sete capacidades exigidas',
+        text:'O briefing do curso — Projeto 2: Detecção de Objetos em Imagens de Satélite com YOLO — define o ciclo de vida completo que o sistema deve cobrir.',
+        list:['Aquisição programática de dados de satélite','Curadoria visual e filtragem de tiles','Anotação com bounding boxes bem definidas','Pré-processamento e augmentations','Treinamento e monitoramento no Colab','Avaliação quantitativa e análise qualitativa de erros','Inferência em um bairro inteiro não usado no treino'] },
 
-            {
-                id: 'concepts', type: 'cards', label: 'Conceitos-Chave', eyebrow: 'CONCEITOS-CHAVE',
-                title: 'O vocabulário por trás', titleAccent: 'das métricas',
-                cards: [
-                    ['📦', 'Bounding box', 'Retângulo que marca onde um objeto está na imagem'],
-                    ['🎯', 'Precision', 'De todas as detecções feitas, quantas estavam corretas'],
-                    ['🔍', 'Recall', 'De todos os helipontos reais, quantos foram encontrados'],
-                    ['📐', 'IoU', 'Sobreposição entre a caixa prevista e a caixa real'],
-                    ['📊', 'mAP', 'Average Precision média ao longo dos limiares de IoU'],
-                    ['⚠️', 'Overfitting', 'O modelo decora os dados de treino em vez de generalizar'],
-                ]
-            },
+      { id:'concepts', type:'cards', label:'Conceitos-Chave', eyebrow:'CONCEITOS-CHAVE',
+        title:'O vocabulário por trás', titleAccent:'das métricas',
+        cards:[
+          ['📦','Bounding box','Retângulo que marca onde um objeto está na imagem'],
+          ['🎯','Precision','De todas as detecções feitas, quantas estavam corretas'],
+          ['🔍','Recall','De todos os helipontos reais, quantos foram encontrados'],
+          ['📐','IoU','Sobreposição entre a caixa prevista e a caixa real'],
+          ['📊','mAP','Average Precision média ao longo dos limiares de IoU'],
+          ['⚠️','Overfitting','O modelo decora os dados de treino em vez de generalizar'],
+        ] },
 
-            {
-                id: 'definitions', type: 'splitlist', label: 'Definições', eyebrow: 'DEFINIÇÕES',
-                title: 'O que é Detecção de Objetos —', titleAccent: 'e por que o YOLO',
-                text: 'A Detecção de Objetos responde a duas perguntas por imagem ao mesmo tempo: o objeto-alvo existe, e onde exatamente? O YOLO (\u201cYou Only Look Once\u201d) examina a imagem inteira em uma única passada e devolve caixas com grau de confiança — rápido o bastante para tempo real, leve o bastante para treinar em uma GPU gratuita do Colab.',
-                list: ['YOLOv8n — variante \u201cnano\u201d, ~3M parâmetros, modelo principal deste projeto', 'YOLOv11n — variante mais recente, testada como próximo passo sugerido', 'Classe única: helipad', 'Treinamento = mostrar repetidamente imagens rotuladas ao longo de épocas até as predições convergirem']
-            },
+      { id:'definitions', type:'splitlist', label:'Definições', eyebrow:'DEFINIÇÕES',
+        title:'O que é Detecção de Objetos —', titleAccent:'e por que o YOLO',
+        text:'A Detecção de Objetos responde a duas perguntas por imagem ao mesmo tempo: o objeto-alvo existe, e onde exatamente? O YOLO (\u201cYou Only Look Once\u201d) examina a imagem inteira em uma única passada e devolve caixas com grau de confiança — rápido o bastante para tempo real, leve o bastante para treinar em uma GPU gratuita do Colab.',
+        list:['YOLOv8n — variante \u201cnano\u201d, ~3M parâmetros, modelo principal deste projeto','YOLOv11n — variante mais recente, testada como próximo passo sugerido','Classe única: helipad','Treinamento = mostrar repetidamente imagens rotuladas ao longo de épocas até as predições convergirem'] },
 
-            {
-                id: 'solution', type: 'pipeline', label: 'Solução', eyebrow: 'VISÃO GERAL DA SOLUÇÃO',
-                title: 'Sete blocos,', titleAccent: 'um pipeline rastreável', cols: 4,
-                steps: [
-                    ['01', 'Descoberta de helipontos', 'Automação em site de aviação'],
-                    ['02', 'Extração geográfica', 'Coordenadas → graus decimais'],
-                    ['03', 'Geração de perímetro', 'Bounding boxes por ponto'],
-                    ['04', 'Aquisição visual', 'Download de tiles ESRI'],
-                    ['05', 'Triagem visual', 'Seleção manual'],
-                    ['06', 'Anotação', 'Rotulagem no Roboflow + splits'],
-                    ['07', 'Treino / avaliação / inferência', 'YOLO no Colab'],
-                ]
-            },
+      { id:'solution', type:'pipeline', label:'Solução', eyebrow:'VISÃO GERAL DA SOLUÇÃO',
+        title:'Sete blocos,', titleAccent:'um pipeline rastreável', cols:4,
+        steps:[
+          ['01','Descoberta de helipontos','Automação em site de aviação'],
+          ['02','Extração geográfica','Coordenadas → graus decimais'],
+          ['03','Geração de perímetro','Bounding boxes por ponto'],
+          ['04','Aquisição visual','Download de tiles ESRI'],
+          ['05','Triagem visual','Seleção manual'],
+          ['06','Anotação','Rotulagem no Roboflow + splits'],
+          ['07','Treino / avaliação / inferência','YOLO no Colab'],
+        ] },
 
-            {
-                id: 'scenario', type: 'info', label: 'Cenário de IA', eyebrow: 'CENÁRIO DE IA',
-                title: 'Um problema supervisionado', titleAccent: 'de detecção de objetos, classe única',
-                text: 'A tarefa é enquadrada como detecção de objetos supervisionada em imagens aéreas: uma classe-alvo (helipad), com transfer learning a partir de pesos YOLO pré-treinados no COCO, ajustados finamente em um dataset pequeno e construído sob medida.',
-                badges: ['Aprendizado supervisionado', 'Transfer learning (COCO → São Paulo)', 'Classe única: helipad', 'Regime de poucos dados (~150 imagens)', 'Fine-tuning em GPU (Colab T4)']
-            },
+      { id:'scenario', type:'info', label:'Cenário de IA', eyebrow:'CENÁRIO DE IA',
+        title:'Um problema supervisionado', titleAccent:'de detecção de objetos, classe única',
+        text:'A tarefa é enquadrada como detecção de objetos supervisionada em imagens aéreas: uma classe-alvo (helipad), com transfer learning a partir de pesos YOLO pré-treinados no COCO, ajustados finamente em um dataset pequeno e construído sob medida.',
+        badges:['Aprendizado supervisionado','Transfer learning (COCO → São Paulo)','Classe única: helipad','Regime de poucos dados (~150 imagens)','Fine-tuning em GPU (Colab T4)'] },
 
-            {
-                id: 'architecture', type: 'arch', label: 'Arquitetura', eyebrow: 'ARQUITETURA',
-                title: 'Quatro estágios,', titleAccent: 'um pipeline de AI/ML Ops',
-                groups: [
-                    ['Descoberta Geoespacial', ['Scraping de site de aviação (Selenium)', 'CSV de coordenadas', 'Conversão em bounding box']],
-                    ['Aquisição Visual', ['Download de tiles XYZ do ESRI', 'Mosaicos por região', 'Triagem manual']],
-                    ['Engenharia de Dataset', ['Upload e anotação no Roboflow', 'Pré-processamento + augmentation', 'Exportação train/valid/test']],
-                    ['Modelagem e Validação', ['Treinamento no Colab (YOLOv8/11)', 'Avaliação quantitativa + qualitativa', 'Inferência em bairro não visto', 'App Streamlit']],
-                ]
-            },
+      { id:'architecture', type:'arch', label:'Arquitetura', eyebrow:'ARQUITETURA',
+        title:'Quatro estágios,', titleAccent:'um pipeline de AI/ML Ops',
+        groups:[
+          ['Descoberta Geoespacial',['Scraping de site de aviação (Selenium)','CSV de coordenadas','Conversão em bounding box']],
+          ['Aquisição Visual',['Download de tiles XYZ do ESRI','Mosaicos por região','Triagem manual']],
+          ['Engenharia de Dataset',['Upload e anotação no Roboflow','Pré-processamento + augmentation','Exportação train/valid/test']],
+          ['Modelagem e Validação',['Treinamento no Colab (YOLOv8/11)','Avaliação quantitativa + qualitativa','Inferência em bairro não visto','App Streamlit']],
+        ] },
 
-            {
-                id: 'datapipeline', type: 'pipeline', label: 'Pipeline de Dados', eyebrow: 'PIPELINE DE DADOS',
-                title: 'De um site de aviação', titleAccent: 'a tiles prontos para treino', cols: 5,
-                steps: [
-                    ['01', 'Scraping', 'Bot Selenium — helipad_bot.py'],
-                    ['02', 'Converter', 'Coordenadas DMS → bounding boxes'],
-                    ['03', 'Baixar', 'Tiles ESRI XYZ, zoom 19'],
-                    ['04', 'Mosaico', 'Unir tiles por região'],
-                    ['05', 'Triagem', 'Manter / descartar manualmente'],
-                ]
-            },
+      { id:'datapipeline', type:'pipeline', label:'Pipeline de Dados', eyebrow:'PIPELINE DE DADOS',
+        title:'De um site de aviação', titleAccent:'a tiles prontos para treino', cols:5,
+        steps:[
+          ['01','Scraping','Bot Selenium — helipad_bot.py'],
+          ['02','Converter','Coordenadas DMS → bounding boxes'],
+          ['03','Baixar','Tiles ESRI XYZ, zoom 19'],
+          ['04','Mosaico','Unir tiles por região'],
+          ['05','Triagem','Manter / descartar manualmente'],
+        ] },
 
-            {
-                id: 'mlpipeline', type: 'pipeline', label: 'Pipeline de ML', eyebrow: 'PIPELINE DE ML / IA',
-                title: 'Três experimentos,', titleAccent: 'uma história consistente', cols: 5,
-                steps: [
-                    ['01', 'Anotar', 'Roboflow, classe única'],
-                    ['02', 'Dividir', '70/20/10 train/valid/test'],
-                    ['03', 'Treinar', 'YOLOv8n, Colab T4'],
-                    ['04', 'Avaliar', 'mAP, Precision, Recall'],
-                    ['05', 'Comparar', 'exp1 / exp2 / exp3'],
-                ],
-                note: 'exp1 (60 épocas) vs. exp2 (100 épocas) — mesmo dataset, a ablação exigida pelo briefing. O exp3 roda um dataset separadamente aumentado (\u201cfork\u201d), mantido como um ponto de dado distinto.'
-            },
+      { id:'mlpipeline', type:'pipeline', label:'Pipeline de ML', eyebrow:'PIPELINE DE ML / IA',
+        title:'Três experimentos,', titleAccent:'uma história consistente', cols:5,
+        steps:[
+          ['01','Anotar','Roboflow, classe única'],
+          ['02','Dividir','70/20/10 train/valid/test'],
+          ['03','Treinar','YOLOv8n, Colab T4'],
+          ['04','Avaliar','mAP, Precision, Recall'],
+          ['05','Comparar','exp1 / exp2 / exp3'],
+        ],
+        note:'exp1 (60 épocas) vs. exp2 (100 épocas) — mesmo dataset, a ablação exigida pelo briefing. O exp3 roda um dataset separadamente aumentado (\u201cfork\u201d), mantido como um ponto de dado distinto.' },
 
-            {
-                id: 'api', type: 'code', label: 'API', eyebrow: 'INTERFACE DO MODELO',
-                title: 'Sem API de rede —', titleAccent: 'uma chamada direta de inferência em Python',
-                text: 'Este projeto não expõe uma API REST. A inferência é chamada diretamente pela API Python da Ultralytics, encapsulada em uma única função reutilizada em todas as abas do dashboard.',
-                code: 'def detect_helipad(image, model, conf):\n    result = model.predict(source=image, conf=conf, verbose=False)[0]\n    plotted = result.plot()[:, :, ::-1]  # BGR -> RGB\n    return plotted, len(result.boxes) > 0',
-                list: ['Modelo auto-descoberto em artifacts/runs/detect/*/weights/best.pt', 'Limiar de confiança ajustável ao vivo na barra lateral', 'A mesma função alimenta as abas Upload, Search-by-Region e Sample Images']
-            },
+      { id:'api', type:'code', label:'API', eyebrow:'INTERFACE DO MODELO',
+        title:'Sem API de rede —', titleAccent:'uma chamada direta de inferência em Python',
+        text:'Este projeto não expõe uma API REST. A inferência é chamada diretamente pela API Python da Ultralytics, encapsulada em uma única função reutilizada em todas as abas do dashboard.',
+        code:'def detect_helipad(image, model, conf):\n    result = model.predict(source=image, conf=conf, verbose=False)[0]\n    plotted = result.plot()[:, :, ::-1]  # BGR -> RGB\n    return plotted, len(result.boxes) > 0',
+        list:['Modelo auto-descoberto em artifacts/runs/detect/*/weights/best.pt','Limiar de confiança ajustável ao vivo na barra lateral','A mesma função alimenta as abas Upload, Search-by-Region e Sample Images'] },
 
-            {
-                id: 'dashboard', type: 'table', label: 'Dashboard', eyebrow: 'DASHBOARD',
-                title: 'Nove abas,', titleAccent: 'um app Streamlit',
-                headers: ['Aba', 'O que mostra'],
-                rows: [
-                    ['📊 Experiment Metrics', 'Descobre automaticamente todo experimento treinado, compara Precision/Recall/mAP ao vivo'],
-                    ['🌍 Field Detections by Region', 'Cards de validação em dados reais, gráfico de barras e tabela em 10 bairros'],
-                    ['🗺️ Map', 'Camadas Folium em modo escuro: bairros de treino, dataset de descoberta, taxa de detecção'],
-                    ['🔎 Search by Region', 'Informe uma bounding box, baixe tiles do ESRI ao vivo e rode o modelo na hora'],
-                    ['🖼️ Sample Images', 'Detecções reais pré-selecionadas para demonstração instantânea'],
-                    ['📤 Upload Image', 'Faça upload de qualquer imagem aérea/satélite e receba uma detecção anotada'],
-                    ['📖 Pipeline', 'Passo a passo visual do pipeline completo'],
-                    ['🛡️ Governance', 'Declarações de justiça, transparência, LGPD e limitações conhecidas'],
-                    ['⬇️ Downloads', 'Relatórios executivos, dataset, métricas e artefatos de validação de campo'],
-                ]
-            },
+      { id:'dashboard', type:'table', label:'Dashboard', eyebrow:'DASHBOARD',
+        title:'Nove abas,', titleAccent:'um app Streamlit',
+        headers:['Aba','O que mostra'],
+        rows:[
+          ['📊 Experiment Metrics','Descobre automaticamente todo experimento treinado, compara Precision/Recall/mAP ao vivo'],
+          ['🌍 Field Detections by Region','Cards de validação em dados reais, gráfico de barras e tabela em 10 bairros'],
+          ['🗺️ Map','Camadas Folium em modo escuro: bairros de treino, dataset de descoberta, taxa de detecção'],
+          ['🔎 Search by Region','Informe uma bounding box, baixe tiles do ESRI ao vivo e rode o modelo na hora'],
+          ['🖼️ Sample Images','Detecções reais pré-selecionadas para demonstração instantânea'],
+          ['📤 Upload Image','Faça upload de qualquer imagem aérea/satélite e receba uma detecção anotada'],
+          ['📖 Pipeline','Passo a passo visual do pipeline completo'],
+          ['🛡️ Governance','Declarações de justiça, transparência, LGPD e limitações conhecidas'],
+          ['⬇️ Downloads','Relatórios executivos, dataset, métricas e artefatos de validação de campo'],
+        ] },
 
-            {
-                id: 'demo', type: 'cards2', label: 'Demonstração', eyebrow: 'DEMONSTRAÇÃO',
-                title: 'Duas formas de ver', titleAccent: 'um heliponto sendo detectado',
-                cards: [
-                    ['📤', 'Upload Image', 'Envie qualquer foto aérea/satélite e receba uma detecção anotada instantaneamente'],
-                    ['🔎', 'Search by Region', 'Informe uma bounding box — o app baixa tiles do ESRI ao vivo e roda o modelo na hora'],
-                ]
-            },
+      { id:'demo', type:'cards2', label:'Demonstração', eyebrow:'DEMONSTRAÇÃO',
+        title:'Duas formas de ver', titleAccent:'um heliponto sendo detectado',
+        cards:[
+          ['📤','Upload Image','Envie qualquer foto aérea/satélite e receba uma detecção anotada instantaneamente'],
+          ['🔎','Search by Region','Informe uma bounding box — o app baixa tiles do ESRI ao vivo e roda o modelo na hora'],
+        ] },
 
-            {
-                id: 'testing', type: 'splitlist', label: 'Testes', eyebrow: 'TESTES E VALIDAÇÃO',
-                title: 'Comprovado além do', titleAccent: 'conjunto de treino',
-                text: 'Duas camadas de teste vão além do split padrão train/valid/test: inferência em uma região confirmadamente não vista, e uma validação de campo em larga escala.',
-                list: ['Tiles da Baixada Santista verificados a 70–90km de distância de toda bounding box de treino (inversão do deg2tile)', '7.943 tiles reais de satélite rodados em 10 bairros de São Paulo, sem filtragem prévia', 'Taxa de detecção consistente com padrões reais de uso do solo urbano']
-            },
+      { id:'testing', type:'splitlist', label:'Testes', eyebrow:'TESTES E VALIDAÇÃO',
+        title:'Comprovado além do', titleAccent:'conjunto de treino',
+        text:'Duas camadas de teste vão além do split padrão train/valid/test: inferência em uma região confirmadamente não vista, e uma validação de campo em larga escala.',
+        list:['Tiles da Baixada Santista verificados a 70–90km de distância de toda bounding box de treino (inversão do deg2tile)','7.943 tiles reais de satélite rodados em 10 bairros de São Paulo, sem filtragem prévia','Taxa de detecção consistente com padrões reais de uso do solo urbano'] },
 
-            {
-                id: 'results1', type: 'table', label: 'Resultados · Dados', eyebrow: 'RESULTADOS · ANÁLISE DE DADOS',
-                title: 'exp1 vs. exp2 —', titleAccent: 'mesmo dataset, mais épocas',
-                headers: ['', 'exp1 · Melhor (ép. 54)', 'exp1 · Final (ép. 60)', 'exp2 · Melhor (ép. 81)'],
-                rows: [
-                    ['Precision', '1.000', '0.992', '0.982'],
-                    ['Recall', '0.963', '0.971', '0.971'],
-                    ['mAP@50', '0.994', '0.994', '0.993'],
-                    ['mAP@50-95', '0.881', '0.841', '0.888'],
-                ],
-                note: 'O exp2 supera levemente o exp1 em mAP@50-95 (+0,0065) com 100 épocas; ambos estão dentro da margem de ruído esperada dado o dataset pequeno (~150 imagens) — mais épocas não causaram overfitting.'
-            },
+      { id:'results1', type:'table', label:'Resultados · Dados', eyebrow:'RESULTADOS · ANÁLISE DE DADOS',
+        title:'exp1 vs. exp2 —', titleAccent:'mesmo dataset, mais épocas',
+        headers:['','exp1 · Melhor (ép. 54)','exp1 · Final (ép. 60)','exp2 · Melhor (ép. 81)'],
+        rows:[
+          ['Precision','1.000','0.992','0.982'],
+          ['Recall','0.963','0.971','0.971'],
+          ['mAP@50','0.994','0.994','0.993'],
+          ['mAP@50-95','0.881','0.841','0.888'],
+        ],
+        note:'O exp2 supera levemente o exp1 em mAP@50-95 (+0,0065) com 100 épocas; ambos estão dentro da margem de ruído esperada dado o dataset pequeno (~150 imagens) — mais épocas não causaram overfitting.' },
 
-            {
-                id: 'results2', type: 'bars', label: 'Resultados · Decisões', eyebrow: 'RESULTADOS · DECISION MAKING',
-                title: 'Taxa de detecção como proxy', titleAccent: 'de densidade corporativa',
-                bars: [
-                    ['Inter-Zone Corridor', 27.7], ['Itaim Bibi', 25.5], ['Brooklin', 22.8], ['Vila Olímpia', 23.9],
-                    ['Av. Paulista (Trecho 1)', 21.3], ['Faria Lima', 20.2], ['Av. Paulista (Trecho 2)', 20.1],
-                    ['Pinheiros', 19.8], ['Vila Nova Conceição', 19.1], ['Alphaville Industrial', 13.6],
-                ],
-                text: 'Inter-Zone Corridor e Itaim Bibi — corredores corporativos densos — apresentam as maiores taxas de detecção; Alphaville Industrial, a menor. Esse alinhamento com o zoneamento urbano conhecido é, em si, um sinal de que o modelo está aprendendo um padrão real, não ruído — um insumo útil para priorizar onde uma revisão humana importa mais.'
-            },
+      { id:'results2', type:'bars', label:'Resultados · Decisões', eyebrow:'RESULTADOS · DECISION MAKING',
+        title:'Taxa de detecção como proxy', titleAccent:'de densidade corporativa',
+        bars:[
+          ['Inter-Zone Corridor',27.7],['Itaim Bibi',25.5],['Brooklin',22.8],['Vila Olímpia',23.9],
+          ['Av. Paulista (Trecho 1)',21.3],['Faria Lima',20.2],['Av. Paulista (Trecho 2)',20.1],
+          ['Pinheiros',19.8],['Vila Nova Conceição',19.1],['Alphaville Industrial',13.6],
+        ],
+        text:'Inter-Zone Corridor e Itaim Bibi — corredores corporativos densos — apresentam as maiores taxas de detecção; Alphaville Industrial, a menor. Esse alinhamento com o zoneamento urbano conhecido é, em si, um sinal de que o modelo está aprendendo um padrão real, não ruído — um insumo útil para priorizar onde uma revisão humana importa mais.' },
 
-            {
-                id: 'advantages', type: 'cards', label: 'Vantagens', eyebrow: 'VANTAGENS',
-                title: 'O que este projeto', titleAccent: 'acerta',
-                cards: [
-                    ['🔁', 'Cobertura de ponta a ponta', 'O ciclo de vida completo de visão computacional, não apenas um modelo treinado'],
-                    ['🗂️', 'Foco em dados primeiro', 'Ênfase explícita em engenharia de dataset, não apenas em arquitetura'],
-                    ['🛰️', 'Automação geoespacial', 'Aumenta escala e produtividade na descoberta de alvos'],
-                    ['🧪', 'Trilha clara de experimentos', 'Runs e artefatos organizados em artifacts/runs/runs/detect/'],
-                    ['💻', 'Uma camada de aplicação real', 'Dashboard de 9 abas reforçando a aplicabilidade prática'],
-                ]
-            },
+      { id:'advantages', type:'cards', label:'Vantagens', eyebrow:'VANTAGENS',
+        title:'O que este projeto', titleAccent:'acerta',
+        cards:[
+          ['🔁','Cobertura de ponta a ponta','O ciclo de vida completo de visão computacional, não apenas um modelo treinado'],
+          ['🗂️','Foco em dados primeiro','Ênfase explícita em engenharia de dataset, não apenas em arquitetura'],
+          ['🛰️','Automação geoespacial','Aumenta escala e produtividade na descoberta de alvos'],
+          ['🧪','Trilha clara de experimentos','Runs e artefatos organizados em artifacts/runs/runs/detect/'],
+          ['💻','Uma camada de aplicação real','Dashboard de 9 abas reforçando a aplicabilidade prática'],
+        ] },
 
-            {
-                id: 'limitations', type: 'cards', label: 'Limitações', eyebrow: 'LIMITAÇÕES',
-                title: 'O que ainda precisa', titleAccent: 'de mais trabalho',
-                cards: [
-                    ['🏊', 'Confusão visual', 'Piscinas e quadras esportivas podem se assemelhar ao padrão \u201cH\u201d do heliponto'],
-                    ['✍️', 'Dependência de anotação', 'Os resultados dependem da consistência entre os anotadores da equipe'],
-                    ['🗺️', 'Risco de generalização', 'Limitado se a diversidade de bairros e padrões de telhado for estreita demais'],
-                ]
-            },
+      { id:'limitations', type:'cards', label:'Limitações', eyebrow:'LIMITAÇÕES',
+        title:'O que ainda precisa', titleAccent:'de mais trabalho',
+        cards:[
+          ['🏊','Confusão visual','Piscinas e quadras esportivas podem se assemelhar ao padrão \u201cH\u201d do heliponto'],
+          ['✍️','Dependência de anotação','Os resultados dependem da consistência entre os anotadores da equipe'],
+          ['🗺️','Risco de generalização','Limitado se a diversidade de bairros e padrões de telhado for estreita demais'],
+        ] },
 
-            {
-                id: 'security', type: 'splitlist', label: 'Segurança', eyebrow: 'SEGURANÇA E ESCALABILIDADE',
-                title: 'Um incidente real,', titleAccent: 'identificado e corrigido',
-                text: 'Uma chave de API do Roboflow foi encontrada hardcoded em um notebook de treino — uma falha real de gestão de segredos, identificada e corrigida pela equipe.',
-                list: ['Chave de API hardcoded encontrada e removida do código-fonte, movida para variáveis de ambiente / Colab Secrets', 'Scripts de validação de campo são retomáveis (download_all_regions.py → auto_triage_regions.py)', 'Deploy no Streamlit Cloud exige libgl1 / libglib2.0-0t64 para OpenCV headless']
-            },
+      { id:'security', type:'splitlist', label:'Segurança', eyebrow:'SEGURANÇA E ESCALABILIDADE',
+        title:'Um incidente real,', titleAccent:'identificado e corrigido',
+        text:'Uma chave de API do Roboflow foi encontrada hardcoded em um notebook de treino — uma falha real de gestão de segredos, identificada e corrigida pela equipe.',
+        list:['Chave de API hardcoded encontrada e removida do código-fonte, movida para variáveis de ambiente / Colab Secrets','Scripts de validação de campo são retomáveis (download_all_regions.py → auto_triage_regions.py)','Deploy no Streamlit Cloud exige libgl1 / libglib2.0-0t64 para OpenCV headless'] },
 
-            {
-                id: 'responsible', type: 'roadmap', label: 'IA Responsável', eyebrow: 'IA RESPONSÁVEL',
-                title: 'Ética por construção,', titleAccent: 'não como reflexão tardia',
-                items: [
-                    ['Apenas imagens de área pública', 'Sem uso de fontes de satélite privadas ou não públicas'],
-                    ['Nenhum identificador pessoal', 'Nenhuma anotação de pessoas, placas ou outros identificadores'],
-                    ['Uso de IA generativa divulgado', 'Qualquer apoio de IA usado está documentado no relatório'],
-                    ['Intenção educacional, sem vigilância', 'Nenhum caso de uso de rastreamento ou vigilância individual'],
-                ]
-            },
+      { id:'responsible', type:'roadmap', label:'IA Responsável', eyebrow:'IA RESPONSÁVEL',
+        title:'Ética por construção,', titleAccent:'não como reflexão tardia',
+        items:[
+          ['Apenas imagens de área pública','Sem uso de fontes de satélite privadas ou não públicas'],
+          ['Nenhum identificador pessoal','Nenhuma anotação de pessoas, placas ou outros identificadores'],
+          ['Uso de IA generativa divulgado','Qualquer apoio de IA usado está documentado no relatório'],
+          ['Intenção educacional, sem vigilância','Nenhum caso de uso de rastreamento ou vigilância individual'],
+        ] },
 
-            {
-                id: 'governance', type: 'splitlist', label: 'AI Governance', eyebrow: 'GOVERNANÇA DE IA',
-                title: 'Práticas que ecoam', titleAccent: 'princípios emergentes do AI Act',
-                text: 'O projeto não reivindica certificação regulatória, mas várias de suas práticas espelham princípios que o AI Act da União Europeia exige de sistemas de IA de maior risco: documentação, supervisão humana e governança de dados.',
-                list: ['Documentação → pipeline técnico completo, glossário e seção de governança no relatório', 'Supervisão humana → triagem manual antes da anotação; revisão qualitativa de acertos/FP/FN', 'Governança de dados → apenas imagens de área pública, sem identificadores pessoais, minimização alinhada à LGPD', 'Transparência → métricas de experimento auto-descobertas, visíveis ao vivo no dashboard']
-            },
+      { id:'governance', type:'splitlist', label:'AI Governance', eyebrow:'GOVERNANÇA DE IA',
+        title:'Práticas que ecoam', titleAccent:'princípios emergentes do AI Act',
+        text:'O projeto não reivindica certificação regulatória, mas várias de suas práticas espelham princípios que o AI Act da União Europeia exige de sistemas de IA de maior risco: documentação, supervisão humana e governança de dados.',
+        list:['Documentação → pipeline técnico completo, glossário e seção de governança no relatório','Supervisão humana → triagem manual antes da anotação; revisão qualitativa de acertos/FP/FN','Governança de dados → apenas imagens de área pública, sem identificadores pessoais, minimização alinhada à LGPD','Transparência → métricas de experimento auto-descobertas, visíveis ao vivo no dashboard'] },
 
-            {
-                id: 'conclusion', type: 'quote', label: 'Conclusão', eyebrow: 'CONCLUSÃO',
-                title: 'Qualidade de dado antes da', titleAccent: 'complexidade do modelo',
-                text: 'O Helipad Detector atinge métricas de nível profissional — mAP@50 próximo de 99% e mAP@50-95 próximo de 88% — em um dataset construído inteiramente do zero. A contribuição mais profunda é o que esse resultado prova: que um dataset pequeno, bem curado e bem governado pode superar sofisticação arquitetural, e que documentar com transparência tanto os acertos quanto os erros é, em si, parte de uma prática responsável de IA.'
-            },
+      { id:'conclusion', type:'quote', label:'Conclusão', eyebrow:'CONCLUSÃO',
+        title:'Qualidade de dado antes da', titleAccent:'complexidade do modelo',
+        text:'O Helipad Detector atinge métricas de nível profissional — mAP@50 próximo de 99% e mAP@50-95 próximo de 88% — em um dataset construído inteiramente do zero. A contribuição mais profunda é o que esse resultado prova: que um dataset pequeno, bem curado e bem governado pode superar sofisticação arquitetural, e que documentar com transparência tanto os acertos quanto os erros é, em si, parte de uma prática responsável de IA.' },
 
-            {
-                id: 'nextsteps', type: 'roadmap', label: 'Próximos Passos', eyebrow: 'PRÓXIMOS PASSOS',
-                title: 'O que vem', titleAccent: 'depois desta apresentação',
-                items: [
-                    ['Expandir a validação de campo', 'Mais bairros, mais testes em regiões não vistas'],
-                    ['YOLOv8n vs. YOLOv11n', 'Uma comparação sistemática cabeça a cabeça'],
-                    ['Modularizar o código', 'Mover a lógica dos notebooks para módulos reutilizáveis'],
-                    ['Evoluir o dashboard', 'Transformar apps/streamlit_app/app.py em uma aplicação mais robusta'],
-                    ['Ciclos de active learning', 'Re-anotar os exemplos mais difíceis da validação de campo'],
-                ]
-            },
+      { id:'nextsteps', type:'roadmap', label:'Próximos Passos', eyebrow:'PRÓXIMOS PASSOS',
+        title:'O que vem', titleAccent:'depois desta apresentação',
+        items:[
+          ['Expandir a validação de campo','Mais bairros, mais testes em regiões não vistas'],
+          ['YOLOv8n vs. YOLOv11n','Uma comparação sistemática cabeça a cabeça'],
+          ['Modularizar o código','Mover a lógica dos notebooks para módulos reutilizáveis'],
+          ['Evoluir o dashboard','Transformar apps/streamlit_app/app.py em uma aplicação mais robusta'],
+          ['Ciclos de active learning','Re-anotar os exemplos mais difíceis da validação de campo'],
+        ] },
 
-            {
-                id: 'thanks', type: 'closing', label: 'Agradecimentos', eyebrow: 'AGRADECIMENTOS',
-                title: 'Obrigado,', titleAccent: 'Professor Coelho',
-                text: 'Agradecimentos especiais ao Prof. Rooney Ribeiro Albuquerque Coelho por uma estrutura de projeto que enfatiza o ciclo de vida completo da Visão Computacional aplicada, e à PUC-SP e às comunidades open-source por trás de Ultralytics, PyTorch, Roboflow, Streamlit e Jupyter.',
-                repoLabel: 'github.com/Mindful-AI-Research/3-project-ai-ml-yolo-helipad_detector',
-                repoUrl: 'https://github.com/Mindful-AI-Research/3-project-ai-ml-yolo-helipad_detector'
-            },
-        ];
+      { id:'thanks', type:'closing', label:'Agradecimentos', eyebrow:'AGRADECIMENTOS',
+        title:'Obrigado,', titleAccent:'Professor Coelho',
+        text:'Agradecimentos especiais ao Prof. Rooney Ribeiro Albuquerque Coelho por uma estrutura de projeto que enfatiza o ciclo de vida completo da Visão Computacional aplicada, e à PUC-SP e às comunidades open-source por trás de Ultralytics, PyTorch, Roboflow, Streamlit e Jupyter.',
+        repoLabel:'github.com/Mindful-AI-Research/3-project-ai-ml-yolo-helipad_detector',
+        repoUrl:'https://github.com/Mindful-AI-Research/3-project-ai-ml-yolo-helipad_detector' },
+    ];
 
-        function Eyebrow({ n, label }) {
-            return (
-                <div className="eyebrow animate">
-                    <span style={{ fontFamily: 'var(--mono)', color: 'var(--teal)' }}>{String(n).padStart(2, '0')}</span>
-                    <span style={{ color: 'var(--w50)' }}>{label}</span>
-                </div>
-            );
+    function Eyebrow({ n, label }) {
+      return (
+        <div className="eyebrow animate">
+          <span style={{ fontFamily: 'var(--mono)', color: 'var(--teal)' }}>{String(n).padStart(2, '0')}</span>
+          <span style={{ color: 'var(--w50)' }}>{label}</span>
+        </div>
+      );
+    }
+    function Title({ title, accent }) {
+      return (
+        <h2 className="headline animate d1" style={{ maxWidth: 900 }}>
+          {title}<br /><span className="accent">{accent}</span>
+        </h2>
+      );
+    }
+    function Footer() {
+      return <div className="footer-tag">{UI.footer}</div>;
+    }
+
+    function ThreeCoverScene() {
+      const mountRef = useRef(null);
+      useEffect(() => {
+        const mount = mountRef.current;
+        if (!mount || !window.THREE || !window.THREE.OrbitControls) return;
+        const THREE = window.THREE;
+        let width = mount.clientWidth, height = mount.clientHeight;
+
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 100);
+        camera.position.set(0.4, 1.1, 9);
+
+        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+        renderer.setSize(width, height);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        mount.appendChild(renderer.domElement);
+
+        const controls = new THREE.OrbitControls(camera, renderer.domElement);
+        controls.enableDamping = true;
+        controls.dampingFactor = 0.06;
+        controls.enableZoom = false;
+        controls.enablePan = false;
+        controls.autoRotate = true;
+        controls.autoRotateSpeed = 0.45;
+        controls.minPolarAngle = Math.PI / 3;
+        controls.maxPolarAngle = Math.PI / 1.7;
+        controls.target.set(0.3, 0.1, 0);
+
+        scene.add(new THREE.AmbientLight(0x2a3d3a, 1.3));
+        const key = new THREE.PointLight(0x14b8a6, 3.2, 22);
+        key.position.set(3, 3, 4);
+        scene.add(key);
+        const rim = new THREE.PointLight(0xff2500, 1.3, 18);
+        rim.position.set(-4, -1, -3);
+        scene.add(rim);
+
+        const starGeo = new THREE.BufferGeometry();
+        const starCount = 850;
+        const starPos = new Float32Array(starCount * 3);
+        for (let i = 0; i < starCount; i++) {
+          starPos[i*3]   = (Math.random() - 0.5) * 60;
+          starPos[i*3+1] = (Math.random() - 0.5) * 60;
+          starPos[i*3+2] = (Math.random() - 0.5) * 60 - 10;
         }
-        function Title({ title, accent }) {
-            return (
-                <h2 className="headline animate d1" style={{ maxWidth: 900 }}>
-                    {title}<br /><span className="accent">{accent}</span>
-                </h2>
-            );
+        starGeo.setAttribute('position', new THREE.BufferAttribute(starPos, 3));
+        const starMat = new THREE.PointsMaterial({ color: 0xffffff, size: 0.055, transparent: true, opacity: 0.75 });
+        const stars = new THREE.Points(starGeo, starMat);
+        scene.add(stars);
+
+        const partGeo = new THREE.BufferGeometry();
+        const partCount = 200;
+        const partPos = new Float32Array(partCount * 3);
+        for (let i = 0; i < partCount; i++) {
+          partPos[i*3]   = (Math.random() - 0.5) * 14;
+          partPos[i*3+1] = (Math.random() - 0.5) * 8;
+          partPos[i*3+2] = (Math.random() - 0.5) * 10;
         }
-        function Footer() {
-            return <div className="footer-tag">{UI.footer}</div>;
-        }
+        partGeo.setAttribute('position', new THREE.BufferAttribute(partPos, 3));
+        const partMat = new THREE.PointsMaterial({ color: 0x2fe8d4, size: 0.05, transparent: true, opacity: 0.85, blending: THREE.AdditiveBlending });
+        const particles = new THREE.Points(partGeo, partMat);
+        scene.add(particles);
 
-        function Slide({ data, n, className }) {
-            const cls = className || 'slide';
-            const body = (() => {
-                switch (data.type) {
-
-                    case 'cover': return (
-                        <>
-                            <div className="hero-stage">
-                                <div className="cover-scan" />
-                                <div className="hero-glow" />
-                                <div className="heli-pad" />
-                                <div className="heli">🚁</div>
-                            </div>
-                            <Eyebrow n={n} label={data.eyebrow} />
-                            <h1 className="headline animate d1" style={{ maxWidth: 860 }}>
-                                {data.title}<br /><span className="accent">{data.titleAccent}</span>
-                            </h1>
-                            <p className="subline animate d2" style={{ marginBottom: 26 }}>{data.subtitle}</p>
-                            <p className="subline animate d2" style={{ fontSize: '.82rem', color: 'var(--w50)', marginBottom: 6 }}>{data.professor}</p>
-                            <p className="subline animate d2" style={{ fontSize: '.8rem', color: 'var(--w50)' }}>{data.authors.join(' · ')}</p>
-                            <div className="badge-row animate d3">
-                                {data.badges.map(b => <span key={b} className="badge">{b}</span>)}
-                            </div>
-                            <p style={{ marginTop: 34, fontFamily: 'var(--mono)', fontSize: '.62rem', color: 'var(--w20)', letterSpacing: '.14em' }} className="animate d4">
-                                {UI.swipeHint}
-                            </p>
-                        </>
-                    );
-
-                    case 'info': return (
-                        <>
-                            <Eyebrow n={n} label={data.eyebrow} />
-                            <Title title={data.title} accent={data.titleAccent} />
-                            {data.text && <p className="subline animate d2" style={{ marginBottom: 22 }}>{data.text}</p>}
-                            {data.facts && (
-                                <div className="animate d3" style={{ display: 'flex', flexDirection: 'column', gap: 0, maxWidth: 760, marginTop: 10 }}>
-                                    {data.facts.map(([k, v]) => (
-                                        <div key={k} style={{ display: 'flex', gap: 18, padding: '10px 0', borderBottom: '1px solid var(--w10)' }}>
-                                            <div style={{ minWidth: 130, fontFamily: 'var(--mono)', fontSize: '.68rem', color: 'var(--teal)', letterSpacing: '.05em' }}>{k.toUpperCase()}</div>
-                                            <div style={{ fontSize: '.88rem', color: 'var(--w90)' }}>{v}</div>
-                                        </div>
-                                    ))}
-                                </div>
-                            )}
-                            {data.badges && <div className="badge-row animate d3">{data.badges.map(b => <span key={b} className="badge">{b}</span>)}</div>}
-                        </>
-                    );
-
-                    case 'stats': return (
-                        <>
-                            <Eyebrow n={n} label={data.eyebrow} />
-                            <div className="g2" style={{ gap: 48, alignItems: 'center' }}>
-                                <div>
-                                    <Title title={data.title} accent={data.titleAccent} />
-                                    <p className="subline animate d2">{data.text}</p>
-                                </div>
-                                <div className="g2 animate d3" style={{ gap: 14 }}>
-                                    {data.stats.map(([v, l]) => (
-                                        <div key={l} className="kpi"><div className="kpi-value">{v}</div><div className="kpi-label">{l}</div></div>
-                                    ))}
-                                </div>
-                            </div>
-                        </>
-                    );
-
-                    case 'cards': return (
-                        <>
-                            <Eyebrow n={n} label={data.eyebrow} />
-                            <Title title={data.title} accent={data.titleAccent} />
-                            <div className="g3 animate d2" style={{ marginTop: 18 }}>
-                                {data.cards.map(([icon, t, d]) => (
-                                    <div key={t} className="card">
-                                        <div className="card-icon">{icon}</div>
-                                        <div className="card-title">{t}</div>
-                                        <div className="card-body">{d}</div>
-                                    </div>
-                                ))}
-                            </div>
-                        </>
-                    );
-
-                    case 'cards2': return (
-                        <>
-                            <Eyebrow n={n} label={data.eyebrow} />
-                            <Title title={data.title} accent={data.titleAccent} />
-                            <div className="g2 animate d2" style={{ marginTop: 22, maxWidth: 820 }}>
-                                {data.cards.map(([icon, t, d]) => (
-                                    <div key={t} className="card" style={{ padding: '28px 26px' }}>
-                                        <div className="card-icon" style={{ fontSize: '2rem' }}>{icon}</div>
-                                        <div className="card-title" style={{ fontSize: '1.05rem' }}>{t}</div>
-                                        <div className="card-body">{d}</div>
-                                    </div>
-                                ))}
-                            </div>
-                        </>
-                    );
-
-                    case 'splitlist': return (
-                        <>
-                            <Eyebrow n={n} label={data.eyebrow} />
-                            <div className="g2" style={{ gap: 48, alignItems: 'flex-start' }}>
-                                <div>
-                                    <Title title={data.title} accent={data.titleAccent} />
-                                    <p className="subline animate d2">{data.text}</p>
-                                </div>
-                                <div className="animate d3" style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
-                                    {data.list.map((item, i) => (
-                                        <div key={i} className="roadmap-item">
-                                            <div className="roadmap-dot" />
-                                            <div className="roadmap-desc" style={{ fontSize: '.86rem', color: 'var(--w90)' }}>{item}</div>
-                                        </div>
-                                    ))}
-                                </div>
-                            </div>
-                        </>
-                    );
-
-                    case 'pipeline': return (
-                        <>
-                            <Eyebrow n={n} label={data.eyebrow} />
-                            <Title title={data.title} accent={data.titleAccent} />
-                            <div className="pipeline animate d2" style={{ gridTemplateColumns: `repeat(${data.cols || data.steps.length}, 1fr)` }}>
-                                {data.steps.map(([nb, t, d]) => (
-                                    <div key={nb} className="pipe">
-                                        <div className="pipe-nb">ETAPA {nb}</div>
-                                        <div className="pipe-t">{t}</div>
-                                        <div className="pipe-d">{d}</div>
-                                    </div>
-                                ))}
-                            </div>
-                            {data.note && <div className="hl animate d3" style={{ maxWidth: 820 }}>{data.note}</div>}
-                        </>
-                    );
-
-                    case 'arch': return (
-                        <>
-                            <Eyebrow n={n} label={data.eyebrow} />
-                            <Title title={data.title} accent={data.titleAccent} />
-                            <div className="g4 animate d2" style={{ marginTop: 18 }}>
-                                {data.groups.map(([t, items]) => (
-                                    <div key={t} className="card">
-                                        <div className="card-title" style={{ marginBottom: 12 }}>{t}</div>
-                                        {items.map((it, i) => (
-                                            <div key={i} style={{ fontSize: '.76rem', color: 'var(--w70)', padding: '6px 0', borderTop: i > 0 ? '1px solid var(--w10)' : 'none' }}>{it}</div>
-                                        ))}
-                                    </div>
-                                ))}
-                            </div>
-                        </>
-                    );
-
-                    case 'code': return (
-                        <>
-                            <Eyebrow n={n} label={data.eyebrow} />
-                            <div className="g2" style={{ gap: 44, alignItems: 'flex-start' }}>
-                                <div>
-                                    <Title title={data.title} accent={data.titleAccent} />
-                                    <p className="subline animate d2" style={{ marginBottom: 18 }}>{data.text}</p>
-                                    <div style={{ display: 'flex', flexDirection: 'column' }} className="animate d3">
-                                        {data.list.map((item, i) => (
-                                            <div key={i} className="roadmap-item"><div className="roadmap-dot" /><div className="roadmap-desc" style={{ fontSize: '.82rem', color: 'var(--w90)' }}>{item}</div></div>
-                                        ))}
-                                    </div>
-                                </div>
-                                <pre className="code animate d2">{data.code}</pre>
-                            </div>
-                        </>
-                    );
-
-                    case 'table': return (
-                        <>
-                            <Eyebrow n={n} label={data.eyebrow} />
-                            <Title title={data.title} accent={data.titleAccent} />
-                            <div className="animate d2" style={{ overflowX: 'auto' }}>
-                                <table className="tbl">
-                                    <thead><tr>{data.headers.map((h, i) => <th key={i} className={i > 0 ? 'num' : ''}>{h}</th>)}</tr></thead>
-                                    <tbody>
-                                        {data.rows.map((r, i) => (
-                                            <tr key={i}>{r.map((c, j) => <td key={j} className={j > 0 ? 'num' : ''}>{j === 0 ? <strong style={{ color: 'var(--w90)' }}>{c}</strong> : c}</td>)}</tr>
-                                        ))}
-                                    </tbody>
-                                </table>
-                            </div>
-                            {data.note && <div className="hl animate d3" style={{ marginTop: 20, maxWidth: 860 }}>{data.note}</div>}
-                        </>
-                    );
-
-                    case 'bars': return (
-                        <>
-                            <Eyebrow n={n} label={data.eyebrow} />
-                            <div className="g2" style={{ gap: 48, alignItems: 'center' }}>
-                                <div className="animate d2">
-                                    {data.bars.map(([label, val]) => (
-                                        <div key={label} className="bar-row">
-                                            <div className="bar-label">{label}</div>
-                                            <div className="bar-track"><div className="bar-fill" style={{ width: `${(val / 28) * 100}%` }} /></div>
-                                            <div className="bar-val">{val}%</div>
-                                        </div>
-                                    ))}
-                                </div>
-                                <div>
-                                    <Title title={data.title} accent={data.titleAccent} />
-                                    <p className="subline animate d3">{data.text}</p>
-                                </div>
-                            </div>
-                        </>
-                    );
-
-                    case 'roadmap': return (
-                        <>
-                            <Eyebrow n={n} label={data.eyebrow} />
-                            <Title title={data.title} accent={data.titleAccent} />
-                            <div className="animate d2" style={{ maxWidth: 780, marginTop: 8 }}>
-                                {data.items.map(([t, d], i) => (
-                                    <div key={i} className="roadmap-item">
-                                        <div className="roadmap-dot" />
-                                        <div><div className="roadmap-title">{t}</div><div className="roadmap-desc">{d}</div></div>
-                                    </div>
-                                ))}
-                            </div>
-                        </>
-                    );
-
-                    case 'quote': return (
-                        <div style={{ textAlign: 'center', margin: '0 auto' }}>
-                            <Eyebrow n={n} label={data.eyebrow} />
-                            <h2 className="headline animate d1" style={{ textAlign: 'center', margin: '0 auto 22px', maxWidth: 880 }}>
-                                {data.title}<br /><span className="accent">{data.titleAccent}</span>
-                            </h2>
-                            <p className="subline animate d2" style={{ margin: '0 auto', maxWidth: 720, textAlign: 'center' }}>{data.text}</p>
-                        </div>
-                    );
-
-                    case 'closing': return (
-                        <div style={{ textAlign: 'center', margin: '0 auto' }}>
-                            <Eyebrow n={n} label={data.eyebrow} />
-                            <h2 className="headline animate d1" style={{ textAlign: 'center', margin: '0 auto 18px', maxWidth: 780 }}>
-                                {data.title}<br /><span className="accent">{data.titleAccent}</span>
-                            </h2>
-                            <p className="subline animate d2" style={{ margin: '0 auto 26px', maxWidth: 680, textAlign: 'center' }}>{data.text}</p>
-                            <a href={data.repoUrl} target="_blank" rel="noopener noreferrer" className="animate d3"
-                                style={{ fontFamily: 'var(--mono)', fontSize: '.78rem', color: 'var(--teal)', letterSpacing: '.04em', textDecoration: 'none', border: '1px solid var(--border)', padding: '10px 20px', borderRadius: 999, display: 'inline-block' }}>
-                                ↗ {data.repoLabel}
-                            </a>
-                        </div>
-                    );
-
-                    default: return null;
-                }
-            })();
-
-            return (
-                <div className={cls} id={data.id}>
-                    {body}
-                    <Footer />
-                </div>
-            );
-        }
-
-        function ShortcutsModal({ onClose }) {
-            return (
-                <div className="modal-overlay" onClick={onClose}>
-                    <div className="modal" onClick={e => e.stopPropagation()}>
-                        <h3>{UI.shortcutsTitle}</h3>
-                        {UI.shortcutsList.map(([k, d]) => (
-                            <div key={k} className="modal-row"><span>{d}</span><kbd>{k}</kbd></div>
-                        ))}
-                        <button className="modal-close" onClick={onClose}>{UI.close}</button>
-                    </div>
-                </div>
-            );
-        }
-
-        function App() {
-            const [cur, setCur] = useState(0);
-            const [theme, setTheme] = useState('dark');
-            const [showShortcuts, setShowShortcuts] = useState(false);
-            const touchStart = useRef(null);
-            const isAnimating = useRef(false);
-
-            const go = useCallback((idx) => {
-                if (isAnimating.current || idx === cur || idx < 0 || idx >= SLIDES.length) return;
-                isAnimating.current = true;
-                setCur(idx);
-                setTimeout(() => { isAnimating.current = false }, 600);
-            }, [cur]);
-
-            useEffect(() => {
-                const h = (e) => {
-                    if (showShortcuts) { if (e.key === 'Escape' || e.key === '?') setShowShortcuts(false); return; }
-                    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') go(cur + 1);
-                    else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') go(cur - 1);
-                    else if (e.key === 'f' || e.key === 'F') {
-                        document.fullscreenElement ? document.exitFullscreen() : document.getElementById('stage').requestFullscreen();
-                    }
-                    else if (e.key === 'r' || e.key === 'R') go(0);
-                    else if (e.key === '?') setShowShortcuts(true);
-                    else if (e.key === 'Escape' && document.fullscreenElement) document.exitFullscreen();
-                };
-                window.addEventListener('keydown', h);
-                return () => window.removeEventListener('keydown', h);
-            }, [cur, go, showShortcuts]);
-
-            useEffect(() => {
-                const s = (e) => { touchStart.current = e.touches[0].clientX };
-                const en = (e) => {
-                    if (!touchStart.current) return;
-                    const dx = touchStart.current - e.changedTouches[0].clientX;
-                    if (Math.abs(dx) > 50) { dx > 0 ? go(cur + 1) : go(cur - 1); }
-                    touchStart.current = null;
-                };
-                window.addEventListener('touchstart', s, { passive: true });
-                window.addEventListener('touchend', en, { passive: true });
-                return () => { window.removeEventListener('touchstart', s); window.removeEventListener('touchend', en) };
-            }, [cur, go]);
-
-            useEffect(() => { document.body.setAttribute('data-theme', theme) }, [theme]);
-
-            const toggleFullscreen = () => {
-                document.fullscreenElement ? document.exitFullscreen() : document.getElementById('stage').requestFullscreen();
-            };
-
-            const exitPresentation = () => {
-                if (window.confirm(UI.exitConfirm)) {
-                    if (document.fullscreenElement) document.exitFullscreen();
-                    go(0);
-                }
-            };
-
-            const onScrub = (e) => {
-                const rect = e.currentTarget.getBoundingClientRect();
-                const pct = (e.clientX - rect.left) / rect.width;
-                go(Math.min(SLIDES.length - 1, Math.max(0, Math.round(pct * (SLIDES.length - 1)))));
-            };
-
-            const pct = (cur / (SLIDES.length - 1)) * 100;
-
-            return (
-                <>
-                    <div className="timeline-track" onClick={onScrub} title="Arraste / clique para pular de seção">
-                        <div className="timeline-fill" style={{ width: `${pct}%` }} />
-                    </div>
-
-                    <div className="slide-counter">
-                        <span>{String(cur + 1).padStart(2, '0')}</span> / {String(SLIDES.length).padStart(2, '0')}
-                        &emsp;<span style={{ color: 'var(--w50)', fontSize: '.65rem' }}>{SLIDES[cur].label}</span>
-                    </div>
-
-                    {SLIDES.map((s, i) => {
-                        let cls = 'slide';
-                        if (i === cur) cls += ' active';
-                        else if (i < cur) cls += ' exit-up';
-                        else cls += ' exit-down';
-                        return <Slide key={s.id} data={s} n={i + 1} className={cls} />;
-                    })}
-
-                    <div className="hud">
-                        <div className="hud-dots">
-                            {SLIDES.map((s, i) => (
-                                <button key={s.id} className={`hud-dot${i === cur ? ' on' : ''}`} onClick={() => go(i)} title={s.label} />
-                            ))}
-                        </div>
-                        <div className="hud-sep" />
-                        <button className="hud-btn" onClick={() => go(cur - 1)} title={UI.prev} disabled={cur === 0}>◀</button>
-                        <button className="hud-btn" onClick={() => go(cur + 1)} title={UI.next} disabled={cur === SLIDES.length - 1}>▶</button>
-                        <button className="hud-btn" onClick={() => go(0)} title={UI.restart}>↺</button>
-                        <button className="hud-btn" onClick={toggleFullscreen} title={UI.fullscreen}>⛶</button>
-                        <button className="hud-btn" onClick={() => setTheme(t => t === 'dark' ? 'light' : 'dark')} title={UI.theme}>
-                            {theme === 'dark' ? '☀' : '🌙'}
-                        </button>
-                        <button className="hud-btn" onClick={() => setShowShortcuts(true)} title={UI.shortcuts}>?</button>
-                        <button className="hud-btn danger" onClick={exitPresentation} title={UI.exit}>⏻</button>
-                        <button className="hud-btn" onClick={exportPPT} title="Download PPTX" style={{ fontWeight: 600, color: 'var(--teal)' }}>{UI.pptx}</button>
-                    </div>
-
-                    {showShortcuts && <ShortcutsModal onClose={() => setShowShortcuts(false)} />}
-                </>
-            );
-        }
-
-        ReactDOM.createRoot(document.getElementById('stage')).render(<App />);
-
-        async function exportPPT() {
-            const btn = document.querySelector('[title="Download PPTX"]');
-            if (btn) btn.textContent = '⏳';
-            document.querySelectorAll('.animate').forEach(el => {
-                el.style.animation = 'none'; el.style.opacity = '1'; el.style.transform = 'none';
-            });
-            const pptx = new PptxGenJS();
-            pptx.layout = 'LAYOUT_16x9';
-            const all = [...document.querySelectorAll('.slide')];
-            const hud = document.querySelector('.hud');
-            const ctr = document.querySelector('.slide-counter');
-            const tl = document.querySelector('.timeline-track');
-            if (hud) hud.style.opacity = '0';
-            if (ctr) ctr.style.opacity = '0';
-            if (tl) tl.style.opacity = '0';
-            for (let i = 0; i < all.length; i++) {
-                const el = all[i];
-                const origCls = el.className;
-                el.className = 'slide active';
-                const canvas = await html2canvas(el, {
-                    width: 1920, height: 1080, scale: 1,
-                    backgroundColor: document.body.getAttribute('data-theme') === 'dark' ? '#050506' : '#f5f5f7',
-                    windowWidth: 1920, windowHeight: 1080, logging: false,
-                });
-                el.className = origCls;
-                const s = pptx.addSlide();
-                s.background = { color: document.body.getAttribute('data-theme') === 'dark' ? '050506' : 'f5f5f7' };
-                s.addImage({ data: canvas.toDataURL('image/png', .95), x: 0, y: 0, w: '100%', h: '100%' });
+        const auroraGeo = new THREE.PlaneGeometry(42, 20, 1, 1);
+        const auroraMat = new THREE.ShaderMaterial({
+          transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, side: THREE.DoubleSide,
+          uniforms: { uTime: { value: 0 } },
+          vertexShader: `
+            varying vec2 vUv;
+            void main() {
+              vUv = uv;
+              gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
             }
-            if (hud) hud.style.opacity = '1';
-            if (ctr) ctr.style.opacity = '1';
-            if (tl) tl.style.opacity = '1';
-            pptx.writeFile({ fileName: UI.pptxFile });
-            if (btn) btn.textContent = UI.pptx;
+          `,
+          fragmentShader: `
+            varying vec2 vUv;
+            uniform float uTime;
+            void main() {
+              float t = uTime * 0.15;
+              float y = vUv.y;
+              float wave1 = sin(vUv.x * 6.0 + t * 2.0) * 0.09;
+              float wave2 = sin(vUv.x * 11.0 - t * 1.4) * 0.05;
+              float band = smoothstep(0.0, 0.5, y + wave1) - smoothstep(0.5, 1.0, y + wave1 + wave2);
+              vec3 teal = vec3(0.055, 0.46, 0.43);
+              vec3 green = vec3(0.24, 0.85, 0.55);
+              vec3 col = mix(teal, green, sin(vUv.x * 4.0 + t) * 0.5 + 0.5);
+              float alpha = band * 0.55 * smoothstep(0.0, 0.15, y) * smoothstep(1.0, 0.7, y);
+              gl_FragColor = vec4(col, alpha);
+            }
+          `,
+        });
+        const aurora = new THREE.Mesh(auroraGeo, auroraMat);
+        aurora.position.set(0, 4, -14);
+        scene.add(aurora);
+
+        const heli = new THREE.Group();
+        const bodyMat = new THREE.MeshStandardMaterial({ color: 0x0d2b28, emissive: 0x0E756D, emissiveIntensity: 0.55, metalness: 0.4, roughness: 0.35 });
+        const accentMat = new THREE.MeshStandardMaterial({ color: 0x111315, metalness: 0.6, roughness: 0.4 });
+
+        const body = new THREE.Mesh(new THREE.SphereGeometry(0.62, 20, 16), bodyMat);
+        body.scale.set(1.35, 0.85, 1);
+        heli.add(body);
+
+        const tailBoom = new THREE.Mesh(new THREE.CylinderGeometry(0.09, 0.05, 1.5, 10), accentMat);
+        tailBoom.rotation.z = Math.PI / 2;
+        tailBoom.position.set(-1.35, 0.05, 0);
+        heli.add(tailBoom);
+
+        const tailFin = new THREE.Mesh(new THREE.ConeGeometry(0.22, 0.5, 8), bodyMat);
+        tailFin.rotation.z = Math.PI / 2.4;
+        tailFin.position.set(-2.05, 0.28, 0);
+        heli.add(tailFin);
+
+        const skidGeo = new THREE.CylinderGeometry(0.03, 0.03, 1.3, 6);
+        const skidL = new THREE.Mesh(skidGeo, accentMat); skidL.rotation.z = Math.PI / 2; skidL.position.set(0, -0.62, 0.35);
+        const skidR = skidL.clone(); skidR.position.z = -0.35;
+        heli.add(skidL, skidR);
+
+        const rotorGroup = new THREE.Group();
+        const bladeGeo = new THREE.BoxGeometry(2.6, 0.03, 0.12);
+        const blade1 = new THREE.Mesh(bladeGeo, accentMat);
+        const blade2 = blade1.clone(); blade2.rotation.y = Math.PI / 2;
+        rotorGroup.add(blade1, blade2);
+        rotorGroup.position.set(0, 0.62, 0);
+        heli.add(rotorGroup);
+
+        const tailRotorGroup = new THREE.Group();
+        const tBladeGeo = new THREE.BoxGeometry(0.05, 0.5, 0.06);
+        const tBlade1 = new THREE.Mesh(tBladeGeo, accentMat);
+        const tBlade2 = tBlade1.clone(); tBlade2.rotation.x = Math.PI / 2;
+        tailRotorGroup.add(tBlade1, tBlade2);
+        tailRotorGroup.position.set(-2.05, 0.28, 0.18);
+        heli.add(tailRotorGroup);
+
+        heli.scale.setScalar(0.85);
+        heli.position.set(0.6, 0, 0);
+        scene.add(heli);
+
+        let raf;
+        const clock = new THREE.Clock();
+        const animate = () => {
+          raf = requestAnimationFrame(animate);
+          const t = clock.getElapsedTime();
+          rotorGroup.rotation.y += 0.9;
+          tailRotorGroup.rotation.x += 1.1;
+          heli.position.y = Math.sin(t * 0.8) * 0.18;
+          heli.rotation.y += 0.0025;
+          particles.rotation.y += 0.0006;
+          stars.rotation.y += 0.00015;
+          auroraMat.uniforms.uTime.value = t;
+          controls.update();
+          renderer.render(scene, camera);
+        };
+        animate();
+
+        const onResize = () => {
+          width = mount.clientWidth; height = mount.clientHeight;
+          camera.aspect = width / height; camera.updateProjectionMatrix();
+          renderer.setSize(width, height);
+        };
+        window.addEventListener('resize', onResize);
+
+        return () => {
+          cancelAnimationFrame(raf);
+          window.removeEventListener('resize', onResize);
+          controls.dispose();
+          renderer.dispose();
+          if (mount.contains(renderer.domElement)) mount.removeChild(renderer.domElement);
+        };
+      }, []);
+
+      return <div ref={mountRef} className="three-cover" title="Arraste para orbitar" />;
+    }
+
+    function Slide({ data, n, className }) {
+      const cls = className || 'slide';
+      const body = (() => {
+        switch (data.type) {
+
+          case 'cover': return (
+            <>
+              <div className="hero-stage">
+                <div className="cover-scan" />
+                <ThreeCoverScene />
+              </div>
+              <Eyebrow n={n} label={data.eyebrow} />
+              <h1 className="headline animate d1" style={{ maxWidth: 860 }}>
+                {data.title}<br /><span className="accent">{data.titleAccent}</span>
+              </h1>
+              <p className="subline animate d2" style={{ marginBottom: 26 }}>{data.subtitle}</p>
+              <p className="subline animate d2" style={{ fontSize: '.82rem', color: 'var(--w50)', marginBottom: 6 }}>{data.professor}</p>
+              <p className="subline animate d2" style={{ fontSize: '.8rem', color: 'var(--w50)' }}>{data.authors.join(' · ')}</p>
+              <div className="badge-row animate d3">
+                {data.badges.map(b => <span key={b} className="badge">{b}</span>)}
+              </div>
+              <p style={{ marginTop: 34, fontFamily: 'var(--mono)', fontSize: '.62rem', color: 'var(--w20)', letterSpacing: '.14em' }} className="animate d4">
+                {UI.swipeHint}
+              </p>
+            </>
+          );
+
+          case 'info': return (
+            <>
+              <Eyebrow n={n} label={data.eyebrow} />
+              <Title title={data.title} accent={data.titleAccent} />
+              {data.text && <p className="subline animate d2" style={{ marginBottom: 22 }}>{data.text}</p>}
+              {data.facts && (
+                <div className="animate d3" style={{ display: 'flex', flexDirection: 'column', gap: 0, maxWidth: 760, marginTop: 10 }}>
+                  {data.facts.map(([k, v]) => (
+                    <div key={k} style={{ display: 'flex', gap: 18, padding: '10px 0', borderBottom: '1px solid var(--w10)' }}>
+                      <div style={{ minWidth: 130, fontFamily: 'var(--mono)', fontSize: '.68rem', color: 'var(--teal)', letterSpacing: '.05em' }}>{k.toUpperCase()}</div>
+                      <div style={{ fontSize: '.88rem', color: 'var(--w90)' }}>{v}</div>
+                    </div>
+                  ))}
+                </div>
+              )}
+              {data.badges && <div className="badge-row animate d3">{data.badges.map(b => <span key={b} className="badge">{b}</span>)}</div>}
+            </>
+          );
+
+          case 'stats': return (
+            <>
+              <Eyebrow n={n} label={data.eyebrow} />
+              <div className="g2" style={{ gap: 48, alignItems: 'center' }}>
+                <div>
+                  <Title title={data.title} accent={data.titleAccent} />
+                  <p className="subline animate d2">{data.text}</p>
+                </div>
+                <div className="g2 animate d3" style={{ gap: 14 }}>
+                  {data.stats.map(([v, l]) => (
+                    <div key={l} className="kpi"><div className="kpi-value">{v}</div><div className="kpi-label">{l}</div></div>
+                  ))}
+                </div>
+              </div>
+            </>
+          );
+
+          case 'cards': return (
+            <>
+              <Eyebrow n={n} label={data.eyebrow} />
+              <Title title={data.title} accent={data.titleAccent} />
+              <div className="g3 animate d2" style={{ marginTop: 18 }}>
+                {data.cards.map(([icon, t, d]) => (
+                  <div key={t} className="card">
+                    <div className="card-icon">{icon}</div>
+                    <div className="card-title">{t}</div>
+                    <div className="card-body">{d}</div>
+                  </div>
+                ))}
+              </div>
+            </>
+          );
+
+          case 'cards2': return (
+            <>
+              <Eyebrow n={n} label={data.eyebrow} />
+              <Title title={data.title} accent={data.titleAccent} />
+              <div className="g2 animate d2" style={{ marginTop: 22, maxWidth: 820 }}>
+                {data.cards.map(([icon, t, d]) => (
+                  <div key={t} className="card" style={{ padding: '28px 26px' }}>
+                    <div className="card-icon" style={{ fontSize: '2rem' }}>{icon}</div>
+                    <div className="card-title" style={{ fontSize: '1.05rem' }}>{t}</div>
+                    <div className="card-body">{d}</div>
+                  </div>
+                ))}
+              </div>
+            </>
+          );
+
+          case 'splitlist': return (
+            <>
+              <Eyebrow n={n} label={data.eyebrow} />
+              <div className="g2" style={{ gap: 48, alignItems: 'flex-start' }}>
+                <div>
+                  <Title title={data.title} accent={data.titleAccent} />
+                  <p className="subline animate d2">{data.text}</p>
+                </div>
+                <div className="animate d3" style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
+                  {data.list.map((item, i) => (
+                    <div key={i} className="roadmap-item">
+                      <div className="roadmap-dot" />
+                      <div className="roadmap-desc" style={{ fontSize: '.86rem', color: 'var(--w90)' }}>{item}</div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </>
+          );
+
+          case 'pipeline': return (
+            <>
+              <Eyebrow n={n} label={data.eyebrow} />
+              <Title title={data.title} accent={data.titleAccent} />
+              <div className="pipeline animate d2" style={{ gridTemplateColumns: `repeat(${data.cols || data.steps.length}, 1fr)` }}>
+                {data.steps.map(([nb, t, d]) => (
+                  <div key={nb} className="pipe">
+                    <div className="pipe-nb">ETAPA {nb}</div>
+                    <div className="pipe-t">{t}</div>
+                    <div className="pipe-d">{d}</div>
+                  </div>
+                ))}
+              </div>
+              {data.note && <div className="hl animate d3" style={{ maxWidth: 820 }}>{data.note}</div>}
+            </>
+          );
+
+          case 'arch': return (
+            <>
+              <Eyebrow n={n} label={data.eyebrow} />
+              <Title title={data.title} accent={data.titleAccent} />
+              <div className="g4 animate d2" style={{ marginTop: 18 }}>
+                {data.groups.map(([t, items]) => (
+                  <div key={t} className="card">
+                    <div className="card-title" style={{ marginBottom: 12 }}>{t}</div>
+                    {items.map((it, i) => (
+                      <div key={i} style={{ fontSize: '.76rem', color: 'var(--w70)', padding: '6px 0', borderTop: i > 0 ? '1px solid var(--w10)' : 'none' }}>{it}</div>
+                    ))}
+                  </div>
+                ))}
+              </div>
+            </>
+          );
+
+          case 'code': return (
+            <>
+              <Eyebrow n={n} label={data.eyebrow} />
+              <div className="g2" style={{ gap: 44, alignItems: 'flex-start' }}>
+                <div>
+                  <Title title={data.title} accent={data.titleAccent} />
+                  <p className="subline animate d2" style={{ marginBottom: 18 }}>{data.text}</p>
+                  <div style={{ display: 'flex', flexDirection: 'column' }} className="animate d3">
+                    {data.list.map((item, i) => (
+                      <div key={i} className="roadmap-item"><div className="roadmap-dot" /><div className="roadmap-desc" style={{ fontSize: '.82rem', color: 'var(--w90)' }}>{item}</div></div>
+                    ))}
+                  </div>
+                </div>
+                <pre className="code animate d2">{data.code}</pre>
+              </div>
+            </>
+          );
+
+          case 'table': return (
+            <>
+              <Eyebrow n={n} label={data.eyebrow} />
+              <Title title={data.title} accent={data.titleAccent} />
+              <div className="animate d2" style={{ overflowX: 'auto' }}>
+                <table className="tbl">
+                  <thead><tr>{data.headers.map((h, i) => <th key={i} className={i > 0 ? 'num' : ''}>{h}</th>)}</tr></thead>
+                  <tbody>
+                    {data.rows.map((r, i) => (
+                      <tr key={i}>{r.map((c, j) => <td key={j} className={j > 0 ? 'num' : ''}>{j === 0 ? <strong style={{ color: 'var(--w90)' }}>{c}</strong> : c}</td>)}</tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+              {data.note && <div className="hl animate d3" style={{ marginTop: 20, maxWidth: 860 }}>{data.note}</div>}
+            </>
+          );
+
+          case 'bars': return (
+            <>
+              <Eyebrow n={n} label={data.eyebrow} />
+              <div className="g2" style={{ gap: 48, alignItems: 'center' }}>
+                <div className="animate d2">
+                  {data.bars.map(([label, val]) => (
+                    <div key={label} className="bar-row">
+                      <div className="bar-label">{label}</div>
+                      <div className="bar-track"><div className="bar-fill" style={{ width: `${(val / 28) * 100}%` }} /></div>
+                      <div className="bar-val">{val}%</div>
+                    </div>
+                  ))}
+                </div>
+                <div>
+                  <Title title={data.title} accent={data.titleAccent} />
+                  <p className="subline animate d3">{data.text}</p>
+                </div>
+              </div>
+            </>
+          );
+
+          case 'roadmap': return (
+            <>
+              <Eyebrow n={n} label={data.eyebrow} />
+              <Title title={data.title} accent={data.titleAccent} />
+              <div className="animate d2" style={{ maxWidth: 780, marginTop: 8 }}>
+                {data.items.map(([t, d], i) => (
+                  <div key={i} className="roadmap-item">
+                    <div className="roadmap-dot" />
+                    <div><div className="roadmap-title">{t}</div><div className="roadmap-desc">{d}</div></div>
+                  </div>
+                ))}
+              </div>
+            </>
+          );
+
+          case 'quote': return (
+            <div style={{ textAlign: 'center', margin: '0 auto' }}>
+              <Eyebrow n={n} label={data.eyebrow} />
+              <h2 className="headline animate d1" style={{ textAlign: 'center', margin: '0 auto 22px', maxWidth: 880 }}>
+                {data.title}<br /><span className="accent">{data.titleAccent}</span>
+              </h2>
+              <p className="subline animate d2" style={{ margin: '0 auto', maxWidth: 720, textAlign: 'center' }}>{data.text}</p>
+            </div>
+          );
+
+          case 'closing': return (
+            <div style={{ textAlign: 'center', margin: '0 auto' }}>
+              <Eyebrow n={n} label={data.eyebrow} />
+              <h2 className="headline animate d1" style={{ textAlign: 'center', margin: '0 auto 18px', maxWidth: 780 }}>
+                {data.title}<br /><span className="accent">{data.titleAccent}</span>
+              </h2>
+              <p className="subline animate d2" style={{ margin: '0 auto 26px', maxWidth: 680, textAlign: 'center' }}>{data.text}</p>
+              <a href={data.repoUrl} target="_blank" rel="noopener noreferrer" className="animate d3"
+                 style={{ fontFamily: 'var(--mono)', fontSize: '.78rem', color: 'var(--teal)', letterSpacing: '.04em', textDecoration: 'none', border: '1px solid var(--border)', padding: '10px 20px', borderRadius: 999, display: 'inline-block' }}>
+                ↗ {data.repoLabel}
+              </a>
+            </div>
+          );
+
+          default: return null;
         }
-    </script>
+      })();
+
+      return (
+        <div className={cls} id={data.id}>
+          {body}
+          <Footer />
+        </div>
+      );
+    }
+
+    function ShortcutsModal({ onClose }) {
+      return (
+        <div className="modal-overlay" onClick={onClose}>
+          <div className="modal" onClick={e => e.stopPropagation()}>
+            <h3>{UI.shortcutsTitle}</h3>
+            {UI.shortcutsList.map(([k, d]) => (
+              <div key={k} className="modal-row"><span>{d}</span><kbd>{k}</kbd></div>
+            ))}
+            <button className="modal-close" onClick={onClose}>{UI.close}</button>
+          </div>
+        </div>
+      );
+    }
+
+    function App() {
+      const [cur, setCur] = useState(0);
+      const [theme, setTheme] = useState('dark');
+      const [showShortcuts, setShowShortcuts] = useState(false);
+      const touchStart = useRef(null);
+      const isAnimating = useRef(false);
+
+      const go = useCallback((idx) => {
+        if (isAnimating.current || idx === cur || idx < 0 || idx >= SLIDES.length) return;
+        isAnimating.current = true;
+        setCur(idx);
+        setTimeout(() => { isAnimating.current = false }, 600);
+      }, [cur]);
+
+      useEffect(() => {
+        const h = (e) => {
+          if (showShortcuts) { if (e.key === 'Escape' || e.key === '?') setShowShortcuts(false); return; }
+          if (e.key === 'ArrowRight' || e.key === 'ArrowDown') go(cur + 1);
+          else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') go(cur - 1);
+          else if (e.key === 'f' || e.key === 'F') {
+            document.fullscreenElement ? document.exitFullscreen() : document.getElementById('stage').requestFullscreen();
+          }
+          else if (e.key === 'r' || e.key === 'R') go(0);
+          else if (e.key === '?') setShowShortcuts(true);
+          else if (e.key === 'Escape' && document.fullscreenElement) document.exitFullscreen();
+        };
+        window.addEventListener('keydown', h);
+        return () => window.removeEventListener('keydown', h);
+      }, [cur, go, showShortcuts]);
+
+      useEffect(() => {
+        const s = (e) => { touchStart.current = e.touches[0].clientX };
+        const en = (e) => {
+          if (!touchStart.current) return;
+          const dx = touchStart.current - e.changedTouches[0].clientX;
+          if (Math.abs(dx) > 50) { dx > 0 ? go(cur + 1) : go(cur - 1); }
+          touchStart.current = null;
+        };
+        window.addEventListener('touchstart', s, { passive: true });
+        window.addEventListener('touchend', en, { passive: true });
+        return () => { window.removeEventListener('touchstart', s); window.removeEventListener('touchend', en) };
+      }, [cur, go]);
+
+      useEffect(() => { document.body.setAttribute('data-theme', theme) }, [theme]);
+
+      const toggleFullscreen = () => {
+        document.fullscreenElement ? document.exitFullscreen() : document.getElementById('stage').requestFullscreen();
+      };
+
+      const exitPresentation = () => {
+        if (window.confirm(UI.exitConfirm)) {
+          if (document.fullscreenElement) document.exitFullscreen();
+          go(0);
+        }
+      };
+
+      const onScrub = (e) => {
+        const rect = e.currentTarget.getBoundingClientRect();
+        const pct = (e.clientX - rect.left) / rect.width;
+        go(Math.min(SLIDES.length - 1, Math.max(0, Math.round(pct * (SLIDES.length - 1)))));
+      };
+
+      const pct = (cur / (SLIDES.length - 1)) * 100;
+
+      return (
+        <>
+          <div className="heli-ambient" aria-hidden="true">
+            <span className="heli-a">🚁</span>
+            <span className="heli-a h2">🚁</span>
+          </div>
+
+          <div className="timeline-track" onClick={onScrub} title="Arraste / clique para pular de seção">
+            <div className="timeline-fill" style={{ width: `${pct}%` }} />
+          </div>
+
+          <div className="slide-counter">
+            <span>{String(cur + 1).padStart(2, '0')}</span> / {String(SLIDES.length).padStart(2, '0')}
+            &emsp;<span style={{ color: 'var(--w50)', fontSize: '.65rem' }}>{SLIDES[cur].label}</span>
+          </div>
+
+          {SLIDES.map((s, i) => {
+            let cls = 'slide';
+            if (i === cur) cls += ' active';
+            else if (i < cur) cls += ' exit-up';
+            else cls += ' exit-down';
+            return <Slide key={s.id} data={s} n={i + 1} className={cls} />;
+          })}
+
+          <div className="hud">
+            <div className="hud-dots">
+              {SLIDES.map((s, i) => (
+                <button key={s.id} className={`hud-dot${i === cur ? ' on' : ''}`} onClick={() => go(i)} title={s.label} />
+              ))}
+            </div>
+            <div className="hud-sep" />
+            <button className="hud-btn" onClick={() => go(cur - 1)} title={UI.prev} disabled={cur === 0}>◀</button>
+            <button className="hud-btn" onClick={() => go(cur + 1)} title={UI.next} disabled={cur === SLIDES.length - 1}>▶</button>
+            <button className="hud-btn" onClick={() => go(0)} title={UI.restart}>↺</button>
+            <button className="hud-btn" onClick={toggleFullscreen} title={UI.fullscreen}>⛶</button>
+            <button className="hud-btn" onClick={() => setTheme(t => t === 'dark' ? 'light' : 'dark')} title={UI.theme}>
+              {theme === 'dark' ? '☀' : '🌙'}
+            </button>
+            <button className="hud-btn" onClick={() => setShowShortcuts(true)} title={UI.shortcuts}>?</button>
+            <button className="hud-btn danger" onClick={exitPresentation} title={UI.exit}>⏻</button>
+            <button className="hud-btn" onClick={exportPPT} title="Download PPTX" style={{ fontWeight: 600, color: 'var(--teal)' }}>{UI.pptx}</button>
+          </div>
+
+          {showShortcuts && <ShortcutsModal onClose={() => setShowShortcuts(false)} />}
+        </>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById('stage')).render(<App />);
+
+    async function exportPPT() {
+      const btn = document.querySelector('[title="Download PPTX"]');
+      if (btn) btn.textContent = '⏳';
+      document.querySelectorAll('.animate').forEach(el => {
+        el.style.animation = 'none'; el.style.opacity = '1'; el.style.transform = 'none';
+      });
+      const pptx = new PptxGenJS();
+      pptx.layout = 'LAYOUT_16x9';
+      const all = [...document.querySelectorAll('.slide')];
+      const hud = document.querySelector('.hud');
+      const ctr = document.querySelector('.slide-counter');
+      const tl = document.querySelector('.timeline-track');
+      if (hud) hud.style.opacity = '0';
+      if (ctr) ctr.style.opacity = '0';
+      if (tl) tl.style.opacity = '0';
+      for (let i = 0; i < all.length; i++) {
+        const el = all[i];
+        const origCls = el.className;
+        el.className = 'slide active';
+        const canvas = await html2canvas(el, {
+          width: 1920, height: 1080, scale: 1,
+          backgroundColor: document.body.getAttribute('data-theme') === 'dark' ? '#050506' : '#f5f5f7',
+          windowWidth: 1920, windowHeight: 1080, logging: false,
+        });
+        el.className = origCls;
+        const s = pptx.addSlide();
+        s.background = { color: document.body.getAttribute('data-theme') === 'dark' ? '050506' : 'f5f5f7' };
+        s.addImage({ data: canvas.toDataURL('image/png', .95), x: 0, y: 0, w: '100%', h: '100%' });
+      }
+      if (hud) hud.style.opacity = '1';
+      if (ctr) ctr.style.opacity = '1';
+      if (tl) tl.style.opacity = '1';
+      pptx.writeFile({ fileName: UI.pptxFile });
+      if (btn) btn.textContent = UI.pptx;
+    }
+  </script>
 </body>
 
 </html>
