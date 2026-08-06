@@ -80,20 +80,6 @@ https://github.com/user-attachments/assets/5b7d581c-ab5e-416e-8471-d91136b2ada0
 [**Course:**]() BSc in Humanistic AI & Data Science — 5th semester — 2026  
 [**Subject:**]() Machine Learning / Computer Vision — YOLO  
 [**Project:**]() P2 — Object Detection in Satellite Images with YOLO  
-
-**Professor:** [✨ Rooney Ribeiro Albuquerque Coelho](https://www.linkedin.com/in/rooney-coelho-320857182/)  
-**Authors:**  
-- [Carlos Antonio Roth Gorham](https://github.com/RothGorham?tab=followers)   
-- [Fabiana ⚡️ Campanari](https://linktr.ee/fabianacampanari)   
-- [Pedro Vyctor Almeida](https://www.linkedin.com/in/pedro-vyctor-almeida-285b89273/)
-
-
-## [Institutional Information]()
-
-[**Institution:**]() Pontifical Catholic University of São Paulo (PUC‑SP) — FACEI  
-[**Course:**]() BSc in Humanistic AI & Data Science — 5th semester — 2026  
-[**Subject:**]() Machine Learning / Computer Vision — YOLO  
-[**Project:**]() P2 — Object Detection in Satellite Images with YOLO  
 **Professor:** [✨ Rooney Ribeiro Albuquerque Coelho](https://www.linkedin.com/in/rooney-coelho-320857182/) 
 
 **Project Authors (Helipoint Detector):**  
@@ -222,7 +208,7 @@ https://github.com/user-attachments/assets/5b7d581c-ab5e-416e-8471-d91136b2ada0
 <!-- =========ENDMAIN REPO =Projects REFERENCES ========= -->
 
 
-## Overview
+## [Overview]()
 
 **Helipad Detector** is an end-to-end Artificial Intelligence and Computer Vision platform designed to automatically detect and map rooftop helipads from satellite imagery. The project focuses on São Paulo, Brazil, a unique urban environment with the world's largest helicopter fleet, handling approximately **2,200 takeoffs and landings per day** and reaching **one operation every 45 seconds during peak hours**. The city also operates **HELICONTROL**, a dedicated helicopter air traffic control system created to safely manage this exceptionally dense urban air mobility environment.
 
@@ -233,7 +219,7 @@ The platform implements a complete end-to-end AI workflow, including public data
 <br><br>
 
 
-## Key Features
+## [Key Features]()
 
 - End-to-end Artificial Intelligence pipeline
 - Automated satellite imagery acquisition
