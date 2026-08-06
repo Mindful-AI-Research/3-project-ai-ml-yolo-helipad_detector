@@ -7,9 +7,9 @@
 
 
 <!-- ========= START HEADRE ========= -->
-# <p align="center">🧠 AI/ML Project 2 · Computer Vision · Helipoint Detector</p>
+# <p align="center"> 🚁 Helipad Detector
 
-### <p align="center">Automated Helipad Detection Using YOLO and Satellite Imagery of São Paulo, Brazil</p>
+### <p align="center"> End-to-End Artificial Intelligence Platform for Automated Helipad Detection and Geospatial Intelligence from Satellite Imagery
 
 <br>
 
@@ -85,7 +85,21 @@ https://github.com/user-attachments/assets/5b7d581c-ab5e-416e-8471-d91136b2ada0
 **Authors:**  
 - [Carlos Antonio Roth Gorham](https://github.com/RothGorham?tab=followers)   
 - [Fabiana ⚡️ Campanari](https://linktr.ee/fabianacampanari)   
-- [Pedro Vyctor Almeida](https://www.linkedin.com/in/pedro-vyctor-almeida-285b89273/) 
+- [Pedro Vyctor Almeida](https://www.linkedin.com/in/pedro-vyctor-almeida-285b89273/)
+
+
+## [Institutional Information]()
+
+[**Institution:**]() Pontifical Catholic University of São Paulo (PUC‑SP) — FACEI  
+[**Course:**]() BSc in Humanistic AI & Data Science — 5th semester — 2026  
+[**Subject:**]() Machine Learning / Computer Vision — YOLO  
+[**Project:**]() P2 — Object Detection in Satellite Images with YOLO  
+**Professor:** [✨ Rooney Ribeiro Albuquerque Coelho](https://www.linkedin.com/in/rooney-coelho-320857182/) 
+
+**Project Authors (Helipoint Detector):**  
+- [Carlos Antonio Roth Gorham](https://github.com/RothGorham?tab=followers)   
+- [Fabiana ⚡️ Campanari](https://linktr.ee/fabianacampanari)   
+- [Pedro Vyctor Almeida](https://www.linkedin.com/in/pedro-vyctor-almeida-285b89273/)
 
 
 <br><br>
@@ -200,7 +214,7 @@ https://github.com/user-attachments/assets/5b7d581c-ab5e-416e-8471-d91136b2ada0
 >
 > #
 >
-> ✨ Part of the *Humanistic AI & Machine Learning Series*
+> ✨ Part of the *Human Centered AI & Machine Learning Series*
 >
 > [*From handwriting to rooftops — simplicity was never in the roadmap.*]() ⚡️
 
@@ -208,12 +222,38 @@ https://github.com/user-attachments/assets/5b7d581c-ab5e-416e-8471-d91136b2ada0
 <!-- =========ENDMAIN REPO =Projects REFERENCES ========= -->
 
 
-> [!IMPORTANT]
->
-> This repository documents an end-to-end academic project in Computer Vision for automatic 
-> detection of **helipads on rooftops** using satellite images of the city of São Paulo.  
-> The focus goes beyond model training: it emphasizes **dataset construction**, **annotation governance**, **reproducibility**, and
-> [**evaluation on unseen neighborhoods**](), in line with the briefing of Project 2 in the Machine Learning course.
+## Overview
+
+**Helipad Detector** is an end-to-end Artificial Intelligence and Computer Vision platform designed to automatically detect and map rooftop helipads from satellite imagery. The project focuses on São Paulo, Brazil, a unique urban environment with the world's largest helicopter fleet, handling approximately **2,200 takeoffs and landings per day** and reaching **one operation every 45 seconds during peak hours**. The city also operates **HELICONTROL**, a dedicated helicopter air traffic control system created to safely manage this exceptionally dense urban air mobility environment.
+
+These characteristics make São Paulo an ideal real-world benchmark for AI-based geospatial intelligence. By transforming satellite imagery into structured spatial information, the project demonstrates how Computer Vision can automate infrastructure mapping, support urban analysis, and provide decision-support data for future Smart City applications.
+
+The platform implements a complete end-to-end AI workflow, including public data collection, geocoding, satellite imagery acquisition, manual annotation in Roboflow, YOLOv8n/YOLOv11n training, and field validation on more than **7,900** real satellite tiles. The interactive dashboard provides transparent access to the entire pipeline, dataset, model performance, and documented limitations, emphasizing reproducibility, explainability, and Responsible AI principles.
+
+<br><br>
+
+
+## Key Features
+
+- End-to-end Artificial Intelligence pipeline
+- Automated satellite imagery acquisition
+- Geospatial intelligence workflow
+- YOLOv8n / YOLOv11n object detection
+- Roboflow annotation workflow
+- Field validation on 7,900+ real satellite tiles
+- Interactive Streamlit dashboard
+- Fully reproducible repository
+- Downloadable datasets, notebooks and artifacts
+
+
+<br><br>
+
+
+## Dashboard Preview
+
+
+
+
 
 <br><br>
 
