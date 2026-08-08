@@ -10,6 +10,7 @@ import folium
 from folium.plugins import HeatMap
 from streamlit_folium import st_folium
 import streamlit.components.v1 as components
+import base64
 import io
 import json
 import zipfile
@@ -59,6 +60,15 @@ TR = {
               "automaticamente — inclusive experimentos futuros, sem precisar editar o app.",
     },
     "sidebar.confidence": {"en": "Minimum detection confidence", "pt": "Confiança mínima de detecção"},
+
+    # ---- Sidebar: background music ----
+    "sidebar.music.title": {"en": "🎵 Ambient music", "pt": "🎵 Música ambiente"},
+    "sidebar.music.play": {"en": "Play background music", "pt": "Tocar música de fundo"},
+    "sidebar.music.pause": {"en": "Pause music", "pt": "Pausar música"},
+    "sidebar.music.missing": {
+        "en": "Background track not found — add an mp3 at `assets/audio/passacaglia-deep-house-remix.mp3` to enable this.",
+        "pt": "Faixa de fundo não encontrada — adicione um mp3 em `assets/audio/passacaglia-deep-house-remix.mp3` para habilitar.",
+    },
 
     # ---- Main header ----
     "main.title": {"en": "🚁 Helipad Detection", "pt": "🚁 Detecção de Helipontos"},
@@ -901,6 +911,99 @@ def load_field_detection_summary():
 
 MODEL_OPTIONS = discover_models()
 
+# ========================= BACKGROUND MUSIC (sidebar widget) =========================
+# Track: "Passacaglia – Deep House Remix" — used here for educational /
+# academic-presentation purposes. Embedded as base64 so no separate static
+# file server is needed; loops indefinitely once started. The app never
+# autoplays audio (browsers block that anyway) — it always waits for the
+# person to click the 🔇/🔊 icon below, which starts fully muted/paused.
+AUDIO_PATH = Path("assets/audio/passacaglia-deep-house-remix.mp3")
+
+
+@st.cache_data(show_spinner=False)
+def _load_audio_base64(path: str):
+    p = Path(path)
+    if not p.exists():
+        return None
+    return base64.b64encode(p.read_bytes()).decode("ascii")
+
+
+def render_music_toggle():
+    audio_b64 = _load_audio_base64(str(AUDIO_PATH))
+    st.markdown(f"### {t('sidebar.music.title')}")
+    if not audio_b64:
+        st.caption(t("sidebar.music.missing"))
+        return
+
+    label_play = t("sidebar.music.play")
+    label_pause = t("sidebar.music.pause")
+
+    components.html(f"""
+    <button id="music-toggle-btn" title="{label_play}" style="
+      width:100%; display:flex; align-items:center; justify-content:center; gap:10px;
+      background:#0E756D; color:#fff; border:1.5px solid #14b8a6; border-radius:12px;
+      padding:12px 14px; font-family:'Inter',sans-serif; font-size:14px; font-weight:700;
+      letter-spacing:.02em; cursor:pointer; box-shadow:0 3px 14px rgba(14,117,109,.45);
+      transition:transform .15s, box-shadow .2s; animation:music-pulse 2.2s ease-in-out infinite;
+    ">
+      <span id="music-icon" style="font-size:18px;">🔇</span>
+      <span id="music-label">{label_play}</span>
+    </button>
+    <style>
+      @keyframes music-pulse {{
+        0%, 100% {{ box-shadow: 0 3px 14px rgba(14,117,109,.45); }}
+        50% {{ box-shadow: 0 3px 22px rgba(20,184,166,.85); }}
+      }}
+      #music-toggle-btn:hover {{ transform: translateY(-1px); }}
+      #music-toggle-btn.playing {{ animation: none; background:#134e4a; }}
+    </style>
+    <audio id="bg-music" src="data:audio/mp3;base64,{audio_b64}" loop preload="auto" muted></audio>
+    <script>
+      const btn = document.getElementById('music-toggle-btn');
+      const icon = document.getElementById('music-icon');
+      const label = document.getElementById('music-label');
+      const audio = document.getElementById('bg-music');
+      audio.volume = 0.35;
+      let playing = false;
+
+      function start() {{
+        if (playing) return;
+        audio.muted = false;
+        audio.play().then(() => {{
+          playing = true;
+          icon.textContent = '🔊';
+          btn.title = '{label_pause}';
+          label.textContent = '{label_pause}';
+          btn.classList.add('playing');
+        }}).catch(() => {{}});
+      }}
+      function stop() {{
+        audio.pause();
+        playing = false;
+        icon.textContent = '🔇';
+        btn.title = '{label_play}';
+        label.textContent = '{label_play}';
+        btn.classList.remove('playing');
+      }}
+
+      btn.addEventListener('click', () => {{ playing ? stop() : start(); }});
+
+      /* Best-effort auto-start on the very first click anywhere in the app.
+         This widget lives inside its own sandboxed iframe (how Streamlit's
+         components.html works), so — unlike the standalone presentation,
+         which is a single page — it usually cannot see clicks happening in
+         the rest of the dashboard. We still try, in case the browser
+         allows same-origin access; if it doesn't, this silently no-ops and
+         the button above keeps working normally either way. */
+      try {{
+        const parentDoc = window.parent.document;
+        const startOnce = () => {{ start(); parentDoc.removeEventListener('click', startOnce); }};
+        parentDoc.addEventListener('click', startOnce, {{ once: true }});
+      }} catch (e) {{ /* cross-origin iframe — expected in some Streamlit setups, ignored */ }}
+    </script>
+    """, height=64)
+
+
 # ========================= SIDEBAR: LANGUAGE + MODEL SELECTION =========================
 with st.sidebar:
     lang_choice = st.radio(
@@ -912,6 +1015,8 @@ with st.sidebar:
         key="lang_radio",
     )
     st.session_state["lang"] = "en" if lang_choice.startswith("🇬🇧") else "pt"
+
+    render_music_toggle()
 
     st.markdown(f"### {t('sidebar.model')}")
     if not MODEL_OPTIONS:
@@ -974,10 +1079,10 @@ model = get_selected_model()
 # panel at the bottom) — only the visual display moved, not the data load.
 metrics_df = load_experiment_metrics()
 
-tab_metrics, tab_field, tab4, tab2, tab3, tab1, tab5, tab6, tab_about, tab7 = st.tabs([
-    t("tabs.metrics"), t("tabs.field"), t("tabs.map"),
+tab_about, tab_metrics, tab_field, tab4, tab2, tab3, tab1, tab5, tab6, tab7 = st.tabs([
+    t("tabs.about"), t("tabs.metrics"), t("tabs.field"), t("tabs.map"),
     t("tabs.search"), t("tabs.samples"), t("tabs.upload"),
-    t("tabs.pipeline"), t("tabs.governance"), t("tabs.about"), t("tabs.downloads"),
+    t("tabs.pipeline"), t("tabs.governance"), t("tabs.downloads"),
 ])
 
 # ====================== TAB 1: Upload ======================
