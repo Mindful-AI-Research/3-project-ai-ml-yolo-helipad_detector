@@ -113,7 +113,7 @@ https://github.com/user-attachments/assets/5b7d581c-ab5e-416e-8471-d91136b2ada0
 <p align="center" style="margin: 0;">
 
 
-  <a href="https://celadon-torte-104622.netlify.app/" target="_blank" rel="noopener noreferrer">
+  <a href="https://fanciful-beijinho-4f8efa.netlify.app/" target="_blank" rel="noopener noreferrer">
     <img
       src="https://img.shields.io/badge/React%20Presentation-Slides%20and%20Overview-0f766e?style=for-the-badge&logo=jupyter&logoColor=white"
       alt="React Presentation Slides and Overview"
