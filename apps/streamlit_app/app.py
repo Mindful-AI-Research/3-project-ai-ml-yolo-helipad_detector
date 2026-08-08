@@ -501,6 +501,8 @@ TR = {
         "pt": "Nenhum `results.csv` encontrado ainda em `artifacts/runs/detect/*/` (ou `artifacts/runs/runs/detect/*/`).",
     },
     "metrics.best_epoch": {"en": "Best epoch:", "pt": "Melhor época:"},
+    "metrics.netron_view": {"en": "🔎 View architecture in Netron", "pt": "🔎 Ver arquitetura no Netron"},
+    "metrics.netron_manual": {"en": "🔎 Open Netron (upload manually)", "pt": "🔎 Abrir Netron (upload manual)"},
     "metrics.outperformed": {
         "en": "**{exp}** outperformed exp1 on mAP@50-95 ({delta}).",
         "pt": "**{exp}** superou o exp1 em mAP@50-95 ({delta}).",
@@ -897,12 +899,13 @@ REGION_NAME_TRANSLATIONS = {
 
 
 def format_region_display(name: str) -> str:
-    """Human-friendly English display name for a region, regardless of
-    whether it comes from a raw CSV name (e.g. 'Av_Paulista (trecho 1)')
-    or a JSON slug (e.g. 'Av_Paulista_trecho_1'). Display-only — does not
-    rename any file, folder, or CSV entry."""
+    """Human-friendly display name for a region, regardless of whether it
+    comes from a raw CSV name (e.g. 'Av_Paulista (trecho 1)') or a JSON
+    slug (e.g. 'Av_Paulista_trecho_1'). Display-only — does not rename any
+    file, folder, or CSV entry. Always shows 'Trecho N' (not translated to
+    'Segment'), e.g. 'Av Paulista Trecho 1'."""
     display = str(name).replace("_", " ")
-    display = re.sub(r"\btrecho\b", "Segment", display, flags=re.IGNORECASE)
+    display = re.sub(r"\btrecho\b", "Trecho", display, flags=re.IGNORECASE)
     display = re.sub(r"\s+", " ", display).strip()
     translated = REGION_NAME_TRANSLATIONS.get(display.lower())
     return translated if translated else display
@@ -942,6 +945,30 @@ def load_field_detection_summary():
 
 
 MODEL_OPTIONS = discover_models()
+
+# {exp_dir.name: weights_path} — used to build "view architecture in
+# Netron" links per experiment (Netron reads the file straight from its
+# raw GitHub URL, no upload needed).
+MODEL_WEIGHTS_BY_EXP = {exp_dir.name: (exp_dir / "weights" / "best.pt")
+                         for exp_dir in _all_exp_dirs()
+                         if (exp_dir / "weights" / "best.pt").exists()}
+
+GITHUB_REPO_RAW_BASE = (
+    "https://raw.githubusercontent.com/"
+    "Mindful-AI-Research/3-project-ai-ml-yolo-helipad_detector/main"
+)
+
+
+def netron_url_for(exp_name: str) -> str | None:
+    """Netron.app link that auto-loads a given experiment's best.pt
+    straight from its raw GitHub URL — no manual upload needed. Returns
+    None if that experiment's weights aren't tracked locally (Netron
+    still works via plain https://netron.app + manual upload in that case)."""
+    weights_path = MODEL_WEIGHTS_BY_EXP.get(exp_name)
+    if not weights_path:
+        return None
+    raw_url = f"{GITHUB_REPO_RAW_BASE}/{weights_path.as_posix()}"
+    return f"https://netron.app/?url={raw_url}"
 
 # ========================= BACKGROUND MUSIC (sidebar widget) =========================
 # Track: "Passacaglia – Deep House Remix" — used here for educational /
@@ -1020,18 +1047,29 @@ def render_music_toggle():
 
       btn.addEventListener('click', () => {{ playing ? stop() : start(); }});
 
-      /* Best-effort auto-start on the very first click anywhere in the app.
-         This widget lives inside its own sandboxed iframe (how Streamlit's
-         components.html works), so — unlike the standalone presentation,
-         which is a single page — it usually cannot see clicks happening in
-         the rest of the dashboard. We still try, in case the browser
-         allows same-origin access; if it doesn't, this silently no-ops and
-         the button above keeps working normally either way. */
+      /* Auto-start on the very first interaction anywhere in the dashboard
+         (click, tap, or key press) — not just a click on this button.
+         The <audio> tag itself is muted/paused until then, so this never
+         violates the browser's autoplay-with-sound policy; it just widens
+         the trigger from "click this exact icon" to "do literally
+         anything in the app". Listening on window.parent.document works
+         because Streamlit's components.html iframe is same-origin with
+         the main app (srcdoc without a sandbox override inherits the
+         parent's origin) — if that ever changes in a future Streamlit
+         version, this silently no-ops and the button above still works
+         normally on its own. */
       try {{
         const parentDoc = window.parent.document;
-        const startOnce = () => {{ start(); parentDoc.removeEventListener('click', startOnce); }};
-        parentDoc.addEventListener('click', startOnce, {{ once: true }});
-      }} catch (e) {{ /* cross-origin iframe — expected in some Streamlit setups, ignored */ }}
+        const startOnce = () => {{
+          start();
+          parentDoc.removeEventListener('click', startOnce, true);
+          parentDoc.removeEventListener('keydown', startOnce, true);
+          parentDoc.removeEventListener('touchstart', startOnce, true);
+        }};
+        parentDoc.addEventListener('click', startOnce, {{ once: true, capture: true }});
+        parentDoc.addEventListener('keydown', startOnce, {{ once: true, capture: true }});
+        parentDoc.addEventListener('touchstart', startOnce, {{ once: true, capture: true, passive: true }});
+      }} catch (e) {{ /* cross-origin iframe — fallback: only the button click above starts the music */ }}
     </script>
     """, height=64)
 
@@ -1395,7 +1433,7 @@ with tab4:
                 sp_df_display = sp_df.copy()
                 if "Nome do Bairro" in sp_df_display.columns:
                     sp_df_display["Nome do Bairro"] = sp_df_display["Nome do Bairro"].astype(str).str.replace(
-                        r"\btrecho\b", "Segment", regex=True, case=False
+                        r"\btrecho\b", "Trecho", regex=True, case=False
                     )
                 st.dataframe(sp_df_display, use_container_width=True)
             with t2:
@@ -1608,6 +1646,8 @@ with tab_metrics:
         for i, row in metrics_df.iterrows():
             target = cols[i] if n_exp <= 4 else st
             with target:
+                netron_link = netron_url_for(row['Experiment']) or "https://netron.app/"
+                netron_label = t("metrics.netron_view") if row['Experiment'] in MODEL_WEIGHTS_BY_EXP else t("metrics.netron_manual")
                 st.markdown(f"""
                 <div class="metric-card">
                     <h4 style="margin:0 0 8px 0;">{row['Experiment']}</h4>
@@ -1618,6 +1658,12 @@ with tab_metrics:
                         {row['mAP@50-95']:.3f}
                     </p>
                     <p style="margin:0; color:#64748B; font-size:12px;">mAP@50-95</p>
+                    <p style="margin:8px 0 0 0;">
+                        <a href="{netron_link}" target="_blank" rel="noopener noreferrer"
+                           style="font-size:12px; color:#0E756D; font-weight:600; text-decoration:none;">
+                            {netron_label}
+                        </a>
+                    </p>
                 </div>
                 """, unsafe_allow_html=True)
 
@@ -1781,5 +1827,14 @@ st.markdown(f"""
 
 <p style="text-align:center; color:rgba(255,255,255,0.30); margin:6px 0 0 0; font-size:12px;">
 {t("footer.line3")}
+</p>
+
+<p style="text-align:center; margin:16px 0 0 0;">
+  <a href="https://github.com/Mindful-AI-Research" target="_blank" rel="noopener noreferrer"
+     style="color:#14b8a6; text-decoration:none; font-size:13px; font-weight:600; letter-spacing:.03em;
+            border:1px solid rgba(20,184,166,0.35); border-radius:999px; padding:5px 14px;
+            transition:opacity .15s;">
+    ॐ Mindful AI
+  </a>
 </p>
 """, unsafe_allow_html=True)
