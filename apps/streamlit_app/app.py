@@ -62,9 +62,9 @@ TR = {
     "sidebar.confidence": {"en": "Minimum detection confidence", "pt": "Confiança mínima de detecção"},
 
     # ---- Sidebar: background music ----
-    "sidebar.music.title": {"en": "🎵 Ambient music", "pt": "🎵 Música ambiente"},
-    "sidebar.music.play": {"en": "Play background music", "pt": "Tocar música de fundo"},
-    "sidebar.music.pause": {"en": "Pause music", "pt": "Pausar música"},
+    "sidebar.music.title": {"en": "🎶 Passacaglia - Deep House", "pt": "🎶 Passacaglia - Deep House"},
+    "sidebar.music.play": {"en": "Play Music", "pt": "Play Music"},
+    "sidebar.music.pause": {"en": "Pause Music", "pt": "Pausar Música"},
     "sidebar.music.missing": {
         "en": "Background track not found — add an mp3 at `assets/audio/passacaglia-deep-house-remix.mp3` to enable this.",
         "pt": "Faixa de fundo não encontrada — adicione um mp3 em `assets/audio/passacaglia-deep-house-remix.mp3` para habilitar.",
@@ -76,6 +76,7 @@ TR = {
     "main.active_model": {"en": "Active model:", "pt": "Modelo ativo:"},
     "main.active_model.none": {"en": "_none yet — detection tabs disabled_", "pt": "_nenhum ainda — abas de detecção desabilitadas_"},
 
+    
     # ---- Tab labels ----
     "tabs.metrics": {"en": "📊 Experiment Metrics", "pt": "📊 Métricas dos Experimentos"},
     "tabs.field": {"en": "🌍 Field Detections by Region", "pt": "🌍 Detecções de Campo por Região"},
@@ -135,6 +136,7 @@ TR = {
     },
     "search.none_found": {"en": "No helipad was found in this region.", "pt": "Nenhum heliponto foi encontrado nesta região."},
 
+    
     # ---- Tab 3: Sample Images ----
     "samples.subheader": {"en": "🖼️ Test with Sample Images", "pt": "🖼️ Testar com Imagens de Exemplo"},
     "samples.caption": {
@@ -270,7 +272,8 @@ TR = {
     "pt": "Nenhuma coordenada foi encontrada em `{path}` para gerar o mapa de densidade.",
 },
 
-    ## ---- Tab 5: Pipeline ----
+   
+## ---- Tab 5: Pipeline ----
 "pipeline.subheader": {
     "en": "📖 End-to-End Project Pipeline",
     "pt": "📖 Pipeline Completo do Projeto",
@@ -394,7 +397,6 @@ TR = {
 
 
 # ---- Tab: About & Team ----
-
 "about.header": {"en": "👥 About & Team", "pt": "👥 Sobre & Equipe"},
 
 "about.body": {
