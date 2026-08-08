@@ -394,6 +394,7 @@ TR = {
 
 
 # ---- Tab: About & Team ----
+
 "about.header": {"en": "👥 About & Team", "pt": "👥 Sobre & Equipe"},
 
 "about.body": {
@@ -414,12 +415,12 @@ TR = {
         "demonstrates how Computer Vision can support urban analysis, infrastructure mapping, "
         "and data-driven decision making for future smart city applications.\n\n"
 
-        "The complete AI workflow includes:<br><br>"
-        "- Public data collection<br>"
-        "- Satellite imagery acquisition<br>"
-        "- Manual annotation in Roboflow<br>"
-        "- YOLOv8n / YOLOv11n training<br>"
-        "- Field validation on more than **7,900** real satellite tiles<br><br>"
+        "The complete AI workflow includes:\n\n"
+        "• Public data collection\n\n"
+        "• Satellite imagery acquisition\n\n"
+        "• Manual annotation in Roboflow\n\n"
+        "• YOLOv8n / YOLOv11n training\n\n"
+        "• Field validation on more than **7,900** real satellite tiles\n\n"
 
         "This dashboard provides transparent access to the AI pipeline, dataset, model performance, "
         "and documented limitations."
@@ -446,12 +447,12 @@ TR = {
         "demonstra como a Visão Computacional pode contribuir para análise urbana, mapeamento "
         "de infraestrutura e apoio à tomada de decisão em aplicações futuras de cidades inteligentes.\n\n"
 
-        "O fluxo completo de IA inclui:<br><br>"
-        "- Coleta de dados públicos<br>"
-        "- Obtenção de imagens de satélite<br>"
-        "- Anotação manual no Roboflow<br>"
-        "- Treinamento de modelos YOLOv8n / YOLOv11n<br>"
-        "- Validação em campo com mais de **7.900** mosaicos reais<br><br>"
+        "O fluxo completo de IA inclui:\n\n"
+        "• Coleta de dados públicos\n\n"
+        "• Obtenção de imagens de satélite\n\n"
+        "• Anotação manual no Roboflow\n\n"
+        "• Treinamento de modelos YOLOv8n / YOLOv11n\n\n"
+        "• Validação em campo com mais de **7.900** mosaicos reais\n\n"
 
         "Este dashboard apresenta de forma transparente o pipeline de IA, o conjunto de dados, "
         "o desempenho do modelo e suas limitações documentadas."
