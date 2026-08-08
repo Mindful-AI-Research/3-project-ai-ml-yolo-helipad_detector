@@ -114,8 +114,7 @@ https://github.com/user-attachments/assets/5b7d581c-ab5e-416e-8471-d91136b2ada0
 
   <a href="https://canva.link/0781blpvt3td2li" rel="noopener noreferrer">
     <img 
-      src="https://img.shields.io/badge/React%20Presentation-Slides%20and%20Overview-0f766e?style=for-the-badge&logo=jupyter&logoColor=white" 
-      alt="React Presentation Slides and Overview"
+      src="https://legendary-kangaroo-1936b9.netlify.app/"
       style="height: 32px; width: auto; margin-right: 8px;"
     />
   </a>
