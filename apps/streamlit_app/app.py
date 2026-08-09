@@ -72,7 +72,7 @@ TR = {
     },
     "sidebar.replay_heli": {"en": "Replay flyby", "pt": "Repetir sobrevoo"},
     "sidebar.spin_heli": {"en": "Spin", "pt": "Girar"},
-    "sidebar.extras": {"en": "🎬 Extras (music & animation)", "pt": "🎬 Extras (música & animação)"},
+    "sidebar.extras": {"en": "🎬 Extras (helicopter animation)", "pt": "🎬 Extras (animação do helicóptero)"},
     "about.discovery.title": {"en": "🗺️ Discovery dataset coverage", "pt": "🗺️ Cobertura do dataset de descoberta"},
     "about.discovery.body": {
         "en": "Points collected by the geospatial automation (`helipad_bot.py`) across Brazil, outside São Paulo — used to widen the search for real helipad coordinates before triage and annotation.",
@@ -1222,9 +1222,9 @@ with st.sidebar:
     )
     st.session_state["lang"] = "en" if lang_choice.startswith("🇬🇧") else "pt"
 
-    with st.expander(t("sidebar.extras"), expanded=False):
-        render_music_toggle()
+    render_music_toggle()
 
+    with st.expander(t("sidebar.extras"), expanded=False):
         heli_col1, heli_col2 = st.columns(2)
         with heli_col1:
             if st.button("🚁 " + t("sidebar.replay_heli"), use_container_width=True):
