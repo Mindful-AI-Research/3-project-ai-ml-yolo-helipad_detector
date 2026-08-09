@@ -1162,7 +1162,9 @@ if "heli_flight_shown" not in st.session_state:
       }
       .heli-flyby {
         position: absolute; font-size: 34px;
-        animation: heli-fly-across 5.5s cubic-bezier(.45,.05,.55,.95) 1 forwards;
+        /* slower per lap (7s) and flies back and forth 3 times total
+           (alternate direction each pass — ida, volta, ida) */
+        animation: heli-fly-across 7s cubic-bezier(.45,.05,.55,.95) 3 alternate forwards;
         filter: drop-shadow(0 2px 6px rgba(0,0,0,.35));
       }
     </style>
