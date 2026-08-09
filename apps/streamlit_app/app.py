@@ -1228,11 +1228,11 @@ with st.sidebar:
         heli_col1, heli_col2 = st.columns(2)
         with heli_col1:
             if st.button("🚁 " + t("sidebar.replay_heli"), use_container_width=True):
-                st.session_state["heli_replay_nonce"] += 1
+                st.session_state["heli_flight_start"] = time.time()
                 st.rerun()
         with heli_col2:
             if st.button("🌀 " + t("sidebar.spin_heli"), use_container_width=True):
-                st.session_state["heli_spin_nonce"] += 1
+                st.session_state["heli_spin_start"] = time.time()
                 st.rerun()
 
     st.markdown(f"### {t('sidebar.model')}")
@@ -1284,131 +1284,75 @@ def detect_helipad(image, model: YOLO, conf: float):
 
 # ========================= INTERFACE =========================
 
-# ---- Flying helicopter, present on every tab (self-contained iframe
-# injecting into the PARENT document) ----
+# ---- Flying helicopter (self-contained iframe — no cross-frame access) ----
 #
-# Streamlit's tabs never trigger a script rerun — all tab content is
-# already in the DOM at once, and switching tabs is purely a client-side
-# CSS show/hide. So a Python-only "run once at the top" approach can never
-# know when the user changes tabs. Instead: the iframe below injects a
-# single persistent helicopter element straight into the PARENT document
-# (works because a components.html iframe using srcdoc, without a sandbox
-# override, inherits the parent's origin) with position:fixed, so it
-# floats above every tab, plus a click-listener on Streamlit's tab
-# buttons that restarts the flight animation whenever a different tab is
-# selected. Matches BOTH role="tab" (the ARIA attribute BaseWeb always
-# sets, most reliable) and data-baseweb="tab" (belt-and-suspenders) since
-# relying on only one turned out to miss real clicks. The style/element/
-# listener are only created once (guarded by DOM id) even though
-# Streamlit re-executes this components.html call on every rerun; small
-# "nonce" values let the sidebar buttons force a replay/spin on demand.
-LAP_SECONDS = 7
+# Earlier version tried to inject the helicopter into the PARENT document
+# (window.parent.document) so it could float above every tab and replay on
+# tab clicks. That relies on the components.html iframe being same-origin
+# with the main app; if Streamlit ever adds a `sandbox` attribute without
+# `allow-same-origin`, that access throws and gets silently swallowed by
+# the try/catch — nothing renders, no visible error. That's almost
+# certainly why it stopped showing up. This version never leaves its own
+# iframe, so there's no cross-origin gamble at all — the trade-off is it
+# only animates across the width of this iframe (placed once, above the
+# tabs, so it's still visible on every tab on initial load / scroll-to-top)
+# rather than floating over the whole viewport regardless of scroll.
+#
+# Same real-clock trick as before to survive mid-flight Streamlit reruns:
+# any widget click anywhere reruns the whole script and recreates this
+# iframe from scratch, so a plain "already played" boolean would freeze
+# the animation wherever it happened to be. Tracking *when* it started and
+# feeding elapsed real time back in as a negative animation-delay lets a
+# freshly recreated iframe resume from the correct point instead.
+LAP_SECONDS = 6
 LAPS = 3
+TOTAL_FLIGHT_SECONDS = LAP_SECONDS * LAPS
 
-if "heli_replay_nonce" not in st.session_state:
-    st.session_state["heli_replay_nonce"] = 0
-if "heli_spin_nonce" not in st.session_state:
-    st.session_state["heli_spin_nonce"] = 0
+if "heli_flight_start" not in st.session_state:
+    st.session_state["heli_flight_start"] = time.time()
+if "heli_spin_start" not in st.session_state:
+    st.session_state["heli_spin_start"] = None
 
-components.html(f"""
-<script>
-(function() {{
-  try {{
-    var doc = window.parent.document;
+_heli_elapsed = time.time() - st.session_state["heli_flight_start"]
+_heli_still_flying = _heli_elapsed < TOTAL_FLIGHT_SECONDS
 
-    // Respect the OS/browser "reduce motion" accessibility setting —
-    // skip the flying/spinning helicopter entirely for anyone who has it
-    // turned on (motion sensitivity, vestibular disorders, or just a
-    // personal preference). Nothing else in the app depends on this
-    // element, so bailing out here is fully safe.
-    if (doc.defaultView && doc.defaultView.matchMedia &&
-        doc.defaultView.matchMedia('(prefers-reduced-motion: reduce)').matches) {{
-      return;
-    }}
+_heli_spinning = False
+_spin_elapsed = 0.0
+if st.session_state["heli_spin_start"] is not None:
+    _spin_elapsed = time.time() - st.session_state["heli_spin_start"]
+    _heli_spinning = _spin_elapsed < 2.2
 
-    var flyNonce = "{st.session_state['heli_replay_nonce']}";
-    var spinNonce = "{st.session_state['heli_spin_nonce']}";
-
-    if (!doc.getElementById('heli-flyby-style')) {{
-      var style = doc.createElement('style');
-      style.id = 'heli-flyby-style';
-      style.textContent = `
-        @keyframes heli-fly-across-global {{
-          0%   {{ left: 0%;   top: 64px; transform: rotate(-4deg)  scale(1);    opacity: 0; }}
-          8%   {{ opacity: 1; }}
-          18%  {{ top: 50px;  transform: rotate(14deg)  scale(1.04); }}
-          34%  {{ top: 74px;  transform: rotate(-16deg) scale(1); }}
-          50%  {{ left: 48%;  top: 54px;  transform: rotate(10deg)  scale(1.05); }}
-          66%  {{ top: 76px;  transform: rotate(-14deg) scale(1); }}
-          82%  {{ top: 48px;  transform: rotate(16deg)  scale(1.04); }}
-          92%  {{ opacity: 1; }}
-          100% {{ left: 94%;  top: 62px;  transform: rotate(-5deg)  scale(1);   opacity: 0; }}
-        }}
-        @keyframes heli-spin-global {{
-          0%   {{ transform: rotate(0deg)   scale(1);    opacity: 1; }}
-          85%  {{ transform: rotate(360deg) scale(1.15); opacity: 1; }}
-          100% {{ transform: rotate(360deg) scale(1);    opacity: 0; }}
-        }}
-        #heli-flyby-global {{
-          position: fixed; left: 0; top: 64px; font-size: 34px; z-index: 999999;
-          pointer-events: none;
-          filter: drop-shadow(0 2px 6px rgba(0,0,0,.35));
-        }}
-      `;
-      doc.head.appendChild(style);
-    }}
-
-    var heli = doc.getElementById('heli-flyby-global');
-    if (!heli) {{
-      heli = doc.createElement('div');
-      heli.id = 'heli-flyby-global';
-      heli.textContent = '🚁';
-      heli.dataset.lastFlyNonce = flyNonce;   // don't fly again on the render that creates it — replayFlight() below handles the first flight
-      heli.dataset.lastSpinNonce = spinNonce; // don't spin on creation, only on an actual button click later
-      doc.body.appendChild(heli);
-    }}
-
-    function replayFlight() {{
-      heli.style.left = '0';
-      heli.style.animation = 'none';
-      void heli.offsetWidth; // force reflow so the restart actually takes effect
-      heli.style.animation = 'heli-fly-across-global {LAP_SECONDS}s cubic-bezier(.45,.05,.55,.95) {LAPS} alternate forwards';
-    }}
-
-    function spinFlight() {{
-      heli.style.left = '46%';
-      heli.style.top = '64px';
-      heli.style.animation = 'none';
-      void heli.offsetWidth;
-      heli.style.animation = 'heli-spin-global 2.2s ease-in-out 1 forwards';
-    }}
-
-    // First-ever mount: fly in once immediately.
-    if (heli.dataset.mounted !== '1') {{
-      heli.dataset.mounted = '1';
-      replayFlight();
-    }} else {{
-      if (heli.dataset.lastFlyNonce !== flyNonce) {{
-        heli.dataset.lastFlyNonce = flyNonce;
-        replayFlight();
+if _heli_still_flying or _heli_spinning:
+    components.html(f"""
+    <style>
+      html, body {{ margin:0; padding:0; overflow:hidden; background:transparent; }}
+      @keyframes heli-fly-across {{
+        0%   {{ left: 0%;   top: 24px; transform: rotate(-4deg)  scale(1);    opacity: 0; }}
+        8%   {{ opacity: 1; }}
+        18%  {{ top: 10px;  transform: rotate(14deg)  scale(1.04); }}
+        34%  {{ top: 30px;  transform: rotate(-16deg) scale(1); }}
+        50%  {{ left: 48%;  top: 14px;  transform: rotate(10deg)  scale(1.05); }}
+        66%  {{ top: 32px;  transform: rotate(-14deg) scale(1); }}
+        82%  {{ top: 8px;   transform: rotate(16deg)  scale(1.04); }}
+        92%  {{ opacity: 1; }}
+        100% {{ left: 94%;  top: 22px;  transform: rotate(-5deg)  scale(1);   opacity: 0; }}
       }}
-      if (heli.dataset.lastSpinNonce !== spinNonce) {{
-        heli.dataset.lastSpinNonce = spinNonce;
-        spinFlight();
+      @keyframes heli-spin {{
+        0%   {{ transform: rotate(0deg)   scale(1);    opacity: 1; }}
+        85%  {{ transform: rotate(360deg) scale(1.15); opacity: 1; }}
+        100% {{ transform: rotate(360deg) scale(1);    opacity: 0; }}
       }}
-    }}
-
-    if (!doc.body.dataset.heliListenerAttached) {{
-      doc.body.dataset.heliListenerAttached = '1';
-      doc.addEventListener('click', function(e) {{
-        var tabBtn = e.target.closest('[role="tab"], [data-baseweb="tab"]');
-        if (tabBtn) replayFlight();
-      }}, true);
-    }}
-  }} catch (e) {{ /* cross-origin iframe — feature unavailable in this Streamlit setup */ }}
-}})();
-</script>
-""", height=0)
+      .heli-flyby {{
+        position: absolute; font-size: 34px;
+        filter: drop-shadow(0 2px 6px rgba(0,0,0,.35));
+      }}
+      @media (prefers-reduced-motion: reduce) {{
+        .heli-flyby {{ display: none; }}
+      }}
+    </style>
+    {"<div class='heli-flyby' style='animation: heli-spin 2.2s ease-in-out 1 forwards; animation-delay: -" + str(_spin_elapsed) + "s; left:46%; top:14px;'>🚁</div>" if _heli_spinning else
+     "<div class='heli-flyby' style='animation: heli-fly-across " + str(LAP_SECONDS) + "s cubic-bezier(.45,.05,.55,.95) " + str(LAPS) + " alternate forwards; animation-delay: -" + str(_heli_elapsed) + "s;'>🚁</div>"}
+    """, height=60)
 
 st.markdown(f'<h1 class="main-title">{t("main.title")}</h1>', unsafe_allow_html=True)
 st.markdown(f'<p class="subtitle">{t("main.subtitle")}</p>', unsafe_allow_html=True)
@@ -2144,6 +2088,28 @@ with tab_field:
 st.markdown("---")
 
 st.markdown(f"""
+<div style="text-align:center; padding: 6px 0 4px 0;">
+  <a href="https://github.com/Mindful-AI-Research" target="_blank" rel="noopener noreferrer"
+     style="text-decoration:none; font-family: Georgia, 'Times New Roman', serif; font-size:30px;
+            letter-spacing:.01em;">
+    <span style="color:#ffffff;">𖤐</span>
+    <span style="color:#00FFFF; font-weight:600;"> Mindful</span>
+    <span style="color:#ffffff;"> AI</span>
+    <span style="color:#00FFFF;"> ॐ</span>
+  </a>
+</div>
+
+<p align="center" style="margin: 10px 0 22px 0;">
+  <a href="https://github.com/sponsors/Mindful-AI-Research" target="_blank" rel="noopener noreferrer">
+    <img src="https://img.shields.io/badge/Sponsor-%E2%99%A5-0a1f44?style=flat-square&labelColor=0a1f44" alt="Sponsor" height="28" style="vertical-align:middle;">
+  </a>
+  <a href="https://github.com/sponsors/Mindful-AI-Research" target="_blank" rel="noopener noreferrer">
+    <img src="https://img.shields.io/badge/Sponsor-%E0%A5%90%20%E2%8B%86%20Mindful%20AI%20%F0%96%A4%90%20%E2%8B%86-00FFFF?style=flat-square&logo=githubsponsors&logoColor=white&labelColor=0a1f44" alt="Sponsor ॐ ⋆ Mindful AI 𖤐 ⋆" height="28" style="vertical-align:middle;">
+  </a>
+</p>
+
+<hr style="border:none; border-top:1px solid rgba(255,255,255,0.15); max-width: 900px; margin: 0 auto 24px auto;">
+
 <p style="text-align:center; color:rgba(255,255,255,0.30); margin:0;">
 {t("footer.tagline")}
 </p>
@@ -2154,17 +2120,5 @@ st.markdown(f"""
 
 <p style="text-align:center; color:rgba(255,255,255,0.30); margin:6px 0 0 0; font-size:12px;">
 {t("footer.line3")}
-</p>
-
-<p style="text-align:center; margin:16px 0 0 0;">
-  <a href="https://github.com/Mindful-AI-Research" target="_blank" rel="noopener noreferrer"
-     style="text-decoration:none; font-size:13px; font-weight:600; letter-spacing:.03em;
-            border:1px solid rgba(20,184,166,0.35); border-radius:999px; padding:5px 14px;
-            transition:opacity .15s;">
-    <span style="color:#ffffff;">𖤐</span>
-    <span style="color:#14b8a6;"> Mindful</span>
-    <span style="color:#ffffff;"> AI</span>
-    <span style="color:#14b8a6;"> ॐ</span>
-  </a>
 </p>
 """, unsafe_allow_html=True)
