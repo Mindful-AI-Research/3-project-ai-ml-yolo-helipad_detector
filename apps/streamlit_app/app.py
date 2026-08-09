@@ -2083,26 +2083,32 @@ with tab_field:
 # Footer
 st.markdown("---")
 
-st.markdown(f"""
+components.html("""
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&display=swap" rel="stylesheet">
 <style>
-  @keyframes mindful-glow {{
-    0%   {{ text-shadow: 0 0 6px rgba(0,255,255,0.35), 0 0 14px rgba(0,255,255,0.15); }}
-    50%  {{ text-shadow: 0 0 18px rgba(0,255,255,0.85), 0 0 38px rgba(0,255,255,0.45), 0 0 56px rgba(0,255,255,0.20); }}
-    100% {{ text-shadow: 0 0 6px rgba(0,255,255,0.35), 0 0 14px rgba(0,255,255,0.15); }}
-  }}
+  html, body { margin:0; padding:0; overflow:hidden; background:transparent; }
+  @keyframes mindful-glow {
+    0%   { text-shadow: 0 0 6px rgba(0,255,255,0.35), 0 0 14px rgba(0,255,255,0.15); }
+    50%  { text-shadow: 0 0 20px rgba(0,255,255,0.95), 0 0 42px rgba(0,255,255,0.55), 0 0 60px rgba(0,255,255,0.25); }
+    100% { text-shadow: 0 0 6px rgba(0,255,255,0.35), 0 0 14px rgba(0,255,255,0.15); }
+  }
+  .mindful-brand {
+    display: block; text-align: center; text-decoration: none;
+    font-family: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
+    font-weight: 700; font-size: 34px; letter-spacing: .02em;
+    animation: mindful-glow 3.2s ease-in-out infinite;
+  }
+  .mindful-brand span { text-decoration: none; }
+  @media (prefers-reduced-motion: reduce) {
+    .mindful-brand { animation: none; }
+  }
 </style>
+<a class="mindful-brand" href="https://github.com/Mindful-AI-Research" target="_blank" rel="noopener noreferrer">
+  <span style="color:#ffffff;">𖤐</span><span style="color:#00FFFF;"> Mindful</span><span style="color:#ffffff;"> AI</span><span style="color:#00FFFF;"> ॐ</span>
+</a>
+""", height=52)
 
-<div style="text-align:center; padding: 6px 0 4px 0;">
-  <a href="https://github.com/Mindful-AI-Research" target="_blank" rel="noopener noreferrer"
-     style="text-decoration:none; font-family:'Cormorant Garamond',Georgia,'Times New Roman',serif;
-            font-weight:700; font-size:34px; letter-spacing:.02em;
-            animation-name: mindful-glow; animation-duration: 3.2s; animation-timing-function: ease-in-out;
-            animation-iteration-count: infinite; animation-direction: normal;">
-    <span style="color:#ffffff; text-decoration:none;">𖤐</span><span style="color:#00FFFF; text-decoration:none;"> Mindful</span><span style="color:#ffffff; text-decoration:none;"> AI</span><span style="color:#00FFFF; text-decoration:none;"> ॐ</span>
-  </a>
-</div>
-
+st.markdown(f"""
 <p align="center" style="margin: 10px 0 22px 0;">
   <a href="https://github.com/sponsors/Mindful-AI-Research" target="_blank" rel="noopener noreferrer">
     <img src="https://img.shields.io/badge/Sponsor-%E0%A5%90%20%E2%8B%86%20Mindful%20AI%20%F0%96%A4%90%20%E2%8B%86-00FFFF?style=flat-square&logo=githubsponsors&logoColor=white&labelColor=0a1f44" alt="Sponsor ॐ ⋆ Mindful AI 𖤐 ⋆" height="28" style="vertical-align:middle;">
