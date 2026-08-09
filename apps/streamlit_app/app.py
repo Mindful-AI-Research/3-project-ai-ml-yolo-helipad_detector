@@ -2083,41 +2083,23 @@ with tab_field:
 # Footer
 st.markdown("---")
 
-st.markdown("""
+st.markdown(f"""
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&display=swap" rel="stylesheet">
 <style>
-  @keyframes mindful-glow {
-    0%, 100% {
-      text-shadow: 0 0 6px rgba(0,255,255,0.35), 0 0 14px rgba(0,255,255,0.15);
-    }
-    50% {
-      text-shadow: 0 0 16px rgba(0,255,255,0.75), 0 0 34px rgba(0,255,255,0.40), 0 0 50px rgba(0,255,255,0.18);
-    }
-  }
-  a.mindful-ai-brand,
-  a.mindful-ai-brand:hover,
-  a.mindful-ai-brand:visited,
-  a.mindful-ai-brand:active {
-    font-family: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
-    font-weight: 700;
-    font-size: 34px;
-    letter-spacing: .02em;
-    text-decoration: none !important;
-    animation: mindful-glow 3.2s ease-in-out infinite;
-  }
-  @media (prefers-reduced-motion: reduce) {
-    a.mindful-ai-brand { animation: none; }
-  }
+  @keyframes mindful-glow {{
+    0%   {{ text-shadow: 0 0 6px rgba(0,255,255,0.35), 0 0 14px rgba(0,255,255,0.15); }}
+    50%  {{ text-shadow: 0 0 18px rgba(0,255,255,0.85), 0 0 38px rgba(0,255,255,0.45), 0 0 56px rgba(0,255,255,0.20); }}
+    100% {{ text-shadow: 0 0 6px rgba(0,255,255,0.35), 0 0 14px rgba(0,255,255,0.15); }}
+  }}
 </style>
-""", unsafe_allow_html=True)
 
-st.markdown(f"""
 <div style="text-align:center; padding: 6px 0 4px 0;">
-  <a href="https://github.com/Mindful-AI-Research" target="_blank" rel="noopener noreferrer" class="mindful-ai-brand">
-    <span style="color:#ffffff;">𖤐</span>
-    <span style="color:#00FFFF;"> Mindful</span>
-    <span style="color:#ffffff;"> AI</span>
-    <span style="color:#00FFFF;"> ॐ</span>
+  <a href="https://github.com/Mindful-AI-Research" target="_blank" rel="noopener noreferrer"
+     style="text-decoration:none; font-family:'Cormorant Garamond',Georgia,'Times New Roman',serif;
+            font-weight:700; font-size:34px; letter-spacing:.02em;
+            animation-name: mindful-glow; animation-duration: 3.2s; animation-timing-function: ease-in-out;
+            animation-iteration-count: infinite; animation-direction: normal;">
+    <span style="color:#ffffff; text-decoration:none;">𖤐</span><span style="color:#00FFFF; text-decoration:none;"> Mindful</span><span style="color:#ffffff; text-decoration:none;"> AI</span><span style="color:#00FFFF; text-decoration:none;"> ॐ</span>
   </a>
 </div>
 
