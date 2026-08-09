@@ -13,6 +13,7 @@ import streamlit.components.v1 as components
 import base64
 import io
 import json
+import time
 import zipfile
 from datetime import datetime
 import math
@@ -1092,7 +1093,7 @@ with st.sidebar:
     render_music_toggle()
 
     if st.button("🚁 " + t("sidebar.replay_heli")):
-        st.session_state["heli_flight_shown"] = False
+        st.session_state["heli_flight_start"] = time.time()
         st.rerun()
 
     st.markdown(f"### {t('sidebar.model')}")
@@ -1147,33 +1148,51 @@ def detect_helipad(image, model: YOLO, conf: float):
 # ---- One-off flying helicopter (self-contained iframe, no ancestor CSS
 # to fight with) ----
 # Crosses the width of the app once per session — smooth left-to-right
-# glide with a gentle bob and a few light tilts along the way (not full
-# spins, just a little "rodopio" so it reads as flight, not a glitch).
-# Gated by session_state so it plays exactly once per session, not on
-# every Streamlit rerun (which happens on every widget click).
-if "heli_flight_shown" not in st.session_state:
-    st.session_state["heli_flight_shown"] = True
-    components.html("""
+# glide with a gentle bob and a few noticeable turns along the way.
+#
+# Why the real-clock math below: Streamlit reruns the ENTIRE script on
+# every widget interaction, anywhere in the app — including things
+# unrelated to this animation (moving a slider, clicking a tab). Each
+# rerun recreates this iframe from scratch. If we just gated this with a
+# plain "show once" boolean, any click during the ~20s flight would wipe
+# the iframe mid-air and the helicopter would freeze/disappear partway
+# across the screen. Instead we track *when* the flight started in
+# session_state, compute how many seconds have elapsed in real time on
+# every rerun, and feed that in as a NEGATIVE animation-delay — so even
+# if the iframe gets torn down and rebuilt mid-flight, the CSS animation
+# picks up from the correct point instead of restarting from 0. Once the
+# real elapsed time passes the total flight duration, we stop rendering
+# it — done, exactly once per session.
+LAP_SECONDS = 7
+LAPS = 3
+TOTAL_FLIGHT_SECONDS = LAP_SECONDS * LAPS
+
+if "heli_flight_start" not in st.session_state:
+    st.session_state["heli_flight_start"] = time.time()
+
+_heli_elapsed = time.time() - st.session_state["heli_flight_start"]
+
+if _heli_elapsed < TOTAL_FLIGHT_SECONDS:
+    components.html(f"""
     <style>
-      html, body { margin:0; padding:0; overflow:hidden; background:transparent; }
-      @keyframes heli-fly-across {
-        0%   { left: 0%;    top: 24px; transform: rotate(-4deg)  scale(1);    opacity: 0; }
-        8%   { opacity: 1; }
-        18%  { top: 10px;   transform: rotate(14deg)  scale(1.04); }
-        34%  { top: 30px;   transform: rotate(-16deg) scale(1); }
-        50%  { left: 48%;   top: 14px;   transform: rotate(10deg)  scale(1.05); }
-        66%  { top: 32px;   transform: rotate(-14deg) scale(1); }
-        82%  { top: 8px;    transform: rotate(16deg)  scale(1.04); }
-        92%  { opacity: 1; }
-        100% { left: 94%;   top: 22px;   transform: rotate(-5deg)  scale(1);   opacity: 0; }
-      }
-      .heli-flyby {
+      html, body {{ margin:0; padding:0; overflow:hidden; background:transparent; }}
+      @keyframes heli-fly-across {{
+        0%   {{ left: 0%;    top: 24px; transform: rotate(-4deg)  scale(1);    opacity: 0; }}
+        8%   {{ opacity: 1; }}
+        18%  {{ top: 10px;   transform: rotate(14deg)  scale(1.04); }}
+        34%  {{ top: 30px;   transform: rotate(-16deg) scale(1); }}
+        50%  {{ left: 48%;   top: 14px;   transform: rotate(10deg)  scale(1.05); }}
+        66%  {{ top: 32px;   transform: rotate(-14deg) scale(1); }}
+        82%  {{ top: 8px;    transform: rotate(16deg)  scale(1.04); }}
+        92%  {{ opacity: 1; }}
+        100% {{ left: 94%;   top: 22px;   transform: rotate(-5deg)  scale(1);   opacity: 0; }}
+      }}
+      .heli-flyby {{
         position: absolute; font-size: 34px;
-        /* slower per lap (7s) and flies back and forth 3 times total
-           (alternate direction each pass — ida, volta, ida) */
-        animation: heli-fly-across 7s cubic-bezier(.45,.05,.55,.95) 3 alternate forwards;
+        animation: heli-fly-across {LAP_SECONDS}s cubic-bezier(.45,.05,.55,.95) {LAPS} alternate forwards;
+        animation-delay: -{_heli_elapsed}s;
         filter: drop-shadow(0 2px 6px rgba(0,0,0,.35));
-      }
+      }}
     </style>
     <div class="heli-flyby">🚁</div>
     """, height=60)
