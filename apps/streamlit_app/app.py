@@ -1670,9 +1670,15 @@ with tab_metrics:
                 </div>
                 """, unsafe_allow_html=True)
 
-                if row['Experiment'] in MODEL_WEIGHTS_BY_EXP:
-                    with st.expander(t("metrics.netron_expander")):
-                        components.iframe(netron_link, height=480, scrolling=True)
+        # Netron previews render full-width, stacked one per row below the
+        # metric cards — a narrow column (1 of up to 4) is too cramped for
+        # an interactive graph viewer with its own zoom/pan controls.
+        for i, row in metrics_df.iterrows():
+            if row['Experiment'] not in MODEL_WEIGHTS_BY_EXP:
+                continue
+            netron_link = netron_url_for(row['Experiment'])
+            with st.expander(f"{t('metrics.netron_expander')} — {row['Experiment']}", expanded=True):
+                components.iframe(netron_link, height=560, scrolling=True)
 
         st.markdown("")
         st.dataframe(
@@ -1841,9 +1847,10 @@ st.markdown(f"""
      style="text-decoration:none; font-size:13px; font-weight:600; letter-spacing:.03em;
             border:1px solid rgba(20,184,166,0.35); border-radius:999px; padding:5px 14px;
             transition:opacity .15s;">
-    <span style="color:#14b8a6;">ॐ</span>
-    <span style="color:#ffffff;"> Mindful</span>
-    <span style="color:#14b8a6;"> AI</span>
+    <span style="color:#ffffff;">𖤐</span>
+    <span style="color:#14b8a6;"> Mindful</span>
+    <span style="color:#ffffff;"> AI</span>
+    <span style="color:#14b8a6;"> ॐ</span>
   </a>
 </p>
 """, unsafe_allow_html=True)
