@@ -1287,26 +1287,24 @@ def detect_helipad(image, model: YOLO, conf: float):
 # ---- Flying helicopter (self-contained iframe — no cross-frame access) ----
 #
 # Earlier version tried to inject the helicopter into the PARENT document
-# (window.parent.document) so it could float above every tab and replay on
-# tab clicks. That relies on the components.html iframe being same-origin
-# with the main app; if Streamlit ever adds a `sandbox` attribute without
-# `allow-same-origin`, that access throws and gets silently swallowed by
-# the try/catch — nothing renders, no visible error. That's almost
-# certainly why it stopped showing up. This version never leaves its own
-# iframe, so there's no cross-origin gamble at all — the trade-off is it
-# only animates across the width of this iframe (placed once, above the
-# tabs, so it's still visible on every tab on initial load / scroll-to-top)
-# rather than floating over the whole viewport regardless of scroll.
+# (window.parent.document) so it could float above every tab. That relies
+# on the components.html iframe being same-origin with the main app; if
+# Streamlit ever adds a `sandbox` attribute without `allow-same-origin`,
+# that access throws and gets silently swallowed by the try/catch —
+# nothing renders, no visible error. This version never leaves its own
+# iframe, so there's no cross-origin gamble.
 #
-# Same real-clock trick as before to survive mid-flight Streamlit reruns:
-# any widget click anywhere reruns the whole script and recreates this
-# iframe from scratch, so a plain "already played" boolean would freeze
-# the animation wherever it happened to be. Tracking *when* it started and
-# feeding elapsed real time back in as a negative animation-delay lets a
-# freshly recreated iframe resume from the correct point instead.
+# The next version after that gated rendering behind a fixed 18-second
+# real-time window from session start, to survive mid-flight Streamlit
+# reruns. That backfired for actually *seeing* it: if more than 18 real
+# seconds passed between the page loading and someone looking at it
+# (extremely likely — plenty else on the page to read first), the window
+# had already closed and nothing rendered — indistinguishable from it
+# never having worked at all. Simpler and much more reliable: loop the
+# flight forever (CSS `infinite`), so it's simply always visible,
+# whenever anyone looks. Same negative-animation-delay trick keeps it
+# looking continuous (not restarting) across Streamlit reruns.
 LAP_SECONDS = 6
-LAPS = 3
-TOTAL_FLIGHT_SECONDS = LAP_SECONDS * LAPS
 
 if "heli_flight_start" not in st.session_state:
     st.session_state["heli_flight_start"] = time.time()
@@ -1314,7 +1312,6 @@ if "heli_spin_start" not in st.session_state:
     st.session_state["heli_spin_start"] = None
 
 _heli_elapsed = time.time() - st.session_state["heli_flight_start"]
-_heli_still_flying = _heli_elapsed < TOTAL_FLIGHT_SECONDS
 
 _heli_spinning = False
 _spin_elapsed = 0.0
@@ -1322,37 +1319,36 @@ if st.session_state["heli_spin_start"] is not None:
     _spin_elapsed = time.time() - st.session_state["heli_spin_start"]
     _heli_spinning = _spin_elapsed < 2.2
 
-if _heli_still_flying or _heli_spinning:
-    components.html(f"""
-    <style>
-      html, body {{ margin:0; padding:0; overflow:hidden; background:transparent; }}
-      @keyframes heli-fly-across {{
-        0%   {{ left: 0%;   top: 24px; transform: rotate(-4deg)  scale(1);    opacity: 0; }}
-        8%   {{ opacity: 1; }}
-        18%  {{ top: 10px;  transform: rotate(14deg)  scale(1.04); }}
-        34%  {{ top: 30px;  transform: rotate(-16deg) scale(1); }}
-        50%  {{ left: 48%;  top: 14px;  transform: rotate(10deg)  scale(1.05); }}
-        66%  {{ top: 32px;  transform: rotate(-14deg) scale(1); }}
-        82%  {{ top: 8px;   transform: rotate(16deg)  scale(1.04); }}
-        92%  {{ opacity: 1; }}
-        100% {{ left: 94%;  top: 22px;  transform: rotate(-5deg)  scale(1);   opacity: 0; }}
-      }}
-      @keyframes heli-spin {{
-        0%   {{ transform: rotate(0deg)   scale(1);    opacity: 1; }}
-        85%  {{ transform: rotate(360deg) scale(1.15); opacity: 1; }}
-        100% {{ transform: rotate(360deg) scale(1);    opacity: 0; }}
-      }}
-      .heli-flyby {{
-        position: absolute; font-size: 34px;
-        filter: drop-shadow(0 2px 6px rgba(0,0,0,.35));
-      }}
-      @media (prefers-reduced-motion: reduce) {{
-        .heli-flyby {{ display: none; }}
-      }}
-    </style>
-    {"<div class='heli-flyby' style='animation: heli-spin 2.2s ease-in-out 1 forwards; animation-delay: -" + str(_spin_elapsed) + "s; left:46%; top:14px;'>🚁</div>" if _heli_spinning else
-     "<div class='heli-flyby' style='animation: heli-fly-across " + str(LAP_SECONDS) + "s cubic-bezier(.45,.05,.55,.95) " + str(LAPS) + " alternate forwards; animation-delay: -" + str(_heli_elapsed) + "s;'>🚁</div>"}
-    """, height=60)
+components.html(f"""
+<style>
+  html, body {{ margin:0; padding:0; overflow:hidden; background:transparent; }}
+  @keyframes heli-fly-across {{
+    0%   {{ left: 0%;   top: 24px; transform: rotate(-4deg)  scale(1);    opacity: 0; }}
+    4%   {{ opacity: 1; }}
+    18%  {{ top: 10px;  transform: rotate(14deg)  scale(1.04); }}
+    34%  {{ top: 30px;  transform: rotate(-16deg) scale(1); }}
+    50%  {{ left: 48%;  top: 14px;  transform: rotate(10deg)  scale(1.05); }}
+    66%  {{ top: 32px;  transform: rotate(-14deg) scale(1); }}
+    82%  {{ top: 8px;   transform: rotate(16deg)  scale(1.04); }}
+    96%  {{ opacity: 1; }}
+    100% {{ left: 94%;  top: 22px;  transform: rotate(-5deg)  scale(1);   opacity: 0; }}
+  }}
+  @keyframes heli-spin {{
+    0%   {{ transform: rotate(0deg)   scale(1);    opacity: 1; }}
+    85%  {{ transform: rotate(360deg) scale(1.15); opacity: 1; }}
+    100% {{ transform: rotate(360deg) scale(1);    opacity: 0; }}
+  }}
+  .heli-flyby {{
+    position: absolute; font-size: 34px;
+    filter: drop-shadow(0 2px 6px rgba(0,0,0,.35));
+  }}
+  @media (prefers-reduced-motion: reduce) {{
+    .heli-flyby {{ display: none; }}
+  }}
+</style>
+{"<div class='heli-flyby' style='animation: heli-spin 2.2s ease-in-out 1 forwards; animation-delay: -" + str(_spin_elapsed) + "s; left:46%; top:14px;'>🚁</div>" if _heli_spinning else
+ "<div class='heli-flyby' style='animation: heli-fly-across " + str(LAP_SECONDS) + "s cubic-bezier(.45,.05,.55,.95) infinite alternate; animation-delay: -" + str(_heli_elapsed) + "s;'>🚁</div>"}
+""", height=60)
 
 st.markdown(f'<h1 class="main-title">{t("main.title")}</h1>', unsafe_allow_html=True)
 st.markdown(f'<p class="subtitle">{t("main.subtitle")}</p>', unsafe_allow_html=True)
@@ -2088,7 +2084,7 @@ with tab_field:
 st.markdown("---")
 
 st.markdown("""
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;1,600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&display=swap" rel="stylesheet">
 <style>
   @keyframes mindful-glow {
     0%, 100% {
@@ -2100,8 +2096,7 @@ st.markdown("""
   }
   .mindful-ai-brand {
     font-family: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
-    font-style: italic;
-    font-weight: 600;
+    font-weight: 700;
     font-size: 34px;
     letter-spacing: .02em;
     text-decoration: none;
@@ -2124,9 +2119,6 @@ st.markdown(f"""
 </div>
 
 <p align="center" style="margin: 10px 0 22px 0;">
-  <a href="https://github.com/sponsors/Mindful-AI-Research" target="_blank" rel="noopener noreferrer">
-    <img src="https://img.shields.io/badge/Sponsor-%E2%99%A5-0a1f44?style=flat-square&labelColor=0a1f44" alt="Sponsor" height="28" style="vertical-align:middle;">
-  </a>
   <a href="https://github.com/sponsors/Mindful-AI-Research" target="_blank" rel="noopener noreferrer">
     <img src="https://img.shields.io/badge/Sponsor-%E0%A5%90%20%E2%8B%86%20Mindful%20AI%20%F0%96%A4%90%20%E2%8B%86-00FFFF?style=flat-square&logo=githubsponsors&logoColor=white&labelColor=0a1f44" alt="Sponsor ॐ ⋆ Mindful AI 𖤐 ⋆" height="28" style="vertical-align:middle;">
   </a>
