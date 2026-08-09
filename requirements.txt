@@ -31,6 +31,7 @@ streamlit>=1.42.0
 folium>=0.16.0
 streamlit-folium>=0.23.0
 plotly>=5.20.0
+reportlab>=4.0.0
 
 ########################
 # Selenium / Browser Automation
