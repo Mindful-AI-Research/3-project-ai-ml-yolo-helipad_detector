@@ -2087,13 +2087,37 @@ with tab_field:
 # Footer
 st.markdown("---")
 
+st.markdown("""
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;1,600&display=swap" rel="stylesheet">
+<style>
+  @keyframes mindful-glow {
+    0%, 100% {
+      text-shadow: 0 0 6px rgba(0,255,255,0.35), 0 0 14px rgba(0,255,255,0.15);
+    }
+    50% {
+      text-shadow: 0 0 16px rgba(0,255,255,0.75), 0 0 34px rgba(0,255,255,0.40), 0 0 50px rgba(0,255,255,0.18);
+    }
+  }
+  .mindful-ai-brand {
+    font-family: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
+    font-style: italic;
+    font-weight: 600;
+    font-size: 34px;
+    letter-spacing: .02em;
+    text-decoration: none;
+    animation: mindful-glow 3.2s ease-in-out infinite;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .mindful-ai-brand { animation: none; }
+  }
+</style>
+""", unsafe_allow_html=True)
+
 st.markdown(f"""
 <div style="text-align:center; padding: 6px 0 4px 0;">
-  <a href="https://github.com/Mindful-AI-Research" target="_blank" rel="noopener noreferrer"
-     style="text-decoration:none; font-family: Georgia, 'Times New Roman', serif; font-size:30px;
-            letter-spacing:.01em;">
+  <a href="https://github.com/Mindful-AI-Research" target="_blank" rel="noopener noreferrer" class="mindful-ai-brand">
     <span style="color:#ffffff;">𖤐</span>
-    <span style="color:#00FFFF; font-weight:600;"> Mindful</span>
+    <span style="color:#00FFFF;"> Mindful</span>
     <span style="color:#ffffff;"> AI</span>
     <span style="color:#00FFFF;"> ॐ</span>
   </a>
