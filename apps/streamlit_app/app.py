@@ -72,6 +72,22 @@ TR = {
     },
     "sidebar.replay_heli": {"en": "Replay flyby", "pt": "Repetir sobrevoo"},
     "sidebar.spin_heli": {"en": "Spin", "pt": "Girar"},
+    "sidebar.extras": {"en": "🎬 Extras (music & animation)", "pt": "🎬 Extras (música & animação)"},
+    "about.discovery.title": {"en": "🗺️ Discovery dataset coverage", "pt": "🗺️ Cobertura do dataset de descoberta"},
+    "about.discovery.body": {
+        "en": "Points collected by the geospatial automation (`helipad_bot.py`) across Brazil, outside São Paulo — used to widen the search for real helipad coordinates before triage and annotation.",
+        "pt": "Pontos coletados pela automação geoespacial (`helipad_bot.py`) pelo Brasil, fora de São Paulo — usados para ampliar a busca por coordenadas reais de helipontos antes da triagem e anotação.",
+    },
+    "about.discovery.points": {"en": "Points collected", "pt": "Pontos coletados"},
+    "about.discovery.regions": {"en": "Distinct locations", "pt": "Locais distintos"},
+    "about.discovery.pending": {
+        "en": "State-by-state breakdown pending — run `geocode_states.py` to enrich this with a full per-state count.",
+        "pt": "Detalhamento por estado pendente — rode `geocode_states.py` para enriquecer isso com contagem completa por estado.",
+    },
+    "about.discovery.missing": {
+        "en": "Discovery coordinates CSV not found at `{path}`.",
+        "pt": "CSV de coordenadas de descoberta não encontrado em `{path}`.",
+    },
 
     # ---- Main header ----
     "main.title": {"en": "🚁 Helipad Detection", "pt": "🚁 Detecção de Helipontos"},
@@ -491,6 +507,13 @@ TR = {
     "dl.field_validation": {"en": "**🌍 Field Validation**", "pt": "**🌍 Validação de Campo**"},
     "dl.field_json_button": {"en": "⬇️ Detection Summary by Region (.json)", "pt": "⬇️ Resumo de Detecção por Região (.json)"},
     "dl.field_log_button": {"en": "⬇️ Field Triage Log (.txt)", "pt": "⬇️ Log de Triagem de Campo (.txt)"},
+    "dl.session_summary.title": {"en": "📄 This session's summary", "pt": "📄 Resumo desta sessão"},
+    "dl.session_summary.body": {
+        "en": "A quick one-page PDF snapshot — active model, confidence threshold, experiment table, and field-validation totals — handy to attach without regenerating the full report.",
+        "pt": "Um instantâneo rápido de uma página em PDF — modelo ativo, confiança mínima, tabela de experimentos e totais da validação de campo — útil pra anexar sem regenerar o relatório completo.",
+    },
+    "dl.session_summary.button": {"en": "🧾 Generate summary", "pt": "🧾 Gerar resumo"},
+    "dl.session_summary.download_button": {"en": "⬇️ Download session summary (.pdf)", "pt": "⬇️ Baixar resumo da sessão (.pdf)"},
     "dl.repo_title": {"en": "Explore the full source code", "pt": "Explore o código-fonte completo"},
     "dl.repo_desc": {
         "en": "Architecture, datasets, notebooks, and the complete AI pipeline are all on GitHub.",
@@ -507,6 +530,7 @@ TR = {
     "metrics.netron_view": {"en": "🔎 Open in Netron (new tab)", "pt": "🔎 Abrir no Netron (nova aba)"},
     "metrics.netron_manual": {"en": "🔎 Open Netron (upload manually)", "pt": "🔎 Abrir Netron (upload manual)"},
     "metrics.netron_expander": {"en": "🧠 Preview architecture inline", "pt": "🧠 Prévia da arquitetura aqui"},
+    "metrics.netron_load_button": {"en": "▶ Load preview (fetches from netron.app)", "pt": "▶ Carregar prévia (busca do netron.app)"},
     "metrics.outperformed": {
         "en": "**{exp}** outperformed exp1 on mAP@50-95 ({delta}).",
         "pt": "**{exp}** superou o exp1 em mAP@50-95 ({delta}).",
@@ -881,6 +905,113 @@ def load_helipad_locations(csv_path: Path = COORDS_CSV) -> pd.DataFrame:
     return df.dropna(subset=["lat", "lon"])
 
 
+@st.cache_data(show_spinner=False)
+def load_discovery_dataset_stats(csv_path: Path = COORDS_CSV) -> dict | None:
+    """Quick coverage summary of the national helipad-discovery dataset
+    (src/geospatial/helipad_bot.py output) — total points collected and
+    how many distinct location names appear, as a proxy for geographic
+    diversity. A full per-state breakdown needs geocode_states.py to have
+    been run first (pending as of this writing), so this only shows what's
+    derivable from the raw CSV today."""
+    if not csv_path.exists():
+        return None
+    try:
+        df = pd.read_csv(csv_path)
+    except Exception:
+        return None
+    bairro_col = "Nome do Bairro" if "Nome do Bairro" in df.columns else None
+    return {
+        "total_points": len(df),
+        "distinct_locations": df[bairro_col].nunique() if bairro_col else None,
+    }
+
+
+def build_session_summary_pdf(metrics_df: pd.DataFrame, selected_model, conf_threshold, lang: str) -> bytes:
+    """One-page PDF snapshot of the current dashboard session — active
+    model, confidence threshold, the full experiment comparison table, and
+    field-validation totals if available. Meant as something quick to
+    attach to an email or the repo without regenerating the full 25-page
+    Word report every time a small thing changes."""
+    from reportlab.lib.pagesizes import letter
+    from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle
+    from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+    from reportlab.lib import colors
+    from reportlab.lib.units import cm
+
+    buf = io.BytesIO()
+    doc = SimpleDocTemplate(buf, pagesize=letter, topMargin=2 * cm, bottomMargin=2 * cm)
+    styles = getSampleStyleSheet()
+    title_style = ParagraphStyle("HeliTitle", parent=styles["Title"], textColor=colors.HexColor("#0E756D"))
+    h2_style = ParagraphStyle("HeliH2", parent=styles["Heading2"], textColor=colors.HexColor("#1E3A8A"),
+                               spaceBefore=14, spaceAfter=6)
+    body_style = styles["Normal"]
+
+    is_pt = lang == "pt"
+    story = []
+
+    story.append(Paragraph("🚁 Helipad Detector" if not is_pt else "🚁 Helipad Detector", title_style))
+    story.append(Paragraph(
+        "Session summary — Helipad Detector dashboard" if not is_pt else "Resumo de sessão — dashboard Helipad Detector",
+        styles["Heading3"]))
+    story.append(Paragraph(datetime.now().strftime("%Y-%m-%d %H:%M"), body_style))
+    story.append(Spacer(1, 14))
+
+    story.append(Paragraph("Active configuration" if not is_pt else "Configuração ativa", h2_style))
+    config_rows = [
+        ["Model" if not is_pt else "Modelo", str(selected_model) if selected_model else "—"],
+        ["Confidence threshold" if not is_pt else "Confiança mínima", f"{conf_threshold:.2f}" if conf_threshold is not None else "—"],
+        ["Language" if not is_pt else "Idioma", "Português" if is_pt else "English"],
+    ]
+    config_table = Table(config_rows, colWidths=[6 * cm, 9 * cm])
+    config_table.setStyle(TableStyle([
+        ("FONTSIZE", (0, 0), (-1, -1), 10),
+        ("TEXTCOLOR", (0, 0), (0, -1), colors.HexColor("#0E756D")),
+        ("BOTTOMPADDING", (0, 0), (-1, -1), 6),
+        ("LINEBELOW", (0, 0), (-1, -1), 0.5, colors.HexColor("#E2E8F0")),
+    ]))
+    story.append(config_table)
+
+    if not metrics_df.empty:
+        story.append(Paragraph("Experiments" if not is_pt else "Experimentos", h2_style))
+        cols = ["Experiment", "Best Epoch", "Total Epochs", "Precision", "Recall", "mAP@50", "mAP@50-95"]
+        available_cols = [c for c in cols if c in metrics_df.columns]
+        table_data = [available_cols] + metrics_df[available_cols].astype(str).values.tolist()
+        exp_table = Table(table_data, colWidths=[2.1 * cm] * len(available_cols))
+        exp_table.setStyle(TableStyle([
+            ("BACKGROUND", (0, 0), (-1, 0), colors.HexColor("#0E756D")),
+            ("TEXTCOLOR", (0, 0), (-1, 0), colors.white),
+            ("FONTSIZE", (0, 0), (-1, -1), 8),
+            ("GRID", (0, 0), (-1, -1), 0.5, colors.HexColor("#E2E8F0")),
+            ("ALIGN", (1, 0), (-1, -1), "CENTER"),
+        ]))
+        story.append(exp_table)
+
+    field_summary = load_field_detection_summary()
+    if field_summary:
+        story.append(Paragraph("Field validation" if not is_pt else "Validação de campo", h2_style))
+        try:
+            total_tiles = sum(r.get("total_tiles", 0) for r in field_summary.values())
+            total_detected = sum(r.get("detected", 0) for r in field_summary.values())
+            rate = (total_detected / total_tiles * 100) if total_tiles else 0
+            story.append(Paragraph(
+                f"{total_detected} / {total_tiles} tiles ({rate:.1f}%) across {len(field_summary)} regions"
+                if not is_pt else
+                f"{total_detected} / {total_tiles} tiles ({rate:.1f}%) em {len(field_summary)} regiões",
+                body_style))
+        except Exception:
+            pass
+
+    story.append(Spacer(1, 20))
+    story.append(Paragraph(
+        "Generated from the Helipad Detector Streamlit dashboard — PUC-SP FACEI, Machine Learning / Computer Vision, Project P2."
+        if not is_pt else
+        "Gerado a partir do dashboard Streamlit do Helipad Detector — PUC-SP FACEI, Machine Learning / Visão Computacional, Projeto P2.",
+        ParagraphStyle("Footer", parent=body_style, fontSize=8, textColor=colors.HexColor("#64748B"))))
+
+    doc.build(story)
+    return buf.getvalue()
+
+
 def get_selected_model():
     if not MODEL_OPTIONS:
         return None
@@ -994,7 +1125,7 @@ def _load_audio_base64(path: str):
 
 def render_music_toggle():
     audio_b64 = _load_audio_base64(str(AUDIO_PATH))
-    st.markdown(f"### {t('sidebar.music.title')}")
+    st.caption(t("sidebar.music.title"))
     if not audio_b64:
         st.caption(t("sidebar.music.missing"))
         return
@@ -1091,17 +1222,18 @@ with st.sidebar:
     )
     st.session_state["lang"] = "en" if lang_choice.startswith("🇬🇧") else "pt"
 
-    render_music_toggle()
+    with st.expander(t("sidebar.extras"), expanded=False):
+        render_music_toggle()
 
-    heli_col1, heli_col2 = st.columns(2)
-    with heli_col1:
-        if st.button("🚁 " + t("sidebar.replay_heli"), use_container_width=True):
-            st.session_state["heli_replay_nonce"] += 1
-            st.rerun()
-    with heli_col2:
-        if st.button("🌀 " + t("sidebar.spin_heli"), use_container_width=True):
-            st.session_state["heli_spin_nonce"] += 1
-            st.rerun()
+        heli_col1, heli_col2 = st.columns(2)
+        with heli_col1:
+            if st.button("🚁 " + t("sidebar.replay_heli"), use_container_width=True):
+                st.session_state["heli_replay_nonce"] += 1
+                st.rerun()
+        with heli_col2:
+            if st.button("🌀 " + t("sidebar.spin_heli"), use_container_width=True):
+                st.session_state["heli_spin_nonce"] += 1
+                st.rerun()
 
     st.markdown(f"### {t('sidebar.model')}")
     if not MODEL_OPTIONS:
@@ -1183,6 +1315,17 @@ components.html(f"""
 (function() {{
   try {{
     var doc = window.parent.document;
+
+    // Respect the OS/browser "reduce motion" accessibility setting —
+    // skip the flying/spinning helicopter entirely for anyone who has it
+    // turned on (motion sensitivity, vestibular disorders, or just a
+    // personal preference). Nothing else in the app depends on this
+    // element, so bailing out here is fully safe.
+    if (doc.defaultView && doc.defaultView.matchMedia &&
+        doc.defaultView.matchMedia('(prefers-reduced-motion: reduce)').matches) {{
+      return;
+    }}
+
     var flyNonce = "{st.session_state['heli_replay_nonce']}";
     var spinNonce = "{st.session_state['heli_spin_nonce']}";
 
@@ -1697,6 +1840,20 @@ with tab_about:
     </div>
     """, unsafe_allow_html=True)
 
+    st.markdown(f"### {t('about.discovery.title')}")
+    st.caption(t("about.discovery.body"))
+    _disc_stats = load_discovery_dataset_stats()
+    if _disc_stats is None:
+        st.caption(t("about.discovery.missing").format(path=COORDS_CSV))
+    else:
+        disc_col1, disc_col2 = st.columns(2)
+        with disc_col1:
+            st.metric(t("about.discovery.points"), _disc_stats["total_points"])
+        with disc_col2:
+            if _disc_stats["distinct_locations"] is not None:
+                st.metric(t("about.discovery.regions"), _disc_stats["distinct_locations"])
+        st.caption(t("about.discovery.pending"))
+
 # ====================== TAB 7: Downloads ======================
 with tab7:
     st.subheader(t("dl.subheader"))
@@ -1753,6 +1910,25 @@ with tab7:
             st.caption(t("dl.not_found").format(path=TRIAGE_LOG_PATH))
 
     st.markdown("---")
+    st.markdown(f"### {t('dl.session_summary.title')}")
+    st.caption(t("dl.session_summary.body"))
+    if st.button(t("dl.session_summary.button")):
+        st.session_state["session_pdf_bytes"] = build_session_summary_pdf(
+            metrics_df=metrics_df,
+            selected_model=st.session_state.get("model_choice"),
+            conf_threshold=conf_threshold,
+            lang=st.session_state.get("lang", "pt"),
+        )
+    if st.session_state.get("session_pdf_bytes"):
+        st.download_button(
+            t("dl.session_summary.download_button"),
+            data=st.session_state["session_pdf_bytes"],
+            file_name=f"helipad_detector_session_{datetime.now().strftime('%Y%m%d_%H%M')}.pdf",
+            mime="application/pdf",
+            use_container_width=True,
+        )
+
+    st.markdown("---")
     st.markdown(f"""
     <div class="dark-card">
         <span class="repo-icon">🚁</span>
@@ -1802,12 +1978,21 @@ with tab_metrics:
         # Netron previews render full-width, stacked one per row below the
         # metric cards — a narrow column (1 of up to 4) is too cramped for
         # an interactive graph viewer with its own zoom/pan controls.
+        # Loaded on demand (not expanded=True) so opening the Metrics tab
+        # doesn't eagerly fire 3 external requests to netron.app on every
+        # rerun — only the experiment(s) you actually want to inspect.
         for i, row in metrics_df.iterrows():
             if row['Experiment'] not in MODEL_WEIGHTS_BY_EXP:
                 continue
             netron_link = netron_url_for(row['Experiment'])
             with st.expander(f"{t('metrics.netron_expander')} — {row['Experiment']}", expanded=True):
-                components.iframe(netron_link, height=560, scrolling=True)
+                load_key = f"netron_loaded_{row['Experiment']}"
+                if st.session_state.get(load_key):
+                    components.iframe(netron_link, height=560, scrolling=True)
+                else:
+                    if st.button(t("metrics.netron_load_button"), key=f"netron_btn_{row['Experiment']}"):
+                        st.session_state[load_key] = True
+                        st.rerun()
 
         st.markdown("")
         st.dataframe(
