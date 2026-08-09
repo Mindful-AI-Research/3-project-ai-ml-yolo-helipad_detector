@@ -1346,8 +1346,8 @@ components.html(f"""
     .heli-flyby {{ display: none; }}
   }}
 </style>
-{"<div class='heli-flyby' style='animation: heli-spin 2.2s ease-in-out 1 forwards; animation-delay: -" + str(_spin_elapsed) + "s; left:46%; top:14px;'>🚁</div>" if _heli_spinning else
- "<div class='heli-flyby' style='animation: heli-fly-across " + str(LAP_SECONDS) + "s cubic-bezier(.45,.05,.55,.95) infinite alternate; animation-delay: -" + str(_heli_elapsed) + "s;'>🚁</div>"}
+{"<div class='heli-flyby' style='animation: heli-spin 2.2s ease-in-out 1 forwards; animation-delay: -" + f"{_spin_elapsed:.4f}" + "s; left:46%; top:14px;'>🚁</div>" if _heli_spinning else
+ "<div class='heli-flyby' style='animation: heli-fly-across " + str(LAP_SECONDS) + "s cubic-bezier(.45,.05,.55,.95) infinite alternate; animation-delay: -" + f"{_heli_elapsed % LAP_SECONDS:.4f}" + "s;'>🚁</div>"}
 """, height=60)
 
 st.markdown(f'<h1 class="main-title">{t("main.title")}</h1>', unsafe_allow_html=True)
@@ -2094,16 +2094,19 @@ st.markdown("""
       text-shadow: 0 0 16px rgba(0,255,255,0.75), 0 0 34px rgba(0,255,255,0.40), 0 0 50px rgba(0,255,255,0.18);
     }
   }
-  .mindful-ai-brand {
+  a.mindful-ai-brand,
+  a.mindful-ai-brand:hover,
+  a.mindful-ai-brand:visited,
+  a.mindful-ai-brand:active {
     font-family: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
     font-weight: 700;
     font-size: 34px;
     letter-spacing: .02em;
-    text-decoration: none;
+    text-decoration: none !important;
     animation: mindful-glow 3.2s ease-in-out infinite;
   }
   @media (prefers-reduced-motion: reduce) {
-    .mindful-ai-brand { animation: none; }
+    a.mindful-ai-brand { animation: none; }
   }
 </style>
 """, unsafe_allow_html=True)
