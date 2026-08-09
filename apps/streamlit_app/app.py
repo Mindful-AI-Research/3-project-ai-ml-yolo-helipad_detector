@@ -69,6 +69,7 @@ TR = {
         "en": "Background track not found — add an mp3 at `assets/audio/passacaglia-deep-house-remix.mp3` to enable this.",
         "pt": "Faixa de fundo não encontrada — adicione um mp3 em `assets/audio/passacaglia-deep-house-remix.mp3` para habilitar.",
     },
+    "sidebar.replay_heli": {"en": "Replay flyby", "pt": "Repetir sobrevoo"},
 
     # ---- Main header ----
     "main.title": {"en": "🚁 Helipad Detection", "pt": "🚁 Detecção de Helipontos"},
@@ -1089,6 +1090,10 @@ with st.sidebar:
     st.session_state["lang"] = "en" if lang_choice.startswith("🇬🇧") else "pt"
 
     render_music_toggle()
+
+    if st.button("🚁 " + t("sidebar.replay_heli")):
+        st.session_state["heli_flight_shown"] = False
+        st.rerun()
 
     st.markdown(f"### {t('sidebar.model')}")
     if not MODEL_OPTIONS:
