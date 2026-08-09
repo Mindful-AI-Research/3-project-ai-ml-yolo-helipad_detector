@@ -1093,7 +1093,7 @@ with st.sidebar:
     render_music_toggle()
 
     if st.button("🚁 " + t("sidebar.replay_heli")):
-        st.session_state["heli_flight_start"] = time.time()
+        st.session_state["heli_replay_nonce"] += 1
         st.rerun()
 
     st.markdown(f"### {t('sidebar.model')}")
@@ -1145,57 +1145,89 @@ def detect_helipad(image, model: YOLO, conf: float):
 
 # ========================= INTERFACE =========================
 
-# ---- One-off flying helicopter (self-contained iframe, no ancestor CSS
-# to fight with) ----
-# Crosses the width of the app once per session — smooth left-to-right
-# glide with a gentle bob and a few noticeable turns along the way.
+# ---- Flying helicopter, present on every tab (self-contained iframe
+# injecting into the PARENT document) ----
 #
-# Why the real-clock math below: Streamlit reruns the ENTIRE script on
-# every widget interaction, anywhere in the app — including things
-# unrelated to this animation (moving a slider, clicking a tab). Each
-# rerun recreates this iframe from scratch. If we just gated this with a
-# plain "show once" boolean, any click during the ~20s flight would wipe
-# the iframe mid-air and the helicopter would freeze/disappear partway
-# across the screen. Instead we track *when* the flight started in
-# session_state, compute how many seconds have elapsed in real time on
-# every rerun, and feed that in as a NEGATIVE animation-delay — so even
-# if the iframe gets torn down and rebuilt mid-flight, the CSS animation
-# picks up from the correct point instead of restarting from 0. Once the
-# real elapsed time passes the total flight duration, we stop rendering
-# it — done, exactly once per session.
+# Streamlit's tabs never trigger a script rerun — all tab content is
+# already in the DOM at once, and switching tabs is purely a client-side
+# CSS show/hide. So a Python-only "run once at the top" approach can never
+# know when the user changes tabs. Instead: the iframe below injects a
+# single persistent helicopter element straight into the PARENT document
+# (works because a components.html iframe using srcdoc, without a sandbox
+# override, inherits the parent's origin) with position:fixed, so it
+# floats above every tab, plus a click-listener on Streamlit's tab
+# buttons (data-baseweb="tab") that restarts the flight animation
+# whenever a different tab is selected. The style/element/listener are
+# only created once (guarded by DOM id) even though Streamlit re-executes
+# this components.html call on every rerun; a small "nonce" lets the
+# sidebar's "Repetir sobrevoo" button force a replay on demand too.
 LAP_SECONDS = 7
 LAPS = 3
-TOTAL_FLIGHT_SECONDS = LAP_SECONDS * LAPS
 
-if "heli_flight_start" not in st.session_state:
-    st.session_state["heli_flight_start"] = time.time()
+if "heli_replay_nonce" not in st.session_state:
+    st.session_state["heli_replay_nonce"] = 0
 
-_heli_elapsed = time.time() - st.session_state["heli_flight_start"]
+components.html(f"""
+<script>
+(function() {{
+  try {{
+    var doc = window.parent.document;
+    var nonce = "{st.session_state['heli_replay_nonce']}";
 
-if _heli_elapsed < TOTAL_FLIGHT_SECONDS:
-    components.html(f"""
-    <style>
-      html, body {{ margin:0; padding:0; overflow:hidden; background:transparent; }}
-      @keyframes heli-fly-across {{
-        0%   {{ left: 0%;    top: 24px; transform: rotate(-4deg)  scale(1);    opacity: 0; }}
-        8%   {{ opacity: 1; }}
-        18%  {{ top: 10px;   transform: rotate(14deg)  scale(1.04); }}
-        34%  {{ top: 30px;   transform: rotate(-16deg) scale(1); }}
-        50%  {{ left: 48%;   top: 14px;   transform: rotate(10deg)  scale(1.05); }}
-        66%  {{ top: 32px;   transform: rotate(-14deg) scale(1); }}
-        82%  {{ top: 8px;    transform: rotate(16deg)  scale(1.04); }}
-        92%  {{ opacity: 1; }}
-        100% {{ left: 94%;   top: 22px;   transform: rotate(-5deg)  scale(1);   opacity: 0; }}
-      }}
-      .heli-flyby {{
-        position: absolute; font-size: 34px;
-        animation: heli-fly-across {LAP_SECONDS}s cubic-bezier(.45,.05,.55,.95) {LAPS} alternate forwards;
-        animation-delay: -{_heli_elapsed}s;
-        filter: drop-shadow(0 2px 6px rgba(0,0,0,.35));
-      }}
-    </style>
-    <div class="heli-flyby">🚁</div>
-    """, height=60)
+    if (!doc.getElementById('heli-flyby-style')) {{
+      var style = doc.createElement('style');
+      style.id = 'heli-flyby-style';
+      style.textContent = `
+        @keyframes heli-fly-across-global {{
+          0%   {{ left: 0%;   top: 64px; transform: rotate(-4deg)  scale(1);    opacity: 0; }}
+          8%   {{ opacity: 1; }}
+          18%  {{ top: 50px;  transform: rotate(14deg)  scale(1.04); }}
+          34%  {{ top: 74px;  transform: rotate(-16deg) scale(1); }}
+          50%  {{ left: 48%;  top: 54px;  transform: rotate(10deg)  scale(1.05); }}
+          66%  {{ top: 76px;  transform: rotate(-14deg) scale(1); }}
+          82%  {{ top: 48px;  transform: rotate(16deg)  scale(1.04); }}
+          92%  {{ opacity: 1; }}
+          100% {{ left: 94%;  top: 62px;  transform: rotate(-5deg)  scale(1);   opacity: 0; }}
+        }}
+        #heli-flyby-global {{
+          position: fixed; left: 0; font-size: 34px; z-index: 999999;
+          pointer-events: none;
+          filter: drop-shadow(0 2px 6px rgba(0,0,0,.35));
+        }}
+      `;
+      doc.head.appendChild(style);
+    }}
+
+    var heli = doc.getElementById('heli-flyby-global');
+    if (!heli) {{
+      heli = doc.createElement('div');
+      heli.id = 'heli-flyby-global';
+      heli.textContent = '🚁';
+      doc.body.appendChild(heli);
+    }}
+
+    function replayFlight() {{
+      heli.style.animation = 'none';
+      void heli.offsetWidth; // force reflow so the restart actually takes effect
+      heli.style.animation = 'heli-fly-across-global {LAP_SECONDS}s cubic-bezier(.45,.05,.55,.95) {LAPS} alternate forwards';
+    }}
+
+    if (heli.dataset.lastNonce !== nonce) {{
+      heli.dataset.lastNonce = nonce;
+      replayFlight();
+    }}
+
+    if (!doc.body.dataset.heliListenerAttached) {{
+      doc.body.dataset.heliListenerAttached = '1';
+      doc.addEventListener('click', function(e) {{
+        var tabBtn = e.target.closest('[data-baseweb="tab"]');
+        if (tabBtn) replayFlight();
+      }}, true);
+    }}
+  }} catch (e) {{ /* cross-origin iframe — feature unavailable in this Streamlit setup */ }}
+}})();
+</script>
+""", height=0)
 
 st.markdown(f'<h1 class="main-title">{t("main.title")}</h1>', unsafe_allow_html=True)
 st.markdown(f'<p class="subtitle">{t("main.subtitle")}</p>', unsafe_allow_html=True)
