@@ -1138,6 +1138,35 @@ def detect_helipad(image, model: YOLO, conf: float):
     return plotted, len(result.boxes) > 0
 
 # ========================= INTERFACE =========================
+
+# ---- One-off flying helicopter (pure CSS, no JS) ----
+# Crosses the top of the screen once per session — smooth left-to-right
+# glide with a gentle bob and a few light tilts along the way (not full
+# spins, just a little "rodopio" so it reads as flight, not a glitch).
+# Gated by session_state so it plays exactly once per session, not on
+# every Streamlit rerun (which happens on every widget click).
+if "heli_flight_shown" not in st.session_state:
+    st.session_state["heli_flight_shown"] = True
+    st.markdown("""
+    <style>
+      @keyframes heli-fly-across {
+        0%   { left: -8%;   top: 18px; transform: rotate(-6deg) scale(1);   opacity: 0; }
+        8%   { opacity: 1; }
+        25%  { top: 6px;    transform: rotate(4deg)  scale(1.05); }
+        50%  { left: 50%;   top: 26px; transform: rotate(-5deg) scale(1); }
+        75%  { top: 4px;    transform: rotate(5deg)  scale(1.05); }
+        92%  { opacity: 1; }
+        100% { left: 108%;  top: 16px; transform: rotate(-3deg) scale(1);  opacity: 0; }
+      }
+      .heli-flyby {
+        position: fixed; z-index: 9999; font-size: 34px; pointer-events: none;
+        animation: heli-fly-across 5.5s cubic-bezier(.45,.05,.55,.95) 1 forwards;
+        filter: drop-shadow(0 2px 6px rgba(0,0,0,.35));
+      }
+    </style>
+    <div class="heli-flyby">🚁</div>
+    """, unsafe_allow_html=True)
+
 st.markdown(f'<h1 class="main-title">{t("main.title")}</h1>', unsafe_allow_html=True)
 st.markdown(f'<p class="subtitle">{t("main.subtitle")}</p>', unsafe_allow_html=True)
 if MODEL_OPTIONS:
