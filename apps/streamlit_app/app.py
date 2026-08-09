@@ -71,6 +71,7 @@ TR = {
         "pt": "Faixa de fundo não encontrada — adicione um mp3 em `assets/audio/passacaglia-deep-house-remix.mp3` para habilitar.",
     },
     "sidebar.replay_heli": {"en": "Replay flyby", "pt": "Repetir sobrevoo"},
+    "sidebar.spin_heli": {"en": "Spin", "pt": "Girar"},
 
     # ---- Main header ----
     "main.title": {"en": "🚁 Helipad Detection", "pt": "🚁 Detecção de Helipontos"},
@@ -1092,9 +1093,15 @@ with st.sidebar:
 
     render_music_toggle()
 
-    if st.button("🚁 " + t("sidebar.replay_heli")):
-        st.session_state["heli_replay_nonce"] += 1
-        st.rerun()
+    heli_col1, heli_col2 = st.columns(2)
+    with heli_col1:
+        if st.button("🚁 " + t("sidebar.replay_heli"), use_container_width=True):
+            st.session_state["heli_replay_nonce"] += 1
+            st.rerun()
+    with heli_col2:
+        if st.button("🌀 " + t("sidebar.spin_heli"), use_container_width=True):
+            st.session_state["heli_spin_nonce"] += 1
+            st.rerun()
 
     st.markdown(f"### {t('sidebar.model')}")
     if not MODEL_OPTIONS:
@@ -1156,23 +1163,28 @@ def detect_helipad(image, model: YOLO, conf: float):
 # (works because a components.html iframe using srcdoc, without a sandbox
 # override, inherits the parent's origin) with position:fixed, so it
 # floats above every tab, plus a click-listener on Streamlit's tab
-# buttons (data-baseweb="tab") that restarts the flight animation
-# whenever a different tab is selected. The style/element/listener are
-# only created once (guarded by DOM id) even though Streamlit re-executes
-# this components.html call on every rerun; a small "nonce" lets the
-# sidebar's "Repetir sobrevoo" button force a replay on demand too.
+# buttons that restarts the flight animation whenever a different tab is
+# selected. Matches BOTH role="tab" (the ARIA attribute BaseWeb always
+# sets, most reliable) and data-baseweb="tab" (belt-and-suspenders) since
+# relying on only one turned out to miss real clicks. The style/element/
+# listener are only created once (guarded by DOM id) even though
+# Streamlit re-executes this components.html call on every rerun; small
+# "nonce" values let the sidebar buttons force a replay/spin on demand.
 LAP_SECONDS = 7
 LAPS = 3
 
 if "heli_replay_nonce" not in st.session_state:
     st.session_state["heli_replay_nonce"] = 0
+if "heli_spin_nonce" not in st.session_state:
+    st.session_state["heli_spin_nonce"] = 0
 
 components.html(f"""
 <script>
 (function() {{
   try {{
     var doc = window.parent.document;
-    var nonce = "{st.session_state['heli_replay_nonce']}";
+    var flyNonce = "{st.session_state['heli_replay_nonce']}";
+    var spinNonce = "{st.session_state['heli_spin_nonce']}";
 
     if (!doc.getElementById('heli-flyby-style')) {{
       var style = doc.createElement('style');
@@ -1189,8 +1201,13 @@ components.html(f"""
           92%  {{ opacity: 1; }}
           100% {{ left: 94%;  top: 62px;  transform: rotate(-5deg)  scale(1);   opacity: 0; }}
         }}
+        @keyframes heli-spin-global {{
+          0%   {{ transform: rotate(0deg)   scale(1);    opacity: 1; }}
+          85%  {{ transform: rotate(360deg) scale(1.15); opacity: 1; }}
+          100% {{ transform: rotate(360deg) scale(1);    opacity: 0; }}
+        }}
         #heli-flyby-global {{
-          position: fixed; left: 0; font-size: 34px; z-index: 999999;
+          position: fixed; left: 0; top: 64px; font-size: 34px; z-index: 999999;
           pointer-events: none;
           filter: drop-shadow(0 2px 6px rgba(0,0,0,.35));
         }}
@@ -1203,24 +1220,45 @@ components.html(f"""
       heli = doc.createElement('div');
       heli.id = 'heli-flyby-global';
       heli.textContent = '🚁';
+      heli.dataset.lastFlyNonce = flyNonce;   // don't fly again on the render that creates it — replayFlight() below handles the first flight
+      heli.dataset.lastSpinNonce = spinNonce; // don't spin on creation, only on an actual button click later
       doc.body.appendChild(heli);
     }}
 
     function replayFlight() {{
+      heli.style.left = '0';
       heli.style.animation = 'none';
       void heli.offsetWidth; // force reflow so the restart actually takes effect
       heli.style.animation = 'heli-fly-across-global {LAP_SECONDS}s cubic-bezier(.45,.05,.55,.95) {LAPS} alternate forwards';
     }}
 
-    if (heli.dataset.lastNonce !== nonce) {{
-      heli.dataset.lastNonce = nonce;
+    function spinFlight() {{
+      heli.style.left = '46%';
+      heli.style.top = '64px';
+      heli.style.animation = 'none';
+      void heli.offsetWidth;
+      heli.style.animation = 'heli-spin-global 2.2s ease-in-out 1 forwards';
+    }}
+
+    // First-ever mount: fly in once immediately.
+    if (heli.dataset.mounted !== '1') {{
+      heli.dataset.mounted = '1';
       replayFlight();
+    }} else {{
+      if (heli.dataset.lastFlyNonce !== flyNonce) {{
+        heli.dataset.lastFlyNonce = flyNonce;
+        replayFlight();
+      }}
+      if (heli.dataset.lastSpinNonce !== spinNonce) {{
+        heli.dataset.lastSpinNonce = spinNonce;
+        spinFlight();
+      }}
     }}
 
     if (!doc.body.dataset.heliListenerAttached) {{
       doc.body.dataset.heliListenerAttached = '1';
       doc.addEventListener('click', function(e) {{
-        var tabBtn = e.target.closest('[data-baseweb="tab"]');
+        var tabBtn = e.target.closest('[role="tab"], [data-baseweb="tab"]');
         if (tabBtn) replayFlight();
       }}, true);
     }}
