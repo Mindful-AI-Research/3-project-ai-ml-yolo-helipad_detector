@@ -501,8 +501,9 @@ TR = {
         "pt": "Nenhum `results.csv` encontrado ainda em `artifacts/runs/detect/*/` (ou `artifacts/runs/runs/detect/*/`).",
     },
     "metrics.best_epoch": {"en": "Best epoch:", "pt": "Melhor época:"},
-    "metrics.netron_view": {"en": "🔎 View architecture in Netron", "pt": "🔎 Ver arquitetura no Netron"},
+    "metrics.netron_view": {"en": "🔎 Open in Netron (new tab)", "pt": "🔎 Abrir no Netron (nova aba)"},
     "metrics.netron_manual": {"en": "🔎 Open Netron (upload manually)", "pt": "🔎 Abrir Netron (upload manual)"},
+    "metrics.netron_expander": {"en": "🧠 Preview architecture inline", "pt": "🧠 Prévia da arquitetura aqui"},
     "metrics.outperformed": {
         "en": "**{exp}** outperformed exp1 on mAP@50-95 ({delta}).",
         "pt": "**{exp}** superou o exp1 em mAP@50-95 ({delta}).",
@@ -902,10 +903,11 @@ def format_region_display(name: str) -> str:
     """Human-friendly display name for a region, regardless of whether it
     comes from a raw CSV name (e.g. 'Av_Paulista (trecho 1)') or a JSON
     slug (e.g. 'Av_Paulista_trecho_1'). Display-only — does not rename any
-    file, folder, or CSV entry. Always shows 'Trecho N' (not translated to
-    'Segment'), e.g. 'Av Paulista Trecho 1'."""
+    file, folder, or CSV entry. Follows the active language: 'Segment N'
+    in English, 'Trecho N' in Português (e.g. 'Av Paulista Trecho 1')."""
+    word = "Trecho" if st.session_state.get("lang") == "pt" else "Segment"
     display = str(name).replace("_", " ")
-    display = re.sub(r"\btrecho\b", "Trecho", display, flags=re.IGNORECASE)
+    display = re.sub(r"\btrecho\b", word, display, flags=re.IGNORECASE)
     display = re.sub(r"\s+", " ", display).strip()
     translated = REGION_NAME_TRANSLATIONS.get(display.lower())
     return translated if translated else display
@@ -1432,8 +1434,9 @@ with tab4:
             with t1:
                 sp_df_display = sp_df.copy()
                 if "Nome do Bairro" in sp_df_display.columns:
+                    _segment_word = "Trecho" if st.session_state.get("lang") == "pt" else "Segment"
                     sp_df_display["Nome do Bairro"] = sp_df_display["Nome do Bairro"].astype(str).str.replace(
-                        r"\btrecho\b", "Trecho", regex=True, case=False
+                        r"\btrecho\b", _segment_word, regex=True, case=False
                     )
                 st.dataframe(sp_df_display, use_container_width=True)
             with t2:
@@ -1667,6 +1670,10 @@ with tab_metrics:
                 </div>
                 """, unsafe_allow_html=True)
 
+                if row['Experiment'] in MODEL_WEIGHTS_BY_EXP:
+                    with st.expander(t("metrics.netron_expander")):
+                        components.iframe(netron_link, height=480, scrolling=True)
+
         st.markdown("")
         st.dataframe(
             metrics_df.set_index("Experiment").style.format({
@@ -1831,10 +1838,12 @@ st.markdown(f"""
 
 <p style="text-align:center; margin:16px 0 0 0;">
   <a href="https://github.com/Mindful-AI-Research" target="_blank" rel="noopener noreferrer"
-     style="color:#14b8a6; text-decoration:none; font-size:13px; font-weight:600; letter-spacing:.03em;
+     style="text-decoration:none; font-size:13px; font-weight:600; letter-spacing:.03em;
             border:1px solid rgba(20,184,166,0.35); border-radius:999px; padding:5px 14px;
             transition:opacity .15s;">
-    ॐ Mindful AI
+    <span style="color:#14b8a6;">ॐ</span>
+    <span style="color:#ffffff;"> Mindful</span>
+    <span style="color:#14b8a6;"> AI</span>
   </a>
 </p>
 """, unsafe_allow_html=True)
