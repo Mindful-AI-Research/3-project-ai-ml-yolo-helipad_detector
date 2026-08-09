@@ -1152,13 +1152,15 @@ if "heli_flight_shown" not in st.session_state:
     <style>
       html, body { margin:0; padding:0; overflow:hidden; background:transparent; }
       @keyframes heli-fly-across {
-        0%   { left: 0%;    top: 24px; transform: rotate(-6deg) scale(1);   opacity: 0; }
+        0%   { left: 0%;    top: 24px; transform: rotate(-4deg)  scale(1);    opacity: 0; }
         8%   { opacity: 1; }
-        25%  { top: 8px;    transform: rotate(4deg)  scale(1.05); }
-        50%  { left: 48%;   top: 32px; transform: rotate(-5deg) scale(1); }
-        75%  { top: 6px;    transform: rotate(5deg)  scale(1.05); }
+        18%  { top: 10px;   transform: rotate(14deg)  scale(1.04); }
+        34%  { top: 30px;   transform: rotate(-16deg) scale(1); }
+        50%  { left: 48%;   top: 14px;   transform: rotate(10deg)  scale(1.05); }
+        66%  { top: 32px;   transform: rotate(-14deg) scale(1); }
+        82%  { top: 8px;    transform: rotate(16deg)  scale(1.04); }
         92%  { opacity: 1; }
-        100% { left: 94%;   top: 22px; transform: rotate(-3deg) scale(1);  opacity: 0; }
+        100% { left: 94%;   top: 22px;   transform: rotate(-5deg)  scale(1);   opacity: 0; }
       }
       .heli-flyby {
         position: absolute; font-size: 34px;
