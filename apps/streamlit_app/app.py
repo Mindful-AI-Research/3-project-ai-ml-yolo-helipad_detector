@@ -1321,7 +1321,10 @@ if st.session_state["heli_spin_start"] is not None:
 
 components.html(f"""
 <style>
-  html, body {{ margin:0; padding:0; overflow:hidden; background:transparent; border: 3px solid red; }}
+  html, body {{
+    margin:0; padding:0; overflow:hidden; background:transparent;
+    height: 60px; width: 100%; position: relative; border: 3px solid red;
+  }}
   @keyframes heli-fly-across {{
     0%   {{ left: 0%;   top: 24px; transform: rotate(-4deg)  scale(1);    opacity: 0; }}
     4%   {{ opacity: 1; }}
@@ -1339,7 +1342,7 @@ components.html(f"""
     100% {{ transform: rotate(360deg) scale(1);    opacity: 0; }}
   }}
   .heli-flyby {{
-    position: absolute; font-size: 34px;
+    position: absolute; top: 12px; left: 0; font-size: 34px;
     filter: drop-shadow(0 2px 6px rgba(0,0,0,.35));
   }}
   @media (prefers-reduced-motion: reduce) {{
