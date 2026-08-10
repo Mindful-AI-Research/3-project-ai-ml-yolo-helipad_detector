@@ -1286,25 +1286,17 @@ def detect_helipad(image, model: YOLO, conf: float):
 
 # ---- Flying helicopter (self-contained iframe — no cross-frame access) ----
 #
-# Earlier version tried to inject the helicopter into the PARENT document
-# (window.parent.document) so it could float above every tab. That relies
-# on the components.html iframe being same-origin with the main app; if
-# Streamlit ever adds a `sandbox` attribute without `allow-same-origin`,
-# that access throws and gets silently swallowed by the try/catch —
-# nothing renders, no visible error. This version never leaves its own
-# iframe, so there's no cross-origin gamble.
-#
-# The next version after that gated rendering behind a fixed 18-second
-# real-time window from session start, to survive mid-flight Streamlit
-# reruns. That backfired for actually *seeing* it: if more than 18 real
-# seconds passed between the page loading and someone looking at it
-# (extremely likely — plenty else on the page to read first), the window
-# had already closed and nothing rendered — indistinguishable from it
-# never having worked at all. Simpler and much more reliable: loop the
-# flight forever (CSS `infinite`), so it's simply always visible,
-# whenever anyone looks. Same negative-animation-delay trick keeps it
-# looking continuous (not restarting) across Streamlit reruns.
-LAP_SECONDS = 6
+# Confirmed root cause of it not appearing at all: `filter: drop-shadow(...)`
+# combined with `position:absolute` + a CSS animation caused the emoji
+# glyph itself to render as fully invisible in this environment (a static
+# emoji with no filter/animation rendered fine; adding the filter back
+# made it disappear again). No filter is used anywhere in this block from
+# now on. Runs in its own iframe (no cross-origin dependency), loops
+# forever (CSS `infinite`, no fragile time-window cutoff), and uses a
+# negative animation-delay computed from real elapsed time so a Streamlit
+# rerun recreating this iframe mid-flight resumes smoothly instead of
+# restarting or freezing.
+LAP_SECONDS = 14
 
 if "heli_flight_start" not in st.session_state:
     st.session_state["heli_flight_start"] = time.time()
@@ -1317,24 +1309,39 @@ _heli_spinning = False
 _spin_elapsed = 0.0
 if st.session_state["heli_spin_start"] is not None:
     _spin_elapsed = time.time() - st.session_state["heli_spin_start"]
-    _heli_spinning = _spin_elapsed < 2.2
+    _heli_spinning = _spin_elapsed < 2.6
 
 components.html(f"""
 <style>
   html, body {{
     margin:0; padding:0; overflow:visible; background:transparent;
-    height: 60px; width: 100%; position: relative; border: 3px solid red;
+    height: 60px; width: 100%; position: relative;
   }}
   @keyframes heli-fly-across {{
-    0%   {{ left: 0%;   top: 24px; }}
-    50%  {{ left: 48%;  top: 14px; }}
-    100% {{ left: 94%;  top: 22px; }}
+    0%   {{ left: 0%;   top: 24px; transform: rotate(-6deg)  scale(1);    opacity: 0; }}
+    6%   {{ opacity: 1; }}
+    22%  {{ top: 8px;   transform: rotate(10deg)  scale(1.03); }}
+    40%  {{ top: 30px;  transform: rotate(-12deg) scale(1); }}
+    50%  {{ left: 48%;  top: 16px;  transform: rotate(8deg)   scale(1.04); }}
+    60%  {{ top: 30px;  transform: rotate(-10deg) scale(1); }}
+    78%  {{ top: 8px;   transform: rotate(12deg)  scale(1.03); }}
+    94%  {{ opacity: 1; }}
+    100% {{ left: 94%;  top: 20px;  transform: rotate(-5deg)  scale(1);   opacity: 0; }}
+  }}
+  @keyframes heli-spin {{
+    0%   {{ transform: rotate(0deg)   scale(1);    opacity: 1; }}
+    85%  {{ transform: rotate(360deg) scale(1.15); opacity: 1; }}
+    100% {{ transform: rotate(360deg) scale(1);    opacity: 0; }}
   }}
   .heli-flyby {{
     position: absolute; top: 12px; left: 0; font-size: 34px;
   }}
+  @media (prefers-reduced-motion: reduce) {{
+    .heli-flyby {{ display: none; }}
+  }}
 </style>
-<div class="heli-flyby" style="animation: heli-fly-across {LAP_SECONDS}s ease-in-out infinite alternate; animation-delay: -{_heli_elapsed % LAP_SECONDS:.4f}s;">🚁</div>
+{"<div class='heli-flyby' style='animation: heli-spin 2.6s ease-in-out 1 forwards; animation-delay: -" + f"{_spin_elapsed:.4f}" + "s; left:46%; top:14px;'>🚁</div>" if _heli_spinning else
+ "<div class='heli-flyby' style='animation: heli-fly-across " + str(LAP_SECONDS) + "s ease-in-out infinite alternate; animation-delay: -" + f"{_heli_elapsed % LAP_SECONDS:.4f}" + "s;'>🚁</div>"}
 """, height=60)
 
 
