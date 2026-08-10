@@ -1315,33 +1315,20 @@ components.html(f"""
 <style>
   html, body {{
     margin:0; padding:0; overflow:visible; background:transparent;
-    height: 60px; width: 100%; position: relative;
+    height: 60px; width: 100%; position: relative; border: 1px solid rgba(255,0,0,0.6);
   }}
   @keyframes heli-fly-across {{
-    0%   {{ left: 0%;   top: 24px; transform: rotate(-6deg)  scale(1);    opacity: 0; }}
+    0%   {{ left: 0%;   top: 24px; opacity: 0; }}
     6%   {{ opacity: 1; }}
-    22%  {{ top: 8px;   transform: rotate(10deg)  scale(1.03); }}
-    40%  {{ top: 30px;  transform: rotate(-12deg) scale(1); }}
-    50%  {{ left: 48%;  top: 16px;  transform: rotate(8deg)   scale(1.04); }}
-    60%  {{ top: 30px;  transform: rotate(-10deg) scale(1); }}
-    78%  {{ top: 8px;   transform: rotate(12deg)  scale(1.03); }}
+    50%  {{ left: 48%;  top: 14px; }}
     94%  {{ opacity: 1; }}
-    100% {{ left: 94%;  top: 20px;  transform: rotate(-5deg)  scale(1);   opacity: 0; }}
-  }}
-  @keyframes heli-spin {{
-    0%   {{ transform: rotate(0deg)   scale(1);    opacity: 1; }}
-    85%  {{ transform: rotate(360deg) scale(1.15); opacity: 1; }}
-    100% {{ transform: rotate(360deg) scale(1);    opacity: 0; }}
+    100% {{ left: 94%;  top: 22px; opacity: 0; }}
   }}
   .heli-flyby {{
     position: absolute; top: 12px; left: 0; font-size: 34px;
   }}
-  @media (prefers-reduced-motion: reduce) {{
-    .heli-flyby {{ display: none; }}
-  }}
 </style>
-{"<div class='heli-flyby' style='animation: heli-spin 2.6s ease-in-out 1 forwards; animation-delay: -" + f"{_spin_elapsed:.4f}" + "s; left:46%; top:14px;'>🚁</div>" if _heli_spinning else
- "<div class='heli-flyby' style='animation: heli-fly-across " + str(LAP_SECONDS) + "s ease-in-out infinite alternate; animation-delay: -" + f"{_heli_elapsed % LAP_SECONDS:.4f}" + "s;'>🚁</div>"}
+<div class="heli-flyby" style="animation: heli-fly-across {LAP_SECONDS}s ease-in-out infinite alternate; animation-delay: -{_heli_elapsed % LAP_SECONDS:.4f}s;">🚁</div>
 """, height=60)
 
 
