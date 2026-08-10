@@ -1402,21 +1402,18 @@ components.html(f"""
 # ---- Ambient starfield background, behind every tab (parent-document
 # injection, same technique as the helicopter above) ----
 #
-# Matches the visual identity of the HTML presentation: twinkling silver
-# stars + a few slow-drifting teal particles, sitting fixed behind all
-# Streamlit content (z-index:-1, pointer-events:none, so nothing is ever
-# blocked or clickable-through-broken). Built once (guarded by DOM id)
-# and then runs forever on pure CSS — no per-rerun JS work after that.
-#
-# Scope note on the prompt's "orbitable, mouse-reactive camera": a true
-# rotatable 3D camera needs a WebGL/Three.js scene, which fits the
-# standalone HTML presentation (a single full-screen canvas) but not a
-# Streamlit dashboard, where the "canvas" is shared with scrollable
-# tables, forms, and widgets — a real 3D camera there would fight the
-# page's own scroll/zoom and hurt performance on every rerun. The
-# practical equivalent implemented here is a subtle parallax: the whole
-# starfield shifts a few pixels opposite the mouse position, which reads
-# as "reactive depth" without hijacking scroll or interaction.
+# Matches the HTML presentation's visual identity (which renders its
+# starfield with real Three.js/WebGL — 850 silver points at #C9D6DE, 200
+# teal particles at #2fe8d4, with drag-to-orbit + mouse parallax). Pulling
+# an actual Three.js scene from a CDN into the parent document here would
+# add a real external dependency and a new failure surface (CDN blocked,
+# WebGL context denied, etc.) on top of everything already debugged for
+# the helicopter — not worth the risk for a background decoration. This
+# version reproduces the same *feel* — an orbiting, mouse-reactive camera
+# drifting slowly through a silver starfield with teal particles — using
+# only CSS 3D transforms (perspective + rotateX/rotateY) driven by
+# requestAnimationFrame, with zero external dependencies. Same color
+# values as the presentation, so the two feel like one visual identity.
 components.html("""
 <script>
 (function() {
@@ -1427,63 +1424,73 @@ components.html("""
     var style = doc.createElement('style');
     style.id = 'starfield-style';
     style.textContent = `
-      #starfield-layer {
+      #starfield-stage {
         position: fixed; top:0; left:0; width:100vw; height:100vh;
         pointer-events: none; z-index: -1; overflow: hidden;
-        transition: transform 0.4s ease-out;
+        perspective: 900px; perspective-origin: 50% 50%;
+        background: radial-gradient(ellipse at 50% 30%, rgba(14,117,109,0.06), transparent 60%);
+      }
+      #starfield-layer {
+        position: absolute; top:-10%; left:-10%; width:120%; height:120%;
+        transform-style: preserve-3d;
+        will-change: transform;
       }
       .sf-star {
-        position: absolute; border-radius: 50%; background: #e8f4f4;
+        position: absolute; border-radius: 50%; background: #C9D6DE;
         animation: sf-twinkle ease-in-out infinite;
       }
       @keyframes sf-twinkle {
         0%, 100% { opacity: 0.12; }
-        50% { opacity: 0.85; }
+        50% { opacity: 0.9; }
       }
       .sf-particle {
-        position: absolute; background: #14b8a6; border-radius: 2px;
+        position: absolute; background: #2fe8d4; border-radius: 2px;
+        box-shadow: 0 0 4px rgba(47,232,212,0.6);
         animation: sf-drift linear infinite;
       }
       @keyframes sf-drift {
         0%   { transform: translate(0,0); opacity: 0; }
-        12%  { opacity: 0.55; }
-        88%  { opacity: 0.55; }
+        12%  { opacity: 0.6; }
+        88%  { opacity: 0.6; }
         100% { transform: translate(var(--dx), var(--dy)); opacity: 0; }
       }
       @media (prefers-reduced-motion: reduce) {
         .sf-star, .sf-particle { animation: none !important; opacity: 0.35; }
-        #starfield-layer { transition: none; }
+        #starfield-layer { transform: none !important; }
       }
     `;
     doc.head.appendChild(style);
 
+    var stage = doc.createElement('div');
+    stage.id = 'starfield-stage';
     var layer = doc.createElement('div');
     layer.id = 'starfield-layer';
-    doc.body.appendChild(layer);
+    stage.appendChild(layer);
+    doc.body.appendChild(stage);
 
-    var starCount = 80;
+    var starCount = 140;
     for (var i = 0; i < starCount; i++) {
       var s = doc.createElement('div');
       s.className = 'sf-star';
       var size = (Math.random() * 2 + 0.6).toFixed(1);
       s.style.width = size + 'px';
       s.style.height = size + 'px';
-      s.style.top = (Math.random() * 100) + 'vh';
-      s.style.left = (Math.random() * 100) + 'vw';
+      s.style.top = (Math.random() * 100) + '%';
+      s.style.left = (Math.random() * 100) + '%';
       s.style.animationDuration = (2 + Math.random() * 3.5).toFixed(2) + 's';
       s.style.animationDelay = (Math.random() * 4).toFixed(2) + 's';
       layer.appendChild(s);
     }
 
-    var particleCount = 14;
+    var particleCount = 24;
     for (var j = 0; j < particleCount; j++) {
       var p = doc.createElement('div');
       p.className = 'sf-particle';
       var psize = (Math.random() * 3 + 2).toFixed(1);
       p.style.width = psize + 'px';
       p.style.height = psize + 'px';
-      p.style.top = (Math.random() * 100) + 'vh';
-      p.style.left = (Math.random() * 100) + 'vw';
+      p.style.top = (Math.random() * 100) + '%';
+      p.style.left = (Math.random() * 100) + '%';
       var dx = (Math.random() * 160 - 80).toFixed(0) + 'px';
       var dy = (Math.random() * -140 - 40).toFixed(0) + 'px';
       p.style.setProperty('--dx', dx);
@@ -1493,11 +1500,31 @@ components.html("""
       layer.appendChild(p);
     }
 
+    // Pseudo-3D "orbiting camera": the whole starfield slowly auto-rotates
+    // forever (like the presentation's `stars.rotation.y += 0.00015`),
+    // plus the mouse nudges azimuth/tilt further — same lerp-towards-target
+    // approach the presentation uses for its real Three.js camera, just
+    // driving a CSS rotateY/rotateX instead of an actual camera matrix.
+    var mouseX = 0, mouseY = 0;
+    var azimuth = 0, tilt = 0, autoAzimuth = 0;
+    var reduceMotion = doc.defaultView.matchMedia &&
+      doc.defaultView.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
     doc.addEventListener('mousemove', function(e) {
-      var dx = (e.clientX / doc.documentElement.clientWidth - 0.5) * 12;
-      var dy = (e.clientY / doc.documentElement.clientHeight - 0.5) * 12;
-      layer.style.transform = 'translate(' + dx + 'px,' + dy + 'px)';
+      mouseX = (e.clientX / doc.documentElement.clientWidth) * 2 - 1;
+      mouseY = (e.clientY / doc.documentElement.clientHeight) * 2 - 1;
     });
+
+    function tick() {
+      if (!reduceMotion) {
+        autoAzimuth += 0.008;
+        azimuth += ((autoAzimuth + mouseX * 6) - azimuth) * 0.03;
+        tilt += ((mouseY * -3) - tilt) * 0.03;
+        layer.style.transform = 'rotateY(' + azimuth.toFixed(3) + 'deg) rotateX(' + tilt.toFixed(3) + 'deg)';
+        requestAnimationFrame(tick);
+      }
+    }
+    if (!reduceMotion) requestAnimationFrame(tick);
   } catch (e) { /* cross-origin iframe — feature unavailable in this Streamlit setup */ }
 })();
 </script>
