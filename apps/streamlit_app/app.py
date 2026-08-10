@@ -1320,40 +1320,9 @@ if st.session_state["heli_spin_start"] is not None:
     _heli_spinning = _spin_elapsed < 2.2
 
 components.html(f"""
-<style>
-  html, body {{
-    margin:0; padding:0; overflow:hidden; background:transparent;
-    height: 60px; width: 100%; position: relative; border: 3px solid red;
-  }}
-  @keyframes heli-fly-across {{
-    0%   {{ left: 0%;   top: 24px; transform: rotate(-4deg)  scale(1);    opacity: 0; }}
-    4%   {{ opacity: 1; }}
-    18%  {{ top: 10px;  transform: rotate(14deg)  scale(1.04); }}
-    34%  {{ top: 30px;  transform: rotate(-16deg) scale(1); }}
-    50%  {{ left: 48%;  top: 14px;  transform: rotate(10deg)  scale(1.05); }}
-    66%  {{ top: 32px;  transform: rotate(-14deg) scale(1); }}
-    82%  {{ top: 8px;   transform: rotate(16deg)  scale(1.04); }}
-    96%  {{ opacity: 1; }}
-    100% {{ left: 94%;  top: 22px;  transform: rotate(-5deg)  scale(1);   opacity: 0; }}
-  }}
-  @keyframes heli-spin {{
-    0%   {{ transform: rotate(0deg)   scale(1);    opacity: 1; }}
-    85%  {{ transform: rotate(360deg) scale(1.15); opacity: 1; }}
-    100% {{ transform: rotate(360deg) scale(1);    opacity: 0; }}
-  }}
-  .heli-flyby {{
-    position: absolute; top: 12px; left: 0; font-size: 34px;
-    filter: drop-shadow(0 2px 6px rgba(0,0,0,.35));
-  }}
-  @media (prefers-reduced-motion: reduce) {{
-    .heli-flyby {{ display: none; }}
-  }}
-</style>
-<div style="position:absolute; top:2px; left:6px; color:yellow; font-family:monospace; font-size:10px; z-index:9999;">
-  DEBUG: elapsed={_heli_elapsed % LAP_SECONDS:.2f}s spinning={_heli_spinning}
+<div style="border:3px solid red; height:56px; font-size:40px; background:transparent;">
+  DEBUG STATIC TEST: 🚁 (elapsed={_heli_elapsed % LAP_SECONDS:.2f}s)
 </div>
-{"<div class='heli-flyby' style='animation: heli-spin 2.2s ease-in-out 1 forwards; animation-delay: -" + f"{_spin_elapsed:.4f}" + "s; left:46%; top:14px;'>🚁</div>" if _heli_spinning else
- "<div class='heli-flyby' style='animation: heli-fly-across " + str(LAP_SECONDS) + "s cubic-bezier(.45,.05,.55,.95) infinite alternate; animation-delay: -" + f"{_heli_elapsed % LAP_SECONDS:.4f}" + "s;'>🚁</div>"}
 """, height=60)
 
 
