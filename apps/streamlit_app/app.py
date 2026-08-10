@@ -1320,9 +1320,21 @@ if st.session_state["heli_spin_start"] is not None:
     _heli_spinning = _spin_elapsed < 2.2
 
 components.html(f"""
-<div style="border:3px solid red; height:56px; font-size:40px; background:transparent;">
-  DEBUG STATIC TEST: 🚁 (elapsed={_heli_elapsed % LAP_SECONDS:.2f}s)
-</div>
+<style>
+  html, body {{
+    margin:0; padding:0; overflow:visible; background:transparent;
+    height: 60px; width: 100%; position: relative; border: 3px solid red;
+  }}
+  @keyframes heli-fly-across {{
+    0%   {{ left: 0%;   top: 24px; }}
+    50%  {{ left: 48%;  top: 14px; }}
+    100% {{ left: 94%;  top: 22px; }}
+  }}
+  .heli-flyby {{
+    position: absolute; top: 12px; left: 0; font-size: 34px;
+  }}
+</style>
+<div class="heli-flyby" style="animation: heli-fly-across {LAP_SECONDS}s ease-in-out infinite alternate; animation-delay: -{_heli_elapsed % LAP_SECONDS:.4f}s;">🚁</div>
 """, height=60)
 
 
