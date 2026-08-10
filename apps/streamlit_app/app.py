@@ -1321,7 +1321,7 @@ if st.session_state["heli_spin_start"] is not None:
 
 components.html(f"""
 <style>
-  html, body {{ margin:0; padding:0; overflow:hidden; background:transparent; }}
+  html, body {{ margin:0; padding:0; overflow:hidden; background:transparent; border: 3px solid red; }}
   @keyframes heli-fly-across {{
     0%   {{ left: 0%;   top: 24px; transform: rotate(-4deg)  scale(1);    opacity: 0; }}
     4%   {{ opacity: 1; }}
@@ -1346,9 +1346,13 @@ components.html(f"""
     .heli-flyby {{ display: none; }}
   }}
 </style>
+<div style="position:absolute; top:2px; left:6px; color:yellow; font-family:monospace; font-size:10px; z-index:9999;">
+  DEBUG: elapsed={_heli_elapsed % LAP_SECONDS:.2f}s spinning={_heli_spinning}
+</div>
 {"<div class='heli-flyby' style='animation: heli-spin 2.2s ease-in-out 1 forwards; animation-delay: -" + f"{_spin_elapsed:.4f}" + "s; left:46%; top:14px;'>🚁</div>" if _heli_spinning else
  "<div class='heli-flyby' style='animation: heli-fly-across " + str(LAP_SECONDS) + "s cubic-bezier(.45,.05,.55,.95) infinite alternate; animation-delay: -" + f"{_heli_elapsed % LAP_SECONDS:.4f}" + "s;'>🚁</div>"}
 """, height=60)
+
 
 st.markdown(f'<h1 class="main-title">{t("main.title")}</h1>', unsafe_allow_html=True)
 st.markdown(f'<p class="subtitle">{t("main.subtitle")}</p>', unsafe_allow_html=True)
