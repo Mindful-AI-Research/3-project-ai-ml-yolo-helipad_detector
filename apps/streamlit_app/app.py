@@ -1228,11 +1228,11 @@ with st.sidebar:
         heli_col1, heli_col2 = st.columns(2)
         with heli_col1:
             if st.button("🚁 " + t("sidebar.replay_heli"), use_container_width=True):
-                st.session_state["heli_flight_start"] = time.time()
+                st.session_state["heli_replay_nonce"] += 1
                 st.rerun()
         with heli_col2:
             if st.button("🌀 " + t("sidebar.spin_heli"), use_container_width=True):
-                st.session_state["heli_spin_start"] = time.time()
+                st.session_state["heli_spin_nonce"] += 1
                 st.rerun()
 
     st.markdown(f"### {t('sidebar.model')}")
@@ -1284,52 +1284,122 @@ def detect_helipad(image, model: YOLO, conf: float):
 
 # ========================= INTERFACE =========================
 
-# ---- Flying helicopter (self-contained iframe — no cross-frame access) ----
+# ---- Flying helicopter, roaming the whole page (parent-document injection) ----
 #
-# Confirmed root cause of it not appearing at all: `filter: drop-shadow(...)`
-# combined with `position:absolute` + a CSS animation caused the emoji
-# glyph itself to render as fully invisible in this environment (a static
-# emoji with no filter/animation rendered fine; adding the filter back
-# made it disappear again). No filter is used anywhere in this block from
-# now on. Runs in its own iframe (no cross-origin dependency), loops
-# forever (CSS `infinite`, no fragile time-window cutoff), and uses a
-# negative animation-delay computed from real elapsed time so a Streamlit
-# rerun recreating this iframe mid-flight resumes smoothly instead of
-# restarting or freezing.
+# Back to the original architecture: inject one persistent helicopter
+# element straight into the PARENT document (works because a
+# components.html iframe using srcdoc, without a sandbox override,
+# inherits the parent's origin), with position:fixed, so it can roam over
+# everything — sidebar included — not just a small boxed-in strip at the
+# top. It replays on every tab click by listening for clicks matching
+# role="tab" (the reliable ARIA attribute BaseWeb always sets — an
+# earlier version only matched data-baseweb="tab", which apparently
+# missed real clicks and made it look like replay-on-tab-switch never
+# worked at all).
+#
+# Lessons carried over from the boxed-in iframe experiments: no
+# `filter: drop-shadow(...)` and no `transform: rotate()/scale()` on the
+# animated element — both made the emoji glyph render fully invisible in
+# this environment. Position (left/top) + opacity fade only.
 LAP_SECONDS = 14
 
-if "heli_flight_start" not in st.session_state:
-    st.session_state["heli_flight_start"] = time.time()
-if "heli_spin_start" not in st.session_state:
-    st.session_state["heli_spin_start"] = None
-
-_heli_elapsed = time.time() - st.session_state["heli_flight_start"]
-
-_heli_spinning = False
-_spin_elapsed = 0.0
-if st.session_state["heli_spin_start"] is not None:
-    _spin_elapsed = time.time() - st.session_state["heli_spin_start"]
-    _heli_spinning = _spin_elapsed < 2.6
+if "heli_replay_nonce" not in st.session_state:
+    st.session_state["heli_replay_nonce"] = 0
+if "heli_spin_nonce" not in st.session_state:
+    st.session_state["heli_spin_nonce"] = 0
 
 components.html(f"""
-<style>
-  html, body {{
-    margin:0; padding:0; overflow:visible; background:transparent;
-    height: 60px; width: 100%; position: relative; border: 1px solid rgba(255,0,0,0.6);
-  }}
-  @keyframes heli-fly-across {{
-    0%   {{ left: 0%;   top: 24px; opacity: 0; }}
-    6%   {{ opacity: 1; }}
-    50%  {{ left: 48%;  top: 14px; }}
-    94%  {{ opacity: 1; }}
-    100% {{ left: 94%;  top: 22px; opacity: 0; }}
-  }}
-  .heli-flyby {{
-    position: absolute; top: 12px; left: 0; font-size: 34px;
-  }}
-</style>
-<div class="heli-flyby" style="animation: heli-fly-across {LAP_SECONDS}s ease-in-out infinite alternate; animation-delay: -{_heli_elapsed % LAP_SECONDS:.4f}s;">🚁</div>
-""", height=60)
+<script>
+(function() {{
+  try {{
+    var doc = window.parent.document;
+    var flyNonce = "{st.session_state['heli_replay_nonce']}";
+    var spinNonce = "{st.session_state['heli_spin_nonce']}";
+
+    if (!doc.getElementById('heli-flyby-style')) {{
+      var style = doc.createElement('style');
+      style.id = 'heli-flyby-style';
+      style.textContent = `
+        @keyframes heli-fly-across-global {{
+          0%   {{ left: 0%;   top: 64px; opacity: 0; }}
+          6%   {{ opacity: 1; }}
+          28%  {{ top: 48px; }}
+          50%  {{ left: 48%;  top: 62px; }}
+          72%  {{ top: 46px; }}
+          94%  {{ opacity: 1; }}
+          100% {{ left: 94%;  top: 60px;  opacity: 0; }}
+        }}
+        @keyframes heli-spin-global {{
+          0%   {{ transform: rotate(0deg)   scale(1);    opacity: 1; }}
+          85%  {{ transform: rotate(360deg) scale(1.15); opacity: 1; }}
+          100% {{ transform: rotate(360deg) scale(1);    opacity: 0; }}
+        }}
+        #heli-flyby-global {{
+          position: fixed; left: 0; top: 64px; font-size: 34px; z-index: 999999;
+          pointer-events: none;
+        }}
+        @media (prefers-reduced-motion: reduce) {{
+          #heli-flyby-global {{ display: none; }}
+        }}
+      `;
+      doc.head.appendChild(style);
+    }}
+
+    var heli = doc.getElementById('heli-flyby-global');
+    if (!heli) {{
+      heli = doc.createElement('div');
+      heli.id = 'heli-flyby-global';
+      heli.textContent = '🚁';
+      heli.dataset.lastFlyNonce = flyNonce;
+      heli.dataset.lastSpinNonce = spinNonce;
+      doc.body.appendChild(heli);
+    }}
+
+    function replayFlight() {{
+      heli.style.left = '0';
+      heli.style.top = '64px';
+      heli.style.animation = 'none';
+      void heli.offsetWidth;
+      heli.style.animation = 'heli-fly-across-global {LAP_SECONDS}s ease-in-out infinite alternate';
+    }}
+
+    // Spin uses transform:rotate() — this broke inside the small boxed
+    // iframe version, but that was a different rendering context (nested
+    // iframe compositing). Worth testing fresh here since this element
+    // now lives directly in the top-level page.
+    function spinFlight() {{
+      heli.style.left = '46%';
+      heli.style.top = '54px';
+      heli.style.animation = 'none';
+      void heli.offsetWidth;
+      heli.style.animation = 'heli-spin-global 2.2s ease-in-out 1 forwards';
+    }}
+
+    if (heli.dataset.mounted !== '1') {{
+      heli.dataset.mounted = '1';
+      replayFlight();
+    }} else {{
+      if (heli.dataset.lastFlyNonce !== flyNonce) {{
+        heli.dataset.lastFlyNonce = flyNonce;
+        replayFlight();
+      }}
+      if (heli.dataset.lastSpinNonce !== spinNonce) {{
+        heli.dataset.lastSpinNonce = spinNonce;
+        spinFlight();
+      }}
+    }}
+
+    if (!doc.body.dataset.heliListenerAttached) {{
+      doc.body.dataset.heliListenerAttached = '1';
+      doc.addEventListener('click', function(e) {{
+        var tabBtn = e.target.closest('[role="tab"], [data-baseweb="tab"]');
+        if (tabBtn) replayFlight();
+      }}, true);
+    }}
+  }} catch (e) {{ /* cross-origin iframe — feature unavailable in this Streamlit setup */ }}
+}})();
+</script>
+""", height=0)
 
 
 st.markdown(f'<h1 class="main-title">{t("main.title")}</h1>', unsafe_allow_html=True)
