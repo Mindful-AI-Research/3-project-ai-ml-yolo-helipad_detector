@@ -949,7 +949,7 @@ def build_session_summary_pdf(metrics_df: pd.DataFrame, selected_model, conf_thr
     is_pt = lang == "pt"
     story = []
 
-    story.append(Paragraph("🚁 Helipad Detector" if not is_pt else "🚁 Helipad Detector", title_style))
+    story.append(Paragraph("🚁 Helipad Detector", title_style))
     story.append(Paragraph(
         "Session summary — Helipad Detector dashboard" if not is_pt else "Resumo de sessão — dashboard Helipad Detector",
         styles["Heading3"]))
@@ -1125,7 +1125,7 @@ def _load_audio_base64(path: str):
 
 def render_music_toggle():
     audio_b64 = _load_audio_base64(str(AUDIO_PATH))
-    st.caption(t("sidebar.music.title"))
+    st.markdown(f"### {t('sidebar.music.title')}")
     if not audio_b64:
         st.caption(t("sidebar.music.missing"))
         return
@@ -1228,11 +1228,11 @@ with st.sidebar:
         heli_col1, heli_col2 = st.columns(2)
         with heli_col1:
             if st.button("🚁 " + t("sidebar.replay_heli"), use_container_width=True):
-                st.session_state["heli_flight_start"] = time.time()
+                st.session_state["heli_replay_nonce"] += 1
                 st.rerun()
         with heli_col2:
             if st.button("🌀 " + t("sidebar.spin_heli"), use_container_width=True):
-                st.session_state["heli_spin_start"] = time.time()
+                st.session_state["heli_spin_nonce"] += 1
                 st.rerun()
 
     st.markdown(f"### {t('sidebar.model')}")
@@ -1284,67 +1284,224 @@ def detect_helipad(image, model: YOLO, conf: float):
 
 # ========================= INTERFACE =========================
 
-# ---- Flying helicopter (self-contained iframe — no cross-frame access) ----
+# ---- Flying helicopter, present on every tab (self-contained iframe
+# injecting into the PARENT document) ----
 #
-# Two root causes found by bisecting with visible on-screen tests (a
-# static emoji, then adding one property back at a time):
-#   1. `filter: drop-shadow(...)` combined with an animated position made
-#      the emoji glyph render as fully invisible in this environment.
-#   2. `transform: rotate()/scale()` on the animated element did the same
-#      — even with no filter at all. Position (`left`/`top`) + `opacity`
-#      animate together just fine; adding `transform` back broke it again.
-# So: no `filter`, no `transform` on the flying helicopter. Just left/top
-# position plus an opacity fade at each end of the pass. Runs in its own
-# iframe (no cross-origin dependency), loops forever (CSS `infinite`, no
-# fragile time-window cutoff), and uses a negative animation-delay
-# computed from real elapsed time so a Streamlit rerun recreating this
-# iframe mid-flight resumes smoothly instead of restarting or freezing.
-LAP_SECONDS = 14
+# Streamlit's tabs never trigger a script rerun — all tab content is
+# already in the DOM at once, and switching tabs is purely a client-side
+# CSS show/hide. So a Python-only "run once at the top" approach can never
+# know when the user changes tabs. Instead: the iframe below injects a
+# single persistent helicopter element straight into the PARENT document
+# (works because a components.html iframe using srcdoc, without a sandbox
+# override, inherits the parent's origin) with position:fixed, so it
+# floats above every tab, plus a click-listener on Streamlit's tab
+# buttons that restarts the flight animation whenever a different tab is
+# selected. Matches BOTH role="tab" (the ARIA attribute BaseWeb always
+# sets, most reliable) and data-baseweb="tab" (belt-and-suspenders) since
+# relying on only one turned out to miss real clicks. The style/element/
+# listener are only created once (guarded by DOM id) even though
+# Streamlit re-executes this components.html call on every rerun; small
+# "nonce" values let the sidebar buttons force a replay/spin on demand.
+LAP_SECONDS = 7
+LAPS = 3
 
-if "heli_flight_start" not in st.session_state:
-    st.session_state["heli_flight_start"] = time.time()
-if "heli_spin_start" not in st.session_state:
-    st.session_state["heli_spin_start"] = None
-
-_heli_elapsed = time.time() - st.session_state["heli_flight_start"]
-
-_heli_spinning = False
-_spin_elapsed = 0.0
-if st.session_state["heli_spin_start"] is not None:
-    _spin_elapsed = time.time() - st.session_state["heli_spin_start"]
-    _heli_spinning = _spin_elapsed < 2.6
+if "heli_replay_nonce" not in st.session_state:
+    st.session_state["heli_replay_nonce"] = 0
+if "heli_spin_nonce" not in st.session_state:
+    st.session_state["heli_spin_nonce"] = 0
 
 components.html(f"""
-<style>
-  html, body {{
-    margin:0; padding:0; overflow:visible; background:transparent;
-    height: 60px; width: 100%; position: relative;
-  }}
-  @keyframes heli-fly-across {{
-    0%   {{ left: 0%;   top: 24px; opacity: 0; }}
-    6%   {{ opacity: 1; }}
-    28%  {{ top: 8px; }}
-    50%  {{ left: 48%;  top: 22px; }}
-    72%  {{ top: 6px; }}
-    94%  {{ opacity: 1; }}
-    100% {{ left: 94%;  top: 20px; opacity: 0; }}
-  }}
-  @keyframes heli-spin {{
-    0%   {{ transform: rotate(0deg)   scale(1);    opacity: 1; }}
-    85%  {{ transform: rotate(360deg) scale(1.15); opacity: 1; }}
-    100% {{ transform: rotate(360deg) scale(1);    opacity: 0; }}
-  }}
-  .heli-flyby {{
-    position: absolute; top: 12px; left: 0; font-size: 34px;
-  }}
-  @media (prefers-reduced-motion: reduce) {{
-    .heli-flyby {{ display: none; }}
-  }}
-</style>
-{"<div class='heli-flyby' style='animation: heli-spin 2.6s ease-in-out 1 forwards; animation-delay: -" + f"{_spin_elapsed:.4f}" + "s; left:46%; top:14px;'>🚁</div>" if _heli_spinning else
- "<div class='heli-flyby' style='animation: heli-fly-across " + str(LAP_SECONDS) + "s ease-in-out infinite alternate; animation-delay: -" + f"{_heli_elapsed % LAP_SECONDS:.4f}" + "s;'>🚁</div>"}
-""", height=60)
+<script>
+(function() {{
+  try {{
+    var doc = window.parent.document;
+    var flyNonce = "{st.session_state['heli_replay_nonce']}";
+    var spinNonce = "{st.session_state['heli_spin_nonce']}";
 
+    if (!doc.getElementById('heli-flyby-style')) {{
+      var style = doc.createElement('style');
+      style.id = 'heli-flyby-style';
+      style.textContent = `
+        @keyframes heli-fly-across-global {{
+          0%   {{ left: 0%;   top: 64px; transform: rotate(-4deg)  scale(1);    opacity: 0; }}
+          8%   {{ opacity: 1; }}
+          18%  {{ top: 50px;  transform: rotate(14deg)  scale(1.04); }}
+          34%  {{ top: 74px;  transform: rotate(-16deg) scale(1); }}
+          50%  {{ left: 48%;  top: 54px;  transform: rotate(10deg)  scale(1.05); }}
+          66%  {{ top: 76px;  transform: rotate(-14deg) scale(1); }}
+          82%  {{ top: 48px;  transform: rotate(16deg)  scale(1.04); }}
+          92%  {{ opacity: 1; }}
+          100% {{ left: 94%;  top: 62px;  transform: rotate(-5deg)  scale(1);   opacity: 0; }}
+        }}
+        @keyframes heli-spin-global {{
+          0%   {{ transform: rotate(0deg)   scale(1);    opacity: 1; }}
+          85%  {{ transform: rotate(360deg) scale(1.15); opacity: 1; }}
+          100% {{ transform: rotate(360deg) scale(1);    opacity: 0; }}
+        }}
+        #heli-flyby-global {{
+          position: fixed; left: 0; top: 64px; font-size: 34px; z-index: 999999;
+          pointer-events: none;
+          filter: drop-shadow(0 2px 6px rgba(0,0,0,.35));
+        }}
+      `;
+      doc.head.appendChild(style);
+    }}
+
+    var heli = doc.getElementById('heli-flyby-global');
+    if (!heli) {{
+      heli = doc.createElement('div');
+      heli.id = 'heli-flyby-global';
+      heli.textContent = '🚁';
+      heli.dataset.lastFlyNonce = flyNonce;   // don't fly again on the render that creates it — replayFlight() below handles the first flight
+      heli.dataset.lastSpinNonce = spinNonce; // don't spin on creation, only on an actual button click later
+      doc.body.appendChild(heli);
+    }}
+
+    function replayFlight() {{
+      heli.style.left = '0';
+      heli.style.animation = 'none';
+      void heli.offsetWidth; // force reflow so the restart actually takes effect
+      heli.style.animation = 'heli-fly-across-global {LAP_SECONDS}s cubic-bezier(.45,.05,.55,.95) {LAPS} alternate forwards';
+    }}
+
+    function spinFlight() {{
+      heli.style.left = '46%';
+      heli.style.top = '64px';
+      heli.style.animation = 'none';
+      void heli.offsetWidth;
+      heli.style.animation = 'heli-spin-global 2.2s ease-in-out 1 forwards';
+    }}
+
+    // First-ever mount: fly in once immediately.
+    if (heli.dataset.mounted !== '1') {{
+      heli.dataset.mounted = '1';
+      replayFlight();
+    }} else {{
+      if (heli.dataset.lastFlyNonce !== flyNonce) {{
+        heli.dataset.lastFlyNonce = flyNonce;
+        replayFlight();
+      }}
+      if (heli.dataset.lastSpinNonce !== spinNonce) {{
+        heli.dataset.lastSpinNonce = spinNonce;
+        spinFlight();
+      }}
+    }}
+
+    if (!doc.body.dataset.heliListenerAttached) {{
+      doc.body.dataset.heliListenerAttached = '1';
+      doc.addEventListener('click', function(e) {{
+        var tabBtn = e.target.closest('[role="tab"], [data-baseweb="tab"]');
+        if (tabBtn) replayFlight();
+      }}, true);
+    }}
+  }} catch (e) {{ /* cross-origin iframe — feature unavailable in this Streamlit setup */ }}
+}})();
+</script>
+""", height=0)
+
+# ---- Ambient starfield background, behind every tab (parent-document
+# injection, same technique as the helicopter above) ----
+#
+# Matches the visual identity of the HTML presentation: twinkling silver
+# stars + a few slow-drifting teal particles, sitting fixed behind all
+# Streamlit content (z-index:-1, pointer-events:none, so nothing is ever
+# blocked or clickable-through-broken). Built once (guarded by DOM id)
+# and then runs forever on pure CSS — no per-rerun JS work after that.
+#
+# Scope note on the prompt's "orbitable, mouse-reactive camera": a true
+# rotatable 3D camera needs a WebGL/Three.js scene, which fits the
+# standalone HTML presentation (a single full-screen canvas) but not a
+# Streamlit dashboard, where the "canvas" is shared with scrollable
+# tables, forms, and widgets — a real 3D camera there would fight the
+# page's own scroll/zoom and hurt performance on every rerun. The
+# practical equivalent implemented here is a subtle parallax: the whole
+# starfield shifts a few pixels opposite the mouse position, which reads
+# as "reactive depth" without hijacking scroll or interaction.
+components.html("""
+<script>
+(function() {
+  try {
+    var doc = window.parent.document;
+    if (doc.getElementById('starfield-style')) return;
+
+    var style = doc.createElement('style');
+    style.id = 'starfield-style';
+    style.textContent = `
+      #starfield-layer {
+        position: fixed; top:0; left:0; width:100vw; height:100vh;
+        pointer-events: none; z-index: -1; overflow: hidden;
+        transition: transform 0.4s ease-out;
+      }
+      .sf-star {
+        position: absolute; border-radius: 50%; background: #e8f4f4;
+        animation: sf-twinkle ease-in-out infinite;
+      }
+      @keyframes sf-twinkle {
+        0%, 100% { opacity: 0.12; }
+        50% { opacity: 0.85; }
+      }
+      .sf-particle {
+        position: absolute; background: #14b8a6; border-radius: 2px;
+        animation: sf-drift linear infinite;
+      }
+      @keyframes sf-drift {
+        0%   { transform: translate(0,0); opacity: 0; }
+        12%  { opacity: 0.55; }
+        88%  { opacity: 0.55; }
+        100% { transform: translate(var(--dx), var(--dy)); opacity: 0; }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .sf-star, .sf-particle { animation: none !important; opacity: 0.35; }
+        #starfield-layer { transition: none; }
+      }
+    `;
+    doc.head.appendChild(style);
+
+    var layer = doc.createElement('div');
+    layer.id = 'starfield-layer';
+    doc.body.appendChild(layer);
+
+    var starCount = 80;
+    for (var i = 0; i < starCount; i++) {
+      var s = doc.createElement('div');
+      s.className = 'sf-star';
+      var size = (Math.random() * 2 + 0.6).toFixed(1);
+      s.style.width = size + 'px';
+      s.style.height = size + 'px';
+      s.style.top = (Math.random() * 100) + 'vh';
+      s.style.left = (Math.random() * 100) + 'vw';
+      s.style.animationDuration = (2 + Math.random() * 3.5).toFixed(2) + 's';
+      s.style.animationDelay = (Math.random() * 4).toFixed(2) + 's';
+      layer.appendChild(s);
+    }
+
+    var particleCount = 14;
+    for (var j = 0; j < particleCount; j++) {
+      var p = doc.createElement('div');
+      p.className = 'sf-particle';
+      var psize = (Math.random() * 3 + 2).toFixed(1);
+      p.style.width = psize + 'px';
+      p.style.height = psize + 'px';
+      p.style.top = (Math.random() * 100) + 'vh';
+      p.style.left = (Math.random() * 100) + 'vw';
+      var dx = (Math.random() * 160 - 80).toFixed(0) + 'px';
+      var dy = (Math.random() * -140 - 40).toFixed(0) + 'px';
+      p.style.setProperty('--dx', dx);
+      p.style.setProperty('--dy', dy);
+      p.style.animationDuration = (14 + Math.random() * 14).toFixed(1) + 's';
+      p.style.animationDelay = (Math.random() * 10).toFixed(1) + 's';
+      layer.appendChild(p);
+    }
+
+    doc.addEventListener('mousemove', function(e) {
+      var dx = (e.clientX / doc.documentElement.clientWidth - 0.5) * 12;
+      var dy = (e.clientY / doc.documentElement.clientHeight - 0.5) * 12;
+      layer.style.transform = 'translate(' + dx + 'px,' + dy + 'px)';
+    });
+  } catch (e) { /* cross-origin iframe — feature unavailable in this Streamlit setup */ }
+})();
+</script>
+""", height=0)
 
 st.markdown(f'<h1 class="main-title">{t("main.title")}</h1>', unsafe_allow_html=True)
 st.markdown(f'<p class="subtitle">{t("main.subtitle")}</p>', unsafe_allow_html=True)
@@ -1914,9 +2071,8 @@ with tab_metrics:
         # Netron previews render full-width, stacked one per row below the
         # metric cards — a narrow column (1 of up to 4) is too cramped for
         # an interactive graph viewer with its own zoom/pan controls.
-        # Loaded on demand (not expanded=True) so opening the Metrics tab
-        # doesn't eagerly fire 3 external requests to netron.app on every
-        # rerun — only the experiment(s) you actually want to inspect.
+        # Loaded on demand (not eagerly) so opening the Metrics tab doesn't
+        # fire 3 external requests to netron.app on every rerun.
         for i, row in metrics_df.iterrows():
             if row['Experiment'] not in MODEL_WEIGHTS_BY_EXP:
                 continue
@@ -2082,7 +2238,7 @@ st.markdown("---")
 components.html("""
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&display=swap" rel="stylesheet">
 <style>
-  html, body { margin:0; padding:0; overflow:hidden; background:transparent; }
+  html, body { margin:0; padding:0; overflow:visible; background:transparent; }
   @keyframes mindful-glow {
     0%   { text-shadow: 0 0 6px rgba(0,255,255,0.35), 0 0 14px rgba(0,255,255,0.15); }
     50%  { text-shadow: 0 0 20px rgba(0,255,255,0.95), 0 0 42px rgba(0,255,255,0.55), 0 0 60px rgba(0,255,255,0.25); }
