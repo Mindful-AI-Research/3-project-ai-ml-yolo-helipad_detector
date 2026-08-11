@@ -1339,7 +1339,7 @@ components.html(f"""
           100% {{ transform: rotate(360deg) scale(1);    opacity: 0; }}
         }}
         #heli-flyby-global {{
-          position: fixed; left: 0; top: 64px; font-size: 52px; z-index: 999999;
+          position: fixed; left: 0; top: 64px; font-size: 34px; z-index: 999999;
           pointer-events: none;
           filter: drop-shadow(0 2px 6px rgba(0,0,0,.35));
         }}
@@ -1361,7 +1361,7 @@ components.html(f"""
       heli.style.left = '0';
       heli.style.animation = 'none';
       void heli.offsetWidth; // force reflow so the restart actually takes effect
-      heli.style.animation = 'heli-fly-across-global {LAP_SECONDS}s cubic-bezier(.45,.05,.55,.95) infinite alternate';
+      heli.style.animation = 'heli-fly-across-global {LAP_SECONDS}s cubic-bezier(.45,.05,.55,.95) {LAPS} alternate forwards';
     }}
 
     function spinFlight() {{
@@ -1370,25 +1370,12 @@ components.html(f"""
       heli.style.animation = 'none';
       void heli.offsetWidth;
       heli.style.animation = 'heli-spin-global 2.2s ease-in-out 1 forwards';
-      // resume the continuous flight loop once the spin finishes
-      setTimeout(replayFlight, 2300);
     }}
 
-    // First-ever mount: fly in once immediately, and keep flying forever
-    // — every tab, no stopping — with an occasional smooth spin thrown in
-    // automatically (not only from the sidebar button), like a helicopter
-    // doing a lazy loop rather than a straight back-and-forth commute.
+    // First-ever mount: fly in once immediately.
     if (heli.dataset.mounted !== '1') {{
       heli.dataset.mounted = '1';
       replayFlight();
-      var scheduleAutoSpin = function() {{
-        var delay = 18000 + Math.random() * 20000; // every ~18-38s
-        setTimeout(function() {{
-          spinFlight();
-          scheduleAutoSpin();
-        }}, delay);
-      }};
-      scheduleAutoSpin();
     }} else {{
       if (heli.dataset.lastFlyNonce !== flyNonce) {{
         heli.dataset.lastFlyNonce = flyNonce;
@@ -1415,26 +1402,21 @@ components.html(f"""
 # ---- Ambient starfield background, behind every tab (parent-document
 # injection, same technique as the helicopter above) ----
 #
-# Matches the HTML presentation's visual identity (which renders its
-# starfield with real Three.js/WebGL — 850 silver points at #C9D6DE).
-# Both stars and particles use that same silver (#C9D6DE), not teal — the
-# whole field reads as one coherent silver starfield, like the reference.
-# Sits at z-index:-1, fixed to the viewport — visible in the margins
-# outside Streamlit's centered content column and behind any part of the
-# page that doesn't paint its own background. (An earlier version tried
-# forcing Streamlit's own containers transparent so stars would show
-# through everywhere, including under the widgets themselves — that broke
-# text contrast and flipped the sidebar to a light theme on some browsers,
-# because it fought Streamlit's own theme CSS. Reverted; see
-# .streamlit/config.toml for the actual fix to the light/dark theme bug.)
-# Pulling an actual Three.js scene from a CDN into the parent document
-# here would add a real external dependency and a new failure surface
-# (CDN blocked, WebGL context denied, etc.) on top of everything already
-# debugged for the helicopter — not worth the risk for a background
-# decoration. This version reproduces the same *feel* — an orbiting,
-# mouse-reactive camera drifting slowly through a silver starfield — using
-# only CSS 3D transforms (perspective + rotateX/rotateY) driven by
-# requestAnimationFrame, with zero external dependencies.
+# Matches the visual identity of the HTML presentation: twinkling silver
+# stars + a few slow-drifting teal particles, sitting fixed behind all
+# Streamlit content (z-index:-1, pointer-events:none, so nothing is ever
+# blocked or clickable-through-broken). Built once (guarded by DOM id)
+# and then runs forever on pure CSS — no per-rerun JS work after that.
+#
+# Scope note on the prompt's "orbitable, mouse-reactive camera": a true
+# rotatable 3D camera needs a WebGL/Three.js scene, which fits the
+# standalone HTML presentation (a single full-screen canvas) but not a
+# Streamlit dashboard, where the "canvas" is shared with scrollable
+# tables, forms, and widgets — a real 3D camera there would fight the
+# page's own scroll/zoom and hurt performance on every rerun. The
+# practical equivalent implemented here is a subtle parallax: the whole
+# starfield shifts a few pixels opposite the mouse position, which reads
+# as "reactive depth" without hijacking scroll or interaction.
 components.html("""
 <script>
 (function() {
@@ -1445,75 +1427,63 @@ components.html("""
     var style = doc.createElement('style');
     style.id = 'starfield-style';
     style.textContent = `
-      #starfield-stage {
+      #starfield-layer {
         position: fixed; top:0; left:0; width:100vw; height:100vh;
         pointer-events: none; z-index: -1; overflow: hidden;
-        perspective: 900px; perspective-origin: 50% 50%;
-        background: #05070a radial-gradient(ellipse at 50% 30%, rgba(14,117,109,0.10), transparent 60%);
-      }
-      #starfield-layer {
-        position: absolute; top:-10%; left:-10%; width:120%; height:120%;
-        transform-style: preserve-3d;
-        will-change: transform;
+        transition: transform 0.4s ease-out;
       }
       .sf-star {
-        position: absolute; border-radius: 50%; background: #E8EEF2;
-        box-shadow: 0 0 5px 1px rgba(201,214,222,0.55);
+        position: absolute; border-radius: 50%; background: #e8f4f4;
         animation: sf-twinkle ease-in-out infinite;
       }
       @keyframes sf-twinkle {
-        0%, 100% { opacity: 0.3; transform: scale(0.85); }
-        50% { opacity: 1; transform: scale(1.3); }
+        0%, 100% { opacity: 0.12; }
+        50% { opacity: 0.85; }
       }
       .sf-particle {
-        position: absolute; background: #C9D6DE; border-radius: 2px;
-        box-shadow: 0 0 4px rgba(201,214,222,0.6);
+        position: absolute; background: #14b8a6; border-radius: 2px;
         animation: sf-drift linear infinite;
       }
       @keyframes sf-drift {
         0%   { transform: translate(0,0); opacity: 0; }
-        12%  { opacity: 0.6; }
-        88%  { opacity: 0.6; }
+        12%  { opacity: 0.55; }
+        88%  { opacity: 0.55; }
         100% { transform: translate(var(--dx), var(--dy)); opacity: 0; }
       }
       @media (prefers-reduced-motion: reduce) {
-        .sf-star { animation-duration: 6s !important; }
-        .sf-particle { animation: none !important; opacity: 0.35; }
-        #starfield-layer { transform: none !important; }
+        .sf-star, .sf-particle { animation: none !important; opacity: 0.35; }
+        #starfield-layer { transition: none; }
       }
     `;
     doc.head.appendChild(style);
 
-    var stage = doc.createElement('div');
-    stage.id = 'starfield-stage';
     var layer = doc.createElement('div');
     layer.id = 'starfield-layer';
-    stage.appendChild(layer);
-    doc.body.appendChild(stage);
+    doc.body.appendChild(layer);
 
-    var starCount = 140;
+    var starCount = 80;
     for (var i = 0; i < starCount; i++) {
       var s = doc.createElement('div');
       s.className = 'sf-star';
-      var size = (Math.random() * 2.4 + 1.4).toFixed(1);
+      var size = (Math.random() * 2 + 0.6).toFixed(1);
       s.style.width = size + 'px';
       s.style.height = size + 'px';
-      s.style.top = (Math.random() * 100) + '%';
-      s.style.left = (Math.random() * 100) + '%';
+      s.style.top = (Math.random() * 100) + 'vh';
+      s.style.left = (Math.random() * 100) + 'vw';
       s.style.animationDuration = (2 + Math.random() * 3.5).toFixed(2) + 's';
       s.style.animationDelay = (Math.random() * 4).toFixed(2) + 's';
       layer.appendChild(s);
     }
 
-    var particleCount = 24;
+    var particleCount = 14;
     for (var j = 0; j < particleCount; j++) {
       var p = doc.createElement('div');
       p.className = 'sf-particle';
       var psize = (Math.random() * 3 + 2).toFixed(1);
       p.style.width = psize + 'px';
       p.style.height = psize + 'px';
-      p.style.top = (Math.random() * 100) + '%';
-      p.style.left = (Math.random() * 100) + '%';
+      p.style.top = (Math.random() * 100) + 'vh';
+      p.style.left = (Math.random() * 100) + 'vw';
       var dx = (Math.random() * 160 - 80).toFixed(0) + 'px';
       var dy = (Math.random() * -140 - 40).toFixed(0) + 'px';
       p.style.setProperty('--dx', dx);
@@ -1523,31 +1493,11 @@ components.html("""
       layer.appendChild(p);
     }
 
-    // Pseudo-3D "orbiting camera": the whole starfield slowly auto-rotates
-    // forever (like the presentation's `stars.rotation.y += 0.00015`),
-    // plus the mouse nudges azimuth/tilt further — same lerp-towards-target
-    // approach the presentation uses for its real Three.js camera, just
-    // driving a CSS rotateY/rotateX instead of an actual camera matrix.
-    var mouseX = 0, mouseY = 0;
-    var azimuth = 0, tilt = 0, autoAzimuth = 0;
-    var reduceMotion = doc.defaultView.matchMedia &&
-      doc.defaultView.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
     doc.addEventListener('mousemove', function(e) {
-      mouseX = (e.clientX / doc.documentElement.clientWidth) * 2 - 1;
-      mouseY = (e.clientY / doc.documentElement.clientHeight) * 2 - 1;
+      var dx = (e.clientX / doc.documentElement.clientWidth - 0.5) * 12;
+      var dy = (e.clientY / doc.documentElement.clientHeight - 0.5) * 12;
+      layer.style.transform = 'translate(' + dx + 'px,' + dy + 'px)';
     });
-
-    function tick() {
-      if (!reduceMotion) {
-        autoAzimuth += 0.008;
-        azimuth += ((autoAzimuth + mouseX * 6) - azimuth) * 0.03;
-        tilt += ((mouseY * -3) - tilt) * 0.03;
-        layer.style.transform = 'rotateY(' + azimuth.toFixed(3) + 'deg) rotateX(' + tilt.toFixed(3) + 'deg)';
-        requestAnimationFrame(tick);
-      }
-    }
-    if (!reduceMotion) requestAnimationFrame(tick);
   } catch (e) { /* cross-origin iframe — feature unavailable in this Streamlit setup */ }
 })();
 </script>
@@ -1844,7 +1794,7 @@ with tab4:
         st.write(t("map.summary").format(sp=len(sp_df), other=len(other_df)))
         st_folium(fmap, use_container_width=True, height=520, key=f"main_map_{map_tiles}")
 
-        with st.expander(t("map.raw_data_expander"), expanded=True):
+        with st.expander(t("map.raw_data_expander")):
             t1, t2 = st.tabs([t("map.raw_data.sp_tab"), t("map.raw_data.other_tab")])
             with t1:
                 sp_df_display = sp_df.copy()
