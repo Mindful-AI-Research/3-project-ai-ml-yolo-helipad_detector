@@ -1465,12 +1465,13 @@ components.html("""
         will-change: transform;
       }
       .sf-star {
-        position: absolute; border-radius: 50%; background: #C9D6DE;
+        position: absolute; border-radius: 50%; background: #E8EEF2;
+        box-shadow: 0 0 5px 1px rgba(201,214,222,0.55);
         animation: sf-twinkle ease-in-out infinite;
       }
       @keyframes sf-twinkle {
-        0%, 100% { opacity: 0.12; }
-        50% { opacity: 0.9; }
+        0%, 100% { opacity: 0.3; transform: scale(0.85); }
+        50% { opacity: 1; transform: scale(1.3); }
       }
       .sf-particle {
         position: absolute; background: #C9D6DE; border-radius: 2px;
@@ -1501,7 +1502,7 @@ components.html("""
     for (var i = 0; i < starCount; i++) {
       var s = doc.createElement('div');
       s.className = 'sf-star';
-      var size = (Math.random() * 2 + 0.6).toFixed(1);
+      var size = (Math.random() * 2.4 + 1.4).toFixed(1);
       s.style.width = size + 'px';
       s.style.height = size + 'px';
       s.style.top = (Math.random() * 100) + '%';
