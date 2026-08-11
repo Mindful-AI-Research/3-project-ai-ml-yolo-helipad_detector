@@ -590,20 +590,6 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# `.streamlit/config.toml` forces Streamlit's own theme colors to dark,
-# but that alone doesn't stop the BROWSER's native "color-scheme" hint —
-# a separate CSS-level signal that controls default rendering for form
-# controls, scrollbars, and any color not explicitly set by our CSS. If
-# the visitor's OS/browser is set to light mode, the browser still assumes
-# `color-scheme: light` unless told otherwise, which is what caused text
-# to look washed out specifically for light-mode visitors even with the
-# theme forced. This forces the browser itself to treat the whole page as
-# dark, regardless of the visitor's OS/browser preference.
-st.markdown(
-    "<style>:root, html, body { color-scheme: dark !important; }</style>",
-    unsafe_allow_html=True,
-)
-
 # streamlit-folium's map components (used in the Map tab) are unreliable on
 # the very first script execution of a session — they can mount with a 0-size
 # viewport and stay blank until something triggers another rerun (this is why
@@ -1433,14 +1419,6 @@ components.html(f"""
 # starfield with real Three.js/WebGL — 850 silver points at #C9D6DE).
 # Both stars and particles use that same silver (#C9D6DE), not teal — the
 # whole field reads as one coherent silver starfield, like the reference.
-# Sits at z-index:-1, fixed to the viewport — visible in the margins
-# outside Streamlit's centered content column and behind any part of the
-# page that doesn't paint its own background. (An earlier version tried
-# forcing Streamlit's own containers transparent so stars would show
-# through everywhere, including under the widgets themselves — that broke
-# text contrast and flipped the sidebar to a light theme on some browsers,
-# because it fought Streamlit's own theme CSS. Reverted; see
-# .streamlit/config.toml for the actual fix to the light/dark theme bug.)
 # Pulling an actual Three.js scene from a CDN into the parent document
 # here would add a real external dependency and a new failure surface
 # (CDN blocked, WebGL context denied, etc.) on top of everything already
@@ -1459,9 +1437,25 @@ components.html("""
     var style = doc.createElement('style');
     style.id = 'starfield-style';
     style.textContent = `
+      /* Streamlit's own app containers have an opaque background by
+         default, which sat ABOVE our z-index:-1 stage and hid it
+         completely. Making those specific containers transparent lets
+         the fixed starfield show through everywhere behind the actual
+         widgets (which each keep their own opaque card/table backgrounds
+         and stay perfectly readable on top). */
+      .stApp, [data-testid="stAppViewContainer"], [data-testid="stMain"],
+      [data-testid="stHeader"], .main, .block-container {
+        background: transparent !important;
+      }
+      /* Force Streamlit's real content to stack ABOVE the starfield
+         regardless of DOM insertion order, so the dashboard itself is
+         never accidentally covered by the background layer. */
+      [data-testid="stAppViewContainer"] {
+        position: relative; z-index: 1;
+      }
       #starfield-stage {
         position: fixed; top:0; left:0; width:100vw; height:100vh;
-        pointer-events: none; z-index: -1; overflow: hidden;
+        pointer-events: none; z-index: 0; overflow: hidden;
         perspective: 900px; perspective-origin: 50% 50%;
         background: #05070a radial-gradient(ellipse at 50% 30%, rgba(14,117,109,0.10), transparent 60%);
       }
