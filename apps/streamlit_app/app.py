@@ -1485,7 +1485,8 @@ components.html("""
         100% { transform: translate(var(--dx), var(--dy)); opacity: 0; }
       }
       @media (prefers-reduced-motion: reduce) {
-        .sf-star, .sf-particle { animation: none !important; opacity: 0.35; }
+        .sf-star { animation-duration: 6s !important; }
+        .sf-particle { animation: none !important; opacity: 0.35; }
         #starfield-layer { transform: none !important; }
       }
     `;
