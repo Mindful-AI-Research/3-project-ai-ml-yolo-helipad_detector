@@ -1419,6 +1419,14 @@ components.html(f"""
 # starfield with real Three.js/WebGL — 850 silver points at #C9D6DE).
 # Both stars and particles use that same silver (#C9D6DE), not teal — the
 # whole field reads as one coherent silver starfield, like the reference.
+# Sits at z-index:-1, fixed to the viewport — visible in the margins
+# outside Streamlit's centered content column and behind any part of the
+# page that doesn't paint its own background. (An earlier version tried
+# forcing Streamlit's own containers transparent so stars would show
+# through everywhere, including under the widgets themselves — that broke
+# text contrast and flipped the sidebar to a light theme on some browsers,
+# because it fought Streamlit's own theme CSS. Reverted; see
+# .streamlit/config.toml for the actual fix to the light/dark theme bug.)
 # Pulling an actual Three.js scene from a CDN into the parent document
 # here would add a real external dependency and a new failure surface
 # (CDN blocked, WebGL context denied, etc.) on top of everything already
@@ -1437,25 +1445,9 @@ components.html("""
     var style = doc.createElement('style');
     style.id = 'starfield-style';
     style.textContent = `
-      /* Streamlit's own app containers have an opaque background by
-         default, which sat ABOVE our z-index:-1 stage and hid it
-         completely. Making those specific containers transparent lets
-         the fixed starfield show through everywhere behind the actual
-         widgets (which each keep their own opaque card/table backgrounds
-         and stay perfectly readable on top). */
-      .stApp, [data-testid="stAppViewContainer"], [data-testid="stMain"],
-      [data-testid="stHeader"], .main, .block-container {
-        background: transparent !important;
-      }
-      /* Force Streamlit's real content to stack ABOVE the starfield
-         regardless of DOM insertion order, so the dashboard itself is
-         never accidentally covered by the background layer. */
-      [data-testid="stAppViewContainer"] {
-        position: relative; z-index: 1;
-      }
       #starfield-stage {
         position: fixed; top:0; left:0; width:100vw; height:100vh;
-        pointer-events: none; z-index: 0; overflow: hidden;
+        pointer-events: none; z-index: -1; overflow: hidden;
         perspective: 900px; perspective-origin: 50% 50%;
         background: #05070a radial-gradient(ellipse at 50% 30%, rgba(14,117,109,0.10), transparent 60%);
       }
