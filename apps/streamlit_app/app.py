@@ -1339,7 +1339,7 @@ components.html(f"""
           100% {{ transform: rotate(360deg) scale(1);    opacity: 0; }}
         }}
         #heli-flyby-global {{
-          position: fixed; left: 0; top: 64px; font-size: 34px; z-index: 999999;
+          position: fixed; left: 0; top: 64px; font-size: 52px; z-index: 999999;
           pointer-events: none;
           filter: drop-shadow(0 2px 6px rgba(0,0,0,.35));
         }}
@@ -1437,11 +1437,27 @@ components.html("""
     var style = doc.createElement('style');
     style.id = 'starfield-style';
     style.textContent = `
+      /* Streamlit's own app containers have an opaque background by
+         default, which sat ABOVE our z-index:-1 stage and hid it
+         completely. Making those specific containers transparent lets
+         the fixed starfield show through everywhere behind the actual
+         widgets (which each keep their own opaque card/table backgrounds
+         and stay perfectly readable on top). */
+      .stApp, [data-testid="stAppViewContainer"], [data-testid="stMain"],
+      [data-testid="stHeader"], .main, .block-container {
+        background: transparent !important;
+      }
+      /* Force Streamlit's real content to stack ABOVE the starfield
+         regardless of DOM insertion order, so the dashboard itself is
+         never accidentally covered by the background layer. */
+      [data-testid="stAppViewContainer"] {
+        position: relative; z-index: 1;
+      }
       #starfield-stage {
         position: fixed; top:0; left:0; width:100vw; height:100vh;
-        pointer-events: none; z-index: -1; overflow: hidden;
+        pointer-events: none; z-index: 0; overflow: hidden;
         perspective: 900px; perspective-origin: 50% 50%;
-        background: radial-gradient(ellipse at 50% 30%, rgba(14,117,109,0.06), transparent 60%);
+        background: #05070a radial-gradient(ellipse at 50% 30%, rgba(14,117,109,0.10), transparent 60%);
       }
       #starfield-layer {
         position: absolute; top:-10%; left:-10%; width:120%; height:120%;
