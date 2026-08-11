@@ -1361,7 +1361,7 @@ components.html(f"""
       heli.style.left = '0';
       heli.style.animation = 'none';
       void heli.offsetWidth; // force reflow so the restart actually takes effect
-      heli.style.animation = 'heli-fly-across-global {LAP_SECONDS}s cubic-bezier(.45,.05,.55,.95) {LAPS} alternate forwards';
+      heli.style.animation = 'heli-fly-across-global {LAP_SECONDS}s cubic-bezier(.45,.05,.55,.95) infinite alternate';
     }}
 
     function spinFlight() {{
@@ -1370,12 +1370,25 @@ components.html(f"""
       heli.style.animation = 'none';
       void heli.offsetWidth;
       heli.style.animation = 'heli-spin-global 2.2s ease-in-out 1 forwards';
+      // resume the continuous flight loop once the spin finishes
+      setTimeout(replayFlight, 2300);
     }}
 
-    // First-ever mount: fly in once immediately.
+    // First-ever mount: fly in once immediately, and keep flying forever
+    // — every tab, no stopping — with an occasional smooth spin thrown in
+    // automatically (not only from the sidebar button), like a helicopter
+    // doing a lazy loop rather than a straight back-and-forth commute.
     if (heli.dataset.mounted !== '1') {{
       heli.dataset.mounted = '1';
       replayFlight();
+      var scheduleAutoSpin = function() {{
+        var delay = 18000 + Math.random() * 20000; // every ~18-38s
+        setTimeout(function() {{
+          spinFlight();
+          scheduleAutoSpin();
+        }}, delay);
+      }};
+      scheduleAutoSpin();
     }} else {{
       if (heli.dataset.lastFlyNonce !== flyNonce) {{
         heli.dataset.lastFlyNonce = flyNonce;
@@ -1403,17 +1416,17 @@ components.html(f"""
 # injection, same technique as the helicopter above) ----
 #
 # Matches the HTML presentation's visual identity (which renders its
-# starfield with real Three.js/WebGL — 850 silver points at #C9D6DE, 200
-# teal particles at #2fe8d4, with drag-to-orbit + mouse parallax). Pulling
-# an actual Three.js scene from a CDN into the parent document here would
-# add a real external dependency and a new failure surface (CDN blocked,
-# WebGL context denied, etc.) on top of everything already debugged for
-# the helicopter — not worth the risk for a background decoration. This
-# version reproduces the same *feel* — an orbiting, mouse-reactive camera
-# drifting slowly through a silver starfield with teal particles — using
+# starfield with real Three.js/WebGL — 850 silver points at #C9D6DE).
+# Both stars and particles use that same silver (#C9D6DE), not teal — the
+# whole field reads as one coherent silver starfield, like the reference.
+# Pulling an actual Three.js scene from a CDN into the parent document
+# here would add a real external dependency and a new failure surface
+# (CDN blocked, WebGL context denied, etc.) on top of everything already
+# debugged for the helicopter — not worth the risk for a background
+# decoration. This version reproduces the same *feel* — an orbiting,
+# mouse-reactive camera drifting slowly through a silver starfield — using
 # only CSS 3D transforms (perspective + rotateX/rotateY) driven by
-# requestAnimationFrame, with zero external dependencies. Same color
-# values as the presentation, so the two feel like one visual identity.
+# requestAnimationFrame, with zero external dependencies.
 components.html("""
 <script>
 (function() {
@@ -1444,8 +1457,8 @@ components.html("""
         50% { opacity: 0.9; }
       }
       .sf-particle {
-        position: absolute; background: #2fe8d4; border-radius: 2px;
-        box-shadow: 0 0 4px rgba(47,232,212,0.6);
+        position: absolute; background: #C9D6DE; border-radius: 2px;
+        box-shadow: 0 0 4px rgba(201,214,222,0.6);
         animation: sf-drift linear infinite;
       }
       @keyframes sf-drift {
@@ -1821,7 +1834,7 @@ with tab4:
         st.write(t("map.summary").format(sp=len(sp_df), other=len(other_df)))
         st_folium(fmap, use_container_width=True, height=520, key=f"main_map_{map_tiles}")
 
-        with st.expander(t("map.raw_data_expander")):
+        with st.expander(t("map.raw_data_expander"), expanded=True):
             t1, t2 = st.tabs([t("map.raw_data.sp_tab"), t("map.raw_data.other_tab")])
             with t1:
                 sp_df_display = sp_df.copy()
