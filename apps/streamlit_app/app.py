@@ -514,6 +514,26 @@ TR = {
     },
     "dl.session_summary.button": {"en": "🧾 Generate summary", "pt": "🧾 Gerar resumo"},
     "dl.session_summary.download_button": {"en": "⬇️ Download session summary (.pdf)", "pt": "⬇️ Baixar resumo da sessão (.pdf)"},
+    "dl.music.title": {"en": "🎵 Soundtrack", "pt": "🎵 Trilha sonora"},
+    "dl.music.body": {
+        "en": "The background track used throughout this dashboard and the executive presentation.",
+        "pt": "A faixa de fundo usada em todo o dashboard e na apresentação executiva.",
+    },
+    "dl.music.download_button": {"en": "⬇️ Download track (.mp3)", "pt": "⬇️ Baixar faixa (.mp3)"},
+    "dl.music.missing": {"en": "Audio file not found at `{path}`.", "pt": "Arquivo de áudio não encontrado em `{path}`."},
+    "dl.music.credit": {"en": "Passacaglia — Handel, 1708 (Deep House Remix)", "pt": "Passacaglia — Handel, 1708 (Deep House Remix)"},
+    "dl.music.poem_l1": {
+        "en": "The past may be our foundation,",
+        "pt": "O passado nos sustenta,",
+    },
+    "dl.music.poem_l2": {
+        "en": "but it doesn't have to be our destiny.",
+        "pt": "mas não nos define.",
+    },
+    "dl.music.poem_l3": {
+        "en": "What remains, also transforms.",
+        "pt": "O que permanece, se transforma.",
+    },
     "dl.repo_title": {"en": "Explore the full source code", "pt": "Explore o código-fonte completo"},
     "dl.repo_desc": {
         "en": "Architecture, datasets, notebooks, and the complete AI pipeline are all on GitHub.",
@@ -588,6 +608,20 @@ st.set_page_config(
     page_icon="🚁",
     layout="wide",
     initial_sidebar_state="expanded"
+)
+
+# `.streamlit/config.toml` forces Streamlit's own theme colors to dark,
+# but that alone doesn't stop the BROWSER's native "color-scheme" hint —
+# a separate CSS-level signal that controls default rendering for form
+# controls, scrollbars, and any color not explicitly set by our CSS. If
+# the visitor's OS/browser is set to light mode, the browser still assumes
+# `color-scheme: light` unless told otherwise, which can make text look
+# washed out for light-mode visitors even with the theme forced. This
+# forces the browser itself to treat the whole page as dark, regardless
+# of the visitor's OS/browser preference.
+st.markdown(
+    "<style>:root, html, body { color-scheme: dark !important; }</style>",
+    unsafe_allow_html=True,
 )
 
 # streamlit-folium's map components (used in the Map tab) are unreliable on
@@ -1302,8 +1336,11 @@ def detect_helipad(image, model: YOLO, conf: float):
 # listener are only created once (guarded by DOM id) even though
 # Streamlit re-executes this components.html call on every rerun; small
 # "nonce" values let the sidebar buttons force a replay/spin on demand.
-LAP_SECONDS = 7
-LAPS = 3
+# Flight path now varies per tab (4 distinct paths, picked by the clicked
+# tab's position — language-independent) and spins vary too (clockwise,
+# counter-clockwise, or a double spin, chosen at random each time), so it
+# reads as a helicopter actually patrolling the dashboard rather than one
+# looping clip. See FLIGHTS/SPINS inside the injected script below.
 
 if "heli_replay_nonce" not in st.session_state:
     st.session_state["heli_replay_nonce"] = 0
@@ -1322,21 +1359,58 @@ components.html(f"""
       var style = doc.createElement('style');
       style.id = 'heli-flyby-style';
       style.textContent = `
-        @keyframes heli-fly-across-global {{
-          0%   {{ left: 0%;   top: 64px; transform: rotate(-4deg)  scale(1);    opacity: 0; }}
+        /* Four distinct flight paths — different height range, duration
+           and number of undulations — so each tab feels like its own
+           little flight instead of one animation repeating everywhere. */
+        @keyframes heli-fly-v0 {{
+          0%   {{ left: 0%;   top: 44px; transform: rotate(-4deg)  scale(1);    opacity: 0; }}
           8%   {{ opacity: 1; }}
-          18%  {{ top: 50px;  transform: rotate(14deg)  scale(1.04); }}
-          34%  {{ top: 74px;  transform: rotate(-16deg) scale(1); }}
-          50%  {{ left: 48%;  top: 54px;  transform: rotate(10deg)  scale(1.05); }}
-          66%  {{ top: 76px;  transform: rotate(-14deg) scale(1); }}
-          82%  {{ top: 48px;  transform: rotate(16deg)  scale(1.04); }}
+          25%  {{ top: 30px;  transform: rotate(12deg)  scale(1.03); }}
+          50%  {{ left: 48%;  top: 50px;  transform: rotate(-8deg)  scale(1); }}
+          75%  {{ top: 28px;  transform: rotate(12deg)  scale(1.03); }}
           92%  {{ opacity: 1; }}
-          100% {{ left: 94%;  top: 62px;  transform: rotate(-5deg)  scale(1);   opacity: 0; }}
+          100% {{ left: 94%;  top: 42px;  transform: rotate(-4deg)  scale(1);   opacity: 0; }}
         }}
-        @keyframes heli-spin-global {{
+        @keyframes heli-fly-v1 {{
+          0%   {{ left: 0%;   top: 90px;  transform: rotate(-6deg)  scale(1);    opacity: 0; }}
+          8%   {{ opacity: 1; }}
+          20%  {{ top: 60px;  transform: rotate(10deg)  scale(1.04); }}
+          40%  {{ top: 105px; transform: rotate(-12deg) scale(1); }}
+          60%  {{ top: 65px;  transform: rotate(10deg)  scale(1.04); }}
+          80%  {{ top: 100px; transform: rotate(-10deg) scale(1); }}
+          92%  {{ opacity: 1; }}
+          100% {{ left: 94%;  top: 70px;  transform: rotate(-5deg)  scale(1);   opacity: 0; }}
+        }}
+        @keyframes heli-fly-v2 {{
+          0%   {{ left: 0%;   top: 56px; transform: rotate(-8deg)  scale(1);    opacity: 0; }}
+          6%   {{ opacity: 1; }}
+          30%  {{ left: 30%;  top: 36px;  transform: rotate(14deg)  scale(1.05); }}
+          50%  {{ left: 50%;  top: 66px;  transform: rotate(-14deg) scale(1); }}
+          70%  {{ left: 70%;  top: 36px;  transform: rotate(14deg)  scale(1.05); }}
+          94%  {{ opacity: 1; }}
+          100% {{ left: 96%;  top: 56px;  transform: rotate(-6deg)  scale(1);   opacity: 0; }}
+        }}
+        @keyframes heli-fly-v3 {{
+          0%   {{ left: 0%;   top: 34px; transform: rotate(-3deg) scale(0.95); opacity: 0; }}
+          10%  {{ opacity: 1; }}
+          50%  {{ left: 48%;  top: 40px; transform: rotate(3deg)  scale(1.08); }}
+          90%  {{ opacity: 1; }}
+          100% {{ left: 94%;  top: 32px; transform: rotate(-3deg) scale(0.95); opacity: 0; }}
+        }}
+        @keyframes heli-spin-cw {{
           0%   {{ transform: rotate(0deg)   scale(1);    opacity: 1; }}
           85%  {{ transform: rotate(360deg) scale(1.15); opacity: 1; }}
           100% {{ transform: rotate(360deg) scale(1);    opacity: 0; }}
+        }}
+        @keyframes heli-spin-ccw {{
+          0%   {{ transform: rotate(0deg)    scale(1);    opacity: 1; }}
+          85%  {{ transform: rotate(-360deg) scale(1.15); opacity: 1; }}
+          100% {{ transform: rotate(-360deg) scale(1);    opacity: 0; }}
+        }}
+        @keyframes heli-spin-double {{
+          0%   {{ transform: rotate(0deg)   scale(1);    opacity: 1; }}
+          90%  {{ transform: rotate(720deg) scale(1.2);  opacity: 1; }}
+          100% {{ transform: rotate(720deg) scale(1);    opacity: 0; }}
         }}
         #heli-flyby-global {{
           position: fixed; left: 0; top: 64px; font-size: 52px; z-index: 999999;
@@ -1357,21 +1431,33 @@ components.html(f"""
       doc.body.appendChild(heli);
     }}
 
-    function replayFlight() {{
+    var FLIGHTS = [
+      {{ name: 'heli-fly-v0', duration: 7  }},
+      {{ name: 'heli-fly-v1', duration: 11 }},
+      {{ name: 'heli-fly-v2', duration: 9  }},
+      {{ name: 'heli-fly-v3', duration: 6  }},
+    ];
+    var SPINS = ['heli-spin-cw', 'heli-spin-ccw', 'heli-spin-double'];
+    var currentFlightIdx = 0;
+
+    function replayFlight(idx) {{
+      if (typeof idx === 'number') currentFlightIdx = idx;
+      var f = FLIGHTS[currentFlightIdx % FLIGHTS.length];
       heli.style.left = '0';
       heli.style.animation = 'none';
       void heli.offsetWidth; // force reflow so the restart actually takes effect
-      heli.style.animation = 'heli-fly-across-global {LAP_SECONDS}s cubic-bezier(.45,.05,.55,.95) infinite alternate';
+      heli.style.animation = f.name + ' ' + f.duration + 's cubic-bezier(.45,.05,.55,.95) infinite alternate';
     }}
 
     function spinFlight() {{
-      heli.style.left = '46%';
-      heli.style.top = '64px';
+      var spinName = SPINS[Math.floor(Math.random() * SPINS.length)];
+      var rect = heli.getBoundingClientRect();
+      heli.style.left = Math.max(10, Math.min(90, (rect.left / doc.documentElement.clientWidth) * 100)) + '%';
       heli.style.animation = 'none';
       void heli.offsetWidth;
-      heli.style.animation = 'heli-spin-global 2.2s ease-in-out 1 forwards';
+      heli.style.animation = spinName + ' 2.2s ease-in-out 1 forwards';
       // resume the continuous flight loop once the spin finishes
-      setTimeout(replayFlight, 2300);
+      setTimeout(function() {{ replayFlight(); }}, 2300);
     }}
 
     // First-ever mount: fly in once immediately, and keep flying forever
@@ -1380,7 +1466,7 @@ components.html(f"""
     // doing a lazy loop rather than a straight back-and-forth commute.
     if (heli.dataset.mounted !== '1') {{
       heli.dataset.mounted = '1';
-      replayFlight();
+      replayFlight(0);
       var scheduleAutoSpin = function() {{
         var delay = 18000 + Math.random() * 20000; // every ~18-38s
         setTimeout(function() {{
@@ -1404,13 +1490,22 @@ components.html(f"""
       doc.body.dataset.heliListenerAttached = '1';
       doc.addEventListener('click', function(e) {{
         var tabBtn = e.target.closest('[role="tab"], [data-baseweb="tab"]');
-        if (tabBtn) replayFlight();
+        if (!tabBtn) return;
+        // Pick the flight variant from the clicked tab's position among all
+        // tabs — language-independent (works whether labels are PT or EN)
+        // and gives each tab a consistently different, recognizable path.
+        var allTabs = Array.prototype.slice.call(
+          doc.querySelectorAll('[role="tab"], [data-baseweb="tab"]')
+        );
+        var idx = allTabs.indexOf(tabBtn);
+        replayFlight(idx >= 0 ? idx : 0);
       }}, true);
     }}
   }} catch (e) {{ /* cross-origin iframe — feature unavailable in this Streamlit setup */ }}
 }})();
 </script>
 """, height=0)
+
 
 # ---- Ambient starfield background, behind every tab (parent-document
 # injection, same technique as the helicopter above) ----
@@ -1466,12 +1561,17 @@ components.html("""
       }
       .sf-star {
         position: absolute; border-radius: 50%; background: #E8EEF2;
-        box-shadow: 0 0 5px 1px rgba(201,214,222,0.55);
         animation: sf-twinkle ease-in-out infinite;
       }
       @keyframes sf-twinkle {
-        0%, 100% { opacity: 0.3; transform: scale(0.85); }
-        50% { opacity: 1; transform: scale(1.3); }
+        0%, 100% {
+          opacity: 0.3; transform: scale(0.85);
+          box-shadow: 0 0 2px 0px rgba(201,214,222,0.25);
+        }
+        50% {
+          opacity: 1; transform: scale(1.3);
+          box-shadow: 0 0 9px 3px rgba(201,214,222,0.85), 0 0 16px 5px rgba(201,214,222,0.35);
+        }
       }
       .sf-particle {
         position: absolute; background: #C9D6DE; border-radius: 2px;
@@ -2078,6 +2178,31 @@ with tab7:
             mime="application/pdf",
             use_container_width=True,
         )
+
+    st.markdown("---")
+    st.markdown(f"### {t('dl.music.title')}")
+    st.caption(t("dl.music.body"))
+    if AUDIO_PATH.exists():
+        with open(AUDIO_PATH, "rb") as f:
+            st.download_button(
+                t("dl.music.download_button"),
+                data=f,
+                file_name="passacaglia-deep-house-remix.mp3",
+                mime="audio/mpeg",
+                use_container_width=True,
+            )
+    else:
+        st.caption(t("dl.music.missing").format(path=AUDIO_PATH))
+    st.markdown(f"""
+    <div style="border-left: 2px solid #14b8a6; padding: 4px 0 4px 16px; margin-top: 10px;">
+        <p style="color:#9aa4ad; font-style: italic; font-size: 14px; line-height: 1.7; margin: 0;">
+            🎼 {t('dl.music.credit')}<br>
+            {t('dl.music.poem_l1')}<br>
+            {t('dl.music.poem_l2')}<br>
+            {t('dl.music.poem_l3')}
+        </p>
+    </div>
+    """, unsafe_allow_html=True)
 
     st.markdown("---")
     st.markdown(f"""
