@@ -1,5 +1,127 @@
 
 
+# 🚁 Top 10 — Cities with the Highest Presence/Traffic of Helicopters
+
+</div>
+
+<br>
+
+<table>
+<thead>
+<tr>
+<th align="center">Rank</th>
+<th>City</th>
+<th>Country</th>
+<th>Main Indicator</th>
+<th align="center">Rate<br><sub>(Relative Index)</sub></th>
+<th align="center">Estimated Fleet<br><sub>(Helicopters)</sub></th>
+<th>Highlight</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="center"><strong>1st</strong></td>
+<td><strong>São Paulo</strong></td>
+<td>🇧🇷 Brazil</td>
+<td>Largest fleet</td>
+<td align="center" style="background:#123E7A;color:#FFFFFF;"><strong>27.7%</strong></td>
+<td align="center">400+</td>
+<td>~2,200 landings/takeoffs daily in the metropolitan area</td>
+</tr>
+<tr>
+<td align="center"><strong>2nd</strong></td>
+<td><strong>New York</strong></td>
+<td>🇺🇸 USA</td>
+<td>Fleet + intense urban traffic</td>
+<td align="center" style="background:#2864A5;color:#FFFFFF;"><strong>25.5%</strong></td>
+<td align="center">—</td>
+<td>Strong executive, tourist, and transport use</td>
+</tr>
+<tr>
+<td align="center"><strong>3rd</strong></td>
+<td><strong>Tokyo</strong></td>
+<td>🇯🇵 Japan</td>
+<td>Large fleet</td>
+<td align="center" style="background:#347CB8;color:#FFFFFF;"><strong>23.9%</strong></td>
+<td align="center">—</td>
+<td>Corporate, emergency, and transport operations</td>
+</tr>
+<tr>
+<td align="center"><strong>4th</strong></td>
+<td><strong>Rio de Janeiro</strong></td>
+<td>🇧🇷 Brazil</td>
+<td>Fleet + offshore operations</td>
+<td align="center" style="background:#438FC3;color:#FFFFFF;"><strong>22.8%</strong></td>
+<td align="center">—</td>
+<td>Significant activity related to oil and gas</td>
+</tr>
+<tr>
+<td align="center"><strong>5th</strong></td>
+<td><strong>London</strong></td>
+<td>🇬🇧 United Kingdom</td>
+<td>Executive traffic</td>
+<td align="center" style="background:#5AA2CC;color:#FFFFFF;"><strong>21.3%</strong></td>
+<td align="center">—</td>
+<td>Strong corporate market and urban heliports</td>
+</tr>
+<tr>
+<td align="center"><strong>6th</strong></td>
+<td><strong>Belo Horizonte</strong></td>
+<td>🇧🇷 Brazil</td>
+<td>Large fleet</td>
+<td align="center" style="background:#6EAFD3;color:#07131D;"><strong>20.2%</strong></td>
+<td align="center">—</td>
+<td>Strong executive and corporate aviation</td>
+</tr>
+<tr>
+<td align="center"><strong>7th</strong></td>
+<td><strong>Santiago</strong></td>
+<td>🇨🇱 Chile</td>
+<td>Large fleet</td>
+<td align="center" style="background:#72B1D4;color:#07131D;"><strong>20.1%</strong></td>
+<td align="center">—</td>
+<td>Executive aviation and special operations</td>
+</tr>
+<tr>
+<td align="center"><strong>8th</strong></td>
+<td><strong>Mexico City</strong></td>
+<td>🇲🇽 Mexico</td>
+<td>Large fleet</td>
+<td align="center" style="background:#78B5D7;color:#07131D;"><strong>19.8%</strong></td>
+<td align="center">—</td>
+<td>Executive transport and government operations</td>
+</tr>
+<tr>
+<td align="center"><strong>9th</strong></td>
+<td><strong>Bogotá</strong></td>
+<td>🇨🇴 Colombia</td>
+<td>Large fleet</td>
+<td align="center" style="background:#91C3DF;color:#07131D;"><strong>19.1%</strong></td>
+<td align="center">—</td>
+<td>Executive, emergency, and special operations</td>
+</tr>
+<tr>
+<td align="center"><strong>10th</strong></td>
+<td><strong>Beijing</strong></td>
+<td>🇨🇳 China</td>
+<td>Large fleet</td>
+<td align="center" style="background:#E8F2F8;color:#07131D;"><strong>13.6%</strong></td>
+<td align="center">—</td>
+<td>Executive, governmental, and special operations</td>
+</tr>
+</tbody>
+</table>
+
+
+
+<br><br>
+
+
+#
+
+<br><br>
+
+
 # 🚁 Top 10 Ranked — Cidades com maior presença/tráfego de helicópteros
 
 </div>
