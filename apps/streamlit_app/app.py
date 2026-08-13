@@ -640,6 +640,16 @@ st.markdown("""
     <style>
     .main-title {font-size: 42px !important; font-weight: bold; color: #1E3A8A; text-align: center;}
     .subtitle {text-align: center; color: #64748B; font-size: 18px; margin-bottom: 30px;}
+    /* Subtle frame + vignette on every detection image (Sample Images,
+       Upload, Search by Region) so satellite tiles read as part of the
+       same designed piece instead of looking like raw, unstyled crops. */
+    [data-testid="stImage"] img {
+        border-radius: 10px;
+        border: 1px solid rgba(20,184,166,0.28);
+        box-shadow:
+            inset 0 0 34px rgba(0,0,0,0.30),
+            0 4px 18px rgba(0,0,0,0.35);
+    }
     .result-card {background-color: #f8fafc; padding: 15px; border-radius: 12px; border: 1px solid #e2e8f0;}
     .metric-card {
         background-color: #f8fafc;
@@ -1354,6 +1364,7 @@ components.html(f"""
     var doc = window.parent.document;
     var flyNonce = "{st.session_state['heli_replay_nonce']}";
     var spinNonce = "{st.session_state['heli_spin_nonce']}";
+    var isPt = "{st.session_state.get('lang', 'pt')}" === 'pt';
 
     if (!doc.getElementById('heli-flyby-style')) {{
       var style = doc.createElement('style');
@@ -1417,6 +1428,18 @@ components.html(f"""
           pointer-events: none;
           filter: drop-shadow(0 2px 6px rgba(0,0,0,.35));
         }}
+        #heli-tab-toast {{
+          position: fixed; left: 50%; bottom: 22px; transform: translate(-50%, 12px);
+          background: rgba(10,14,20,0.85); color: #C9D6DE; font-size: 12.5px;
+          font-family: 'Inter', 'Segoe UI', sans-serif; letter-spacing: .02em;
+          padding: 7px 16px; border-radius: 999px; border: 1px solid rgba(20,184,166,0.35);
+          pointer-events: none; z-index: 999998; opacity: 0;
+          transition: opacity .35s ease, transform .35s ease;
+          white-space: nowrap;
+        }}
+        #heli-tab-toast.show {{
+          opacity: 1; transform: translate(-50%, 0);
+        }}
       `;
       doc.head.appendChild(style);
     }}
@@ -1429,6 +1452,21 @@ components.html(f"""
       heli.dataset.lastFlyNonce = flyNonce;   // don't fly again on the render that creates it — replayFlight() below handles the first flight
       heli.dataset.lastSpinNonce = spinNonce; // don't spin on creation, only on an actual button click later
       doc.body.appendChild(heli);
+    }}
+
+    var toast = doc.getElementById('heli-tab-toast');
+    if (!toast) {{
+      toast = doc.createElement('div');
+      toast.id = 'heli-tab-toast';
+      doc.body.appendChild(toast);
+    }}
+    var toastTimer = null;
+    function showTabToast(tabLabel) {{
+      var prefix = isPt ? '🚁 Sobrevoando ' : '🚁 Flying over ';
+      toast.textContent = prefix + tabLabel + '...';
+      toast.classList.add('show');
+      if (toastTimer) clearTimeout(toastTimer);
+      toastTimer = setTimeout(function() {{ toast.classList.remove('show'); }}, 2000);
     }}
 
     var FLIGHTS = [
@@ -1488,17 +1526,22 @@ components.html(f"""
 
     if (!doc.body.dataset.heliListenerAttached) {{
       doc.body.dataset.heliListenerAttached = '1';
+      // Thematic mapping by tab position (About, Metrics, Field, Map,
+      // Search, Samples, Upload, Pipeline, Governance, Downloads): Map
+      // and Governance get the slow, low "survey" path (v1) since they're
+      // about surveying/overseeing; Field and Search get the looping
+      // exploration path (v2); the rest get quicker, lighter passes.
+      var TAB_FLIGHT_MAP = [3, 0, 2, 1, 2, 0, 3, 0, 1, 3];
       doc.addEventListener('click', function(e) {{
         var tabBtn = e.target.closest('[role="tab"], [data-baseweb="tab"]');
         if (!tabBtn) return;
-        // Pick the flight variant from the clicked tab's position among all
-        // tabs — language-independent (works whether labels are PT or EN)
-        // and gives each tab a consistently different, recognizable path.
         var allTabs = Array.prototype.slice.call(
           doc.querySelectorAll('[role="tab"], [data-baseweb="tab"]')
         );
         var idx = allTabs.indexOf(tabBtn);
-        replayFlight(idx >= 0 ? idx : 0);
+        var flightIdx = (idx >= 0 && idx < TAB_FLIGHT_MAP.length) ? TAB_FLIGHT_MAP[idx] : (idx % FLIGHTS.length);
+        replayFlight(flightIdx);
+        showTabToast(tabBtn.textContent.trim());
       }}, true);
     }}
   }} catch (e) {{ /* cross-origin iframe — feature unavailable in this Streamlit setup */ }}
@@ -1656,6 +1699,62 @@ components.html("""
       }
     }
     if (!reduceMotion) requestAnimationFrame(tick);
+  } catch (e) { /* cross-origin iframe — feature unavailable in this Streamlit setup */ }
+})();
+</script>
+""", height=0)
+
+# ---- Animated count-up for headline numbers (parent-document injection,
+# same technique as everything else above) ----
+#
+# Targets Streamlit's own st.metric() values (used for "Points collected"
+# / "Distinct locations" in the discovery-coverage section) and the
+# mAP@50-95 figure inside each custom .metric-card in the Metrics tab.
+# Runs once per element (guarded by a data-counted flag) and re-scans
+# periodically so it also catches cards that appear later — e.g. after
+# switching to a tab that wasn't rendered yet, or the field-summary cards
+# once their async data loads.
+components.html("""
+<script>
+(function() {
+  try {
+    var doc = window.parent.document;
+    if (doc.getElementById('heli-counter-marker')) return;
+    var marker = doc.createElement('div');
+    marker.id = 'heli-counter-marker';
+    marker.style.display = 'none';
+    doc.body.appendChild(marker);
+
+    function animateCount(el) {
+      if (el.dataset.counted) return;
+      var raw = el.textContent.trim();
+      var m = raw.match(/^([^\\d\\-]*)([\\d.,]+)(.*)$/);
+      if (!m) return;
+      var prefix = m[1], numStr = m[2].replace(/,/g, ''), suffix = m[3];
+      var decimals = numStr.indexOf('.') !== -1 ? numStr.split('.')[1].length : 0;
+      var target = parseFloat(numStr);
+      if (isNaN(target)) return;
+      el.dataset.counted = '1';
+      var duration = 1000, start = null;
+      function step(ts) {
+        if (!start) start = ts;
+        var progress = Math.min((ts - start) / duration, 1);
+        var eased = 1 - Math.pow(1 - progress, 3);
+        el.textContent = prefix + (target * eased).toFixed(decimals) + suffix;
+        if (progress < 1) requestAnimationFrame(step);
+        else el.textContent = raw;
+      }
+      requestAnimationFrame(step);
+    }
+
+    function scan() {
+      var candidates = doc.querySelectorAll(
+        '[data-testid="stMetricValue"], .metric-card p[style*="font-size:22px"]'
+      );
+      for (var i = 0; i < candidates.length; i++) animateCount(candidates[i]);
+    }
+    scan();
+    setInterval(scan, 700);
   } catch (e) { /* cross-origin iframe — feature unavailable in this Streamlit setup */ }
 })();
 </script>
