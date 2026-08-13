@@ -479,10 +479,6 @@ TR = {
 },
 
 
-# ============================================================
-# TOP 10 HELICOPTER CITIES
-# ============================================================
-
 "cities.header": {
     "en": "🚁 Top 10 — Cities with the Highest Presence/Traffic of Helicopters",
     "pt": "🚁 Top 10 — Cidades com maior presença/tráfego de helicópteros"
@@ -711,9 +707,6 @@ TR = {
 ],
 
 
-# ============================================================
-# DASHBOARD CLOSING MESSAGE
-# ============================================================
 
 "about.dashboard.closing": {
     "en": (
@@ -727,34 +720,46 @@ TR = {
 },
 
 
-# ============================================================
-# ABOUT & TEAM METADATA — LAST ITEMS
-# ============================================================
-
-"about.program": {
-    "en": "Program",
-    "pt": "Curso"
-},
-
-"about.course": {
-    "en": "Course",
-    "pt": "Disciplina"
-},
-
-"about.professor": {
-    "en": "Professor",
-    "pt": "Professor"
-},
-
-"about.authors": {
-    "en": "Authors",
-    "pt": "Autores"
-},
-
 "about.institution": {
     "en": "Institution",
     "pt": "Instituição"
 },
+
+"about.institution.value": {
+    "en": "PUC-SP — FACEI",
+    "pt": "PUC-SP — FACEI"
+},
+
+"about.program.value": {
+    "en": "BSc in Human Centered-AI & Data Science",
+    "pt": "Bacharelado em IA Centrada no Humano & Ciência de Dados"
+},
+
+"about.course.value": {
+    "en": "Machine Learning / Computer Vision — Project P2",
+    "pt": "Machine Learning / Visão Computacional — Projeto P2"
+},
+
+"about.professor.value": {
+    "en": "Rooney Ribeiro Albuquerque Coelho",
+    "pt": "Rooney Ribeiro Albuquerque Coelho"
+},
+
+"about.authors.value": {
+    "en": (
+        "Carlos Antonio dos Santos Roth Gorham<br>"
+        "Fabiana Campanari<br>"
+        "Pedro Vyctor Almeida"
+    ),
+    "pt": (
+        "Carlos Antonio dos Santos Roth Gorham<br>"
+        "Fabiana Campanari<br>"
+        "Pedro Vyctor Almeida"
+    )
+},
+
+
+
 
    
     # ---- Tab 7: Downloads ----
