@@ -72,6 +72,8 @@ TR = {
     },
     "sidebar.replay_heli": {"en": "Replay flyby", "pt": "Repetir sobrevoo"},
     "sidebar.spin_heli": {"en": "Spin", "pt": "Girar"},
+    "sidebar.pause_heli": {"en": "Pause animation", "pt": "Pausar animação"},
+    "sidebar.resume_heli": {"en": "Resume animation", "pt": "Retomar animação"},
     "sidebar.extras": {"en": "🎬 Extras (helicopter animation)", "pt": "🎬 Extras (animação do helicóptero)"},
     "about.discovery.title": {"en": "🗺️ Discovery dataset coverage", "pt": "🗺️ Cobertura do dataset de descoberta"},
     "about.discovery.body": {
@@ -665,21 +667,21 @@ st.markdown("""
         box-shadow: 0 12px 24px rgba(15, 23, 42, 0.16);
     }
     .flow-step {
-        border-radius: 14px;
-        padding: 20px 20px 18px 20px;
+        border-radius: 16px;
+        padding: 22px 20px 20px 20px;
         text-align: left;
         position: relative;
-        min-height: 176px;
+        min-height: 180px;
         display: flex;
         flex-direction: column;
-        border: 1px solid rgba(255,255,255,0.25);
+        border: 1px solid rgba(255,255,255,0.12);
         box-shadow: 0 3px 10px rgba(15, 23, 42, 0.12);
-        transition: transform 0.15s ease, box-shadow 0.15s ease;
+        transition: transform 0.18s ease, box-shadow 0.18s ease;
         margin-bottom: 18px;
     }
     .flow-step:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 12px 26px rgba(15, 23, 42, 0.22);
+        transform: translateY(-4px);
+        box-shadow: 0 14px 30px rgba(15, 23, 42, 0.28);
     }
     .flow-step .flow-badge {
         display: inline-flex;
@@ -687,8 +689,8 @@ st.markdown("""
         justify-content: center;
         width: 30px;
         height: 30px;
-        border-radius: 8px;
-        font-size: 13px;
+        border-radius: 999px;
+        font-size: 12.5px;
         font-weight: 700;
         margin-bottom: 12px;
     }
@@ -763,11 +765,12 @@ def _shade(hex_color: str, amount: float) -> str:
 
 
 def blue_scale(t: float) -> str:
-    """Interpolates from vivid blue (t=0, first step) to white (t=1, last step),
-    the same blue family used across the dashboard's other blue-scale visuals
-    (map detection-rate layer, metrics)."""
-    blue, white = _hex_to_rgb("#1E3A8A"), _hex_to_rgb("#FFFFFF")
-    return _rgb_to_hex(tuple(int(a + (b - a) * t) for a, b in zip(blue, white)))
+    """Interpolates from deep navy (t=0, first step) to the project's teal
+    accent (t=1, last step) — the same blue-to-teal family used across the
+    dashboard's tables and metrics, but staying dark end-to-end so no card
+    ever turns near-white and breaks the dark theme."""
+    start, end = _hex_to_rgb("#1E3A8A"), _hex_to_rgb("#0E756D")
+    return _rgb_to_hex(tuple(int(a + (b - a) * t) for a, b in zip(start, end)))
 
 
 # ========================= MAP TILE PROVIDERS =========================
@@ -1268,16 +1271,26 @@ with st.sidebar:
 
     render_music_toggle()
 
+    if "heli_paused" not in st.session_state:
+        st.session_state["heli_paused"] = False
+
     with st.expander(t("sidebar.extras"), expanded=False):
         heli_col1, heli_col2 = st.columns(2)
         with heli_col1:
             if st.button("🚁 " + t("sidebar.replay_heli"), use_container_width=True):
                 st.session_state["heli_replay_nonce"] += 1
+                st.session_state["heli_paused"] = False
                 st.rerun()
         with heli_col2:
             if st.button("🌀 " + t("sidebar.spin_heli"), use_container_width=True):
                 st.session_state["heli_spin_nonce"] += 1
                 st.rerun()
+
+        pause_label = t("sidebar.resume_heli") if st.session_state["heli_paused"] else t("sidebar.pause_heli")
+        pause_icon = "▶️" if st.session_state["heli_paused"] else "⏸️"
+        if st.button(f"{pause_icon} {pause_label}", use_container_width=True):
+            st.session_state["heli_paused"] = not st.session_state["heli_paused"]
+            st.rerun()
 
     st.markdown(f"### {t('sidebar.model')}")
     if not MODEL_OPTIONS:
@@ -1365,6 +1378,7 @@ components.html(f"""
     var flyNonce = "{st.session_state['heli_replay_nonce']}";
     var spinNonce = "{st.session_state['heli_spin_nonce']}";
     var isPt = "{st.session_state.get('lang', 'pt')}" === 'pt';
+    var isPaused = {"true" if st.session_state.get("heli_paused") else "false"};
 
     if (!doc.getElementById('heli-flyby-style')) {{
       var style = doc.createElement('style');
@@ -1488,6 +1502,7 @@ components.html(f"""
     }}
 
     function spinFlight() {{
+      if (isPaused) return;
       var spinName = SPINS[Math.floor(Math.random() * SPINS.length)];
       var rect = heli.getBoundingClientRect();
       heli.style.left = Math.max(10, Math.min(90, (rect.left / doc.documentElement.clientWidth) * 100)) + '%';
@@ -1498,13 +1513,19 @@ components.html(f"""
       setTimeout(function() {{ replayFlight(); }}, 2300);
     }}
 
+    // Applied on every run (cheap, idempotent) so the pause/resume button
+    // takes effect immediately without needing its own nonce dance —
+    // pausing freezes the animation exactly where it is via CSS
+    // animation-play-state, rather than stopping/losing position.
+    heli.style.animationPlayState = isPaused ? 'paused' : 'running';
+
     // First-ever mount: fly in once immediately, and keep flying forever
     // — every tab, no stopping — with an occasional smooth spin thrown in
     // automatically (not only from the sidebar button), like a helicopter
     // doing a lazy loop rather than a straight back-and-forth commute.
     if (heli.dataset.mounted !== '1') {{
       heli.dataset.mounted = '1';
-      replayFlight(0);
+      if (!isPaused) replayFlight(0);
       var scheduleAutoSpin = function() {{
         var delay = 18000 + Math.random() * 20000; // every ~18-38s
         setTimeout(function() {{
@@ -1516,7 +1537,7 @@ components.html(f"""
     }} else {{
       if (heli.dataset.lastFlyNonce !== flyNonce) {{
         heli.dataset.lastFlyNonce = flyNonce;
-        replayFlight();
+        if (!isPaused) replayFlight();
       }}
       if (heli.dataset.lastSpinNonce !== spinNonce) {{
         heli.dataset.lastSpinNonce = spinNonce;
@@ -1540,7 +1561,7 @@ components.html(f"""
         );
         var idx = allTabs.indexOf(tabBtn);
         var flightIdx = (idx >= 0 && idx < TAB_FLIGHT_MAP.length) ? TAB_FLIGHT_MAP[idx] : (idx % FLIGHTS.length);
-        replayFlight(flightIdx);
+        if (!isPaused) replayFlight(flightIdx);
         showTabToast(tabBtn.textContent.trim());
       }}, true);
     }}
@@ -2136,20 +2157,19 @@ with tab5:
         for col, (icon, title, desc) in zip(row_cols, row):
             frac = step_idx / (n - 1) if n > 1 else 0.0
             base = blue_scale(frac)
-            bg_light = _shade(base, 0.22)
-            bg_dark = _shade(base, -0.22)
-            gradient = f"linear-gradient(135deg, {bg_light} 0%, {base} 55%, {bg_dark} 100%)"
+            bg_light = _shade(base, 0.16)
+            bg_dark = _shade(base, -0.30)
+            gradient = f"linear-gradient(145deg, {bg_light} 0%, {base} 55%, {bg_dark} 100%)"
             accent_rgb = _hex_to_rgb(base)
-            glow = f"rgba({accent_rgb[0]},{accent_rgb[1]},{accent_rgb[2]},0.38)"
-            is_light = frac >= 0.6
-            title_color = "#0F172A" if is_light else "#FFFFFF"
-            desc_color = "#334155" if is_light else "#DBEAFE"
-            badge_bg = "rgba(15,23,42,0.10)" if is_light else "rgba(255,255,255,0.20)"
-            badge_color = "#1E3A8A" if is_light else "#FFFFFF"
+            glow = f"rgba({accent_rgb[0]},{accent_rgb[1]},{accent_rgb[2]},0.45)"
+            title_color = "#FFFFFF"
+            desc_color = "#E2E8F0"
+            badge_bg = "rgba(255,255,255,0.16)"
+            badge_color = "#FFFFFF"
             with col:
                 st.markdown(f"""
-                <div class="flow-step" style="background:{gradient}; border-top:3px solid {bg_dark}; box-shadow: 0 4px 16px {glow};">
-                    <span class="flow-badge" style="background:{badge_bg}; color:{badge_color};">{step_idx+1:02d}</span>
+                <div class="flow-step" style="background:{gradient}; border-top:3px solid rgba(255,255,255,0.35); box-shadow: 0 6px 20px {glow}, inset 0 1px 0 rgba(255,255,255,0.12);">
+                    <span class="flow-badge" style="background:{badge_bg}; color:{badge_color}; box-shadow: 0 0 0 1px rgba(255,255,255,0.25);">{step_idx+1:02d}</span>
                     <span class="flow-icon">{icon}</span>
                     <p class="flow-title" style="color:{title_color};">{title}</p>
                     <p class="flow-desc" style="color:{desc_color};">{desc}</p>
