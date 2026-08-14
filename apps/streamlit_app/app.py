@@ -1353,6 +1353,19 @@ def render_music_toggle():
     </script>
     """, height=64)
 
+    # Download lives right next to the player — one contextual music
+    # experience in the sidebar (play + download together), instead of
+    # a separate, disconnected download link buried in another tab.
+    if AUDIO_PATH.exists():
+        with open(AUDIO_PATH, "rb") as f:
+            st.download_button(
+                t("dl.music.download_button"),
+                data=f,
+                file_name="passacaglia-deep-house-remix.mp3",
+                mime="audio/mpeg",
+                use_container_width=True,
+            )
+
 
 # ========================= SIDEBAR: LANGUAGE + MODEL SELECTION =========================
 with st.sidebar:
@@ -1887,8 +1900,11 @@ st.markdown(f"""
     <p style="color:#7C8B93; font-style:italic; font-size:12.5px; letter-spacing:.03em; margin:0 0 6px 0;">
         {t('epigraph.credit')}
     </p>
-    <p style="color:#9FB0B8; font-style:italic; font-size:13.5px; line-height:1.6; margin:0;">
-        {t('epigraph.line1')}<br>{t('epigraph.line2')}
+    <p style="color:#9FB0B8; font-style:italic; font-size:13.5px; line-height:1.6; margin:0 0 4px 0;">
+        {t('epigraph.line1')}
+    </p>
+    <p style="color:#C9D6DE; font-weight:700; font-size:13.5px; line-height:1.6; margin:0;">
+        {t('epigraph.line2')}
     </p>
 </div>
 """, unsafe_allow_html=True)
@@ -2432,32 +2448,6 @@ with tab7:
         )
 
     st.markdown("---")
-    st.markdown(f"### {t('dl.music.title')}")
-    st.caption(t("dl.music.body"))
-    if AUDIO_PATH.exists():
-        with open(AUDIO_PATH, "rb") as f:
-            st.download_button(
-                t("dl.music.download_button"),
-                data=f,
-                file_name="passacaglia-deep-house-remix.mp3",
-                mime="audio/mpeg",
-                use_container_width=True,
-            )
-    else:
-        st.caption(t("dl.music.missing").format(path=AUDIO_PATH))
-    st.markdown(f"""
-    <div style="border-left: 2px solid #14b8a6; padding: 4px 0 4px 16px; margin-top: 10px;">
-        <p style="color:#9aa4ad; font-style: italic; font-size: 14px; line-height: 1.7; margin: 0;">
-            🎼 {t('dl.music.credit')}<br>
-            {t('dl.music.poem_l1')}<br>
-            {t('dl.music.poem_l2')}<br>
-            {t('dl.music.poem_l3')}<br>
-            {t('dl.music.poem_l4')}
-        </p>
-    </div>
-    """, unsafe_allow_html=True)
-
-    st.markdown("---")
     st.markdown(f"""
     <div class="dark-card">
         <span class="repo-icon">🚁</span>
@@ -2717,7 +2707,7 @@ st.markdown(f"""
 {t("footer.line3")}
 </p>
 
-<p style="text-align:center; color:#7C8B93; font-style:italic; font-size:12.5px; letter-spacing:.02em; margin:20px 0 0 0; max-width:520px; margin-left:auto; margin-right:auto;">
+<p style="text-align:center; color:#C9D6DE; font-weight:700; font-size:13px; letter-spacing:.02em; margin:20px 0 0 0; max-width:520px; margin-left:auto; margin-right:auto;">
 {t("epigraph.echo")}
 </p>
 """, unsafe_allow_html=True)
