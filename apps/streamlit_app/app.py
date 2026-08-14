@@ -561,6 +561,290 @@ TR = {
 "about.authors": {"en": "Authors", "pt": "Autores"},
 
     
+    ),
+},
+
+
+"cities.header": {
+    "en": "🚁 Top 10 — Cities with the Highest Presence/Traffic of Helicopters",
+    "pt": "🚁 Top 10 — Cidades com maior presença/tráfego de helicópteros"
+},
+
+"cities.table.columns": {
+    "en": [
+        "Rank",
+        "City",
+        "Country",
+        "Main Indicator",
+        "Rate (Relative Index)",
+        "Estimated Fleet (Helicopters)",
+        "Highlight"
+    ],
+    "pt": [
+        "Rank",
+        "Cidade",
+        "País",
+        "Indicador principal",
+        "Rate (Índice Relativo)",
+        "Frota estimada (Helicópteros)",
+        "Destaque"
+    ]
+},
+
+"cities.table.data": {
+    "en": [
+        [
+            "1st",
+            "São Paulo",
+            "🇧🇷 Brazil",
+            "Largest fleet",
+            "27.7%",
+            "400+",
+            "~2,200 landings/takeoffs daily in the metropolitan area"
+        ],
+        [
+            "2nd",
+            "New York",
+            "🇺🇸 USA",
+            "Fleet + intense urban traffic",
+            "25.5%",
+            "—",
+            "Strong executive, tourist, and transport use"
+        ],
+        [
+            "3rd",
+            "Tokyo",
+            "🇯🇵 Japan",
+            "Large fleet",
+            "23.9%",
+            "—",
+            "Corporate, emergency, and transport operations"
+        ],
+        [
+            "4th",
+            "Rio de Janeiro",
+            "🇧🇷 Brazil",
+            "Fleet + offshore operations",
+            "22.8%",
+            "—",
+            "Significant activity related to oil and gas"
+        ],
+        [
+            "5th",
+            "London",
+            "🇬🇧 United Kingdom",
+            "Executive traffic",
+            "21.3%",
+            "—",
+            "Strong corporate market and urban heliports"
+        ],
+        [
+            "6th",
+            "Belo Horizonte",
+            "🇧🇷 Brazil",
+            "Large fleet",
+            "20.2%",
+            "—",
+            "Strong executive and corporate aviation"
+        ],
+        [
+            "7th",
+            "Santiago",
+            "🇨🇱 Chile",
+            "Large fleet",
+            "20.1%",
+            "—",
+            "Executive aviation and special operations"
+        ],
+        [
+            "8th",
+            "Mexico City",
+            "🇲🇽 Mexico",
+            "Large fleet",
+            "19.8%",
+            "—",
+            "Executive transport and government operations"
+        ],
+        [
+            "9th",
+            "Bogotá",
+            "🇨🇴 Colombia",
+            "Large fleet",
+            "19.1%",
+            "—",
+            "Executive, emergency, and special operations"
+        ],
+        [
+            "10th",
+            "Beijing",
+            "🇨🇳 China",
+            "Large fleet",
+            "13.6%",
+            "—",
+            "Executive, governmental, and special operations"
+        ]
+    ],
+
+    "pt": [
+        [
+            "1º",
+            "São Paulo",
+            "🇧🇷 Brasil",
+            "Maior frota",
+            "27.7%",
+            "400+",
+            "~2.200 pousos/decolagens diários na região metropolitana"
+        ],
+        [
+            "2º",
+            "Nova York",
+            "🇺🇸 EUA",
+            "Frota + intenso tráfego urbano",
+            "25.5%",
+            "—",
+            "Forte uso executivo, turístico e de transporte"
+        ],
+        [
+            "3º",
+            "Tóquio",
+            "🇯🇵 Japão",
+            "Grande frota",
+            "23.9%",
+            "—",
+            "Operações corporativas, emergência e transporte"
+        ],
+        [
+            "4º",
+            "Rio de Janeiro",
+            "🇧🇷 Brasil",
+            "Frota + operações offshore",
+            "22.8%",
+            "—",
+            "Grande atividade ligada ao petróleo e gás"
+        ],
+        [
+            "5º",
+            "Londres",
+            "🇬🇧 Reino Unido",
+            "Tráfego executivo",
+            "21.3%",
+            "—",
+            "Forte mercado corporativo e heliportos urbanos"
+        ],
+        [
+            "6º",
+            "Belo Horizonte",
+            "🇧🇷 Brasil",
+            "Grande frota",
+            "20.2%",
+            "—",
+            "Forte aviação executiva e corporativa"
+        ],
+        [
+            "7º",
+            "Santiago",
+            "🇨🇱 Chile",
+            "Grande frota",
+            "20.1%",
+            "—",
+            "Aviação executiva e operações especiais"
+        ],
+        [
+            "8º",
+            "Cidade do México",
+            "🇲🇽 México",
+            "Grande frota",
+            "19.8%",
+            "—",
+            "Transporte executivo e operações governamentais"
+        ],
+        [
+            "9º",
+            "Bogotá",
+            "🇨🇴 Colômbia",
+            "Grande frota",
+            "19.1%",
+            "—",
+            "Executivo, emergência e operações especiais"
+        ],
+        [
+            "10º",
+            "Pequim",
+            "🇨🇳 China",
+            "Grande frota",
+            "13.6%",
+            "—",
+            "Executivo, governamental e operações especiais"
+        ]
+    ]
+},
+
+"cities.table.colors": [
+    "#123E7A",
+    "#2864A5",
+    "#347CB8",
+    "#438FC3",
+    "#5AA2CC",
+    "#6EAFD3",
+    "#72B1D4",
+    "#78B5D7",
+    "#91C3DF",
+    "#E8F2F8"
+],
+
+
+
+"about.dashboard.closing": {
+    "en": (
+        "This dashboard provides transparent access to the AI pipeline, dataset, "
+        "model performance, and documented limitations."
+    ),
+    "pt": (
+        "Este dashboard apresenta de forma transparente o pipeline de IA, o conjunto de dados, "
+        "o desempenho do modelo e suas limitações documentadas."
+    )
+},
+
+
+"about.institution": {
+    "en": "Institution",
+    "pt": "Instituição"
+},
+
+"about.institution.value": {
+    "en": "PUC-SP — FACEI",
+    "pt": "PUC-SP — FACEI"
+},
+
+"about.program.value": {
+    "en": "BSc in Human Centered-AI & Data Science",
+    "pt": "Bacharelado em IA Centrada no Humano & Ciência de Dados"
+},
+
+"about.course.value": {
+    "en": "Machine Learning / Computer Vision — Project P2",
+    "pt": "Machine Learning / Visão Computacional — Projeto P2"
+},
+
+"about.professor.value": {
+    "en": "Rooney Ribeiro Albuquerque Coelho",
+    "pt": "Rooney Ribeiro Albuquerque Coelho"
+},
+
+"about.authors.value": {
+    "en": (
+        "Carlos Antonio dos Santos Roth Gorham<br>"
+        "Fabiana Campanari<br>"
+        "Pedro Vyctor Almeida"
+    ),
+    "pt": (
+        "Carlos Antonio dos Santos Roth Gorham<br>"
+        "Fabiana Campanari<br>"
+        "Pedro Vyctor Almeida"
+    )
+},
+
+
     # ---- Tab 7: Downloads ----
     "dl.subheader": {"en": "⬇️ Download Center", "pt": "⬇️ Central de Downloads"},
     "dl.caption": {
