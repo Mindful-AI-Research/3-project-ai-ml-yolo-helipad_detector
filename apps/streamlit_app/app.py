@@ -619,8 +619,8 @@ TR = {
         "pt": "Não apagamos o que veio antes — nós o transformamos naquilo que vem a seguir.",
     },
     "epigraph.echo": {
-        "en": "What came before is not erased. It becomes part of what comes next.",
-        "pt": "O que veio antes não é apagado. Torna-se parte do que vem a seguir.",
+        "en": "What remains gives us the ground to imagine what comes next.",
+        "pt": "O que permanece nos dá a base para imaginar o que vem a seguir.",
     },
     "dl.repo_title": {"en": "Explore the full source code", "pt": "Explore o código-fonte completo"},
     "dl.repo_desc": {
