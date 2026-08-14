@@ -590,15 +590,37 @@ TR = {
     "dl.music.credit": {"en": "Passacaglia — Handel, 1708 (Deep House Remix)", "pt": "Passacaglia — Handel, 1708 (Deep House Remix)"},
     "dl.music.poem_l1": {
         "en": "The past may be our foundation,",
-        "pt": "O passado nos sustenta,",
+        "pt": "O passado pode ser nosso alicerce,",
     },
     "dl.music.poem_l2": {
         "en": "but it doesn't have to be our destiny.",
-        "pt": "mas não nos define.",
+        "pt": "mas não precisa ser nosso destino.",
     },
     "dl.music.poem_l3": {
-        "en": "What remains, also transforms.",
-        "pt": "O que permanece, se transforma.",
+        "en": "We don't erase what came before.",
+        "pt": "Não apagamos o que veio antes.",
+    },
+    "dl.music.poem_l4": {
+        "en": "We transform it into what comes next.",
+        "pt": "Nós o transformamos naquilo que vem a seguir.",
+    },
+
+    # ---- Opening epigraph (before the title) and closing echo (in the
+    # footer) — a condensed, bookending version of the Passacaglia poem
+    # above, framing the project conceptually before the data and
+    # resolving it again at the end. ----
+    "epigraph.credit": {"en": "𝄢 Passacaglia — Handel, 1708 · Deep House Remix", "pt": "𝄢 Passacaglia — Handel, 1708 · Deep House Remix"},
+    "epigraph.line1": {
+        "en": "The past may be our foundation, but it doesn't have to be our destiny.",
+        "pt": "O passado pode ser nosso alicerce, mas não precisa ser nosso destino.",
+    },
+    "epigraph.line2": {
+        "en": "We don't erase what came before — we transform it into what comes next.",
+        "pt": "Não apagamos o que veio antes — nós o transformamos naquilo que vem a seguir.",
+    },
+    "epigraph.echo": {
+        "en": "What came before is not erased. It becomes part of what comes next.",
+        "pt": "O que veio antes não é apagado. Torna-se parte do que vem a seguir.",
     },
     "dl.repo_title": {"en": "Explore the full source code", "pt": "Explore o código-fonte completo"},
     "dl.repo_desc": {
@@ -1704,12 +1726,12 @@ components.html("""
       }
       @keyframes sf-twinkle {
         0%, 100% {
-          opacity: 0.3; transform: scale(0.85);
-          box-shadow: 0 0 2px 0px rgba(201,214,222,0.25);
+          opacity: 0.28; transform: scale(0.9);
+          box-shadow: 0 0 1px 0px rgba(201,214,222,0.15);
         }
         50% {
-          opacity: 1; transform: scale(1.3);
-          box-shadow: 0 0 9px 3px rgba(201,214,222,0.85), 0 0 16px 5px rgba(201,214,222,0.35);
+          opacity: 0.85; transform: scale(1.1);
+          box-shadow: 0 0 4px 1px rgba(201,214,222,0.4);
         }
       }
       .sf-particle {
@@ -1855,6 +1877,21 @@ components.html("""
 })();
 </script>
 """, height=0)
+
+# ---- Opening epigraph — condensed Passacaglia manifesto, shown before the
+# title so the visitor reads the conceptual frame ("we don't erase what
+# came before, we transform it") before encountering any data. Quiet and
+# small on purpose — an epigraph, not a banner competing with the title.
+st.markdown(f"""
+<div style="text-align:center; max-width:640px; margin:6px auto 22px auto;">
+    <p style="color:#7C8B93; font-style:italic; font-size:12.5px; letter-spacing:.03em; margin:0 0 6px 0;">
+        {t('epigraph.credit')}
+    </p>
+    <p style="color:#9FB0B8; font-style:italic; font-size:13.5px; line-height:1.6; margin:0;">
+        {t('epigraph.line1')}<br>{t('epigraph.line2')}
+    </p>
+</div>
+""", unsafe_allow_html=True)
 
 st.markdown(f'<h1 class="main-title">{t("main.title")}</h1>', unsafe_allow_html=True)
 st.markdown(f'<p class="subtitle">{t("main.subtitle")}</p>', unsafe_allow_html=True)
@@ -2414,7 +2451,8 @@ with tab7:
             🎼 {t('dl.music.credit')}<br>
             {t('dl.music.poem_l1')}<br>
             {t('dl.music.poem_l2')}<br>
-            {t('dl.music.poem_l3')}
+            {t('dl.music.poem_l3')}<br>
+            {t('dl.music.poem_l4')}
         </p>
     </div>
     """, unsafe_allow_html=True)
@@ -2677,5 +2715,9 @@ st.markdown(f"""
 
 <p style="text-align:center; color:rgba(255,255,255,0.30); margin:6px 0 0 0; font-size:12px;">
 {t("footer.line3")}
+</p>
+
+<p style="text-align:center; color:#7C8B93; font-style:italic; font-size:12.5px; letter-spacing:.02em; margin:20px 0 0 0; max-width:520px; margin-left:auto; margin-right:auto;">
+{t("epigraph.echo")}
 </p>
 """, unsafe_allow_html=True)
