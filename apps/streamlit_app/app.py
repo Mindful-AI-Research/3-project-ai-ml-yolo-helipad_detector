@@ -492,7 +492,7 @@ TR = {
 # ---- Tab: About & Team ----
 "about.header": {"en": "👥 About & Team", "pt": "👥 Sobre & Equipe"},
 
-"about.body": {
+"about.body_intro": {
     "en": (
         "**Helipad Detector** is an end-to-end Artificial Intelligence and Computer Vision "
         "platform designed to automatically detect and map rooftop helipads from satellite imagery.\n\n"
@@ -516,9 +516,6 @@ TR = {
         "• Manual annotation in Roboflow\n\n"
         "• YOLOv8n / YOLOv11n training\n\n"
         "• Field validation on more than **7,900** real satellite tiles\n\n"
-
-        "This dashboard provides transparent access to the AI pipeline, dataset, model performance, "
-        "and documented limitations."
     ),
 
     "pt": (
@@ -548,7 +545,15 @@ TR = {
         "• Anotação manual no Roboflow\n\n"
         "• Treinamento de modelos YOLOv8n / YOLOv11n\n\n"
         "• Validação em campo com mais de **7.900** mosaicos reais\n\n"
+    ),
+},
 
+"about.body_closing": {
+    "en": (
+        "This dashboard provides transparent access to the AI pipeline, dataset, model performance, "
+        "and documented limitations."
+    ),
+    "pt": (
         "Este dashboard apresenta de forma transparente o pipeline de IA, o conjunto de dados, "
         "o desempenho do modelo e suas limitações documentadas."
     ),
@@ -2260,7 +2265,43 @@ with tab6:
 # ====================== TAB: About & Team ======================
 with tab_about:
     st.header(t("about.header"))
-    st.markdown(t("about.body"))
+    st.markdown(t("about.body_intro"))
+
+    # ---- Top 10 helicopter cities table ----
+    st.markdown(f"### {t('cities.header')}")
+    _cities_cols = t("cities.table.columns")
+    _cities_rows = t("cities.table.data")
+    _cities_header_html = "".join(
+        f'<th style="padding:8px 10px; text-align:left; border-bottom:2px solid rgba(255,255,255,0.15); '
+        f'color:#93C5FD; font-size:13px; white-space:nowrap;">{col}</th>'
+        for col in _cities_cols
+    )
+    _cities_rows_html = ""
+    for i, row in enumerate(_cities_rows):
+        bg = CITIES_TABLE_ROW_COLORS[i % len(CITIES_TABLE_ROW_COLORS)]
+        fg = CITIES_TABLE_ROW_TEXT_COLORS[i % len(CITIES_TABLE_ROW_TEXT_COLORS)]
+        rank, city, country, indicator, rate, fleet, highlight = row
+        _cities_rows_html += f"""
+        <tr style="border-bottom:1px solid rgba(255,255,255,0.06);">
+            <td style="padding:7px 10px; text-align:center; color:#E2E8F0; font-weight:700;">{rank}</td>
+            <td style="padding:7px 10px; color:#F1F5F9; font-weight:700;">{city}</td>
+            <td style="padding:7px 10px; color:#CBD5E1;">{country}</td>
+            <td style="padding:7px 10px; color:#CBD5E1;">{indicator}</td>
+            <td style="padding:7px 10px; text-align:center; background:{bg}; color:{fg}; font-weight:700;">{rate}</td>
+            <td style="padding:7px 10px; text-align:center; color:#E2E8F0;">{fleet}</td>
+            <td style="padding:7px 10px; color:#94A3B8; font-size:13px;">{highlight}</td>
+        </tr>"""
+    st.markdown(f"""
+    <div class="dark-card" style="text-align:left; overflow-x:auto;">
+        <table style="width:100%; border-collapse:collapse; font-size:14px;">
+            <thead><tr>{_cities_header_html}</tr></thead>
+            <tbody>{_cities_rows_html}</tbody>
+        </table>
+    </div>
+    """, unsafe_allow_html=True)
+
+    st.markdown(t("about.body_closing"))
+
     st.markdown(f"""
     <div class="dark-card" style="text-align:left;">
         <table style="width:100%; font-size:14px; color:#E2E8F0; border-collapse:collapse;">
@@ -2295,39 +2336,6 @@ with tab_about:
             if _disc_stats["distinct_locations"] is not None:
                 st.metric(t("about.discovery.regions"), _disc_stats["distinct_locations"])
         st.caption(t("about.discovery.pending"))
-
-    # ---- Top 10 helicopter cities table ----
-    st.markdown(f"### {t('cities.header')}")
-    _cities_cols = t("cities.table.columns")
-    _cities_rows = t("cities.table.data")
-    _cities_header_html = "".join(
-        f'<th style="padding:8px 10px; text-align:left; border-bottom:2px solid rgba(255,255,255,0.15); '
-        f'color:#93C5FD; font-size:13px; white-space:nowrap;">{col}</th>'
-        for col in _cities_cols
-    )
-    _cities_rows_html = ""
-    for i, row in enumerate(_cities_rows):
-        bg = CITIES_TABLE_ROW_COLORS[i % len(CITIES_TABLE_ROW_COLORS)]
-        fg = CITIES_TABLE_ROW_TEXT_COLORS[i % len(CITIES_TABLE_ROW_TEXT_COLORS)]
-        rank, city, country, indicator, rate, fleet, highlight = row
-        _cities_rows_html += f"""
-        <tr style="border-bottom:1px solid rgba(255,255,255,0.06);">
-            <td style="padding:7px 10px; text-align:center; color:#E2E8F0; font-weight:700;">{rank}</td>
-            <td style="padding:7px 10px; color:#F1F5F9; font-weight:700;">{city}</td>
-            <td style="padding:7px 10px; color:#CBD5E1;">{country}</td>
-            <td style="padding:7px 10px; color:#CBD5E1;">{indicator}</td>
-            <td style="padding:7px 10px; text-align:center; background:{bg}; color:{fg}; font-weight:700;">{rate}</td>
-            <td style="padding:7px 10px; text-align:center; color:#E2E8F0;">{fleet}</td>
-            <td style="padding:7px 10px; color:#94A3B8; font-size:13px;">{highlight}</td>
-        </tr>"""
-    st.markdown(f"""
-    <div class="dark-card" style="text-align:left; overflow-x:auto;">
-        <table style="width:100%; border-collapse:collapse; font-size:14px;">
-            <thead><tr>{_cities_header_html}</tr></thead>
-            <tbody>{_cities_rows_html}</tbody>
-        </table>
-    </div>
-    """, unsafe_allow_html=True)
 
 # ====================== TAB 7: Downloads ======================
 with tab7:
