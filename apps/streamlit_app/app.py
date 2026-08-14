@@ -2608,25 +2608,33 @@ with tab_field:
         total_rate = totals.get("detection_rate", 0.0)
 
         card_cols = st.columns(3)
+        _field_card_style = (
+            "padding:18px; border-radius:14px; text-align:center; "
+            "box-shadow:0 3px 10px rgba(15,23,42,0.25); "
+            "border:1px solid rgba(255,255,255,0.10);"
+        )
         with card_cols[0]:
+            bg0 = blue_scale(0.0)
             st.markdown(f"""
-            <div class="metric-card">
-                <p style="margin:6px 0; font-size:26px; font-weight:700; color:#1E3A8A;">{total_detected}</p>
-                <p style="margin:0; color:#64748B; font-size:12px;">{t("field.detected_total")}</p>
+            <div style="{_field_card_style} background:{bg0};">
+                <p style="margin:6px 0; font-size:26px; font-weight:700; color:#FFFFFF;">{total_detected}</p>
+                <p style="margin:0; color:#DCE8F5; font-size:12px;">{t("field.detected_total")}</p>
             </div>
             """, unsafe_allow_html=True)
         with card_cols[1]:
+            bg1 = blue_scale(0.5)
             st.markdown(f"""
-            <div class="metric-card">
-                <p style="margin:6px 0; font-size:26px; font-weight:700; color:#1E3A8A;">{total_tiles}</p>
-                <p style="margin:0; color:#64748B; font-size:12px;">{t("field.tiles_processed")}</p>
+            <div style="{_field_card_style} background:{bg1};">
+                <p style="margin:6px 0; font-size:26px; font-weight:700; color:#FFFFFF;">{total_tiles}</p>
+                <p style="margin:0; color:#DCE8F5; font-size:12px;">{t("field.tiles_processed")}</p>
             </div>
             """, unsafe_allow_html=True)
         with card_cols[2]:
+            bg2 = blue_scale(1.0)
             st.markdown(f"""
-            <div class="metric-card">
-                <p style="margin:6px 0; font-size:26px; font-weight:700; color:#1E3A8A;">{total_rate*100:.1f}%</p>
-                <p style="margin:0; color:#64748B; font-size:12px;">{t("field.overall_rate")}</p>
+            <div style="{_field_card_style} background:{bg2};">
+                <p style="margin:6px 0; font-size:26px; font-weight:700; color:#FFFFFF;">{total_rate*100:.1f}%</p>
+                <p style="margin:0; color:#DCE8F5; font-size:12px;">{t("field.overall_rate")}</p>
             </div>
             """, unsafe_allow_html=True)
 
