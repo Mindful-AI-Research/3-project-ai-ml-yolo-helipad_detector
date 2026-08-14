@@ -40,19 +40,6 @@ def t(key: str) -> str:
     return entry.get(st.session_state["lang"], entry.get("en", key))
 
 
-# Row background/text colors for the Top-10 helicopter-cities table —
-# not bilingual text, so it lives outside TR. Background goes from deep
-# navy (rank 1) to near-white (rank 10); text flips to dark once the
-# background gets light enough (rows 6-10) to stay readable.
-CITIES_TABLE_ROW_COLORS = [
-    "#123E7A", "#2864A5", "#347CB8", "#438FC3", "#5AA2CC",
-    "#6EAFD3", "#72B1D4", "#78B5D7", "#91C3DF", "#E8F2F8",
-]
-CITIES_TABLE_ROW_TEXT_COLORS = [
-    "#FFFFFF", "#FFFFFF", "#FFFFFF", "#FFFFFF", "#FFFFFF",
-    "#07131D", "#07131D", "#07131D", "#07131D", "#07131D",
-]
-
 
 TR = {
     # ---- Sidebar ----
@@ -728,6 +715,17 @@ st.markdown("""
         box-shadow:
             inset 0 0 34px rgba(0,0,0,0.30),
             0 4px 18px rgba(0,0,0,0.35);
+    }
+    /* Same rounded, teal-bordered "netron box" outline applied to native
+       Streamlit inputs that otherwise blend flat into the dark background:
+       dropdowns (Metric / Experiment pickers), number inputs (Min/Max
+       Longitude/Latitude), and the file-uploader's drop zone. */
+    [data-testid="stSelectbox"] > div > div,
+    [data-testid="stNumberInput"] > div,
+    [data-testid="stFileUploaderDropzone"] {
+        border: 1px solid rgba(20,184,166,0.35) !important;
+        border-radius: 10px !important;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.25);
     }
     .result-card {background-color: #f8fafc; padding: 15px; border-radius: 12px; border: 1px solid #e2e8f0;}
     .metric-card {
@@ -2268,37 +2266,22 @@ with tab_about:
     st.markdown(t("about.body_intro"))
 
     # ---- Top 10 helicopter cities table ----
+    # Same technique as the Field Detections table (st.dataframe +
+    # background_gradient on the Rate column) so both tables share one
+    # consistent visual identity — plain dark background, gradient only
+    # on the highlighted metric column.
     st.markdown(f"### {t('cities.header')}")
     _cities_cols = t("cities.table.columns")
     _cities_rows = t("cities.table.data")
-    _cities_header_html = "".join(
-        f'<th style="padding:8px 10px; text-align:left; border-bottom:2px solid rgba(255,255,255,0.15); '
-        f'color:#93C5FD; font-size:13px; white-space:nowrap;">{col}</th>'
-        for col in _cities_cols
+    _rank_col, _rate_col = _cities_cols[0], _cities_cols[4]
+    cities_df = pd.DataFrame(_cities_rows, columns=_cities_cols)
+    cities_df[_rate_col] = cities_df[_rate_col].str.rstrip("%").astype(float) / 100.0
+    st.dataframe(
+        cities_df.set_index(_rank_col).style.format({_rate_col: "{:.1%}"}).background_gradient(
+            cmap="Blues", subset=[_rate_col]
+        ),
+        use_container_width=True,
     )
-    _cities_rows_html = ""
-    for i, row in enumerate(_cities_rows):
-        bg = CITIES_TABLE_ROW_COLORS[i % len(CITIES_TABLE_ROW_COLORS)]
-        fg = CITIES_TABLE_ROW_TEXT_COLORS[i % len(CITIES_TABLE_ROW_TEXT_COLORS)]
-        rank, city, country, indicator, rate, fleet, highlight = row
-        _cities_rows_html += f"""
-        <tr style="border-bottom:1px solid rgba(255,255,255,0.06);">
-            <td style="padding:7px 10px; text-align:center; color:#E2E8F0; font-weight:700;">{rank}</td>
-            <td style="padding:7px 10px; color:#F1F5F9; font-weight:700;">{city}</td>
-            <td style="padding:7px 10px; color:#CBD5E1;">{country}</td>
-            <td style="padding:7px 10px; color:#CBD5E1;">{indicator}</td>
-            <td style="padding:7px 10px; text-align:center; background:{bg}; color:{fg}; font-weight:700;">{rate}</td>
-            <td style="padding:7px 10px; text-align:center; color:#E2E8F0;">{fleet}</td>
-            <td style="padding:7px 10px; color:#94A3B8; font-size:13px;">{highlight}</td>
-        </tr>"""
-    st.markdown(f"""
-    <div class="dark-card" style="text-align:left; overflow-x:auto;">
-        <table style="width:100%; border-collapse:collapse; font-size:14px;">
-            <thead><tr>{_cities_header_html}</tr></thead>
-            <tbody>{_cities_rows_html}</tbody>
-        </table>
-    </div>
-    """, unsafe_allow_html=True)
 
     st.markdown(t("about.body_closing"))
 
