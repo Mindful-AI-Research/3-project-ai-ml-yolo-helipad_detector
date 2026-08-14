@@ -64,10 +64,10 @@ TR = {
     "sidebar.confidence": {"en": "Minimum detection confidence", "pt": "Confiança mínima de detecção"},
 
     # ---- Sidebar: background music ----
-    "sidebar.music.title": {"en": "🎶 Passacaglia - Deep House Remix", "pt": "🎶 Passacaglia - Deep House Remix"},
+    "sidebar.music.title": {"en": "🎶 Passacaglia - Deep House", "pt": "🎶 Passacaglia - Deep House"},
     "sidebar.music.tagline": {
-        "en": "𝄢 The music carries the story forward. Take it with you.",
-        "pt": "𝄢 A música leva a história adiante. Leve-a com você.",
+        "en": "🎵 The music carries the story forward. Take it with you.",
+        "pt": "🎵 A música leva a história adiante. Leve-a com você.",
     },
     "sidebar.music.play": {"en": "Play Music", "pt": "Play Music"},
     "sidebar.music.pause": {"en": "Pause Music", "pt": "Pausar Música"},
@@ -1748,12 +1748,12 @@ components.html("""
       }
       @keyframes sf-twinkle {
         0%, 100% {
-          opacity: 0.28; transform: scale(0.9);
-          box-shadow: 0 0 1px 0px rgba(201,214,222,0.15);
+          opacity: 0.22; transform: scale(0.88);
+          box-shadow: 0 0 1px 0px rgba(201,214,222,0.12);
         }
         50% {
-          opacity: 0.85; transform: scale(1.1);
-          box-shadow: 0 0 4px 1px rgba(201,214,222,0.4);
+          opacity: 0.95; transform: scale(1.2);
+          box-shadow: 0 0 6px 2px rgba(201,214,222,0.55);
         }
       }
       .sf-particle {
@@ -1791,8 +1791,8 @@ components.html("""
       s.style.height = size + 'px';
       s.style.top = (Math.random() * 100) + '%';
       s.style.left = (Math.random() * 100) + '%';
-      s.style.animationDuration = (2 + Math.random() * 3.5).toFixed(2) + 's';
-      s.style.animationDelay = (Math.random() * 4).toFixed(2) + 's';
+      s.style.animationDuration = (2.5 + Math.random() * 6.5).toFixed(2) + 's';
+      s.style.animationDelay = (Math.random() * -10).toFixed(2) + 's';
       layer.appendChild(s);
     }
 
@@ -2478,25 +2478,31 @@ with tab_metrics:
     else:
         n_exp = len(metrics_df)
         cols = st.columns(n_exp) if n_exp <= 4 else [st.container()]
+        _metric_card_style = (
+            "padding:18px; border-radius:14px; text-align:center; "
+            "box-shadow:0 3px 10px rgba(15,23,42,0.25); "
+            "border:1px solid rgba(255,255,255,0.10);"
+        )
 
         for i, row in metrics_df.iterrows():
             target = cols[i] if n_exp <= 4 else st
             with target:
                 netron_link = netron_url_for(row['Experiment']) or "https://netron.app/"
                 netron_label = t("metrics.netron_view") if row['Experiment'] in MODEL_WEIGHTS_BY_EXP else t("metrics.netron_manual")
+                card_bg = blue_scale(i / (n_exp - 1) if n_exp > 1 else 0.0)
                 st.markdown(f"""
-                <div class="metric-card">
-                    <h4 style="margin:0 0 8px 0;">{row['Experiment']}</h4>
-                    <p style="margin:2px 0; color:#64748B; font-size:13px;">
+                <div style="{_metric_card_style} background:{card_bg};">
+                    <h4 style="margin:0 0 8px 0; color:#FFFFFF;">{row['Experiment']}</h4>
+                    <p style="margin:2px 0; color:#DCE8F5; font-size:13px;">
                         {t('metrics.best_epoch')} {row['Best Epoch']} / {row['Total Epochs']}
                     </p>
-                    <p style="margin:6px 0; font-size:22px; font-weight:700; color:#1E3A8A;">
+                    <p style="margin:6px 0; font-size:22px; font-weight:700; color:#FFFFFF;">
                         {row['mAP@50-95']:.3f}
                     </p>
-                    <p style="margin:0; color:#64748B; font-size:12px;">mAP@50-95</p>
+                    <p style="margin:0; color:#DCE8F5; font-size:12px;">mAP@50-95</p>
                     <p style="margin:8px 0 0 0;">
                         <a href="{netron_link}" target="_blank" rel="noopener noreferrer"
-                           style="font-size:12px; color:#0E756D; font-weight:600; text-decoration:none;">
+                           style="font-size:12px; color:#FFFFFF; font-weight:600; text-decoration:underline;">
                             {netron_label}
                         </a>
                     </p>
