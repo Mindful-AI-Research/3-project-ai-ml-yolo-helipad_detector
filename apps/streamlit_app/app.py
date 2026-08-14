@@ -65,6 +65,10 @@ TR = {
 
     # ---- Sidebar: background music ----
     "sidebar.music.title": {"en": "🎶 Passacaglia - Deep House", "pt": "🎶 Passacaglia - Deep House"},
+    "sidebar.music.tagline": {
+        "en": "🎵 The music carries the story forward. Take it with you.",
+        "pt": "🎵 A música leva a história adiante. Leve-a com você.",
+    },
     "sidebar.music.play": {"en": "Play Music", "pt": "Play Music"},
     "sidebar.music.pause": {"en": "Pause Music", "pt": "Pausar Música"},
     "sidebar.music.missing": {
@@ -1357,6 +1361,11 @@ def render_music_toggle():
     # experience in the sidebar (play + download together), instead of
     # a separate, disconnected download link buried in another tab.
     if AUDIO_PATH.exists():
+        st.markdown(
+            f"<p style='font-style:italic; font-size:12.5px; color:#9FB0B8; margin:10px 0 6px 0;'>"
+            f"{t('sidebar.music.tagline')}</p>",
+            unsafe_allow_html=True,
+        )
         with open(AUDIO_PATH, "rb") as f:
             st.download_button(
                 t("dl.music.download_button"),
