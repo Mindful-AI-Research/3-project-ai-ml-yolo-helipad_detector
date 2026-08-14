@@ -40,6 +40,20 @@ def t(key: str) -> str:
     return entry.get(st.session_state["lang"], entry.get("en", key))
 
 
+# Row background/text colors for the Top-10 helicopter-cities table —
+# not bilingual text, so it lives outside TR. Background goes from deep
+# navy (rank 1) to near-white (rank 10); text flips to dark once the
+# background gets light enough (rows 6-10) to stay readable.
+CITIES_TABLE_ROW_COLORS = [
+    "#123E7A", "#2864A5", "#347CB8", "#438FC3", "#5AA2CC",
+    "#6EAFD3", "#72B1D4", "#78B5D7", "#91C3DF", "#E8F2F8",
+]
+CITIES_TABLE_ROW_TEXT_COLORS = [
+    "#FFFFFF", "#FFFFFF", "#FFFFFF", "#FFFFFF", "#FFFFFF",
+    "#07131D", "#07131D", "#07131D", "#07131D", "#07131D",
+]
+
+
 TR = {
     # ---- Sidebar ----
     "sidebar.model": {"en": "⚙️ Model", "pt": "⚙️ Modelo"},
@@ -89,6 +103,64 @@ TR = {
     "about.discovery.missing": {
         "en": "Discovery coordinates CSV not found at `{path}`.",
         "pt": "CSV de coordenadas de descoberta não encontrado em `{path}`.",
+    },
+
+    # ---- Top 10 helicopter cities table ----
+    "cities.header": {
+        "en": "🚁 Top 10 — Cities with the Highest Presence/Traffic of Helicopters",
+        "pt": "🚁 Top 10 — Cidades com maior presença/tráfego de helicópteros",
+    },
+    "cities.table.columns": {
+        "en": ["Rank", "City", "Country", "Main Indicator", "Rate (Relative Index)",
+               "Estimated Fleet (Helicopters)", "Highlight"],
+        "pt": ["Rank", "Cidade", "País", "Indicador principal", "Rate (Índice Relativo)",
+               "Frota estimada (Helicópteros)", "Destaque"],
+    },
+    "cities.table.data": {
+        "en": [
+            ["1st", "São Paulo", "🇧🇷 Brazil", "Largest fleet", "27.7%", "400+",
+             "~2,200 landings/takeoffs daily in the metropolitan area"],
+            ["2nd", "New York", "🇺🇸 USA", "Fleet + intense urban traffic", "25.5%", "—",
+             "Strong executive, tourist, and transport use"],
+            ["3rd", "Tokyo", "🇯🇵 Japan", "Large fleet", "23.9%", "—",
+             "Corporate, emergency, and transport operations"],
+            ["4th", "Rio de Janeiro", "🇧🇷 Brazil", "Fleet + offshore operations", "22.8%", "—",
+             "Significant activity related to oil and gas"],
+            ["5th", "London", "🇬🇧 United Kingdom", "Executive traffic", "21.3%", "—",
+             "Strong corporate market and urban heliports"],
+            ["6th", "Belo Horizonte", "🇧🇷 Brazil", "Large fleet", "20.2%", "—",
+             "Strong executive and corporate aviation"],
+            ["7th", "Santiago", "🇨🇱 Chile", "Large fleet", "20.1%", "—",
+             "Executive aviation and special operations"],
+            ["8th", "Mexico City", "🇲🇽 Mexico", "Large fleet", "19.8%", "—",
+             "Executive transport and government operations"],
+            ["9th", "Bogotá", "🇨🇴 Colombia", "Large fleet", "19.1%", "—",
+             "Executive, emergency, and special operations"],
+            ["10th", "Beijing", "🇨🇳 China", "Large fleet", "13.6%", "—",
+             "Executive, governmental, and special operations"],
+        ],
+        "pt": [
+            ["1º", "São Paulo", "🇧🇷 Brasil", "Maior frota", "27.7%", "400+",
+             "~2.200 pousos/decolagens diários na região metropolitana"],
+            ["2º", "Nova York", "🇺🇸 EUA", "Frota + intenso tráfego urbano", "25.5%", "—",
+             "Forte uso executivo, turístico e de transporte"],
+            ["3º", "Tóquio", "🇯🇵 Japão", "Grande frota", "23.9%", "—",
+             "Operações corporativas, emergência e transporte"],
+            ["4º", "Rio de Janeiro", "🇧🇷 Brasil", "Frota + operações offshore", "22.8%", "—",
+             "Grande atividade ligada ao petróleo e gás"],
+            ["5º", "Londres", "🇬🇧 Reino Unido", "Tráfego executivo", "21.3%", "—",
+             "Forte mercado corporativo e heliportos urbanos"],
+            ["6º", "Belo Horizonte", "🇧🇷 Brasil", "Grande frota", "20.2%", "—",
+             "Forte aviação executiva e corporativa"],
+            ["7º", "Santiago", "🇨🇱 Chile", "Grande frota", "20.1%", "—",
+             "Aviação executiva e operações especiais"],
+            ["8º", "Cidade do México", "🇲🇽 México", "Grande frota", "19.8%", "—",
+             "Transporte executivo e operações governamentais"],
+            ["9º", "Bogotá", "🇨🇴 Colômbia", "Grande frota", "19.1%", "—",
+             "Executivo, emergência e operações especiais"],
+            ["10º", "Pequim", "🇨🇳 China", "Grande frota", "13.6%", "—",
+             "Executivo, governamental e operações especiais"],
+        ],
     },
 
     # ---- Main header ----
@@ -416,11 +488,9 @@ TR = {
 },
 
 
+
 # ---- Tab: About & Team ----
-"about.header": {
-    "en": "👥 About & Team",
-    "pt": "👥 Sobre & Equipe"
-},
+"about.header": {"en": "👥 About & Team", "pt": "👥 Sobre & Equipe"},
 
 "about.body": {
     "en": (
@@ -446,6 +516,9 @@ TR = {
         "• Manual annotation in Roboflow\n\n"
         "• YOLOv8n / YOLOv11n training\n\n"
         "• Field validation on more than **7,900** real satellite tiles\n\n"
+
+        "This dashboard provides transparent access to the AI pipeline, dataset, model performance, "
+        "and documented limitations."
     ),
 
     "pt": (
@@ -475,6 +548,19 @@ TR = {
         "• Anotação manual no Roboflow\n\n"
         "• Treinamento de modelos YOLOv8n / YOLOv11n\n\n"
         "• Validação em campo com mais de **7.900** mosaicos reais\n\n"
+
+        "Este dashboard apresenta de forma transparente o pipeline de IA, o conjunto de dados, "
+        "o desempenho do modelo e suas limitações documentadas."
+    ),
+},
+
+"about.institution": {"en": "Institution", "pt": "Instituição"},
+"about.program": {"en": "Program", "pt": "Curso"},
+"about.course": {"en": "Course", "pt": "Disciplina"},
+"about.professor": {"en": "Professor", "pt": "Professor"},
+"about.authors": {"en": "Authors", "pt": "Autores"},
+
+    
     ),
 },
 
@@ -759,9 +845,6 @@ TR = {
 },
 
 
-
-
-   
     # ---- Tab 7: Downloads ----
     "dl.subheader": {"en": "⬇️ Download Center", "pt": "⬇️ Central de Downloads"},
     "dl.caption": {
@@ -2101,15 +2184,15 @@ with tab1:
 # ====================== TAB 2: Bounding Box Search ======================
 with tab2:
     st.subheader(t("search.subheader"))
-    st.caption(t("search.caption"))
 
-    col_a, col_b = st.columns(2)
-    with col_a:
-        lon_min = st.number_input(t("search.lon_min"), value=-46.6583, format="%.6f")
-        lat_min = st.number_input(t("search.lat_min"), value=-23.5827, format="%.6f")
-    with col_b:
-        lon_max = st.number_input(t("search.lon_max"), value=-46.6311, format="%.6f")
-        lat_max = st.number_input(t("search.lat_max"), value=-23.5536, format="%.6f")
+    with st.expander(t("search.caption"), expanded=True):
+        col_a, col_b = st.columns(2)
+        with col_a:
+            lon_min = st.number_input(t("search.lon_min"), value=-46.6583, format="%.6f")
+            lat_min = st.number_input(t("search.lat_min"), value=-23.5827, format="%.6f")
+        with col_b:
+            lon_max = st.number_input(t("search.lon_max"), value=-46.6311, format="%.6f")
+            lat_max = st.number_input(t("search.lat_max"), value=-23.5536, format="%.6f")
 
     zoom = st.slider(t("search.zoom"), 16, 20, 19)
     search_btn = st.button(t("search.button"), type="primary", use_container_width=True)
@@ -2497,6 +2580,39 @@ with tab_about:
                 st.metric(t("about.discovery.regions"), _disc_stats["distinct_locations"])
         st.caption(t("about.discovery.pending"))
 
+    # ---- Top 10 helicopter cities table ----
+    st.markdown(f"### {t('cities.header')}")
+    _cities_cols = t("cities.table.columns")
+    _cities_rows = t("cities.table.data")
+    _cities_header_html = "".join(
+        f'<th style="padding:8px 10px; text-align:left; border-bottom:2px solid rgba(255,255,255,0.15); '
+        f'color:#93C5FD; font-size:13px; white-space:nowrap;">{col}</th>'
+        for col in _cities_cols
+    )
+    _cities_rows_html = ""
+    for i, row in enumerate(_cities_rows):
+        bg = CITIES_TABLE_ROW_COLORS[i % len(CITIES_TABLE_ROW_COLORS)]
+        fg = CITIES_TABLE_ROW_TEXT_COLORS[i % len(CITIES_TABLE_ROW_TEXT_COLORS)]
+        rank, city, country, indicator, rate, fleet, highlight = row
+        _cities_rows_html += f"""
+        <tr style="border-bottom:1px solid rgba(255,255,255,0.06);">
+            <td style="padding:7px 10px; text-align:center; color:#E2E8F0; font-weight:700;">{rank}</td>
+            <td style="padding:7px 10px; color:#F1F5F9; font-weight:700;">{city}</td>
+            <td style="padding:7px 10px; color:#CBD5E1;">{country}</td>
+            <td style="padding:7px 10px; color:#CBD5E1;">{indicator}</td>
+            <td style="padding:7px 10px; text-align:center; background:{bg}; color:{fg}; font-weight:700;">{rate}</td>
+            <td style="padding:7px 10px; text-align:center; color:#E2E8F0;">{fleet}</td>
+            <td style="padding:7px 10px; color:#94A3B8; font-size:13px;">{highlight}</td>
+        </tr>"""
+    st.markdown(f"""
+    <div class="dark-card" style="text-align:left; overflow-x:auto;">
+        <table style="width:100%; border-collapse:collapse; font-size:14px;">
+            <thead><tr>{_cities_header_html}</tr></thead>
+            <tbody>{_cities_rows_html}</tbody>
+        </table>
+    </div>
+    """, unsafe_allow_html=True)
+
 # ====================== TAB 7: Downloads ======================
 with tab7:
     st.subheader(t("dl.subheader"))
@@ -2686,47 +2802,47 @@ with tab_metrics:
         # ---- Per-epoch metric evolution (real data from results.csv) ----
         curves = load_experiment_curves()
         if curves:
-            st.markdown(t("metrics.evolution"))
-            metric_choice = st.selectbox(
-                t("metrics.metric_label"),
-                ["metrics/mAP50-95(B)", "metrics/mAP50(B)", "metrics/precision(B)", "metrics/recall(B)"],
-                format_func=lambda m: m.replace("metrics/", "").replace("(B)", ""),
-                key="metric_choice_curve",
-            )
-            fig = go.Figure()
-            for exp_name, df_curve in curves.items():
-                if metric_choice in df_curve.columns:
-                    fig.add_trace(go.Scatter(
-                        x=df_curve["epoch"], y=df_curve[metric_choice],
-                        mode="lines", name=exp_name,
-                    ))
-            fig.update_layout(
-                xaxis_title=t("metrics.epoch"), yaxis_title=metric_choice.replace("metrics/", "").replace("(B)", ""),
-                height=320, margin=dict(l=10, r=10, t=10, b=10),
-                legend=dict(orientation="h", yanchor="bottom", y=1.02),
-            )
-            st.plotly_chart(fig, use_container_width=True)
+            with st.expander(t("metrics.evolution").lstrip("#").strip(), expanded=True):
+                metric_choice = st.selectbox(
+                    t("metrics.metric_label"),
+                    ["metrics/mAP50-95(B)", "metrics/mAP50(B)", "metrics/precision(B)", "metrics/recall(B)"],
+                    format_func=lambda m: m.replace("metrics/", "").replace("(B)", ""),
+                    key="metric_choice_curve",
+                )
+                fig = go.Figure()
+                for exp_name, df_curve in curves.items():
+                    if metric_choice in df_curve.columns:
+                        fig.add_trace(go.Scatter(
+                            x=df_curve["epoch"], y=df_curve[metric_choice],
+                            mode="lines", name=exp_name,
+                        ))
+                fig.update_layout(
+                    xaxis_title=t("metrics.epoch"), yaxis_title=metric_choice.replace("metrics/", "").replace("(B)", ""),
+                    height=320, margin=dict(l=10, r=10, t=10, b=10),
+                    legend=dict(orientation="h", yanchor="bottom", y=1.02),
+                )
+                st.plotly_chart(fig, use_container_width=True)
 
         # ---- Confusion matrix per experiment (real image already generated by YOLO) ----
         if not metrics_df.empty and "_dir" in metrics_df.columns:
-            st.markdown(t("metrics.confusion_matrix"))
-            cm_exp = st.selectbox(
-                t("metrics.experiment_label"), metrics_df["Experiment"].tolist(), key="cm_exp_choice"
-            )
-            exp_dir_str = metrics_df.loc[metrics_df["Experiment"] == cm_exp, "_dir"].iloc[0]
-            cm_path = Path(exp_dir_str) / "confusion_matrix.png"
-            cm_norm_path = Path(exp_dir_str) / "confusion_matrix_normalized.png"
-            cm_col1, cm_col2 = st.columns(2)
-            with cm_col1:
-                if cm_path.exists():
-                    st.image(str(cm_path), caption=f"{cm_exp} — {t('metrics.cm_caption')}", use_container_width=True)
-                else:
-                    st.info(t("metrics.cm_not_found").format(path=cm_path.resolve()))
-            with cm_col2:
-                if cm_norm_path.exists():
-                    st.image(str(cm_norm_path), caption=f"{cm_exp} — {t('metrics.cm_norm_caption')}", use_container_width=True)
-                else:
-                    st.info(t("metrics.cm_norm_not_found").format(path=cm_norm_path.resolve()))
+            with st.expander(t("metrics.confusion_matrix").lstrip("#").strip(), expanded=True):
+                cm_exp = st.selectbox(
+                    t("metrics.experiment_label"), metrics_df["Experiment"].tolist(), key="cm_exp_choice"
+                )
+                exp_dir_str = metrics_df.loc[metrics_df["Experiment"] == cm_exp, "_dir"].iloc[0]
+                cm_path = Path(exp_dir_str) / "confusion_matrix.png"
+                cm_norm_path = Path(exp_dir_str) / "confusion_matrix_normalized.png"
+                cm_col1, cm_col2 = st.columns(2)
+                with cm_col1:
+                    if cm_path.exists():
+                        st.image(str(cm_path), caption=f"{cm_exp} — {t('metrics.cm_caption')}", use_container_width=True)
+                    else:
+                        st.info(t("metrics.cm_not_found").format(path=cm_path.resolve()))
+                with cm_col2:
+                    if cm_norm_path.exists():
+                        st.image(str(cm_norm_path), caption=f"{cm_exp} — {t('metrics.cm_norm_caption')}", use_container_width=True)
+                    else:
+                        st.info(t("metrics.cm_norm_not_found").format(path=cm_norm_path.resolve()))
 
 # ========================= FIELD DETECTIONS BY REGION =========================
 with tab_field:
