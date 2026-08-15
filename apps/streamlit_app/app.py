@@ -64,7 +64,7 @@ TR = {
     "sidebar.confidence": {"en": "Minimum detection confidence", "pt": "Confiança mínima de detecção"},
 
     # ---- Sidebar: background music ----
-    "sidebar.music.title": {"en": "🎶 Passacaglia - Deep House", "pt": "🎶 Passacaglia - Deep House Remix"},
+    "sidebar.music.title": {"en": "🎶 Passacaglia - Deep House Remix", "pt": "🎶 Passacaglia - Deep House Remix"},
     "sidebar.music.tagline": {
         "en": "𝄢 The music carries the story forward. Take it with you.",
         "pt": "𝄢 A música leva a história adiante. Leve-a com você.",
