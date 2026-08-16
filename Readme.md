@@ -190,7 +190,7 @@ https://github.com/user-attachments/assets/5b7d581c-ab5e-416e-8471-d91136b2ada0
 >
 > Explore the complete collection of projects, notebooks, research materials, analyses, and interactive applications available in the central repository:
 >
-> 🔗 **[AI & Machine Learning — Hub](https://github.com/Mindful-AI-Assistants/1-AI_Machine-Learning_Hub)**
+> 🔗 **[AI/ML - Neural Networks — Hub](https://github.com/Mindful-AI-Research/1-ai-ml_neural-networks_hub)**
 >
 > #
 >
