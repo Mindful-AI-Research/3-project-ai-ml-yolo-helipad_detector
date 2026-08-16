@@ -76,8 +76,9 @@ https://github.com/user-attachments/assets/5b7d581c-ab5e-416e-8471-d91136b2ada0
 <!-- ======================================= Start Institutional INFO ===========================================  -->
 ## [Institutional Information]()
 
-[**Institution:**]() Pontifical Catholic University of São Paulo (PUC‑SP) — FACEI  
-[**Course:**]() BSc in Humanistic AI & Data Science — 5th semester — 2026  
+[**Institution:**]() Pontifical Catholic University of São Paulo (PUC‑SP) 
+[**School:**]() FCAEI — Computer Science Department 
+[**Course:**]() BSc in — Human-Centered AI & Data Science • 6th Semester • 2026   
 [**Subject:**]() Machine Learning / Computer Vision — YOLO  
 [**Project:**]() P2 — Object Detection in Satellite Images with YOLO  
 **Professor:** [✨ Rooney Ribeiro Albuquerque Coelho](https://www.linkedin.com/in/rooney-coelho-320857182/) 
