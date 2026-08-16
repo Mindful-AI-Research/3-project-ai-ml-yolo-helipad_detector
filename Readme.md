@@ -7,7 +7,7 @@
 
 
 <!-- ========= START HEADRE ========= -->
-# <p align="center"> 🚁 Helipad Detector
+# <p align="center"> 🚁  [Helipad Detector]()
 
 ### <p align="center"> End-to-End Artificial Intelligence Platform for Automated Helipad Detection and Geospatial Intelligence from Satellite Imagery
 
@@ -220,6 +220,33 @@ The platform implements a complete end-to-end AI workflow, including public data
 
 <br><br>
 
+
+## [Global Helicopter Traffic Context — Why São Paulo?]()
+
+
+São Paulo's choice as the project's real-world setting is not incidental. The table below situates the city's rooftop helicopter activity against the world's other major helicopter hubs, using a relative index of fleet size and operational density:
+
+<br>
+
+| Rank | City | Country | Main Indicator | Rate <sub>(Relative Index)</sub> | Estimated Fleet <sub>(Helicopters)</sub> | Highlight |
+|:---:|---|---|---|:---:|:---:|---|
+| **1st** | **São Paulo** | 🇧🇷 Brazil | Largest fleet | **27.7%** | 400+ | ~2,200 landings/takeoffs daily in the metropolitan area |
+| **2nd** | **New York** | 🇺🇸 USA | Fleet + intense urban traffic | **25.5%** | — | Strong executive, tourist, and transport use |
+| **3rd** | **Tokyo** | 🇯🇵 Japan | Large fleet | **23.9%** | — | Corporate, emergency, and transport operations |
+| **4th** | **Rio de Janeiro** | 🇧🇷 Brazil | Fleet + offshore operations | **22.8%** | — | Significant activity related to oil and gas |
+| **5th** | **London** | 🇬🇧 United Kingdom | Executive traffic | **21.3%** | — | Strong corporate market and urban heliports |
+| **6th** | **Belo Horizonte** | 🇧🇷 Brazil | Large fleet | **20.2%** | — | Strong executive and corporate aviation |
+| **7th** | **Santiago** | 🇨🇱 Chile | Large fleet | **20.1%** | — | Executive aviation and special operations |
+| **8th** | **Mexico City** | 🇲🇽 Mexico | Large fleet | **19.8%** | — | Executive transport and government operations |
+| **9th** | **Bogotá** | 🇨🇴 Colombia | Large fleet | **19.1%** | — | Executive, emergency, and special operations |
+| **10th** | **Beijing** | 🇨🇳 China | Large fleet | **13.6%** | — | Executive, governmental, and special operations |
+
+<br><br>
+
+> [!NOTE]
+> **Rate** is a relative index of helicopter presence/traffic, combining fleet size and operational density. São Paulo's estimated **400+ fleet** and **~2,200 daily landings/takeoffs** — cited in the Overview above — place it at the top of this global ranking, which is precisely why this project targets São Paulo specifically rather than a city with sparser or already-mapped helipad infrastructure.
+
+<br><br>
 
 ## [Key Features]()
 
