@@ -1,0 +1,92 @@
+{
+  "generated_at": "2026-08-16T17:36:34",
+  "model": "artifacts/runs/runs/detect/exp3/weights/best.pt",
+  "confidence_threshold": 0.25,
+  "regions": [
+    {
+      "region": "Alphaville_Industrial",
+      "tiles_total": 775,
+      "tiles_detected": 103,
+      "detection_rate": 0.1329,
+      "top_confidence": 0.9805,
+      "samples_copied": 6
+    },
+    {
+      "region": "Av_Paulista_segment_1",
+      "tiles_total": 835,
+      "tiles_detected": 224,
+      "detection_rate": 0.2683,
+      "top_confidence": 0.975,
+      "samples_copied": 6
+    },
+    {
+      "region": "Av_Paulista_segment_2",
+      "tiles_total": 785,
+      "tiles_detected": 187,
+      "detection_rate": 0.2382,
+      "top_confidence": 0.975,
+      "samples_copied": 6
+    },
+    {
+      "region": "Brooklin",
+      "tiles_total": 1014,
+      "tiles_detected": 144,
+      "detection_rate": 0.142,
+      "top_confidence": 0.9562,
+      "samples_copied": 6
+    },
+    {
+      "region": "Faria_Lima",
+      "tiles_total": 664,
+      "tiles_detected": 114,
+      "detection_rate": 0.1717,
+      "top_confidence": 0.9682,
+      "samples_copied": 6
+    },
+    {
+      "region": "Inter_Zonas",
+      "tiles_total": 480,
+      "tiles_detected": 100,
+      "detection_rate": 0.2083,
+      "top_confidence": 0.9821,
+      "samples_copied": 6
+    },
+    {
+      "region": "Itaim_Bibi",
+      "tiles_total": 750,
+      "tiles_detected": 134,
+      "detection_rate": 0.1787,
+      "top_confidence": 0.9644,
+      "samples_copied": 6
+    },
+    {
+      "region": "Pinheiros",
+      "tiles_total": 1232,
+      "tiles_detected": 205,
+      "detection_rate": 0.1664,
+      "top_confidence": 0.9705,
+      "samples_copied": 6
+    },
+    {
+      "region": "Vila_Olimpia",
+      "tiles_total": 660,
+      "tiles_detected": 109,
+      "detection_rate": 0.1652,
+      "top_confidence": 0.9821,
+      "samples_copied": 6
+    },
+    {
+      "region": "Vila_nova_Conceicao",
+      "tiles_total": 572,
+      "tiles_detected": 69,
+      "detection_rate": 0.1206,
+      "top_confidence": 0.9772,
+      "samples_copied": 6
+    }
+  ],
+  "totals": {
+    "tiles_total": 7767,
+    "tiles_detected": 1389,
+    "detection_rate": 0.1788
+  }
+}
