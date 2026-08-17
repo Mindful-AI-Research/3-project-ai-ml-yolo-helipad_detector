@@ -64,10 +64,10 @@ TR = {
     "sidebar.confidence": {"en": "Minimum detection confidence", "pt": "Confiança mínima de detecção"},
 
     # ---- Sidebar: background music ----
-    "sidebar.music.title": {"en": "🎶 Passacaglia - Deep House Remix", "pt": "🎶 Passacaglia - Deep House Remix"},
+    "sidebar.music.title": {"en": "🎶 Passacaglia - Deep House", "pt": "🎶 Passacaglia - Deep House"},
     "sidebar.music.tagline": {
-        "en": "𝄢 The music carries the story forward. Take it with you.",
-        "pt": "𝄢 A música leva a história adiante. Leve-a com você.",
+        "en": "🎵 The music carries the story forward. Take it with you.",
+        "pt": "🎵 A música leva a história adiante. Leve-a com você.",
     },
     "sidebar.music.play": {"en": "Play Music", "pt": "Play Music"},
     "sidebar.music.pause": {"en": "Pause Music", "pt": "Pausar Música"},
@@ -687,6 +687,23 @@ TR = {
         "pt": "ℹ️ **Inter-Zone Corridor**: uma bounding box cobrindo a área de transição entre "
               "distritos corporativos vizinhos, em vez de um único bairro nomeado.",
     },
+    "field.compare.title": {
+        "en": "🔬 Compare all 3 models on the same field validation",
+        "pt": "🔬 Comparar os 3 modelos na mesma validação de campo",
+    },
+    "field.compare.body": {
+        "en": "Same 7,943 tiles across the same 10 regions, run separately with each experiment's "
+              "weights — shows whether the model that scored best on the curated validation set "
+              "actually generalizes as well once it meets real, uncurated satellite coverage.",
+        "pt": "Os mesmos 7.943 tiles nas mesmas 10 regiões, rodados separadamente com os pesos de "
+              "cada experimento — mostra se o modelo que teve a melhor nota no conjunto de "
+              "validação curado realmente generaliza bem quando enfrenta cobertura de satélite "
+              "real, sem curadoria prévia.",
+    },
+    "field.compare.missing": {
+        "en": "Not yet run in the field for: **{missing}** — only showing the experiment(s) with a summary file present.",
+        "pt": "Ainda não rodado em campo para: **{missing}** — mostrando só o(s) experimento(s) com arquivo de resumo presente.",
+    },
 
     # ---- Footer ----
     "footer.tagline": {"en": "🚁 *Finding hidden H's in the Concrete Jungle*", "pt": "🚁 *Encontrando \"H\"s escondidos na Selva de Pedra*"},
@@ -1216,6 +1233,17 @@ def detection_rate_to_color(rate: float, min_rate: float, max_rate: float) -> st
 # in the Map tab) so both the Map tab and the Field Detections tab can read it.
 FIELD_SUMMARY_PATH = Path("reports/detection_summary_by_region.json")
 
+# Per-experiment field-validation summaries — same JSON shape as
+# FIELD_SUMMARY_PATH above (that one is exp2, the model actually used for
+# the "main" Field Detections view). exp1/exp3 are optional: if their
+# files aren't present in the repo yet, the 3-way comparison section
+# below simply doesn't render, no error.
+FIELD_SUMMARY_PATHS_BY_EXP = {
+    "exp1": Path("reports/detection_summary_by_region_exp1.json"),
+    "exp2": FIELD_SUMMARY_PATH,
+    "exp3": Path("reports/detection_summary_by_region_exp3.json"),
+}
+
 
 @st.cache_data(show_spinner=False)
 def load_field_detection_summary():
@@ -1226,6 +1254,22 @@ def load_field_detection_summary():
             return json.load(f)
     except Exception:
         return None
+
+
+@st.cache_data(show_spinner=False)
+def load_field_summaries_by_exp() -> dict:
+    """{exp_name: parsed_json} for every experiment whose field-validation
+    summary file actually exists in reports/ — used to build the 3-model
+    comparison table. Missing files are silently skipped."""
+    out = {}
+    for exp_name, path in FIELD_SUMMARY_PATHS_BY_EXP.items():
+        if path.exists():
+            try:
+                with open(path, "r", encoding="utf-8") as f:
+                    out[exp_name] = json.load(f)
+            except Exception:
+                pass
+    return out
 
 
 MODEL_OPTIONS = discover_models()
@@ -2680,6 +2724,52 @@ with tab_field:
         generated_at = field_summary.get("generated_at")
         if generated_at:
             st.caption(f"{t('field.last_updated').format(date=generated_at)}")
+
+        # ---- 3-model comparison on the same field validation ----
+        # Same 7,943 tiles / 10 regions, run separately with exp1, exp2
+        # and exp3's weights — shows whether the "best" model on the
+        # curated val set (exp1, by Precision) actually generalizes as
+        # well in the field as exp2/exp3 do.
+        all_summaries = load_field_summaries_by_exp()
+        if len(all_summaries) >= 2:
+            with st.expander(t("field.compare.title"), expanded=True):
+                st.caption(t("field.compare.body"))
+
+                def _norm_region(name: str) -> str:
+                    return str(name).strip().lower().replace("segment", "trecho")
+
+                comparison_rows = {}
+                for exp_name, summary in all_summaries.items():
+                    for r in summary.get("regions", []):
+                        key = _norm_region(r["region"])
+                        comparison_rows.setdefault(key, {"__display__": format_region_display(r["region"])})
+                        comparison_rows[key][exp_name] = r["detection_rate"]
+
+                exp_names_sorted = sorted(all_summaries.keys())
+                comp_df = pd.DataFrame([
+                    {"Region": v["__display__"], **{e: v.get(e) for e in exp_names_sorted}}
+                    for v in comparison_rows.values()
+                ]).sort_values(exp_names_sorted[0], ascending=False, na_position="last")
+
+                st.dataframe(
+                    comp_df.set_index("Region").style.format(
+                        {e: "{:.1%}" for e in exp_names_sorted}, na_rep="—"
+                    ).background_gradient(cmap="Blues", subset=exp_names_sorted),
+                    use_container_width=True,
+                )
+
+                comp_totals = {
+                    exp_name: summary.get("totals", {}).get("detection_rate", 0.0)
+                    for exp_name, summary in all_summaries.items()
+                }
+                total_cols = st.columns(len(comp_totals))
+                for col, (exp_name, rate) in zip(total_cols, sorted(comp_totals.items())):
+                    with col:
+                        st.metric(exp_name, f"{rate*100:.1f}%")
+
+                missing = set(FIELD_SUMMARY_PATHS_BY_EXP) - set(all_summaries)
+                if missing:
+                    st.caption(t("field.compare.missing").format(missing=", ".join(sorted(missing))))
 
 # Footer
 st.markdown("---")
