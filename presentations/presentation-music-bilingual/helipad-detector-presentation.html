@@ -465,6 +465,24 @@
         ],
         text:'Inter-Zone Corridor and Itaim Bibi — dense corporate corridors — show the highest detection rates; Alphaville Industrial, the lowest. That alignment with known urban zoning is itself a signal the model is learning a real pattern, not noise — useful input for prioritizing where a human review pass matters most.' },
 
+      { id:'results3', type:'table', label:'Results · Field Reality Check', eyebrow:'RESULTS · A REALITY CHECK',
+        title:'The best model on paper,', titleAccent:'is not the best model in the field',
+        headers:['Region','exp1','exp2','exp3'],
+        rows:[
+          ['Alphaville Industrial','6.1%','13.6%','13.3%'],
+          ['Av. Paulista (Seg. 1)','9.8%','21.3%','26.8%'],
+          ['Av. Paulista (Seg. 2)','9.3%','20.1%','23.8%'],
+          ['Brooklin','9.7%','22.8%','14.2%'],
+          ['Faria Lima','9.0%','20.2%','17.2%'],
+          ['Inter-Zone Corridor','14.2%','27.7%','20.8%'],
+          ['Itaim Bibi','11.9%','25.5%','17.9%'],
+          ['Pinheiros','8.2%','19.8%','16.6%'],
+          ['Vila Olímpia','12.9%','23.9%','16.5%'],
+          ['Vila Nova Conceição','8.0%','19.1%','12.1%'],
+        ],
+        note:'exp1 tops the curated validation set on Precision (1.000) — yet across the same 7,943 field tiles it detects roughly half as many real helipads as exp2 (9.6% vs. 21.1% overall detection rate) and exp3 (17.9%). A model that looks best on a small, curated benchmark is not automatically the model that generalizes best to unfiltered, real-world coverage — exactly the kind of gap field validation exists to catch.' },
+
+      
       { id:'helicities', type:'table', label:'Helicopter Cities', eyebrow:'GLOBAL CONTEXT',
         title:'Why São Paulo,', titleAccent:'of all cities',
         headers:['Rank','City','Country','Main Indicator','Rate','Est. Fleet','Highlight'],
