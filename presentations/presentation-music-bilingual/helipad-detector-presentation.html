@@ -723,6 +723,23 @@
         ],
         text:'Inter-Zone Corridor e Itaim Bibi — corredores corporativos densos — apresentam as maiores taxas de detecção, enquanto Alphaville Industrial apresenta a menor. Essa correspondência com padrões conhecidos de ocupação urbana sugere que o modelo pode estar capturando um padrão real, e não apenas ruído. O resultado também ajuda a indicar onde uma revisão humana pode ser mais relevante.' },
 
+      { id:'results3', type:'table', label:'Resultados · Teste de Realidade', eyebrow:'RESULTADOS · TESTE DE REALIDADE',
+        title:'O melhor modelo no papel,', titleAccent:'não é o melhor modelo em campo',
+        headers:['Região','exp1','exp2','exp3'],
+        rows:[
+          ['Alphaville Industrial','6,1%','13,6%','13,3%'],
+          ['Av. Paulista (Trecho 1)','9,8%','21,3%','26,8%'],
+          ['Av. Paulista (Trecho 2)','9,3%','20,1%','23,8%'],
+          ['Brooklin','9,7%','22,8%','14,2%'],
+          ['Faria Lima','9,0%','20,2%','17,2%'],
+          ['Inter-Zone Corridor','14,2%','27,7%','20,8%'],
+          ['Itaim Bibi','11,9%','25,5%','17,9%'],
+          ['Pinheiros','8,2%','19,8%','16,6%'],
+          ['Vila Olímpia','12,9%','23,9%','16,5%'],
+          ['Vila Nova Conceição','8,0%','19,1%','12,1%'],
+        ],
+        note:'O exp1 lidera o conjunto de validação curado em Precision (1.000) — mas, nos mesmos 7.943 tiles de campo, detecta aproximadamente metade dos helipontos reais que o exp2 (9,6% vs. 21,1% de taxa geral de detecção) e o exp3 (17,9%). Um modelo que parece melhor num benchmark pequeno e curado não é automaticamente o que generaliza melhor em cobertura real, sem filtragem — exatamente o tipo de lacuna que a validação de campo existe para capturar.' },
+
       { id:'helicities', type:'table', label:'Cidades Helicópteros', eyebrow:'CONTEXTO GLOBAL',
         title:'Por que São Paulo,', titleAccent:'entre todas as cidades',
         headers:['Rank','Cidade','País','Indicador Principal','Taxa','Frota Est.','Destaque'],
