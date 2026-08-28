@@ -66,9 +66,8 @@
 <p align="center">
    <img src="https://github.com/user-attachments/assets/791a69e2-d09a-429f-9257-f6667fff5c04 ">
  </p>
-<!-- ========= END PUC GIF ========= -
+<!-- ========= END PUC GIF ========= -->
 
-https://github.com/user-attachments/assets/5b7d581c-ab5e-416e-8471-d91136b2ada0
 
 <br>
 
@@ -281,7 +280,7 @@ São Paulo's choice as the project's real-world setting is not incidental. The t
 - Downloadable datasets, notebooks and artifacts
 
 
-<br><br>
+<br><br><br>
 
 
 <!--
@@ -292,11 +291,12 @@ São Paulo's choice as the project's real-world setting is not incidental. The t
 
  
 <!-- ========= START 🎥 **DEMO** ========= -->
+###### <p align="center">  🎥 **DEMO:** **HELIPAD DETECTION** ✧ `YOLO11` ✧ `MODEL TRAINING`   ✧ *Creation by Fabi* ⚡️
 
-  🎥 **DEMO** ✧ *Creation by Fabi* ⚡️
+https://github.com/user-attachments/assets/5b7d581c-ab5e-416e-8471-d91136b2ada0
 
-###### <p align="center"> **HELIPAD DETECTION** ✧ `YOLO11` ✧ `MODEL TRAINING`
-###### <p align="center"> 🎶 *Feel Good* by Nina Simone - Deep House - Remix
+###### <p align="center"> 🎶 *Feel Good* by Nina Simone - Deep House  Remix
+
 <br><br><br>
 <!-- ========= END  🎥 **DEMO** ========= -->
 
