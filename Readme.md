@@ -44,28 +44,33 @@
 <!-- ========= END HEADRE ========= -->
 
 <!-- ========= START SPONSOR BADGE ========= -->
-#### <p align="center">[![Sponsor ॐ ⋆ ⋆ ⋆ ⋆ Mindful AI ⋆ ⋆ ⋆ ⋆ 𖤐](https://img.shields.io/badge/Sponsor-%E0%A5%90%20%E2%8B%86%20%E2%8B%86%20%E2%8B%86%20%E2%8B%86%20Mindful%20AI%20%E2%8B%86%20%E2%8B%86%20%E2%8B%86%20%E2%8B%86%20%F0%96%A4%90-brightgreen?logo=github)](https://github.com/sponsors/Mindful-AI-Research)
+<p align="center">
+  <a href="https://github.com/sponsors/Mindful-AI-Research">
+  <img src="https://img.shields.io/badge/Sponsor-%E0%A5%90%20%E2%8B%86%20Mindful%20AI%20%F0%96%A4%90%20%E2%8B%86-00FFFF?style=flat-square&logo=githubsponsors&logoColor=white&labelColor=0a1f44" alt="Sponsor ॐ ⋆ Mindful AI 𖤐 ⋆" height="28">
+</a>
+  &nbsp;&nbsp;
+ <a href="https://committers.top/brazil_public">
+    <img src="https://img.shields.io/badge/🇧🇷_Top_Contributors-Brazil-00FFFF?style=flat-square&logoColor=white&labelColor=0a1f44" alt="committers.top badge" height="28">
+  </a>
+</p>
 
 <br><br>
 <!-- ========= END SPONSOR BADGE ========= -->
 
-<!-- ========= START GIFE ========= -->
-<!-- 
+
+
+
+
+<!-- ========= START PUC GIF ========= -->
+
 <p align="center">
    <img src="https://github.com/user-attachments/assets/791a69e2-d09a-429f-9257-f6667fff5c04 ">
  </p>
- -->
+<!-- ========= END PUC GIF ========= -
 
 https://github.com/user-attachments/assets/5b7d581c-ab5e-416e-8471-d91136b2ada0
 
-###### <p align="center"> **HELIPAD DETECTION** ✧ `YOLO11` ✧ `MODEL TRAINING` ✧ 🎥 **DEMO**
-###### <p align="center"> *From pixels to perception ✦ Teaching AI to see what others overlook*
-###### <p align="center"> 🎶 *Feel Good* by Nina Simone (Remix) ✧ *Creation by Fabi* ⚡️
-
-<br><br><br>
-<!-- ========= END GIFR IMAGE ========= -->
-
-
+<br>
 
 <!-- ======================================= Start Institutional INFO ===========================================  
 ## [Institutional Information]()
@@ -92,14 +97,12 @@ https://github.com/user-attachments/assets/5b7d581c-ab5e-416e-8471-d91136b2ada0
 
 
 
-<!-- ======================================= Start Institutional INFO - IA WEEK and PHD SUBMISSIION =========================================== -->  
-## [Institutional Information]()
-
+<!-- ======================================= Start Institutional INFO - IA WEEK and PHD SUBMISSIION =========================================== --> 
 [**Institution:**]() Pontifical Catholic University of São Paulo (PUC‑SP) <br>
-[**School:**]() FCAEI — Computer Science Department <br>
-[**Course:**]() BSc in — Human-Centered AI & Data Science • 6th Semester • 2026  <br> 
+[**School:**]() FACEI — Computer Science Department <br>
+[**Course:**]() BSc in — Human-Centered AI & Data Science  <br> 
 [**Subject:**]() Machine Learning / Computer Vision — YOLO  <br>
-[**Project:**]() Project — Object Detection in Satellite Images with YOLO  <br>
+[**Project:**]() Object Detection in Satellite Images with YOLO  <br>
  **Author:** [Fabiana ⚡️ Campanari](https://linktr.ee/fabianacampanari)   
 
 
@@ -109,24 +112,6 @@ https://github.com/user-attachments/assets/5b7d581c-ab5e-416e-8471-d91136b2ada0
 
 <br><br>
 <!-- ========= END Institutional INFO ========= -->
-
-
-
-
-
-
-
-## [Institutional Information]()
-
-[**Institution:**]() Pontifical Catholic University of São Paulo (PUC‑SP) <br>
-[**School:**]() FCAEI — Computer Science Department <br>
-[**Course:**]() BSc in — Human-Centered AI & Data Science • 6th Semester • 2026  <br> 
-[**Subject:**]() Machine Learning / Computer Vision — YOLO  <br>
-[**Project:**]() P2 — Object Detection in Satellite Images with YOLO  <br>
-
-
-
-
 
 
 
@@ -304,6 +289,16 @@ São Paulo's choice as the project's real-world setting is not incidental. The t
 
 <br><br>
  -->
+
+ 
+<!-- ========= START 🎥 **DEMO** ========= -->
+
+  🎥 **DEMO** ✧ *Creation by Fabi* ⚡️
+
+###### <p align="center"> **HELIPAD DETECTION** ✧ `YOLO11` ✧ `MODEL TRAINING`
+###### <p align="center"> 🎶 *Feel Good* by Nina Simone - Deep House - Remix
+<br><br><br>
+<!-- ========= END  🎥 **DEMO** ========= -->
 
 
 
