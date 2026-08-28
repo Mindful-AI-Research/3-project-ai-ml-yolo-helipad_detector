@@ -65,7 +65,9 @@ https://github.com/user-attachments/assets/5b7d581c-ab5e-416e-8471-d91136b2ada0
 <br><br><br>
 <!-- ========= END GIFR IMAGE ========= -->
 
-<!-- ======================================= Start Institutional INFO ===========================================  -->
+
+
+<!-- ======================================= Start Institutional INFO ===========================================  
 ## [Institutional Information]()
 
 [**Institution:**]() Pontifical Catholic University of São Paulo (PUC‑SP) <br>
@@ -87,6 +89,46 @@ https://github.com/user-attachments/assets/5b7d581c-ab5e-416e-8471-d91136b2ada0
 
 <br><br>
 <!-- ========= END Institutional INFO ========= -->
+
+
+
+<!-- ======================================= Start Institutional INFO - IA WEEK and PHD SUBMISSIION =========================================== -->  
+## [Institutional Information]()
+
+[**Institution:**]() Pontifical Catholic University of São Paulo (PUC‑SP) <br>
+[**School:**]() FCAEI — Computer Science Department <br>
+[**Course:**]() BSc in — Human-Centered AI & Data Science • 6th Semester • 2026  <br> 
+[**Subject:**]() Machine Learning / Computer Vision — YOLO  <br>
+[**Project:**]() Project — Object Detection in Satellite Images with YOLO  <br>
+ **Author:** [Fabiana ⚡️ Campanari](https://linktr.ee/fabianacampanari)   
+
+
+<br><br>
+
+#
+
+<br><br>
+<!-- ========= END Institutional INFO ========= -->
+
+
+
+
+
+
+
+## [Institutional Information]()
+
+[**Institution:**]() Pontifical Catholic University of São Paulo (PUC‑SP) <br>
+[**School:**]() FCAEI — Computer Science Department <br>
+[**Course:**]() BSc in — Human-Centered AI & Data Science • 6th Semester • 2026  <br> 
+[**Subject:**]() Machine Learning / Computer Vision — YOLO  <br>
+[**Project:**]() P2 — Object Detection in Satellite Images with YOLO  <br>
+
+
+
+
+
+
 
 
 <!-- ========= START Streamlit BADGE ========= -->
