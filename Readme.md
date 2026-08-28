@@ -257,13 +257,12 @@ São Paulo's choice as the project's real-world setting is not incidental. The t
 <br><br>
 
 
+<!--
 ## Dashboard Preview
 
-
-
-
-
 <br><br>
+ -->
+
 
 
 ##  Table of Contents
