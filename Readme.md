@@ -62,14 +62,6 @@ https://github.com/user-attachments/assets/5b7d581c-ab5e-416e-8471-d91136b2ada0
 ###### <p align="center"> *From pixels to perception ✦ Teaching AI to see what others overlook*
 ###### <p align="center"> 🎶 *Feel Good* by Nina Simone (Remix) ✧ *Creation by Fabi* ⚡️
 
-
-
-<br>
-
-#
-
-<br>
-
 <br><br><br>
 <!-- ========= END GIFR IMAGE ========= -->
 
@@ -121,7 +113,7 @@ https://github.com/user-attachments/assets/5b7d581c-ab5e-416e-8471-d91136b2ada0
       style="height: 32px; width: auto; margin-right: 8px;"
     />
   </a> 
-<!-- =========End Eeact Presentation BADGE ========= -->
+<!-- =========End REeact Presentation BADGE ========= -->
 
 <!-- ========= START Data Analysis Report BADGE ========= -->
   <a href="https://github.com/Mindful-AI-Research/3-project-ai-ml-yolo-helipad_detector/blob/9b8ce0e1daec129bc45d74cb03826f3b557d7eed/reports/helipad_detector_full_report/%F0%9F%87%AC%F0%9F%87%A7Helipad_Detector_Full_Report.pdf" target="_blank" rel="noopener noreferrer">
@@ -133,6 +125,7 @@ https://github.com/user-attachments/assets/5b7d581c-ab5e-416e-8471-d91136b2ada0
   </a>
 
 </p>
+
 
 <br><br>
 
