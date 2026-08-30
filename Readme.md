@@ -66,33 +66,9 @@
 <p align="center">
    <img src="https://github.com/user-attachments/assets/791a69e2-d09a-429f-9257-f6667fff5c04 ">
  </p>
+
+ <br>
 <!-- ========= END PUC GIF ========= -->
-
-
-<br>
-
-<!-- ======================================= Start Institutional INFO ===========================================  
-## [Institutional Information]()
-
-[**Institution:**]() Pontifical Catholic University of São Paulo (PUC‑SP) <br>
-[**School:**]() FCAEI — Computer Science Department <br>
-[**Course:**]() BSc in — Human-Centered AI & Data Science • 6th Semester • 2026  <br> 
-[**Subject:**]() Machine Learning / Computer Vision — YOLO  <br>
-[**Project:**]() P2 — Object Detection in Satellite Images with YOLO  <br>
-**Professor:** [✨ Rooney Ribeiro Albuquerque Coelho](https://www.linkedin.com/in/rooney-coelho-320857182/) 
-
-**Project Authors (Helipoint Detector):**  
-- [Carlos Antonio Roth Gorham](https://github.com/RothGorham?tab=followers)   
-- [Fabiana ⚡️ Campanari](https://linktr.ee/fabianacampanari)   
-- [Pedro Vyctor Almeida](https://www.linkedin.com/in/pedro-vyctor-almeida-285b89273/)
-
-
-<br><br>
-
-#
-
-<br><br>
-<!-- ========= END Institutional INFO ========= -->
 
 
 
