@@ -45,13 +45,28 @@
 
 <!-- ========= START SPONSOR BADGE ========= -->
 <p align="center">
+
   <a href="https://github.com/sponsors/Mindful-AI-Research">
-  <img src="https://img.shields.io/badge/Sponsor-%E0%A5%90%20%E2%8B%86%20Mindful%20AI%20%F0%96%A4%90%20%E2%8B%86-00FFFF?style=flat-square&logo=githubsponsors&logoColor=white&labelColor=0a1f44" alt="Sponsor ॐ ⋆ Mindful AI 𖤐 ⋆" height="28">
-</a>
-  &nbsp;&nbsp;
- <a href="https://committers.top/brazil_public">
-    <img src="https://img.shields.io/badge/🇧🇷_Top_Contributors-Brazil-00FFFF?style=flat-square&logoColor=white&labelColor=0a1f44" alt="committers.top badge" height="28">
+    <img
+      src="https://img.shields.io/badge/Sponsor-%E0%A5%90%20%E2%8B%86%20Mindful%20AI%20%E2%8B%86%20Research%20%26%20Consulting%20%F0%96%A4%90%20%E2%8B%86-3A424C?style=for-the-badge&logo=githubsponsors&logoColor=white&labelColor=07111F"
+      alt="Sponsor ॐ ⋆ Mindful AI ⋆ Research & Consulting 𖤐 ⋆"
+      height="36"
+    >
   </a>
+&nbsp;&nbsp;
+<a href="https://user-badge.committers.top/brazil/FabianaCampanari">
+    <img
+      src="https://img.shields.io/badge/%F0%9F%87%A7%F0%9F%87%B7%20TOP%20COMMITTER-07111F?style=for-the-badge&labelColor=07111F&logoColor=white"
+      alt="🇧🇷 Top Committer"
+      height="36"
+    >
+    <img
+      src="https://img.shields.io/badge/·····%20BRAZIL-3A424C?style=for-the-badge&labelColor=3A424C&logoColor=white"
+      alt="Brazil"
+      height="36"
+    >
+  </a>
+
 </p>
 
 <br><br>
