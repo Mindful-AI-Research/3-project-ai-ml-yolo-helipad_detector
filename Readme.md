@@ -212,12 +212,7 @@
 > 🔗 **[AI/ML Project 1 · Computer Vision · EMNIST Vision Intelligence](https://github.com/Mindful-AI-Assistants/2-project-ai-ml-emnist-vision-intelligence)**
 >
 > A deep learning system for handwritten character recognition using PyTorch and Streamlit.
->
-> #
->
-> ✨ Part of the *Human Centered AI & Machine Learning Series*
->
-> [*From handwriting to rooftops — simplicity was never in the roadmap.*]() ⚡️
+
 
 <br><br>
 <!-- =========ENDMAIN REPO =Projects REFERENCES ========= -->
