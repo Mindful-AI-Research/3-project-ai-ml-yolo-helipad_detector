@@ -71,7 +71,6 @@
 <!-- ========= END PUC GIF ========= -->
 
 
-
 <!-- ======================================= Start Institutional INFO - IA WEEK and PHD SUBMISSIION =========================================== --> 
 [**Institution:**]() Pontifical Catholic University of São Paulo (PUC‑SP) <br>
 [**School:**]() FACEI — Computer Science Department <br>
