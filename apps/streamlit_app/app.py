@@ -101,6 +101,18 @@ TR = {
         "en": "🚁 Top 10 — Cities with the Highest Presence/Traffic of Helicopters",
         "pt": "🚁 Top 10 — Cidades com maior presença/tráfego de helicópteros",
     },
+    "cities.why_sao_paulo": {
+        "en": "São Paulo leads the global ranking of helicopter presence/traffic — the largest "
+              "estimated fleet (400+) and roughly 2,200 rooftop landings and takeoffs per day in "
+              "the metropolitan area. That real density of rooftop helicopter activity is why this "
+              "project specifically targets São Paulo, rather than a city with sparser or "
+              "already-mapped helipad infrastructure.",
+        "pt": "São Paulo lidera o ranking global de presença/tráfego de helicópteros — maior frota "
+              "estimada (400+) e cerca de 2.200 pousos e decolagens por dia na região metropolitana. "
+              "Essa densidade real de atividade de helicópteros em telhados é o motivo pelo qual "
+              "este projeto tem como alvo especificamente São Paulo, em vez de uma cidade com "
+              "infraestrutura de helipontos mais esparsa ou já mapeada.",
+    },
     "cities.table.columns": {
         "en": ["Rank", "City", "Country", "Main Indicator", "Rate (Relative Index)",
                "Estimated Fleet (Helicopters)", "Highlight"],
@@ -170,7 +182,7 @@ TR = {
     "tabs.upload": {"en": "📤 Upload Image", "pt": "📤 Enviar Imagem"},
     "tabs.pipeline": {"en": "📖 Pipeline", "pt": "📖 Pipeline"},
     "tabs.governance": {"en": "🛡️ Governance", "pt": "🛡️ Governança"},
-    "tabs.about": {"en": "👥 About & Team", "pt": "👥 Sobre & Equipe"},
+    "tabs.about": {"en": "👥 About", "pt": "👥 Sobre"},
     "tabs.downloads": {"en": "⬇️ Downloads", "pt": "⬇️ Downloads"},
 
     # ---- Tab 1: Upload ----
@@ -554,7 +566,7 @@ TR = {
 "about.program": {"en": "Program", "pt": "Curso"},
 "about.course": {"en": "Course", "pt": "Disciplina"},
 "about.professor": {"en": "Professor", "pt": "Professor"},
-"about.authors": {"en": "Authors", "pt": "Autores"},
+"about.authors": {"en": "Author", "pt": "Autor"},
 
     
     # ---- Tab 7: Downloads ----
@@ -699,6 +711,19 @@ TR = {
               "cada experimento — mostra se o modelo que teve a melhor nota no conjunto de "
               "validação curado realmente generaliza bem quando enfrenta cobertura de satélite "
               "real, sem curadoria prévia.",
+    },
+    "field.compare.reality_check": {
+        "en": "exp1 leads the curated validation set on Precision (1.000) — but across these same "
+              "7,943 field tiles, it detects roughly half as many real helipads as exp2 (9.6% vs. "
+              "21.1% overall detection rate) and exp3 (17.9%). A model that looks best on a small, "
+              "curated benchmark is not automatically the model that generalizes best in unfiltered, "
+              "real-world coverage — exactly the kind of gap field validation exists to catch.",
+        "pt": "O exp1 lidera o conjunto de validação curado em Precision (1.000) — mas, nos mesmos "
+              "7.943 tiles de campo, detecta aproximadamente metade dos helipontos reais que o exp2 "
+              "(9,6% vs. 21,1% de taxa geral de detecção) e o exp3 (17,9%). Um modelo que parece "
+              "melhor num benchmark pequeno e curado não é automaticamente o que generaliza melhor "
+              "em cobertura real, sem filtragem — exatamente o tipo de lacuna que a validação de "
+              "campo existe para capturar.",
     },
     "field.compare.missing": {
         "en": "Not yet run in the field for: **{missing}** — only showing the experiment(s) with a summary file present.",
@@ -2389,6 +2414,15 @@ with tab_about:
         use_container_width=True,
     )
 
+    st.markdown(f"""
+    <div style="border-left:3px solid #14b8a6; background:rgba(14,117,109,0.08);
+                border-radius:8px; padding:14px 18px; margin:14px 0 4px 0;">
+        <p style="margin:0; color:#E2E8F0; font-size:14px; line-height:1.65;">
+            {t('cities.why_sao_paulo')}
+        </p>
+    </div>
+    """, unsafe_allow_html=True)
+
     st.markdown(t("about.body_closing"))
 
     st.markdown(f"""
@@ -2400,13 +2434,9 @@ with tab_about:
                 <td style="padding:6px 0;">BSc in Human Centered-AI & Data Science</td></tr>
             <tr><td style="padding:6px 0; color:#93C5FD; vertical-align:top;">{t("about.course")}</td>
                 <td style="padding:6px 0;">Machine Learning / Computer Vision — Project P2</td></tr>
-            <tr><td style="padding:6px 0; color:#93C5FD; vertical-align:top;">{t("about.professor")}</td>
-                <td style="padding:6px 0;">Rooney Ribeiro Albuquerque Coelho</td></tr>
             <tr><td style="padding:6px 0; color:#93C5FD; vertical-align:top;">{t("about.authors")}</td>
                 <td style="padding:6px 0;">
-                    Carlos Antonio dos Santos Roth Gorham<br>
-                    Fabiana Campanari<br>
-                    Pedro Vyctor Almeida
+                    Fabiana ⚡️ Campanari
                 </td></tr>
         </table>
     </div>
@@ -2766,6 +2796,16 @@ with tab_field:
                 for col, (exp_name, rate) in zip(total_cols, sorted(comp_totals.items())):
                     with col:
                         st.metric(exp_name, f"{rate*100:.1f}%")
+
+                if {"exp1", "exp2", "exp3"} <= set(all_summaries):
+                    st.markdown(f"""
+                    <div style="border-left:3px solid #FF2500; background:rgba(14,117,109,0.08);
+                                border-radius:8px; padding:14px 18px; margin-top:14px;">
+                        <p style="margin:0; color:#E2E8F0; font-size:14px; line-height:1.65;">
+                            {t('field.compare.reality_check')}
+                        </p>
+                    </div>
+                    """, unsafe_allow_html=True)
 
                 missing = set(FIELD_SUMMARY_PATHS_BY_EXP) - set(all_summaries)
                 if missing:
