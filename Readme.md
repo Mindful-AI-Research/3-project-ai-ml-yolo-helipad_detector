@@ -29,19 +29,23 @@
 
 <br><br>
 
-#### <p align="center">✨ <i>Teaching YOLO to spot the city's most exclusive landing spots.</i> ✨</p>
 
-<p align="center">
-<i>Finding hidden H’s in the concrete jungle</i><br><br>
-<b>One rooftop at a time.</b> 🚁⚡️
-</p>
+<!-- ========= START TEASER ========= -->
+###### <p align="center">✨ <i>Teaching YOLO to spot the city's most exclusive landing spots.</i> ✨</p> 
+
+###### <p align="center"> 🚁 ***Finding hidden H’s in the concrete jungle*** <br>
+
+###### <p align="center">One rooftop at a time. </b> 
+
+#### <p align="center"> ⚡️
+
 
 <br>
 
 #
 
 <br><br>
-<!-- ========= END HEADRE ========= -->
+<!-- ========= END TEASER ========= -->
 
 <!-- ========= START SPONSOR BADGE ========= -->
 <p align="center">
