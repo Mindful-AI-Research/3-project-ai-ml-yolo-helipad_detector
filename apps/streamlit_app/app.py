@@ -688,11 +688,16 @@ TR = {
     "field.tiles_processed": {"en": "Tiles processed", "pt": "Tiles processados"},
     "field.overall_rate": {"en": "Overall detection rate", "pt": "Taxa de detecção geral"},
     "field.detection_rate_pct": {"en": "Detection rate (%)", "pt": "Taxa de detecção (%)"},
+    "field.rank_col": {"en": "Rank", "pt": "Ranking"},
     "field.region_col": {"en": "Region", "pt": "Região"},
     "field.tiles_col": {"en": "Tiles", "pt": "Tiles"},
     "field.detected_col": {"en": "Detected", "pt": "Detectado"},
-    "field.rate_col": {"en": "Rate", "pt": "Taxa"},
+    "field.rate_col": {"en": "Detection Rate", "pt": "Taxa de Detecção"},
     "field.top_confidence_col": {"en": "Top Confidence", "pt": "Confiança Máxima"},
+    "field.rate_definition": {
+        "en": "**Rank** here follows the raw number of helipads found (**Detected**), highest to lowest — not **Detection Rate**, which is Detected ÷ Tiles for that region. A smaller region can show a higher rate with fewer total finds than a larger one (e.g. Inter-Zone Corridor: 133 found, 27.7% rate vs. Itaim Bibi: 191 found, 25.5% rate) simply because it has fewer tiles overall.",
+        "pt": "O **ranking** aqui segue o número bruto de helipontos encontrados (**Detectado**), do maior para o menor — não a **Taxa de Detecção**, que é Detectado ÷ Tiles daquela região. Uma região menor pode ter taxa maior com menos achados totais do que uma maior (ex: Inter-Zone Corridor: 133 encontrados, taxa de 27,7% vs. Itaim Bibi: 191 encontrados, taxa de 25,5%) simplesmente por ter menos tiles no total.",
+    },
     "field.inter_zone_note": {
         "en": "ℹ️ **Inter-Zone Corridor**: a bounding box covering the transition area between "
               "neighboring corporate districts, rather than a single named neighborhood.",
@@ -2722,11 +2727,6 @@ with tab_field:
             st.markdown("")
             regions_df = pd.DataFrame(regions).sort_values("detection_rate", ascending=False)
             regions_df["region"] = regions_df["region"].apply(format_region_display)
-            regions_df_display = regions_df.rename(columns={
-                "region": t("field.region_col"), "tiles_total": t("field.tiles_col"),
-                "tiles_detected": t("field.detected_col"), "detection_rate": t("field.rate_col"),
-                "top_confidence": t("field.top_confidence_col"),
-            })
 
             fig_regions = go.Figure(go.Bar(
                 x=regions_df["region"],
@@ -2741,12 +2741,26 @@ with tab_field:
             )
             st.plotly_chart(fig_regions, use_container_width=True)
 
+            # Table is ranked by absolute helipads found (tiles_detected),
+            # not by rate — rate and raw count don't always agree (e.g. a
+            # small region can have a higher rate but fewer total finds
+            # than a bigger one), so an explicit rank column makes the
+            # "most helipads found overall" reading unambiguous.
+            regions_df_ranked = regions_df.sort_values("tiles_detected", ascending=False).reset_index(drop=True)
+            regions_df_ranked.insert(0, t("field.rank_col"), range(1, len(regions_df_ranked) + 1))
+            regions_df_display = regions_df_ranked.rename(columns={
+                "region": t("field.region_col"), "tiles_total": t("field.tiles_col"),
+                "tiles_detected": t("field.detected_col"), "detection_rate": t("field.rate_col"),
+                "top_confidence": t("field.top_confidence_col"),
+            })
+
             st.dataframe(
-                regions_df_display.set_index(t("field.region_col")).style.format({
+                regions_df_display.set_index(t("field.rank_col")).style.format({
                     t("field.rate_col"): "{:.1%}", t("field.top_confidence_col"): "{:.2f}",
-                }).background_gradient(cmap="Blues", subset=[t("field.rate_col")]),
+                }).background_gradient(cmap="Blues", subset=[t("field.detected_col")]),
                 use_container_width=True,
             )
+            st.caption(t("field.rate_definition"))
 
             if "Inter-Zone Corridor" in regions_df["region"].values:
                 st.caption(t("field.inter_zone_note"))
