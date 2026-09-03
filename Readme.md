@@ -137,7 +137,7 @@
 <p align="center" style="margin: 0;">
 
 
-  <a href="https://adorable-puppy-f67365.netlify.app/" target="_blank" rel="noopener noreferrer">
+  <a href="" target="_blank" rel="noopener noreferrer">
     <img
       src="https://img.shields.io/badge/React%20Presentation-Slides%20and%20Overview-0f766e?style=for-the-badge&logo=jupyter&logoColor=white"
       alt="React Presentation Slides and Overview"
@@ -147,7 +147,7 @@
 <!-- =========End REeact Presentation BADGE ========= -->
 
 <!-- ========= START Data Analysis Report BADGE ========= -->
-  <a href="https://github.com/Mindful-AI-Research/3-project-ai-ml-yolo-helipad_detector/blob/9b8ce0e1daec129bc45d74cb03826f3b557d7eed/reports/helipad_detector_full_report/%F0%9F%87%AC%F0%9F%87%A7Helipad_Detector_Full_Report.pdf" target="_blank" rel="noopener noreferrer">
+  <a href="" target="_blank" rel="noopener noreferrer">
     <img 
       src="https://img.shields.io/badge/Data%20Analysis-Report%20and%20PDF-134e4a?style=for-the-badge&logo=streamlit&logoColor=white&labelColor=022c22" 
       alt="Data Analysis Report and PDF"
