@@ -97,7 +97,7 @@
 
 </p>
 
-<br><br>
+<br><br><br><br>
 <!-- ========= END 🇧🇷 Top CommtributorsE  ========= -->
 
 
@@ -203,6 +203,10 @@
 >
 
 <br><br>
+
+#
+
+<br><br>
 <!-- ========= END NOTE ========= -->
 
 <!-- =========START MAIN REPO =Projects REFERENCES ========= -->
@@ -225,7 +229,7 @@
 > A deep learning system for handwritten character recognition using PyTorch and Streamlit.
 
 
-<br><br>
+<br><br><br><br>
 <!-- =========ENDMAIN REPO =Projects REFERENCES ========= -->
 
 
