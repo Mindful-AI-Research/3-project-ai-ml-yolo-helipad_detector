@@ -47,6 +47,7 @@
 <br><br>
 <!-- ========= END TEASER ========= -->
 
+
 <!-- ========= START SPONSOR BADGE ========= -->
 <p align="center">
 
@@ -57,24 +58,11 @@
       height="36"
     >
   </a>
-&nbsp;&nbsp;
-<a href="https://user-badge.committers.top/brazil/FabianaCampanari">
-    <img
-      src="https://img.shields.io/badge/%F0%9F%87%A7%F0%9F%87%B7%20TOP%20COMMITTER-07111F?style=for-the-badge&labelColor=07111F&logoColor=white"
-      alt="🇧🇷 Top Committer"
-      height="36"
-    >
-    <img
-      src="https://img.shields.io/badge/·····%20BRAZIL-3A424C?style=for-the-badge&labelColor=3A424C&logoColor=white"
-      alt="Brazil"
-      height="36"
-    >
-  </a>
 
-</p>
-
+  
 <br><br>
 <!-- ========= END SPONSOR BADGE ========= -->
+
 
 
 
@@ -88,6 +76,29 @@
 
  <br>
 <!-- ========= END PUC GIF ========= -->
+
+
+
+<!-- ========= START 🇧🇷 Top CommtributorsE ========= -->
+<p align="center">
+  <a href="https://user-badge.committers.top/brazil/FabianaCampanari">
+    <img
+      src="https://img.shields.io/badge/%F0%9F%87%A7%F0%9F%87%B7%20TOP%20CONTRIBUTORS-07111F?style=for-the-badge&labelColor=07111F&logoColor=white"
+      alt="🇧🇷 TOP CONTRIBUTORS"
+      height="36"
+    >
+    <img
+      src="https://img.shields.io/badge/·····%20BRAZIL-3A424C?style=for-the-badge&labelColor=3A424C&logoColor=white"
+      alt="Brazil"
+      height="36"
+    >
+  </a>
+</p>
+
+</p>
+
+<br><br>
+<!-- ========= END 🇧🇷 Top CommtributorsE  ========= -->
 
 
 <!-- ======================================= Start Institutional INFO - IA WEEK and PHD SUBMISSIION =========================================== --> 
