@@ -493,7 +493,7 @@ TR = {
 
 
 # ---- Tab: About & Team ----
-"about.header": {"en": "👥 About & Team", "pt": "👥 Sobre & Equipe"},
+"about.header": {"en": "👥 About", "pt": "👥 Sobre"},
 
 "about.body_intro": {
     "en": (
@@ -970,8 +970,7 @@ def _force_leaflet_resize(fmap: folium.Map) -> None:
         }}
         [100, 300, 700, 1200, 2000].forEach(function(ms) {{ setTimeout(fixSize, ms); }});
         window.addEventListener('load', fixSize);
-    }})();
-    </script>
+    }})();    </script>
     """))
 
 
