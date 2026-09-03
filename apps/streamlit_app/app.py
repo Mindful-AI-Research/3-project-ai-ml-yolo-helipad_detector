@@ -2235,13 +2235,39 @@ with tab4:
         # decoration of the base layer above it, not an independent toggle.
         folium.TileLayer(tiles=labels_url, attr=ESRI_CANVAS_ATTR, name="labels", control=False).add_to(fmap)
 
+        # Field-validation results (helipads found per region), loaded early so
+        # the training-region markers below can show a count, not just a name.
+        field_summary_for_map = load_field_detection_summary()
+        regions_by_slug = {}
+        min_rate, max_rate = 0.0, 1.0
+        if field_summary_for_map:
+            regions_by_slug = {r["region"]: r for r in field_summary_for_map.get("regions", [])}
+            rates = [r["detection_rate"] for r in regions_by_slug.values()]
+            min_rate, max_rate = (min(rates), max(rates)) if rates else (0.0, 1.0)
+
         sp_layer = folium.FeatureGroup(name=f"🟢 {t('map.sp_layer')} ({len(sp_df)})", show=True)
         for _, row in sp_df.iterrows():
-            name = format_region_display(row.get("Nome do Bairro", "Unknown"))
+            raw_name = row.get("Nome do Bairro", "Unknown")
+            name = format_region_display(raw_name)
+            region_stats = regions_by_slug.get(slugify_region(raw_name))
+
+            if region_stats is not None:
+                found = region_stats["tiles_detected"]
+                rate = region_stats["detection_rate"]
+                tooltip_text = f"{name} · {found} {t('map.tiles_detected')} ({rate*100:.1f}%)"
+                popup_html = (
+                    f"<b>{name}</b><br>{t('map.training_region')}<br>"
+                    f"🚁 <b>{found}</b> {t('map.tiles_detected')} "
+                    f"({region_stats['tiles_detected']}/{region_stats['tiles_total']} · {rate*100:.1f}%)"
+                )
+            else:
+                tooltip_text = name
+                popup_html = f"<b>{name}</b><br>{t('map.training_region')}"
+
             folium.Marker(
                 location=[row["lat"], row["lon"]],
-                popup=folium.Popup(f"<b>{name}</b><br>{t('map.training_region')}", max_width=250),
-                tooltip=name,
+                popup=folium.Popup(popup_html, max_width=250),
+                tooltip=tooltip_text,
                 icon=folium.Icon(color="green", icon="home"),
             ).add_to(sp_layer)
         sp_layer.add_to(fmap)
@@ -2259,12 +2285,7 @@ with tab4:
         other_layer.add_to(fmap)
 
         # ---- Layer 3: field detection rate by region (blue scale, same as tables) ----
-        field_summary_for_map = load_field_detection_summary()
-        if field_summary_for_map and not sp_df.empty:
-            regions_by_slug = {r["region"]: r for r in field_summary_for_map.get("regions", [])}
-            rates = [r["detection_rate"] for r in regions_by_slug.values()]
-            min_rate, max_rate = (min(rates), max(rates)) if rates else (0.0, 1.0)
-
+        if regions_by_slug and not sp_df.empty:
             detection_layer = folium.FeatureGroup(name=t("map.detection_rate_layer"), show=True)
             matched = 0
             for _, row in sp_df.iterrows():
