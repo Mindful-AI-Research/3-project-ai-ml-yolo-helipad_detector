@@ -359,8 +359,8 @@ TR = {
 },
 
 "map.density.caption": {
-    "en": "Interactive point and heatmap visualization of the Discovery Dataset from other Brazilian states. Rendered locally with Folium and CartoDB—no API key or account required.",
-    "pt": "Visualização interativa em pontos e mapa de calor do Dataset de Descoberta em outros estados brasileiros. Renderizada localmente com Folium e CartoDB, sem necessidade de chave de API ou conta.",
+    "en": "Interactive point and heatmap visualization of the Discovery Dataset from other Brazilian states. Rendered locally with Folium and Esri—no API key or account required.",
+    "pt": "Visualização interativa em pontos e mapa de calor do Dataset de Descoberta em outros estados brasileiros. Renderizada localmente com Folium e Esri, sem necessidade de chave de API ou conta.",
 },
 
 "map.density.no_coords": {
@@ -927,11 +927,24 @@ def blue_scale(t: float) -> str:
 # pass for known presets and falls back to its own internal identifier
 # (e.g. "cartodbdarkmatter") in the layer control. A raw URL template has no
 # such special-casing, so our friendly name is always used.
-CARTO_DARK_URL = "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
-CARTO_LIGHT_URL = "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
-CARTO_ATTR = (
-    '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> '
-    'contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
+#
+# NOTE (basemap provider): this used to point at CartoDB's free/anonymous
+# endpoint (https://{s}.basemaps.cartocdn.com/...). CartoDB has since locked
+# that endpoint behind a required account + API key; without one it no longer
+# errors out, it just silently serves tiles stamped with an "API KEY
+# REQUIRED" watermark, which is what was showing up over the whole map.
+# Esri's "Canvas" basemaps are used instead: same server.arcgisonline.com
+# host already used elsewhere in this app for World_Imagery tiles, no
+# account/key needed, and they ship matching dark/light gray styles. Esri
+# splits the basemap into two layers — a shaded "Base" and a text "Reference"
+# (labels/borders) — so both are added, stacked, to reproduce the
+# label-on-dark-gray look CartoDB's dark_matter used to give us.
+ESRI_DARK_BASE_URL = "https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}"
+ESRI_DARK_LABELS_URL = "https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Reference/MapServer/tile/{z}/{y}/{x}"
+ESRI_LIGHT_BASE_URL = "https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}"
+ESRI_LIGHT_LABELS_URL = "https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Reference/MapServer/tile/{z}/{y}/{x}"
+ESRI_CANVAS_ATTR = (
+    "Esri, HERE, Garmin, &copy; OpenStreetMap contributors, and the GIS User Community"
 )
 
 
@@ -2195,7 +2208,7 @@ with tab4:
     with col_toggle:
         dark_mode = st.toggle(t("map.dark_mode"), value=True, key="map_theme")
 
-    map_tiles = "CartoDB dark_matter" if dark_mode else "CartoDB positron"
+    map_tiles = "Esri dark_gray" if dark_mode else "Esri light_gray"
     map_tiles_label = t("map.dark_base") if dark_mode else t("map.light_base")
 
     sp_df = load_helipad_locations(SP_COORDS_CSV)
@@ -2213,9 +2226,14 @@ with tab4:
         # unreadable name (e.g. "cartodbdarkmatter") to the layer control —
         # we add our own TileLayer below, built from an explicit URL template
         # (not a Folium preset string) so our friendly `name=` is always honored.
-        tile_url = CARTO_DARK_URL if dark_mode else CARTO_LIGHT_URL
+        base_url = ESRI_DARK_BASE_URL if dark_mode else ESRI_LIGHT_BASE_URL
+        labels_url = ESRI_DARK_LABELS_URL if dark_mode else ESRI_LIGHT_LABELS_URL
         fmap = folium.Map(location=[center_lat, center_lon], zoom_start=5, tiles=None)
-        folium.TileLayer(tiles=tile_url, attr=CARTO_ATTR, name=map_tiles_label, control=True).add_to(fmap)
+        folium.TileLayer(tiles=base_url, attr=ESRI_CANVAS_ATTR, name=map_tiles_label, control=True).add_to(fmap)
+        # Reference layer (place labels/borders) stacked on top of the shaded
+        # base — kept out of the layer control (control=False) since it's a
+        # decoration of the base layer above it, not an independent toggle.
+        folium.TileLayer(tiles=labels_url, attr=ESRI_CANVAS_ATTR, name="labels", control=False).add_to(fmap)
 
         sp_layer = folium.FeatureGroup(name=f"🟢 {t('map.sp_layer')} ({len(sp_df)})", show=True)
         for _, row in sp_df.iterrows():
@@ -2304,8 +2322,9 @@ with tab4:
         with col_density_toggle:
             density_dark_mode = st.toggle(t("map.dark_mode"), value=True, key="density_map_theme")
 
-        density_tiles = "CartoDB dark_matter" if density_dark_mode else "CartoDB positron"
-        density_tile_url = CARTO_DARK_URL if density_dark_mode else CARTO_LIGHT_URL
+        density_tiles = "Esri dark_gray" if density_dark_mode else "Esri light_gray"
+        density_base_url = ESRI_DARK_BASE_URL if density_dark_mode else ESRI_LIGHT_BASE_URL
+        density_labels_url = ESRI_DARK_LABELS_URL if density_dark_mode else ESRI_LIGHT_LABELS_URL
 
         if other_df.empty:
             st.info(t("map.density.no_coords").format(path=COORDS_CSV))
@@ -2315,7 +2334,8 @@ with tab4:
                 zoom_start=5,
                 tiles=None,
             )
-            folium.TileLayer(tiles=density_tile_url, attr=CARTO_ATTR, control=False).add_to(dark_map)
+            folium.TileLayer(tiles=density_base_url, attr=ESRI_CANVAS_ATTR, control=False).add_to(dark_map)
+            folium.TileLayer(tiles=density_labels_url, attr=ESRI_CANVAS_ATTR, control=False).add_to(dark_map)
             for _, row in other_df.iterrows():
                 folium.CircleMarker(
                     location=[row["lat"], row["lon"]],
