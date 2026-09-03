@@ -2320,7 +2320,162 @@ with tab4:
         _force_leaflet_resize(fmap)
 
         st.write(t("map.summary").format(sp=len(sp_df), other=len(other_df)))
-        st_folium(fmap, use_container_width=True, height=520, key=f"main_map_{map_tiles}")
+        map_state = st_folium(fmap, use_container_width=True, height=520, key=f"main_map_{map_tiles}")
+
+        # ---- Helicopter reacts to real zoom: turn, land, pause, take off ----
+        # st_folium returns the live zoom/center of the Leaflet map after every
+        # pan/zoom, so "zoomed into a region" below is real map state, not a
+        # simulated one. When the visible center sits close enough to one of
+        # the SP training-region markers at a close-enough zoom, the ambient
+        # helicopter (persistent overlay defined earlier in this file) plays a
+        # bank-turn > land > pause > take-off sequence and a toast names the
+        # region, then it resumes its normal patrol.
+        #
+        # The touchdown spot is viewport-relative (bottom-center), not a
+        # pixel-accurate landing on the Leaflet marker itself: the map lives
+        # inside streamlit-folium's own nested iframe with its own coordinate
+        # system, and translating a lat/lon into the parent page's pixel
+        # space would need a second round-trip through Leaflet's internal
+        # projection — too fragile to chase for a decorative flourish.
+        #
+        # This runs as its OWN components.html call (its own iframe/script
+        # scope) rather than reusing the functions defined in the main
+        # helicopter script above, because two separate components.html
+        # iframes never share JS scope even though both inject into the same
+        # parent document. The one thing they DO share is the actual DOM node
+        # (`#heli-flyby-global`) and its `dataset` attributes, which is used
+        # here the same way `heli_replay_nonce`/`heli_spin_nonce` are used
+        # above: a nonce written by Python, compared against the last nonce
+        # the DOM element remembers, so the sequence fires once per landing
+        # rather than once per rerun.
+        LAND_ZOOM_THRESHOLD = 12
+        LAND_DISTANCE_DEG = 0.08  # ~9 km at this latitude — generous on purpose
+
+        landed_region = None
+        if map_state and not sp_df.empty:
+            zoom_level = map_state.get("zoom")
+            center = map_state.get("center") or {}
+            center_lat_live, center_lon_live = center.get("lat"), center.get("lng")
+            if zoom_level is not None and zoom_level >= LAND_ZOOM_THRESHOLD \
+                    and center_lat_live is not None and center_lon_live is not None:
+                distances = ((sp_df["lat"] - center_lat_live) ** 2 + (sp_df["lon"] - center_lon_live) ** 2) ** 0.5
+                nearest_idx = distances.idxmin()
+                if distances.loc[nearest_idx] <= LAND_DISTANCE_DEG:
+                    landed_region = format_region_display(sp_df.loc[nearest_idx, "Nome do Bairro"])
+
+        if landed_region != st.session_state.get("heli_landed_region"):
+            st.session_state["heli_landed_region"] = landed_region
+            st.session_state["heli_land_nonce"] = st.session_state.get("heli_land_nonce", 0) + 1
+
+        if landed_region:
+            region_name_js = json.dumps(landed_region)
+            components.html(f"""
+            <script>
+            (function() {{
+              try {{
+                var doc = window.parent.document;
+                var heli = doc.getElementById('heli-flyby-global');
+                if (!heli) return; // main helicopter overlay hasn't mounted yet — skip this run
+
+                var landNonce = "{st.session_state['heli_land_nonce']}";
+                if (heli.dataset.lastLandNonce === landNonce) return; // already played this landing
+                heli.dataset.lastLandNonce = landNonce;
+
+                var isPt = "{st.session_state.get('lang', 'pt')}" === 'pt';
+                var isPaused = {"true" if st.session_state.get("heli_paused") else "false"};
+                if (isPaused) return; // respect the sidebar pause toggle — don't force a landing over it
+                var regionName = {region_name_js};
+
+                if (!doc.getElementById('heli-landing-style')) {{
+                  var style = doc.createElement('style');
+                  style.id = 'heli-landing-style';
+                  style.textContent = `
+                    @keyframes heli-land-sequence {{
+                      0%   {{ top: var(--heli-cur-top); left: var(--heli-cur-left); transform: rotate(0deg) scale(1); }}
+                      25%  {{ transform: rotate(-22deg) scale(0.95); }}
+                      50%  {{ top: calc(100vh - 150px); left: 48%; transform: rotate(8deg) scale(0.88); }}
+                      75%  {{ top: calc(100vh - 110px); left: 48%; transform: rotate(-4deg) scale(0.80); }}
+                      100% {{ top: calc(100vh - 92px);  left: 48%; transform: rotate(0deg)  scale(0.72); }}
+                    }}
+                    @keyframes heli-takeoff-sequence {{
+                      0%   {{ top: calc(100vh - 92px);  left: 48%; transform: rotate(0deg)   scale(0.72); }}
+                      35%  {{ top: calc(100vh - 150px); left: 48%; transform: rotate(-14deg) scale(0.85); }}
+                      100% {{ top: 64px; left: 48%; transform: rotate(-4deg) scale(1); }}
+                    }}
+                    #heli-landing-pad {{
+                      position: fixed; left: 48%; top: calc(100vh - 58px); width: 46px; height: 14px;
+                      transform: translateX(-50%); border-radius: 50%;
+                      background: radial-gradient(ellipse at center, rgba(14,117,109,0.55), rgba(14,117,109,0) 72%);
+                      z-index: 999997; opacity: 0; transition: opacity .4s ease; pointer-events: none;
+                    }}
+                    #heli-landing-pad.show {{ opacity: 1; }}
+                  `;
+                  doc.head.appendChild(style);
+                }}
+
+                var pad = doc.getElementById('heli-landing-pad');
+                if (!pad) {{
+                  pad = doc.createElement('div');
+                  pad.id = 'heli-landing-pad';
+                  doc.body.appendChild(pad);
+                }}
+
+                var toast = doc.getElementById('heli-tab-toast');
+                function announce(text, ms) {{
+                  if (!toast) return;
+                  toast.textContent = text;
+                  toast.classList.add('show');
+                  clearTimeout(toast.dataset._landTimer);
+                  toast.dataset._landTimer = setTimeout(function() {{
+                    toast.classList.remove('show');
+                  }}, ms);
+                }}
+
+                // Same 4 patrol flights the main script uses, duplicated here
+                // (small maintenance cost) since this iframe can't reach the
+                // other iframe's FLIGHTS array — see comment above.
+                var FLIGHTS = [
+                  {{ name: 'heli-fly-v0', duration: 7  }},
+                  {{ name: 'heli-fly-v1', duration: 11 }},
+                  {{ name: 'heli-fly-v2', duration: 9  }},
+                  {{ name: 'heli-fly-v3', duration: 6  }},
+                ];
+
+                // 1) Freeze current position into CSS vars, then bank-turn + descend.
+                var rect = heli.getBoundingClientRect();
+                heli.style.setProperty('--heli-cur-top', rect.top + 'px');
+                heli.style.setProperty('--heli-cur-left', ((rect.left / doc.documentElement.clientWidth) * 100) + '%');
+                heli.style.animation = 'none';
+                void heli.offsetWidth;
+                heli.style.animation = 'heli-land-sequence 2.2s cubic-bezier(.3,.6,.3,1) forwards';
+                announce((isPt ? '🚁 Pousando em ' : '🚁 Landing in ') + regionName + '...', 2200);
+
+                // 2) Touch down: glow the pad, pause on the ground.
+                setTimeout(function() {{
+                  pad.classList.add('show');
+                }}, 2100);
+
+                // 3) Take back off after a short dwell on the ground.
+                setTimeout(function() {{
+                  pad.classList.remove('show');
+                  announce((isPt ? '🚁 Decolando de ' : '🚁 Taking off from ') + regionName + '...', 2000);
+                  heli.style.animation = 'none';
+                  void heli.offsetWidth;
+                  heli.style.animation = 'heli-takeoff-sequence 1.8s cubic-bezier(.3,.1,.3,1) forwards';
+                }}, 4300);
+
+                // 4) Resume normal patrol once the take-off climb finishes.
+                setTimeout(function() {{
+                  var f = FLIGHTS[Math.floor(Math.random() * FLIGHTS.length)];
+                  heli.style.left = '0';
+                  heli.style.animation = 'none';
+                  void heli.offsetWidth;
+                  heli.style.animation = f.name + ' ' + f.duration + 's cubic-bezier(.45,.05,.55,.95) infinite alternate';
+                }}, 6150);
+              }} catch (e) {{ /* cross-origin iframe — feature unavailable in this Streamlit setup */ }}
+            }})();
+            </script>
+            """, height=0)
 
         with st.expander(t("map.raw_data_expander"), expanded=True):
             t1, t2 = st.tabs([t("map.raw_data.sp_tab"), t("map.raw_data.other_tab")])
