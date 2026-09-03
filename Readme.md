@@ -31,7 +31,7 @@
 
 
 <!-- ========= START TEASER ========= -->
-###### <p align="center">✨ <i>Teaching YOLO to spot the city's most exclusive landing spots.</i> ✨</p> 
+###### <p align="center"> <i>Teaching YOLO to spot the city's most exclusive landing spots.</i> ✨</p> 
 
 ###### <p align="center"> 🚁 ***Finding hidden H’s in the concrete jungle*** <br>
 
