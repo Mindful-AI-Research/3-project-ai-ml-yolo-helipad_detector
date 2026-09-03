@@ -199,15 +199,15 @@
 >
 > This repository is part of the flagship ecosystem:
 >
-> ## 🧠 AI/ML - Neural Networks — Hub
+> ## 🧠 AI/ML ✦ Neural Networks  ✦ Hub   ✦
 > 
 > Explore the complete collection of projects, notebooks, research materials, analyses, and interactive applications available in the central repository:
 >
-> 🔗 **[AI/ML - Neural Networks — Hub](https://github.com/Mindful-AI-Research/1-ai-ml_neural-networks_hub)**
+> 🔗 **[AI/ML ✦ Neural Networks ✦ Hub](https://github.com/Mindful-AI-Research/1-ai-ml_neural-networks_hub)**
 >
 > #
 >
-> ###  Related Project in this Series
+> ###  Related Project in this Series:
 >
 > 🔗 **[AI/ML Project 1 · Computer Vision · EMNIST Vision Intelligence](https://github.com/Mindful-AI-Assistants/2-project-ai-ml-emnist-vision-intelligence)**
 >
