@@ -292,8 +292,8 @@ TR = {
 },
 
 "map.caption": {
-    "en": "🟢 **Training Areas (São Paulo)**: regional bounding boxes used to build and validate the training dataset. 🔵 **Discovery Dataset**: helipad candidates identified across other Brazilian states.",
-    "pt": "🟢 **Áreas de Treinamento (São Paulo)**: regiões delimitadas por bounding boxes utilizadas na construção e validação do conjunto de treinamento. 🔵 **Dataset de Descoberta**: candidatos a helipontos identificados em outros estados brasileiros.",
+    "en": "🔴 **Training Areas (São Paulo)**: regional bounding boxes used to build and validate the training dataset. 🔵 **Discovery Dataset**: helipad candidates identified across other Brazilian states.",
+    "pt": "🔴 **Áreas de Treinamento (São Paulo)**: regiões delimitadas por bounding boxes utilizadas na construção e validação do conjunto de treinamento. 🔵 **Dataset de Descoberta**: candidatos a helipontos identificados em outros estados brasileiros.",
 },
 
 "map.dark_mode": {
@@ -347,8 +347,8 @@ TR = {
 },
 
 "map.summary": {
-    "en": "**{sp} training region(s)** 🟢 · **{other} discovered helipad(s)** 🔵",
-    "pt": "**{sp} região(ões) de treinamento** 🟢 · **{other} heliponto(s) descoberto(s)** 🔵",
+    "en": "**{sp} training region(s)** 🔴 · **{other} discovered helipad(s)** 🔵",
+    "pt": "**{sp} região(ões) de treinamento** 🔴 · **{other} heliponto(s) descoberto(s)** 🔵",
 },
 
 "map.raw_data_expander": {
@@ -971,19 +971,34 @@ OSM_MAX_ZOOM = 19
 OSM_DARK_FILTER_CSS = "invert(1) hue-rotate(180deg) brightness(0.95) contrast(0.9) saturate(0.85)"
 
 
-def add_osm_tile_layer(fmap: "folium.Map", dark_mode: bool, name: str | None = None, control: bool = True) -> None:
+def add_osm_tile_layer(fmap: "folium.Map", dark_mode: bool, name: str | None = None,
+                        control: bool = True, container_id: str | None = None) -> None:
     """Adds the OpenStreetMap base layer to `fmap` and, if dark_mode, injects
     a CSS filter scoped to that map's own container so only its tile pane is
-    inverted — other maps on the same page (e.g. the Search-by-Region result
-    thumbnails) and this map's own markers/popups are unaffected."""
+    inverted — other maps on the same page and this map's own markers/popups
+    are unaffected.
+
+    `container_id`: which DOM id to scope the filter to. Matters because the
+    two ways this app renders a folium.Map end up with DIFFERENT real ids:
+      - st_folium(fmap, ...) (the main Maps-tab map): confirmed directly in
+        streamlit-folium's own frontend bundle that it hardcodes the map into
+        a div with id="map_div", discarding whatever fmap.get_name() was.
+        Pass container_id="map_div" for anything rendered this way.
+      - components.html(fmap.get_root().render(), ...) (the density map):
+        keeps Folium's own generated id, so fmap.get_name() (the default
+        here) is correct.
+    Getting this wrong doesn't error — the <style> tag still renders, it just
+    never matches anything, so the map silently stays in light mode. That's
+    exactly what was happening on the main map before this fix.
+    """
     folium.TileLayer(
         tiles=OSM_TILE_URL, attr=OSM_ATTR, name=(name or "OpenStreetMap"),
         max_zoom=OSM_MAX_ZOOM, control=control,
     ).add_to(fmap)
     if dark_mode:
-        map_container_id = fmap.get_name()
+        scope_id = container_id or fmap.get_name()
         fmap.get_root().html.add_child(folium.Element(
-            f"<style>#{map_container_id} .leaflet-tile-pane "
+            f"<style>#{scope_id} .leaflet-tile-pane "
             f"{{ filter: {OSM_DARK_FILTER_CSS}; }}</style>"
         ))
 
@@ -2366,7 +2381,11 @@ with tab4:
         # we add our own TileLayer below, built from an explicit URL template
         # (not a Folium preset string) so our friendly `name=` is always honored.
         fmap = folium.Map(location=[center_lat, center_lon], zoom_start=5, tiles=None)
-        add_osm_tile_layer(fmap, dark_mode, name=map_tiles_label, control=True)
+        # container_id="map_div": this map is rendered via st_folium() further
+        # down, which hardcodes the map into a div with that literal id
+        # regardless of Folium's own generated name — see add_osm_tile_layer's
+        # docstring for how this was confirmed.
+        add_osm_tile_layer(fmap, dark_mode, name=map_tiles_label, control=True, container_id="map_div")
 
         # Field-validation results (helipads found per region), loaded early so
         # the training-region markers below can show a count, not just a name.
@@ -2378,7 +2397,7 @@ with tab4:
             rates = [r["detection_rate"] for r in regions_by_slug.values()]
             min_rate, max_rate = (min(rates), max(rates)) if rates else (0.0, 1.0)
 
-        sp_layer = folium.FeatureGroup(name=f"🟢 {t('map.sp_layer')} ({len(sp_df)})", show=True)
+        sp_layer = folium.FeatureGroup(name=f"🔴 {t('map.sp_layer')} ({len(sp_df)})", show=True)
         for _, row in sp_df.iterrows():
             raw_name = row.get("Nome do Bairro", "Unknown")
             name = format_region_display(raw_name)
@@ -2401,7 +2420,7 @@ with tab4:
                 location=[row["lat"], row["lon"]],
                 popup=folium.Popup(popup_html, max_width=250),
                 tooltip=tooltip_text,
-                icon=folium.Icon(color="green", icon="home"),
+                icon=folium.Icon(color="red", icon="home"),
             ).add_to(sp_layer)
         sp_layer.add_to(fmap)
 
@@ -2649,6 +2668,8 @@ with tab4:
             )
             add_osm_tile_layer(dark_map, density_dark_mode, control=False)
             for _, row in other_df.iterrows():
+                hint = city_hint(row["lat"], row["lon"])
+                display_name = f"{row.get('Nome do Bairro', 'Unknown')} ({hint})" if hint else row.get("Nome do Bairro", "Unknown")
                 folium.CircleMarker(
                     location=[row["lat"], row["lon"]],
                     radius=5,
@@ -2656,7 +2677,7 @@ with tab4:
                     fill=True,
                     fill_color="#00CED1",
                     fill_opacity=0.8,
-                    tooltip=row.get("Nome do Bairro", "Unknown"),
+                    tooltip=display_name,
                 ).add_to(dark_map)
             HeatMap(
                 other_df[["lat", "lon"]].values.tolist(),
