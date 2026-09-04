@@ -1440,22 +1440,20 @@ def readable_text_color(hex_color: str) -> str:
     return "#0a1f2b" if luminance > 0.55 else "#ffffff"
 
 
-def detection_rate_to_red_color(rate: float, min_rate: float, max_rate: float) -> str:
-    """Same idea and math as detection_rate_to_color, but on a light-pink to
-    brand red-orange (#FF2500) scale — used for the SP training-region (red
-    pin) tooltips, so they read as their own color family instead of
-    borrowing the blue scale that belongs to the detection-rate circles.
-    Same rate, same gradient logic, different hue: keeps the two marker
-    families visually distinct even where they sit stacked on the same spot."""
-    if max_rate <= min_rate:
-        t = 0.5
-    else:
-        t = (rate - min_rate) / (max_rate - min_rate)
-    t = max(0.0, min(1.0, t))
-    light = (0xFF, 0xE5, 0xDE)
-    dark = (0xFF, 0x25, 0x00)  # brand secondary accent
-    rgb = tuple(int(light[i] + (dark[i] - light[i]) * t) for i in range(3))
-    return f"#{rgb[0]:02x}{rgb[1]:02x}{rgb[2]:02x}"
+def rate_popup_html(inner_html: str, bg_color: str, text_color: str) -> str:
+    """Wraps popup content in a div that bleeds into Leaflet's default popup
+    padding (negative margin) so the popup's visible content area reads as
+    fully colored, not just white-with-colored-text. Leaflet's own
+    .leaflet-popup-content-wrapper chrome (rounded corners, drop shadow,
+    little tip/arrow) stays its default white — Folium doesn't expose a
+    stable per-popup id to scope a CSS override at that layer — but this
+    covers the entire readable content area, which is what actually carries
+    the color signal."""
+    return (
+        f'<div style="background:{bg_color}; color:{text_color}; '
+        f'margin:-13px -20px; padding:12px 18px; border-radius:10px;">'
+        f'{inner_html}</div>'
+    )
 
 
 # ========================= FIELD DETECTIONS BY REGION (data) =========================
@@ -2457,26 +2455,25 @@ with tab4:
                 found = region_stats["tiles_detected"]
                 rate = region_stats["detection_rate"]
                 tooltip_text = f"{name} · {found} {t('map.tiles_detected')} ({rate*100:.1f}%)"
-                popup_html = (
+                # Same blue_scale color-coding as the detection-rate circles
+                # (detection_rate_to_color), applied to BOTH the hover
+                # tooltip and the click popup here — per explicit request,
+                # one shared blue signal for "how many points this region
+                # has" everywhere that number shows up, rather than a
+                # separate color per marker family.
+                color = detection_rate_to_color(rate, min_rate, max_rate)
+                text_color = readable_text_color(color)
+                tooltip_style = (
+                    f"background-color:{color}; color:{text_color}; "
+                    f"border:1px solid {text_color}22; border-radius:4px; "
+                    f"padding:4px 8px; font-weight:600; box-shadow:0 1px 4px rgba(0,0,0,0.35);"
+                )
+                tooltip = folium.Tooltip(tooltip_text, style=tooltip_style)
+                popup_html = rate_popup_html(
                     f"<b>{name}</b><br>{t('map.training_region')}<br>"
                     f"🚁 <b>{found}</b> {t('map.tiles_detected')} "
-                    f"({region_stats['tiles_detected']}/{region_stats['tiles_total']} · {rate*100:.1f}%)"
-                )
-                # Same rate-based color-coding as the detection-rate circles,
-                # but on the red scale (light pink -> brand red-orange) that
-                # matches this marker's own red pin, rather than borrowing
-                # blue — keeps the two overlapping marker families visually
-                # distinct instead of one looking like a mismatched copy of
-                # the other. See detection_rate_to_red_color's docstring.
-                red_color = detection_rate_to_red_color(rate, min_rate, max_rate)
-                red_text_color = readable_text_color(red_color)
-                tooltip = folium.Tooltip(
-                    tooltip_text,
-                    style=(
-                        f"background-color:{red_color}; color:{red_text_color}; "
-                        f"border:1px solid {red_text_color}22; border-radius:4px; "
-                        f"padding:4px 8px; font-weight:600; box-shadow:0 1px 4px rgba(0,0,0,0.35);"
-                    ),
+                    f"({region_stats['tiles_detected']}/{region_stats['tiles_total']} · {rate*100:.1f}%)",
+                    color, text_color,
                 )
             else:
                 tooltip = tooltip_text = name
@@ -2542,9 +2539,12 @@ with tab4:
                     fill_opacity=0.85,
                     tooltip=tooltip,
                     popup=folium.Popup(
-                        f"<b>{display_name}</b><br>"
-                        f"{region_stats['tiles_detected']} {t('map.tiles_detected')}<br>"
-                        f"{t('map.rate')}: {rate*100:.1f}%",
+                        rate_popup_html(
+                            f"<b>{display_name}</b><br>"
+                            f"{region_stats['tiles_detected']} {t('map.tiles_detected')}<br>"
+                            f"{t('map.rate')}: {rate*100:.1f}%",
+                            color, text_color,
+                        ),
                         max_width=250,
                     ),
                 ).add_to(detection_layer)
