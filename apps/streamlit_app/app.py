@@ -359,8 +359,8 @@ TR = {
 },
 
 "map.density.caption": {
-    "en": "Interactive point and heatmap visualization of the Discovery Dataset from other Brazilian states. Rendered locally with Folium and Esri—no API key or account required.",
-    "pt": "Visualização interativa em pontos e mapa de calor do Dataset de Descoberta em outros estados brasileiros. Renderizada localmente com Folium e Esri, sem necessidade de chave de API ou conta.",
+    "en": "Interactive point and heatmap visualization of the Discovery Dataset from other Brazilian states. Rendered locally with Folium and OpenStreetMap—no API key or account required.",
+    "pt": "Visualização interativa em pontos e mapa de calor do Dataset de Descoberta em outros estados brasileiros. Renderizada localmente com Folium e OpenStreetMap, sem necessidade de chave de API ou conta.",
 },
 
 "map.density.no_coords": {
@@ -493,7 +493,7 @@ TR = {
 
 
 # ---- Tab: About & Team ----
-"about.header": {"en": "👥 About", "pt": "👥 Sobre"},
+"about.header": {"en": "👥 About & Team", "pt": "👥 Sobre & Equipe"},
 
 "about.body_intro": {
     "en": (
@@ -928,24 +928,49 @@ def blue_scale(t: float) -> str:
 # (e.g. "cartodbdarkmatter") in the layer control. A raw URL template has no
 # such special-casing, so our friendly name is always used.
 #
-# NOTE (basemap provider): this used to point at CartoDB's free/anonymous
-# endpoint (https://{s}.basemaps.cartocdn.com/...). CartoDB has since locked
-# that endpoint behind a required account + API key; without one it no longer
-# errors out, it just silently serves tiles stamped with an "API KEY
-# REQUIRED" watermark, which is what was showing up over the whole map.
-# Esri's "Canvas" basemaps are used instead: same server.arcgisonline.com
-# host already used elsewhere in this app for World_Imagery tiles, no
-# account/key needed, and they ship matching dark/light gray styles. Esri
-# splits the basemap into two layers — a shaded "Base" and a text "Reference"
-# (labels/borders) — so both are added, stacked, to reproduce the
-# label-on-dark-gray look CartoDB's dark_matter used to give us.
-ESRI_DARK_BASE_URL = "https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}"
-ESRI_DARK_LABELS_URL = "https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Reference/MapServer/tile/{z}/{y}/{x}"
-ESRI_LIGHT_BASE_URL = "https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}"
-ESRI_LIGHT_LABELS_URL = "https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Reference/MapServer/tile/{z}/{y}/{x}"
-ESRI_CANVAS_ATTR = (
-    "Esri, HERE, Garmin, &copy; OpenStreetMap contributors, and the GIS User Community"
-)
+# NOTE (basemap provider history): this used to point at CartoDB's free
+# endpoint, then briefly at Esri's "Canvas" gray basemaps. Both were dropped:
+#   - CartoDB's free/anonymous endpoint now requires an account + API key;
+#     without one it silently serves tiles stamped with an "API KEY
+#     REQUIRED" watermark instead of erroring out.
+#   - Esri's Canvas Dark/Light Gray basemaps are a generalized cartographic
+#     style (not real street-level data) with a native max zoom around 16;
+#     zooming past that returned an explicit "Map data not yet available"
+#     placeholder tile instead of the requested imagery, and even at their
+#     native max zoom, street names were already sparse/abstracted.
+# OpenStreetMap's own raster tile server is used instead: real, detailed
+# street-level cartography (actual OSM road/place data, not a generalized
+# style) with genuine tile coverage up to zoom 19 almost everywhere, no
+# account/key needed. It ships one style (light), so "dark mode" is done
+# with a CSS filter (`invert` + `hue-rotate`) applied only to the tile pane
+# of a given map instance — a standard, widely-used technique — which never
+# touches markers/popups/labels since those live in separate Leaflet panes.
+OSM_TILE_URL = "https://tile.openstreetmap.org/{z}/{x}/{y}.png"
+OSM_ATTR = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+OSM_MAX_ZOOM = 19
+# Applied via a scoped <style> (per Folium map container id) rather than a
+# global rule, so it only affects the specific map it's added to.
+OSM_DARK_FILTER_CSS = "invert(1) hue-rotate(180deg) brightness(0.95) contrast(0.9) saturate(0.85)"
+
+
+def add_osm_tile_layer(fmap: "folium.Map", dark_mode: bool, name: str | None = None, control: bool = True) -> None:
+    """Adds the OpenStreetMap base layer to `fmap` and, if dark_mode, injects
+    a CSS filter scoped to that map's own container so only its tile pane is
+    inverted — other maps on the same page (e.g. the Search-by-Region result
+    thumbnails) and this map's own markers/popups are unaffected."""
+    folium.TileLayer(
+        tiles=OSM_TILE_URL, attr=OSM_ATTR, name=(name or "OpenStreetMap"),
+        max_zoom=OSM_MAX_ZOOM, control=control,
+    ).add_to(fmap)
+    if dark_mode:
+        map_container_id = fmap.get_name()
+        fmap.get_root().html.add_child(folium.Element(
+            f"<style>#{map_container_id} .leaflet-tile-pane "
+            f"{{ filter: {OSM_DARK_FILTER_CSS}; }}</style>"
+        ))
+
+
+
 
 
 def _force_leaflet_resize(fmap: folium.Map) -> None:
@@ -970,7 +995,8 @@ def _force_leaflet_resize(fmap: folium.Map) -> None:
         }}
         [100, 300, 700, 1200, 2000].forEach(function(ms) {{ setTimeout(fixSize, ms); }});
         window.addEventListener('load', fixSize);
-    }})();    </script>
+    }})();
+    </script>
     """))
 
 
@@ -1083,10 +1109,65 @@ def load_experiment_curves() -> dict[str, pd.DataFrame]:
     return curves
 
 
+_DMS_NUM = r"[-+]?\d+(?:\.\d+)?"
+_DMS_COORD_RE = re.compile(
+    rf"""
+    (?P<g>{_DMS_NUM})\s*[°ºo]?\s*
+    (?:(?P<m>{_DMS_NUM})\s*['’′]?\s*)?
+    (?:(?P<s>{_DMS_NUM})\s*["”″]?\s*)?
+    (?P<dir>[NSEWnsew])?
+    """,
+    re.VERBOSE,
+)
+
+
+def _dms_to_dd(graus: float, minutos: float, segundos: float, direcao: str = "") -> float:
+    dd = abs(graus) + minutos / 60 + segundos / 3600
+    if direcao.upper() in ("S", "W") or graus < 0:
+        dd = -dd
+    return dd
+
+
+def _parse_dms_point(texto: str):
+    """Same DMS-pair regex/logic as src/geospatial/transform_coordinates.py's
+    parse_dms_pair, reused here as a fallback for rows that were scraped by
+    helipad_bot.py but never actually run through transform_coordinates.py —
+    i.e. still a raw 'DD°MM'SS"H DD°MM'SS"H' pair instead of the converted
+    'lon_min lat_min lon_max lat_max' bbox format. Returns a single (lat, lon)
+    point directly rather than fabricating a bounding box, since the only
+    thing load_helipad_locations ever does with the box is average it back
+    down to a center point anyway."""
+    coords = []
+    for m in _DMS_COORD_RE.finditer(str(texto)):
+        if m.group("g") is None or m.group(0).strip() == "":
+            continue
+        graus = float(m.group("g"))
+        minutos = float(m.group("m")) if m.group("m") else 0.0
+        segundos = float(m.group("s")) if m.group("s") else 0.0
+        direcao = m.group("dir") or ""
+        coords.append(_dms_to_dd(graus, minutos, segundos, direcao))
+    if len(coords) < 2:
+        return None, None
+    return coords[0], coords[1]  # lat, lon
+
+
 @st.cache_data(show_spinner=False)
 def load_helipad_locations(csv_path: Path = COORDS_CSV) -> pd.DataFrame:
     """Reads a helipad-coordinates CSV (same schema as helipad_coordinates_bbox.csv)
-    and computes the center point (lat, lon) of each bounding box, for the map view."""
+    and computes the center point (lat, lon) of each bounding box, for the map view.
+
+    Some rows in this CSV are the direct output of helipad_bot.py's scraper
+    but were never run through transform_coordinates.py's DMS-to-decimal
+    conversion (or that step failed silently for them), so they're still raw
+    'DD°MM'SS"H DD°MM'SS"H' pairs rather than a converted bounding box. Those
+    used to be dropped by the bbox parser below and silently vanish from
+    every map in the app — confirmed against the project's own
+    helipad_coordinates.csv: 80 of 129 rows (62%) were still in this raw
+    format, including a 7-point Belo Horizonte cluster that never showed up
+    on the Discovery Dataset map. parse_center() now falls back to the same
+    DMS parser transform_coordinates.py uses, so those rows render too
+    instead of requiring the conversion script to be re-run first.
+    """
     if not csv_path.exists():
         return pd.DataFrame()
 
@@ -1096,7 +1177,8 @@ def load_helipad_locations(csv_path: Path = COORDS_CSV) -> pd.DataFrame:
             lon_min, lat_min, lon_max, lat_max = (float(p) for p in parts[:4])
             return (lat_min + lat_max) / 2, (lon_min + lon_max) / 2
         except Exception:
-            return None, None
+            pass
+        return _parse_dms_point(raw)
 
     try:
         df = pd.read_csv(csv_path)
@@ -2225,14 +2307,8 @@ with tab4:
         # unreadable name (e.g. "cartodbdarkmatter") to the layer control —
         # we add our own TileLayer below, built from an explicit URL template
         # (not a Folium preset string) so our friendly `name=` is always honored.
-        base_url = ESRI_DARK_BASE_URL if dark_mode else ESRI_LIGHT_BASE_URL
-        labels_url = ESRI_DARK_LABELS_URL if dark_mode else ESRI_LIGHT_LABELS_URL
         fmap = folium.Map(location=[center_lat, center_lon], zoom_start=5, tiles=None)
-        folium.TileLayer(tiles=base_url, attr=ESRI_CANVAS_ATTR, name=map_tiles_label, control=True).add_to(fmap)
-        # Reference layer (place labels/borders) stacked on top of the shaded
-        # base — kept out of the layer control (control=False) since it's a
-        # decoration of the base layer above it, not an independent toggle.
-        folium.TileLayer(tiles=labels_url, attr=ESRI_CANVAS_ATTR, name="labels", control=False).add_to(fmap)
+        add_osm_tile_layer(fmap, dark_mode, name=map_tiles_label, control=True)
 
         # Field-validation results (helipads found per region), loaded early so
         # the training-region markers below can show a count, not just a name.
@@ -2497,10 +2573,6 @@ with tab4:
         with col_density_toggle:
             density_dark_mode = st.toggle(t("map.dark_mode"), value=True, key="density_map_theme")
 
-        density_tiles = "Esri dark_gray" if density_dark_mode else "Esri light_gray"
-        density_base_url = ESRI_DARK_BASE_URL if density_dark_mode else ESRI_LIGHT_BASE_URL
-        density_labels_url = ESRI_DARK_LABELS_URL if density_dark_mode else ESRI_LIGHT_LABELS_URL
-
         if other_df.empty:
             st.info(t("map.density.no_coords").format(path=COORDS_CSV))
         else:
@@ -2509,8 +2581,7 @@ with tab4:
                 zoom_start=5,
                 tiles=None,
             )
-            folium.TileLayer(tiles=density_base_url, attr=ESRI_CANVAS_ATTR, control=False).add_to(dark_map)
-            folium.TileLayer(tiles=density_labels_url, attr=ESRI_CANVAS_ATTR, control=False).add_to(dark_map)
+            add_osm_tile_layer(dark_map, density_dark_mode, control=False)
             for _, row in other_df.iterrows():
                 folium.CircleMarker(
                     location=[row["lat"], row["lon"]],
