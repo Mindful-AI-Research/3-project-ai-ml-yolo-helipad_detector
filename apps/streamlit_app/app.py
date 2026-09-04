@@ -114,54 +114,67 @@ TR = {
               "infraestrutura de helipontos mais esparsa ou já mapeada.",
     },
     "cities.table.columns": {
-        "en": ["Rank", "City", "Country", "Main Indicator", "Rate (Relative Index)",
+        "en": ["Rank", "City", "Country", "Main Indicator",
                "Estimated Fleet (Helicopters)", "Highlight"],
-        "pt": ["Rank", "Cidade", "País", "Indicador principal", "Rate (Índice Relativo)",
+        "pt": ["Rank", "Cidade", "País", "Indicador principal",
                "Frota estimada (Helicópteros)", "Destaque"],
     },
+    # NOTE: this table used to carry a "Rate (%)" column presented as each
+    # city's relative helicopter presence/traffic. It was removed — those
+    # numbers (27.7%, 25.5%, 23.9%, ...) turned out to be an exact,
+    # digit-for-digit copy of this project's own SP field-validation
+    # detection-rate-by-region table (see field.rank_col and the Field
+    # Detections tab), sorted descending and relabeled onto 10 world cities.
+    # That's unrelated data — a region's helipad-detection rate says nothing
+    # about a different city's helicopter fleet — so the column was invented
+    # precision, not a sourced statistic, and is better left out than kept
+    # with a caveat nobody will read. The city ranking and fleet-size figures
+    # themselves are left in as general/editorial context (not a project
+    # measurement), consistent with Section 13 of the report's transparency
+    # about known data-integrity issues once found and corrected.
     "cities.table.data": {
         "en": [
-            ["1st", "São Paulo", "🇧🇷 Brazil", "Largest fleet", "27.7%", "400+",
+            ["1st", "São Paulo", "🇧🇷 Brazil", "Largest fleet", "400+",
              "~2,200 landings/takeoffs daily in the metropolitan area"],
-            ["2nd", "New York", "🇺🇸 USA", "Fleet + intense urban traffic", "25.5%", "—",
+            ["2nd", "New York", "🇺🇸 USA", "Fleet + intense urban traffic", "—",
              "Strong executive, tourist, and transport use"],
-            ["3rd", "Tokyo", "🇯🇵 Japan", "Large fleet", "23.9%", "—",
+            ["3rd", "Tokyo", "🇯🇵 Japan", "Large fleet", "—",
              "Corporate, emergency, and transport operations"],
-            ["4th", "Rio de Janeiro", "🇧🇷 Brazil", "Fleet + offshore operations", "22.8%", "—",
+            ["4th", "Rio de Janeiro", "🇧🇷 Brazil", "Fleet + offshore operations", "—",
              "Significant activity related to oil and gas"],
-            ["5th", "London", "🇬🇧 United Kingdom", "Executive traffic", "21.3%", "—",
+            ["5th", "London", "🇬🇧 United Kingdom", "Executive traffic", "—",
              "Strong corporate market and urban heliports"],
-            ["6th", "Belo Horizonte", "🇧🇷 Brazil", "Large fleet", "20.2%", "—",
+            ["6th", "Belo Horizonte", "🇧🇷 Brazil", "Large fleet", "—",
              "Strong executive and corporate aviation"],
-            ["7th", "Santiago", "🇨🇱 Chile", "Large fleet", "20.1%", "—",
+            ["7th", "Santiago", "🇨🇱 Chile", "Large fleet", "—",
              "Executive aviation and special operations"],
-            ["8th", "Mexico City", "🇲🇽 Mexico", "Large fleet", "19.8%", "—",
+            ["8th", "Mexico City", "🇲🇽 Mexico", "Large fleet", "—",
              "Executive transport and government operations"],
-            ["9th", "Bogotá", "🇨🇴 Colombia", "Large fleet", "19.1%", "—",
+            ["9th", "Bogotá", "🇨🇴 Colombia", "Large fleet", "—",
              "Executive, emergency, and special operations"],
-            ["10th", "Beijing", "🇨🇳 China", "Large fleet", "13.6%", "—",
+            ["10th", "Beijing", "🇨🇳 China", "Large fleet", "—",
              "Executive, governmental, and special operations"],
         ],
         "pt": [
-            ["1º", "São Paulo", "🇧🇷 Brasil", "Maior frota", "27.7%", "400+",
+            ["1º", "São Paulo", "🇧🇷 Brasil", "Maior frota", "400+",
              "~2.200 pousos/decolagens diários na região metropolitana"],
-            ["2º", "Nova York", "🇺🇸 EUA", "Frota + intenso tráfego urbano", "25.5%", "—",
+            ["2º", "Nova York", "🇺🇸 EUA", "Frota + intenso tráfego urbano", "—",
              "Forte uso executivo, turístico e de transporte"],
-            ["3º", "Tóquio", "🇯🇵 Japão", "Grande frota", "23.9%", "—",
+            ["3º", "Tóquio", "🇯🇵 Japão", "Grande frota", "—",
              "Operações corporativas, emergência e transporte"],
-            ["4º", "Rio de Janeiro", "🇧🇷 Brasil", "Frota + operações offshore", "22.8%", "—",
+            ["4º", "Rio de Janeiro", "🇧🇷 Brasil", "Frota + operações offshore", "—",
              "Grande atividade ligada ao petróleo e gás"],
-            ["5º", "Londres", "🇬🇧 Reino Unido", "Tráfego executivo", "21.3%", "—",
+            ["5º", "Londres", "🇬🇧 Reino Unido", "Tráfego executivo", "—",
              "Forte mercado corporativo e heliportos urbanos"],
-            ["6º", "Belo Horizonte", "🇧🇷 Brasil", "Grande frota", "20.2%", "—",
+            ["6º", "Belo Horizonte", "🇧🇷 Brasil", "Grande frota", "—",
              "Forte aviação executiva e corporativa"],
-            ["7º", "Santiago", "🇨🇱 Chile", "Grande frota", "20.1%", "—",
+            ["7º", "Santiago", "🇨🇱 Chile", "Grande frota", "—",
              "Aviação executiva e operações especiais"],
-            ["8º", "Cidade do México", "🇲🇽 México", "Grande frota", "19.8%", "—",
+            ["8º", "Cidade do México", "🇲🇽 México", "Grande frota", "—",
              "Transporte executivo e operações governamentais"],
-            ["9º", "Bogotá", "🇨🇴 Colômbia", "Grande frota", "19.1%", "—",
+            ["9º", "Bogotá", "🇨🇴 Colômbia", "Grande frota", "—",
              "Executivo, emergência e operações especiais"],
-            ["10º", "Pequim", "🇨🇳 China", "Grande frota", "13.6%", "—",
+            ["10º", "Pequim", "🇨🇳 China", "Grande frota", "—",
              "Executivo, governamental e operações especiais"],
         ],
     },
@@ -351,6 +364,11 @@ TR = {
 "map.raw_data.other_tab": {
     "en": "Other states",
     "pt": "Outros estados",
+},
+
+"map.raw_data.city_hint_col": {
+    "en": "Nearest state capital",
+    "pt": "Capital estadual mais próxima",
 },
 
 "map.density.subheader": {
@@ -1313,6 +1331,46 @@ def slugify_region(name: str) -> str:
     and auto_triage_regions.py, so map markers can be joined with the
     per-region detection summary by name."""
     return str(name).strip().replace(" ", "_").replace("/", "-").replace("(", "").replace(")", "")
+
+
+# Approximate coordinates of the capital of each state helipad_bot.py is
+# configured to search (see DEFAULT_ESTADOS in src/geospatial/helipad_bot.py),
+# used only to add a city hint to Discovery Dataset marker labels. A bairro
+# name alone can be ambiguous — e.g. "Centro" showed up for Rio de Janeiro,
+# and could just as easily show up for Belo Horizonte or Fortaleza in a
+# future scrape — but its coordinates aren't. This is a label hint for
+# readability, not a claim about which municipality a point administratively
+# belongs to: if no capital is within CITY_HINT_RADIUS_DEG, no hint is added
+# rather than guessing one.
+BRAZIL_STATE_CAPITALS = {
+    "Rio de Janeiro": (-22.9068, -43.1729),
+    "Belo Horizonte": (-19.9167, -43.9345),
+    "Porto Alegre": (-30.0346, -51.2177),
+    "Curitiba": (-25.4284, -49.2733),
+    "Salvador": (-12.9714, -38.5014),
+    "Fortaleza": (-3.7172, -38.5433),
+    "Goiânia": (-16.6869, -49.2648),
+    "Florianópolis": (-27.5954, -48.5480),
+    "Recife": (-8.0476, -34.8770),
+    "Brasília": (-15.7939, -47.8828),
+    "Manaus": (-3.1190, -60.0217),
+    "Belém": (-1.4558, -48.5039),
+    "Vitória": (-20.3155, -40.3128),
+    "Cuiabá": (-15.6014, -56.0979),
+    "Campo Grande": (-20.4697, -54.6201),
+}
+CITY_HINT_RADIUS_DEG = 0.6  # ~65 km — the city + close metro area, not the whole state
+
+
+def city_hint(lat: float, lon: float) -> str | None:
+    """Nearest state capital within CITY_HINT_RADIUS_DEG, or None if the
+    point is too far from any of them to guess responsibly."""
+    best_city, best_dist = None, CITY_HINT_RADIUS_DEG
+    for city, (clat, clon) in BRAZIL_STATE_CAPITALS.items():
+        dist = ((lat - clat) ** 2 + (lon - clon) ** 2) ** 0.5
+        if dist < best_dist:
+            best_city, best_dist = city, dist
+    return best_city
 
 
 # Region names that need a specific English translation, not just a literal
@@ -2350,11 +2408,13 @@ with tab4:
         other_layer = folium.FeatureGroup(name=f"🔵 {t('map.other_layer')} ({len(other_df)})", show=True)
         for _, row in other_df.iterrows():
             neighborhood = row.get("Nome do Bairro", "Unknown")
+            hint = city_hint(row["lat"], row["lon"])
+            display_name = f"{neighborhood} ({hint})" if hint else neighborhood
             timestamp = row.get("Carimbo de data/hora", "")
             folium.Marker(
                 location=[row["lat"], row["lon"]],
-                popup=folium.Popup(f"<b>{neighborhood}</b><br>{timestamp}", max_width=250),
-                tooltip=neighborhood,
+                popup=folium.Popup(f"<b>{display_name}</b><br>{timestamp}", max_width=250),
+                tooltip=display_name,
                 icon=folium.Icon(color="blue", icon="info-sign"),
             ).add_to(other_layer)
         other_layer.add_to(fmap)
@@ -2563,7 +2623,13 @@ with tab4:
                     )
                 st.dataframe(sp_df_display, use_container_width=True)
             with t2:
-                st.dataframe(other_df, use_container_width=True)
+                other_df_display = other_df.copy()
+                if not other_df_display.empty:
+                    city_col = t("map.raw_data.city_hint_col")
+                    other_df_display[city_col] = other_df_display.apply(
+                        lambda r: city_hint(r["lat"], r["lon"]) or "—", axis=1
+                    )
+                st.dataframe(other_df_display, use_container_width=True)
 
         st.divider()
         col_density_title, col_density_toggle = st.columns([4, 1])
@@ -2668,22 +2734,17 @@ with tab_about:
     st.markdown(t("about.body_intro"))
 
     # ---- Top 10 helicopter cities table ----
-    # Same technique as the Field Detections table (st.dataframe +
-    # background_gradient on the Rate column) so both tables share one
-    # consistent visual identity — plain dark background, gradient only
-    # on the highlighted metric column.
+    # This used to apply a Blues background_gradient to a "Rate" column, the
+    # same styling technique as the Field Detections table. That column was
+    # removed (see the comment above cities.table.data) since its numbers
+    # weren't sourced — there's no real per-city percentage left to shade, so
+    # this now renders as a plain table like the rest of the About tab.
     st.markdown(f"### {t('cities.header')}")
     _cities_cols = t("cities.table.columns")
     _cities_rows = t("cities.table.data")
-    _rank_col, _rate_col = _cities_cols[0], _cities_cols[4]
+    _rank_col = _cities_cols[0]
     cities_df = pd.DataFrame(_cities_rows, columns=_cities_cols)
-    cities_df[_rate_col] = cities_df[_rate_col].str.rstrip("%").astype(float) / 100.0
-    st.dataframe(
-        cities_df.set_index(_rank_col).style.format({_rate_col: "{:.1%}"}).background_gradient(
-            cmap="Blues", subset=[_rate_col]
-        ),
-        use_container_width=True,
-    )
+    st.dataframe(cities_df.set_index(_rank_col), use_container_width=True)
 
     st.markdown(f"""
     <div style="border-left:3px solid #14b8a6; background:rgba(14,117,109,0.08);
