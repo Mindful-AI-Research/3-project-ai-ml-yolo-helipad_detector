@@ -351,6 +351,11 @@ TR = {
     "pt": "**{sp} região(ões) de treinamento** 🔴 · **{other} heliponto(s) descoberto(s)** 🔵",
 },
 
+"map.layers_caption": {
+    "en": "🗂️ Map layers — toggle what's shown",
+    "pt": "🗂️ Camadas do mapa — controle o que aparece",
+},
+
 "map.raw_data_expander": {
     "en": "📋 Coordinate data",
     "pt": "📋 Dados de coordenadas",
@@ -2362,7 +2367,7 @@ with tab4:
     with col_toggle:
         dark_mode = st.toggle(t("map.dark_mode"), value=True, key="map_theme")
 
-    map_tiles = "Esri dark_gray" if dark_mode else "Esri light_gray"
+    map_tiles = "OSM dark" if dark_mode else "OSM light"
     map_tiles_label = t("map.dark_base") if dark_mode else t("map.light_base")
 
     sp_df = load_helipad_locations(SP_COORDS_CSV)
@@ -2385,7 +2390,11 @@ with tab4:
         # down, which hardcodes the map into a div with that literal id
         # regardless of Folium's own generated name — see add_osm_tile_layer's
         # docstring for how this was confirmed.
-        add_osm_tile_layer(fmap, dark_mode, name=map_tiles_label, control=True, container_id="map_div")
+        # control=False: the layer-control panel that used to float on top of
+        # the map (basemap name + the 3 feature-group checkboxes below) was
+        # moved out of the map canvas entirely, into the Streamlit checkboxes
+        # right below — this tile layer has nothing left to be listed in.
+        add_osm_tile_layer(fmap, dark_mode, name=map_tiles_label, control=False, container_id="map_div")
 
         # Field-validation results (helipads found per region), loaded early so
         # the training-region markers below can show a count, not just a name.
@@ -2396,6 +2405,18 @@ with tab4:
             regions_by_slug = {r["region"]: r for r in field_summary_for_map.get("regions", [])}
             rates = [r["detection_rate"] for r in regions_by_slug.values()]
             min_rate, max_rate = (min(rates), max(rates)) if rates else (0.0, 1.0)
+
+        # Layer visibility now lives here, as ordinary Streamlit checkboxes
+        # above the map, instead of Leaflet's own floating control panel that
+        # used to sit on top of (and cover part of) the map canvas.
+        st.caption(t("map.layers_caption"))
+        col_l1, col_l2, col_l3 = st.columns(3)
+        with col_l1:
+            show_sp_layer = st.checkbox(f"🔴 {t('map.sp_layer')} ({len(sp_df)})", value=True, key="map_show_sp")
+        with col_l2:
+            show_other_layer = st.checkbox(f"🔵 {t('map.other_layer')} ({len(other_df)})", value=True, key="map_show_other")
+        with col_l3:
+            show_detection_layer = st.checkbox(t("map.detection_rate_layer"), value=True, key="map_show_detection")
 
         sp_layer = folium.FeatureGroup(name=f"🔴 {t('map.sp_layer')} ({len(sp_df)})", show=True)
         for _, row in sp_df.iterrows():
@@ -2422,7 +2443,8 @@ with tab4:
                 tooltip=tooltip_text,
                 icon=folium.Icon(color="red", icon="home"),
             ).add_to(sp_layer)
-        sp_layer.add_to(fmap)
+        if show_sp_layer:
+            sp_layer.add_to(fmap)
 
         other_layer = folium.FeatureGroup(name=f"🔵 {t('map.other_layer')} ({len(other_df)})", show=True)
         for _, row in other_df.iterrows():
@@ -2436,7 +2458,8 @@ with tab4:
                 tooltip=display_name,
                 icon=folium.Icon(color="blue", icon="info-sign"),
             ).add_to(other_layer)
-        other_layer.add_to(fmap)
+        if show_other_layer:
+            other_layer.add_to(fmap)
 
         # ---- Layer 3: field detection rate by region (blue scale, same as tables) ----
         if regions_by_slug and not sp_df.empty:
@@ -2467,10 +2490,12 @@ with tab4:
                         max_width=250,
                     ),
                 ).add_to(detection_layer)
-            if matched:
+            if matched and show_detection_layer:
                 detection_layer.add_to(fmap)
 
-        folium.LayerControl(collapsed=False).add_to(fmap)
+        # The layer-control panel that used to render here (folium.LayerControl,
+        # floating over the map's top-right corner) was replaced by the
+        # Streamlit checkboxes above, outside the map canvas.
         _force_leaflet_resize(fmap)
 
         st.write(t("map.summary").format(sp=len(sp_df), other=len(other_df)))
@@ -3204,7 +3229,7 @@ components.html("""
 st.markdown(f"""
 <p align="center" style="margin: 10px 0 22px 0;">
   <a href="https://github.com/sponsors/Mindful-AI-Research" target="_blank" rel="noopener noreferrer">
-    <img src="https://img.shields.io/badge/Sponsor-%E0%A5%90%20%E2%8B%86%20Mindful%20AI%20%F0%96%A4%90%20%E2%8B%86-00FFFF?style=flat-square&logo=githubsponsors&logoColor=white&labelColor=0a1f44" alt="Sponsor ॐ ⋆ Mindful AI 𖤐 ⋆" height="28" style="vertical-align:middle;">
+    <img src="https://img.shields.io/badge/Sponsor-%E0%A5%90%20%E2%8B%86%20Mindful%20AI%20%E2%8B%86%20Research%20%26%20Consulting%20%F0%96%A4%90%20%E2%8B%86-3A424C?style=for-the-badge&logo=githubsponsors&logoColor=white&labelColor=07111F" alt="Sponsor ॐ ⋆ Mindful AI ⋆ Research & Consulting 𖤐 ⋆" height="36" style="vertical-align:middle;">
   </a>
 </p>
 
