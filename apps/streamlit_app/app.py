@@ -838,6 +838,20 @@ st.markdown("""
         overflow: hidden;
         box-shadow: 0 2px 10px rgba(0,0,0,0.25);
     }
+    /* Same teal outline on every button and download button (Downloads tab's
+       "quadradinhos" — Annotated Dataset, Experiment Metrics, Detection
+       Summary, Field Triage Log, etc., plus Play/Pause Music and the
+       Search-by-Region buttons) — same reasoning as the tables/expanders
+       above: these had no border at all against the dark background, which
+       stood out as unstyled next to everything else. `> button` targets the
+       actual clickable element inside Streamlit's wrapper div, which is
+       where the visible edges are. */
+    [data-testid="stDownloadButton"] > button,
+    [data-testid="stButton"] > button {
+        border: 1px solid rgba(20,184,166,0.35) !important;
+        border-radius: 10px !important;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.25);
+    }
     .result-card {background-color: #f8fafc; padding: 15px; border-radius: 12px; border: 1px solid #e2e8f0;}
     .metric-card {
         background-color: #f8fafc;
@@ -918,7 +932,7 @@ st.markdown("""
         background: linear-gradient(135deg, #1E3A8A 0%, #3B82F6 100%);
         color: white;
         font-weight: 600;
-        border: none;
+        border: none !important;
         padding: 0.75em 1.4em;
         border-radius: 10px;
         box-shadow: 0 4px 14px rgba(30, 58, 138, 0.35);
@@ -3319,6 +3333,8 @@ st.markdown(f"""
 <p style="text-align:center; color:rgba(255,255,255,0.30); margin:6px 0 0 0; font-size:12px;">
 {t("footer.line3")}
 </p>
+
+<hr style="border:none; border-top:1px solid rgba(255,255,255,0.15); max-width: 900px; margin: 20px auto 0 auto;">
 
 <p style="text-align:center; color:#C9D6DE; font-weight:700; font-size:13px; letter-spacing:.02em; margin:20px 0 0 0; max-width:520px; margin-left:auto; margin-right:auto;">
 {t("epigraph.echo")}
