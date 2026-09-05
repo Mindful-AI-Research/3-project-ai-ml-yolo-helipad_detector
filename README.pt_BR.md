@@ -11,46 +11,42 @@
 <!-- ========= START HEADRE ========= -->
 # <p align="center"> 🚁  [Helipad Detector]()
 
-### <p align="center"> End-to-End Artificial Intelligence Platform for Automated Helipad Detection and Geospatial Intelligence from Satellite Imagery
+### <p align="center"> Plataforma de Inteligência Artificial End-to-End para Detecção Automatizada de Helipontos e Inteligência Geoespacial a partir de Imagens de Satélite
 
 <br>
 
 <div align="center">
 
-<a href="https://github.com/topics/satellite-imagery">Satellite Imagery</a>
-&nbsp;&nbsp;✦&nbsp;&nbsp;
-<a href="https://github.com/topics/data-visualization">Urban Analytics</a>
-&nbsp;&nbsp;✦&nbsp;&nbsp;
-<a href="https://github.com/topics/object-detection">Object Detection</a>
-&nbsp;&nbsp;✦&nbsp;&nbsp;
-<a href="https://github.com/topics/yolo">YOLO (v8 / v11)</a>
-&nbsp;&nbsp;✦&nbsp;&nbsp;
-<a href="https://github.com/topics/geospatial">Geospatial Intelligence</a>
+<a href="https://github.com/topics/satellite-imagery">Imagens de Satélite</a>
+  ✦   <a href="https://github.com/topics/data-visualization">Análise Urbana</a>
+  ✦   <a href="https://github.com/topics/object-detection">Detecção de Objetos</a>
+  ✦   <a href="https://github.com/topics/yolo">YOLO (v8 / v11)</a>
+  ✦   <a href="https://github.com/topics/geospatial">Inteligência Geoespacial</a>
 
 </div>
 
 <br><br>
 
-
 <!-- ========= START TEASER ========= -->
-###### <p align="center"> <i>Teaching YOLO to spot the city's most exclusive landing spots.</i> ✨</p> 
 
-###### <p align="center"> 🚁 ***Finding hidden H’s in the concrete jungle*** <br>
+###### <p align="center"> <i>Ensinando o YOLO a encontrar os pontos de pouso mais exclusivos da cidade.</i> ✨</p>
 
-###### <p align="center">One rooftop at a time. </b> 
+###### <p align="center"> 🚁 ***Encontrando H's escondidos na selva de concreto*** <br>
+
+###### <p align="center">Um terraço de cada vez. </b>
 
 #### <p align="center"> ⚡️
-
 
 <br>
 
 #
 
 <br><br>
+
 <!-- ========= END TEASER ========= -->
 
-
 <!-- ========= START SPONSOR BADGE ========= -->
+
 <p align="center">
 
   <a href="https://github.com/sponsors/Mindful-AI-Research">
@@ -61,8 +57,8 @@
     >
   </a>
 
-  
 <br><br>
+
 <!-- ========= END SPONSOR BADGE ========= -->
 
 
