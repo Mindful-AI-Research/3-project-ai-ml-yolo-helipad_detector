@@ -91,6 +91,8 @@ TR = {
         "en": "State-by-state breakdown pending — run `geocode_states.py` to enrich this with a full per-state count.",
         "pt": "Detalhamento por estado pendente — rode `geocode_states.py` para enriquecer isso com contagem completa por estado.",
     },
+    "about.discovery.state_col": {"en": "State", "pt": "Estado"},
+    "about.discovery.count_col": {"en": "Points", "pt": "Pontos"},
     "about.discovery.missing": {
         "en": "Discovery coordinates CSV not found at `{path}`.",
         "pt": "CSV de coordenadas de descoberta não encontrado em `{path}`.",
@@ -515,8 +517,8 @@ TR = {
 
 
 
-# ---- Tab: About & Team ----
-"about.header": {"en": "👥 About & Team", "pt": "👥 Sobre & Equipe"},
+# ---- Tab: About ----
+"about.header": {"en": "👥 About", "pt": "👥 Sobre"},
 
 "about.body_intro": {
     "en": (
@@ -1266,9 +1268,11 @@ def load_discovery_dataset_stats(csv_path: Path = COORDS_CSV) -> dict | None:
     """Quick coverage summary of the national helipad-discovery dataset
     (src/geospatial/helipad_bot.py output) — total points collected and
     how many distinct location names appear, as a proxy for geographic
-    diversity. A full per-state breakdown needs geocode_states.py to have
-    been run first (pending as of this writing), so this only shows what's
-    derivable from the raw CSV today."""
+    diversity. If src/geospatial/geocode_states.py has been run, its output
+    JSON (discovery_dataset_by_state.json, next to csv_path) is picked up
+    here too and merged in as "by_state" — this is what lets the About tab
+    replace its "State-by-state breakdown pending" caption with real
+    numbers once that script has actually been run."""
     if not csv_path.exists():
         return None
     try:
@@ -1276,10 +1280,22 @@ def load_discovery_dataset_stats(csv_path: Path = COORDS_CSV) -> dict | None:
     except Exception:
         return None
     bairro_col = "Nome do Bairro" if "Nome do Bairro" in df.columns else None
-    return {
+    stats = {
         "total_points": len(df),
         "distinct_locations": df[bairro_col].nunique() if bairro_col else None,
+        "by_state": None,
     }
+
+    by_state_path = csv_path.parent / "discovery_dataset_by_state.json"
+    if by_state_path.exists():
+        try:
+            with open(by_state_path, encoding="utf-8") as f:
+                by_state_data = json.load(f)
+            stats["by_state"] = by_state_data.get("by_state")
+        except Exception:
+            pass  # malformed/partial JSON — fall back to the pending caption, don't crash the tab
+
+    return stats
 
 
 def build_session_summary_pdf(metrics_df: pd.DataFrame, selected_model, conf_threshold, lang: str) -> bytes:
@@ -2861,7 +2877,7 @@ with tab6:
     st.subheader(t("gov.lgpd"))
     st.markdown(t("gov.lgpd.body"))
 
-# ====================== TAB: About & Team ======================
+# ====================== TAB: About ======================
 with tab_about:
     st.header(t("about.header"))
     st.markdown(t("about.body_intro"))
@@ -2919,7 +2935,16 @@ with tab_about:
         with disc_col2:
             if _disc_stats["distinct_locations"] is not None:
                 st.metric(t("about.discovery.regions"), _disc_stats["distinct_locations"])
-        st.caption(t("about.discovery.pending"))
+        if _disc_stats["by_state"]:
+            st.dataframe(
+                pd.DataFrame(
+                    list(_disc_stats["by_state"].items()),
+                    columns=[t("about.discovery.state_col"), t("about.discovery.count_col")],
+                ),
+                use_container_width=True, hide_index=True,
+            )
+        else:
+            st.caption(t("about.discovery.pending"))
 
 # ====================== TAB 7: Downloads ======================
 with tab7:
