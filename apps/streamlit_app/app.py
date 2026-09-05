@@ -823,6 +823,21 @@ st.markdown("""
         border-radius: 10px !important;
         box-shadow: 0 2px 10px rgba(0,0,0,0.25);
     }
+    /* Same teal outline extended to every st.dataframe table in the app
+       (Top 10 cities, Coordinate data, Field Detections, Experiment
+       Metrics, etc.) and every st.expander panel — Streamlit's own default
+       border on these is barely visible against the dark background, which
+       read as an unstyled white/near-transparent edge next to everything
+       else above that already gets this treatment. overflow:hidden clips
+       the inner grid's own square corners to the rounded border instead of
+       poking past it. */
+    [data-testid="stDataFrame"],
+    [data-testid="stExpander"] {
+        border: 1px solid rgba(20,184,166,0.35) !important;
+        border-radius: 10px !important;
+        overflow: hidden;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.25);
+    }
     .result-card {background-color: #f8fafc; padding: 15px; border-radius: 12px; border: 1px solid #e2e8f0;}
     .metric-card {
         background-color: #f8fafc;
