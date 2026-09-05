@@ -1269,10 +1269,10 @@ def load_discovery_dataset_stats(csv_path: Path = COORDS_CSV) -> dict | None:
     (src/geospatial/helipad_bot.py output) — total points collected and
     how many distinct location names appear, as a proxy for geographic
     diversity. If src/geospatial/geocode_states.py has been run, its output
-    JSON (discovery_dataset_by_state.json, next to csv_path) is picked up
-    here too and merged in as "by_state" — this is what lets the About tab
-    replace its "State-by-state breakdown pending" caption with real
-    numbers once that script has actually been run."""
+    CSV (helipad_coordinates_com_estado.csv, next to csv_path) is picked up
+    here too and grouped into "by_state" counts — this is what lets the
+    About tab replace its "State-by-state breakdown pending" caption with
+    real numbers once that script has actually been run."""
     if not csv_path.exists():
         return None
     try:
@@ -1286,14 +1286,15 @@ def load_discovery_dataset_stats(csv_path: Path = COORDS_CSV) -> dict | None:
         "by_state": None,
     }
 
-    by_state_path = csv_path.parent / "discovery_dataset_by_state.json"
+    by_state_path = csv_path.parent / "helipad_coordinates_com_estado.csv"
     if by_state_path.exists():
         try:
-            with open(by_state_path, encoding="utf-8") as f:
-                by_state_data = json.load(f)
-            stats["by_state"] = by_state_data.get("by_state")
+            state_df = pd.read_csv(by_state_path)
+            if "Estado" in state_df.columns:
+                counts = state_df["Estado"].fillna("").replace("", "(desconhecido)").value_counts()
+                stats["by_state"] = counts.to_dict()
         except Exception:
-            pass  # malformed/partial JSON — fall back to the pending caption, don't crash the tab
+            pass  # malformed/partial CSV — fall back to the pending caption, don't crash the tab
 
     return stats
 
