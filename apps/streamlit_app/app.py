@@ -671,6 +671,9 @@ TR = {
 
     # ---- Metrics tab ----
     "metrics.subheader": {"en": "📊 Experiment Metrics", "pt": "📊 Métricas dos Experimentos"},
+    "metrics.comparison_title": {
+        "en": "#### 📋 Side-by-Side Comparison", "pt": "#### 📋 Comparação Lado a Lado"
+    },
     "metrics.no_csv": {
         "en": "No `results.csv` found yet under `artifacts/runs/detect/*/` (or `artifacts/runs/runs/detect/*/`).",
         "pt": "Nenhum `results.csv` encontrado ainda em `artifacts/runs/detect/*/` (ou `artifacts/runs/runs/detect/*/`).",
@@ -737,7 +740,10 @@ TR = {
     },
     "field.compare.title": {
         "en": "🔬 Compare all 3 models on the same field validation",
-        "pt": "🔬 Comparar os 3 modelos na mesma validação de campo",
+        "pt": "🔬 Comparar os 3 modelos na mesma validação de campo",    },
+    "field.compare.table_title": {
+        "en": "#### Detection Rate by Region and Experiment",
+        "pt": "#### Taxa de Detecção por Região e Experimento",
     },
     "field.compare.body": {
         "en": "Same 7,943 tiles across the same 10 regions, run separately with each experiment's "
@@ -2802,6 +2808,7 @@ with tab4:
             </script>
             """, height=0)
 
+        st.markdown(f"#### {t('map.raw_data_expander')}")
         with st.expander(t("map.raw_data_expander"), expanded=True):
             t1, t2 = st.tabs([t("map.raw_data.sp_tab"), t("map.raw_data.other_tab")])
             with t1:
@@ -2823,13 +2830,14 @@ with tab4:
                         ) or "—",
                         axis=1,
                     )
-                    # Coordinates + place name + resolved location first (the
-                    # "what and where" of each row), lat/lon as the raw
-                    # numbers backing that up, timestamp last since it's
-                    # metadata about the scrape rather than about the place.
+                    # Most human-readable/general first (which state, which
+                    # neighborhood), then the precise numbers, then the raw
+                    # source string, timestamp metadata last — a zoom-in
+                    # from "where is this, in words" to "the exact technical
+                    # record it came from".
                     _preferred_order = [
-                        "Coordenadas da Bounding Box", "Nome do Bairro", city_col,
-                        "lat", "lon", "Carimbo de data/hora",
+                        city_col, "Nome do Bairro", "lat", "lon",
+                        "Coordenadas da Bounding Box", "Carimbo de data/hora",
                     ]
                     other_df_display = other_df_display[
                         [c for c in _preferred_order if c in other_df_display.columns]
@@ -2952,8 +2960,31 @@ with tab_about:
     _cities_cols = t("cities.table.columns")
     _cities_rows = t("cities.table.data")
     _rank_col = _cities_cols[0]
-    cities_df = pd.DataFrame(_cities_rows, columns=_cities_cols)
-    st.dataframe(cities_df.set_index(_rank_col), use_container_width=True)
+    cities_df = pd.DataFrame(_cities_rows, columns=_cities_cols).set_index(_rank_col)
+
+    # Same "Blues" gradient look as "Compare all 3 models" (Field Detections
+    # tab) — matplotlib's actual colormap, not an approximation, so the
+    # shades genuinely match. Gradiented by Rank position (1st..10th), not
+    # by a measured value: the old "Rate (%)" column this table used to
+    # carry was removed earlier (it turned out to be an unrelated table's
+    # numbers copy-pasted in, not a real per-city statistic — see the
+    # comment above cities.table.data) and there's no other numeric column
+    # here that isn't itself editorial ("Estimated Fleet" is "400+"/"—"
+    # strings, not something you can average or gradient). Rank is just
+    # display order, so coloring by it doesn't imply a precision the table
+    # doesn't have — it's a reading aid, not a re-introduced statistic.
+    # Applied across the WHOLE row (every column, same shade) rather than
+    # one narrow column, which reads as more deliberate/cohesive than a
+    # single colored strip next to otherwise-plain cells.
+    def _rank_row_style(row):
+        rank_num = int(re.sub(r"\D", "", str(row.name)) or 1)
+        frac = 1 - (rank_num - 1) / max(len(cities_df) - 1, 1)
+        rgba = plt.colormaps["Blues"](frac)
+        hexcolor = "#{:02x}{:02x}{:02x}".format(*(int(c * 255) for c in rgba[:3]))
+        text_color = readable_text_color(hexcolor)
+        return [f"background-color:{hexcolor}; color:{text_color};"] * len(row)
+
+    st.dataframe(cities_df.style.apply(_rank_row_style, axis=1), use_container_width=True)
 
     st.markdown(f"""
     <div style="border-left:3px solid #14b8a6; background:rgba(14,117,109,0.08);
@@ -2984,18 +3015,16 @@ with tab_about:
                 list(_disc_stats["by_state"].items()),
                 columns=[t("about.discovery.state_col"), _count_col],
             )
-            # Same gradient mechanism as "Compare all 3 models" and the
-            # Field Detections ranking table below — plain pandas Styler
-            # (.background_gradient, cmap="Blues"), no column_config mixed
-            # in. Combining a Styler with column_config on the same
-            # st.dataframe call was silently dropping this column's values
-            # (right-align was worth less than the numbers actually
-            # rendering), so text-align is now also done via the Styler
-            # (.set_properties) instead of column_config.NumberColumn.
+            # No gradient here (unlike the other ranked tables in this app):
+            # with only a handful of distinct values (mostly 1s and 2s)
+            # spread across 13 states, a continuous gradient just produces
+            # a few repeated blocks of identical color instead of a smooth,
+            # readable progression — it looked broken rather than
+            # harmonious. Plain table, numbers right-aligned via the Styler.
             st.dataframe(
                 _state_by_count_df.style.format({_count_col: "{:.0f}"}).set_properties(
                     subset=[_count_col], **{"text-align": "right"}
-                ).background_gradient(cmap="Blues", subset=[_count_col]),
+                ),
                 use_container_width=True, hide_index=True,
             )
         else:
@@ -3163,7 +3192,7 @@ with tab_metrics:
                         st.session_state[load_key] = True
                         st.rerun()
 
-        st.markdown("")
+        st.markdown(t("metrics.comparison_title"))
         st.dataframe(
             metrics_df.set_index("Experiment").style.format({
                 "Precision": "{:.3f}", "Recall": "{:.3f}",
@@ -3389,6 +3418,7 @@ with tab_field:
                     for v in comparison_rows.values()
                 ]).sort_values(exp_names_sorted[0], ascending=False, na_position="last")
 
+                st.markdown(t("field.compare.table_title"))
                 st.dataframe(
                     comp_df.set_index("Region").style.format(
                         {e: "{:.1%}" for e in exp_names_sorted}, na_rep="—"
