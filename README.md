@@ -38,7 +38,7 @@
 
 ###### <p align="center"> 🚁 ***Finding hidden H’s in the concrete jungle*** <br>
 
-###### <p align="center">One rooftop at a time. </b> 
+###### <p align="center">One rooftop at a time. <br> 
 
 #### <p align="center"> ⚡️
 
@@ -67,19 +67,13 @@
 <!-- ========= END SPONSOR BADGE ========= -->
 
 
-
-
-
-
 <!-- ========= START PUC GIF ========= -->
-
 <p align="center">
    <img src="https://github.com/user-attachments/assets/791a69e2-d09a-429f-9257-f6667fff5c04 ">
  </p>
 
  <br>
 <!-- ========= END PUC GIF ========= -->
-
 
 
 <!-- ========= START 🇧🇷 Top CommtributorsE ========= -->
@@ -170,6 +164,8 @@
 
 
 <!--
+### 🎥 **DEMO: RESTful API & Dashboard Deployment** ✧ ` * Geocoding: Nominatim (OpenStreetMap)` ✧ ` MapLibre GL JS` ✧ `Streamlit`
+
 ## Dashboard Preview
 
 <br><br><br>
