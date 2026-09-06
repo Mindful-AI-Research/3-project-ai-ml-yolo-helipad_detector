@@ -100,7 +100,7 @@
 
 </p>
 
-<br><br><br><br>
+<br><br><br>
 <!-- ========= END 🇧🇷 Top CommtributorsE  ========= -->
 
 
@@ -113,11 +113,11 @@
  **Author:** [Fabiana ⚡️ Campanari](https://linktr.ee/fabianacampanari)   
 
 
-<br><br>
+<br>
 
 #
 
-<br><br>
+<br><br><br>
 <!-- ========= END Institutional INFO ========= -->
 
 
@@ -168,6 +168,12 @@
 <br><br>
 <!-- ========= END Data Analysis Report BADGE ========= -->
 
+
+<!--
+## Dashboard Preview
+
+<br><br><br>
+ -->
 
 
 <!-- ========= START TECH STACK / PIPELINE BADGES ========= -->
@@ -238,7 +244,7 @@
 
 ## [Overview]()
 
-**Helipad Detector** is an end-to-end Artificial Intelligence and Computer Vision platform designed to automatically detect and map rooftop helipads from satellite imagery. The project focuses on São Paulo, Brazil, a unique urban environment with the world's largest helicopter fleet, handling approximately **2,200 takeoffs and landings per day** and reaching **one operation every 45 seconds during peak hours**. The city also operates **HELICONTROL**, a dedicated helicopter air traffic control system created to safely manage this exceptionally dense urban air mobility environment.
+[**Helipad Detector**]() is an end-to-end Artificial Intelligence and Computer Vision platform designed to automatically detect and map rooftop helipads from satellite imagery. The project focuses on São Paulo, Brazil, a unique urban environment with the world's largest helicopter fleet, handling approximately **2,200 takeoffs and landings per day** and reaching **one operation every 45 seconds during peak hours**. The city also operates **HELICONTROL**, a dedicated helicopter air traffic control system created to safely manage this exceptionally dense urban air mobility environment.
 
 These characteristics make São Paulo an ideal real-world benchmark for AI-based geospatial intelligence. By transforming satellite imagery into structured spatial information, the project demonstrates how Computer Vision can automate infrastructure mapping, support urban analysis, and provide decision-support data for future Smart City applications.
 
@@ -287,26 +293,38 @@ São Paulo's choice as the project's real-world setting is not incidental. The t
 - Downloadable datasets, notebooks and artifacts
 
 
-<br><br><br>
+<br>
 
-
-<!--
-## Dashboard Preview
+#
 
 <br><br>
- -->
+
+
+
 
  
 <!-- ========= START 🎥 **DEMO** ========= -->
-###### <p align="center">  🎥 **DEMO:** **HELIPAD DETECTION** ✧ `YOLO11` ✧ `MODEL TRAINING`   ✧ *Creation by Fabi* ⚡️
+###### <p align="center">  🎥 **DEMO:** **HELIPAD DETECTION** ✧ `YOLO11` ✧ `MODEL TRAINING`  
 
 https://github.com/user-attachments/assets/5b7d581c-ab5e-416e-8471-d91136b2ada0
 
-###### <p align="center"> 🎶 *Feel Good* by Nina Simone - Deep House  Remix
+###### <p align="center"> 🎶 *Feel Good* by Nina Simone - Deep House  Remix  ✧ *Creation by Fabi* ⚡️
 
-<br><br><br>
+<br><br>
+
+#
+
+<br><br>
 <!-- ========= END  🎥 **DEMO** ========= -->
 
+
+<!-- ========= START 🎥 **DEMO** `AUTOMATED HELIPAD SCRAPING` ========= -->
+###### <p align="center"> 🎥 **DEMO:** **AUTOMATED HELIPAD SCRAPING** ✧ `SELENIUM` ✧ `FLIGHTMARKET` ✧ `GEOCODING` ✧ *Creation by Fabi* ⚡️
+
+https://github.com/user-attachments/assets/eab6e951-6b66-4c6c-a2c6-23ee2f902c5f
+
+<br><br><br><br><br>
+<!-- ========= END  🎥 **DEMO** ========= -->
 
 
 ##  Table of Contents
