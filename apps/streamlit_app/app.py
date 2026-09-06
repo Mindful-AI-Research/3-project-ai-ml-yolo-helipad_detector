@@ -2984,31 +2984,19 @@ with tab_about:
                 list(_disc_stats["by_state"].items()),
                 columns=[t("about.discovery.state_col"), _count_col],
             )
-
-            def _blue_scale_row_style(series):
-                # blue_scale() (navy -> teal, never near-white) instead of a
-                # matplotlib colormap — same reasoning as the Field
-                # Detections table fix: a cmap like "Blues" fades all the way
-                # to near-white at its low end, which reads as "several rows
-                # got no color at all" once two or three values cluster near
-                # the minimum.
-                lo, hi = series.min(), series.max()
-                out = []
-                for v in series:
-                    frac = (v - lo) / (hi - lo) if hi > lo else 0.5
-                    out.append(f"background-color:{blue_scale(frac)}; color:white; text-align:right;")
-                return out
-
+            # Same gradient mechanism as "Compare all 3 models" and the
+            # Field Detections ranking table below — plain pandas Styler
+            # (.background_gradient, cmap="Blues"), no column_config mixed
+            # in. Combining a Styler with column_config on the same
+            # st.dataframe call was silently dropping this column's values
+            # (right-align was worth less than the numbers actually
+            # rendering), so text-align is now also done via the Styler
+            # (.set_properties) instead of column_config.NumberColumn.
             st.dataframe(
-                _state_by_count_df.style.apply(_blue_scale_row_style, subset=[_count_col]),
+                _state_by_count_df.style.format({_count_col: "{:.0f}"}).set_properties(
+                    subset=[_count_col], **{"text-align": "right"}
+                ).background_gradient(cmap="Blues", subset=[_count_col]),
                 use_container_width=True, hide_index=True,
-                column_config={
-                    # width="small" keeps the numeric column tight instead of
-                    # stretching to fill the row, so the right-alignment set
-                    # above actually reads as "aligned" instead of the digit
-                    # floating in the middle of an oversized cell.
-                    _count_col: st.column_config.NumberColumn(_count_col, format="%d", width="small"),
-                },
             )
         else:
             st.caption(t("about.discovery.pending"))
@@ -3359,26 +3347,11 @@ with tab_field:
                 t("field.tiles_col"), t("field.rate_col"), t("field.top_confidence_col"),
             ]]
 
-            def _blue_scale_row_style(series):
-                # blue_scale() (navy -> teal, never near-white) instead of a
-                # matplotlib colormap — a cmap like "Blues" fades all the way
-                # to near-white at its low end, which reads as "several rows
-                # got no color at all" once two or three values cluster near
-                # the minimum (Alphaville Industrial's 105 and Vila Nova
-                # Conceição's 109 were landing on visually the same
-                # near-white shade here before this fix).
-                lo, hi = series.min(), series.max()
-                out = []
-                for v in series:
-                    frac = (v - lo) / (hi - lo) if hi > lo else 0.5
-                    out.append(f"background-color:{blue_scale(frac)}; color:white;")
-                return out
-
             st.markdown(f"#### {t('field.ranking_title')}")
             st.dataframe(
                 regions_df_display.set_index(t("field.rank_col")).style.format({
                     t("field.rate_col"): "{:.1%}", t("field.top_confidence_col"): "{:.2f}",
-                }).apply(_blue_scale_row_style, subset=[t("field.detected_col")]),
+                }).background_gradient(cmap="Blues", subset=[t("field.detected_col")]),
                 use_container_width=True,
             )
             st.caption(t("field.rate_definition"))
