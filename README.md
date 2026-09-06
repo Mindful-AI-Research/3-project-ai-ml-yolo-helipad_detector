@@ -163,7 +163,7 @@
 <!-- ========= END Data Analysis Report BADGE ========= -->
 
 
-<!--
+<!-- 🚧<!-- ========= START 🎥 **DEMO** ========= 
 ### 🎥 **DEMO: RESTful API & Dashboard Deployment** ✧ ` * Geocoding: Nominatim (OpenStreetMap)` ✧ ` MapLibre GL JS` ✧ `Streamlit`
 
 ## Dashboard Preview
@@ -176,7 +176,7 @@
 #
 
 <br><br>
- -->
+=========🚧 END 🎥 **DEMO** =========  -->
 
 
 <!-- ========= START TECH STACK / PIPELINE BADGES ========= -->
