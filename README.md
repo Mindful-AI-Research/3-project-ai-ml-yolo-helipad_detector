@@ -168,7 +168,14 @@
 
 ## Dashboard Preview
 
-<br><br><br>
+###### <p align="center"> 🎬 **Creative Direction, Music Curation & Editing by Fab⚡️**
+###### <p align="center"> 🎶 **Soundtrack:** *"Canon in D"* — Johann Pachelbel
+
+<br>
+
+#
+
+<br><br>
  -->
 
 
@@ -278,15 +285,27 @@ São Paulo's choice as the project's real-world setting is not incidental. The t
 
 ## [Key Features]()
 
-- End-to-end Artificial Intelligence pipeline
-- Automated satellite imagery acquisition
-- Geospatial intelligence workflow
-- YOLOv8n / YOLOv11n object detection
-- Roboflow annotation workflow
-- Field validation on 7,900+ real satellite tiles
-- Interactive Streamlit dashboard
-- Fully reproducible repository
-- Downloadable datasets, notebooks and artifacts
+[-]() End-to-end Artificial Intelligence pipeline <br>
+
+[-]() Automated satellite imagery acquisition  <br>
+
+[-]() Geospatial intelligence workflow <br>
+
+[-]() YOLOv8n / YOLOv11n object detection <br>
+
+[-]() Roboflow annotation workflow <br>
+
+[-]() Interactive maps with MapLibre GL JS + OpenStreetMap <br>
+
+[-]() Geocoding with Nominatim (OpenStreetMap) <br>
+
+[-]() Field validation on 7,900+ real satellite tiles <br>
+
+[-]() Interactive Streamlit dashboard <br>
+
+[-]() Fully reproducible repository <br>
+
+[-]() Downloadable datasets, notebooks and artifacts
 
 
 <br>
@@ -294,9 +313,6 @@ São Paulo's choice as the project's real-world setting is not incidental. The t
 #
 
 <br><br>
-
-
-
 
  
 <!-- ========= START 🎥 **DEMO** ========= -->
