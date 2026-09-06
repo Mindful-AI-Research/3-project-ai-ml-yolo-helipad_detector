@@ -722,6 +722,9 @@ TR = {
     "field.detected_col": {"en": "Detected", "pt": "Detectado"},
     "field.rate_col": {"en": "Detection Rate", "pt": "Taxa de Detecção"},
     "field.top_confidence_col": {"en": "Top Confidence", "pt": "Confiança Máxima"},
+    "field.ranking_title": {
+        "en": "🏆 Ranking — Helipads Found by Region", "pt": "🏆 Ranking — Helipontos Encontrados por Região"
+    },
     "field.rate_definition": {
         "en": "**Rank** here follows the raw number of helipads found (**Detected**), highest to lowest — not **Detection Rate**, which is Detected ÷ Tiles for that region. A smaller region can show a higher rate with fewer total finds than a larger one (e.g. Inter-Zone Corridor: 133 found, 27.7% rate vs. Itaim Bibi: 191 found, 25.5% rate) simply because it has fewer tiles overall.",
         "pt": "O **ranking** aqui segue o número bruto de helipontos encontrados (**Detectado**), do maior para o menor — não a **Taxa de Detecção**, que é Detectado ÷ Tiles daquela região. Uma região menor pode ter taxa maior com menos achados totais do que uma maior (ex: Inter-Zone Corridor: 133 encontrados, taxa de 27,7% vs. Itaim Bibi: 191 encontrados, taxa de 25,5%) simplesmente por ter menos tiles no total.",
@@ -2820,6 +2823,18 @@ with tab4:
                         ) or "—",
                         axis=1,
                     )
+                    # Coordinates + place name + resolved location first (the
+                    # "what and where" of each row), lat/lon as the raw
+                    # numbers backing that up, timestamp last since it's
+                    # metadata about the scrape rather than about the place.
+                    _preferred_order = [
+                        "Coordenadas da Bounding Box", "Nome do Bairro", city_col,
+                        "lat", "lon", "Carimbo de data/hora",
+                    ]
+                    other_df_display = other_df_display[
+                        [c for c in _preferred_order if c in other_df_display.columns]
+                        + [c for c in other_df_display.columns if c not in _preferred_order]
+                    ]
                     other_df_display.index = range(1, len(other_df_display) + 1)
                 st.dataframe(other_df_display, use_container_width=True)
 
@@ -2951,6 +2966,53 @@ with tab_about:
 
     st.markdown(t("about.body_closing"))
 
+    st.markdown(f"### {t('about.discovery.title')}")
+    st.caption(t("about.discovery.body"))
+    _disc_stats = load_discovery_dataset_stats()
+    if _disc_stats is None:
+        st.caption(t("about.discovery.missing").format(path=COORDS_CSV))
+    else:
+        disc_col1, disc_col2 = st.columns(2)
+        with disc_col1:
+            st.metric(t("about.discovery.points"), _disc_stats["total_points"])
+        with disc_col2:
+            if _disc_stats["distinct_locations"] is not None:
+                st.metric(t("about.discovery.regions"), _disc_stats["distinct_locations"])
+        if _disc_stats["by_state"]:
+            _count_col = t("about.discovery.count_col")
+            _state_by_count_df = pd.DataFrame(
+                list(_disc_stats["by_state"].items()),
+                columns=[t("about.discovery.state_col"), _count_col],
+            )
+
+            def _blue_scale_row_style(series):
+                # blue_scale() (navy -> teal, never near-white) instead of a
+                # matplotlib colormap — same reasoning as the Field
+                # Detections table fix: a cmap like "Blues" fades all the way
+                # to near-white at its low end, which reads as "several rows
+                # got no color at all" once two or three values cluster near
+                # the minimum.
+                lo, hi = series.min(), series.max()
+                out = []
+                for v in series:
+                    frac = (v - lo) / (hi - lo) if hi > lo else 0.5
+                    out.append(f"background-color:{blue_scale(frac)}; color:white; text-align:right;")
+                return out
+
+            st.dataframe(
+                _state_by_count_df.style.apply(_blue_scale_row_style, subset=[_count_col]),
+                use_container_width=True, hide_index=True,
+                column_config={
+                    # width="small" keeps the numeric column tight instead of
+                    # stretching to fill the row, so the right-alignment set
+                    # above actually reads as "aligned" instead of the digit
+                    # floating in the middle of an oversized cell.
+                    _count_col: st.column_config.NumberColumn(_count_col, format="%d", width="small"),
+                },
+            )
+        else:
+            st.caption(t("about.discovery.pending"))
+
     st.markdown(f"""
     <div class="dark-card" style="text-align:left;">
         <table style="width:100%; font-size:14px; color:#E2E8F0; border-collapse:collapse;">
@@ -2967,38 +3029,6 @@ with tab_about:
         </table>
     </div>
     """, unsafe_allow_html=True)
-
-    st.markdown(f"### {t('about.discovery.title')}")
-    st.caption(t("about.discovery.body"))
-    _disc_stats = load_discovery_dataset_stats()
-    if _disc_stats is None:
-        st.caption(t("about.discovery.missing").format(path=COORDS_CSV))
-    else:
-        disc_col1, disc_col2 = st.columns(2)
-        with disc_col1:
-            st.metric(t("about.discovery.points"), _disc_stats["total_points"])
-        with disc_col2:
-            if _disc_stats["distinct_locations"] is not None:
-                st.metric(t("about.discovery.regions"), _disc_stats["distinct_locations"])
-        if _disc_stats["by_state"]:
-            st.dataframe(
-                pd.DataFrame(
-                    list(_disc_stats["by_state"].items()),
-                    columns=[t("about.discovery.state_col"), t("about.discovery.count_col")],
-                ),
-                use_container_width=True, hide_index=True,
-                column_config={
-                    # Explicit NumberColumn (not just relying on dtype
-                    # inference) so Streamlit's grid renders + aligns this
-                    # as a real numeric column (right-aligned) instead of
-                    # a generic left-aligned cell.
-                    t("about.discovery.count_col"): st.column_config.NumberColumn(
-                        t("about.discovery.count_col"), format="%d"
-                    ),
-                },
-            )
-        else:
-            st.caption(t("about.discovery.pending"))
 
 # ====================== TAB 7: Downloads ======================
 with tab7:
@@ -3321,11 +3351,34 @@ with tab_field:
                 "tiles_detected": t("field.detected_col"), "detection_rate": t("field.rate_col"),
                 "top_confidence": t("field.top_confidence_col"),
             })
+            # Rank, Region, Detected, Tiles, Detection Rate, Top Confidence —
+            # leads with the headline number (Detected) right after the
+            # region name, instead of Tiles (the denominator) coming first.
+            regions_df_display = regions_df_display[[
+                t("field.rank_col"), t("field.region_col"), t("field.detected_col"),
+                t("field.tiles_col"), t("field.rate_col"), t("field.top_confidence_col"),
+            ]]
 
+            def _blue_scale_row_style(series):
+                # blue_scale() (navy -> teal, never near-white) instead of a
+                # matplotlib colormap — a cmap like "Blues" fades all the way
+                # to near-white at its low end, which reads as "several rows
+                # got no color at all" once two or three values cluster near
+                # the minimum (Alphaville Industrial's 105 and Vila Nova
+                # Conceição's 109 were landing on visually the same
+                # near-white shade here before this fix).
+                lo, hi = series.min(), series.max()
+                out = []
+                for v in series:
+                    frac = (v - lo) / (hi - lo) if hi > lo else 0.5
+                    out.append(f"background-color:{blue_scale(frac)}; color:white;")
+                return out
+
+            st.markdown(f"#### {t('field.ranking_title')}")
             st.dataframe(
                 regions_df_display.set_index(t("field.rank_col")).style.format({
                     t("field.rate_col"): "{:.1%}", t("field.top_confidence_col"): "{:.2f}",
-                }).background_gradient(cmap="Blues", subset=[t("field.detected_col")]),
+                }).apply(_blue_scale_row_style, subset=[t("field.detected_col")]),
                 use_container_width=True,
             )
             st.caption(t("field.rate_definition"))
@@ -3381,7 +3434,7 @@ with tab_field:
 
                 if {"exp1", "exp2", "exp3"} <= set(all_summaries):
                     st.markdown(f"""
-                    <div style="border-left:3px solid #FF2500; background:rgba(14,117,109,0.08);
+                    <div style="border-left:3px solid #14b8a6; background:rgba(14,117,109,0.08);
                                 border-radius:8px; padding:14px 18px; margin-top:14px;">
                         <p style="margin:0; color:#E2E8F0; font-size:14px; line-height:1.65;">
                             {t('field.compare.reality_check')}
