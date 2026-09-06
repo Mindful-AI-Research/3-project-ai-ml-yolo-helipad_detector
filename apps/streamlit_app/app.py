@@ -3023,7 +3023,7 @@ with tab_about:
             # harmonious. Plain table, numbers right-aligned via the Styler.
             st.dataframe(
                 _state_by_count_df.style.format({_count_col: "{:.0f}"}).set_properties(
-                    subset=[_count_col], **{"text-align": "right"}
+                    subset=[_count_col], **{"text-align": "center"}
                 ),
                 use_container_width=True, hide_index=True,
             )
