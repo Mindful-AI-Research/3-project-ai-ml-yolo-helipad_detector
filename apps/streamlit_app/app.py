@@ -714,6 +714,9 @@ TR = {
     "field.overall_rate": {"en": "Overall detection rate", "pt": "Taxa de detecção geral"},
     "field.detection_rate_pct": {"en": "Detection rate (%)", "pt": "Taxa de detecção (%)"},
     "field.rank_col": {"en": "Rank", "pt": "Ranking"},
+    "field.segments_combined_suffix": {
+        "en": " (Segments 1+2 combined)", "pt": " (Trechos 1+2 combinados)"
+    },
     "field.region_col": {"en": "Region", "pt": "Região"},
     "field.tiles_col": {"en": "Tiles", "pt": "Tiles"},
     "field.detected_col": {"en": "Detected", "pt": "Detectado"},
@@ -1437,6 +1440,41 @@ def city_hint(lat: float, lon: float) -> str | None:
         if dist < best_dist:
             best_city, best_dist = city, dist
     return best_city
+
+
+@st.cache_data(show_spinner=False)
+def load_state_lookup(csv_path: Path = COORDS_CSV) -> dict:
+    """Reads src/geospatial/helipad_coordinates_com_estado.csv (produced by
+    geocode_states.py) if it exists, keyed by the raw 'Coordenadas da
+    Bounding Box' string — a stable, unique-per-point join key that doesn't
+    depend on row order matching between this file and the main coordinates
+    CSV. Used as a fallback wherever city_hint() comes back empty: a point
+    can be too far from any of the 15 hardcoded state capitals to guess a
+    *city* responsibly (city_hint's job), while still having a known
+    *state* from geocode_states.py's real Nominatim lookup — a materially
+    more precise, distance-independent source for that one field."""
+    state_csv = csv_path.parent / "helipad_coordinates_com_estado.csv"
+    if not state_csv.exists():
+        return {}
+    try:
+        df = pd.read_csv(state_csv)
+        if "Coordenadas da Bounding Box" not in df.columns or "Estado" not in df.columns:
+            return {}
+        return dict(zip(df["Coordenadas da Bounding Box"], df["Estado"]))
+    except Exception:
+        return {}
+
+
+def location_hint(lat: float, lon: float, raw_bbox: str, state_lookup: dict) -> str | None:
+    """Best available human-readable hint for a Discovery Dataset point:
+    nearest state capital if close enough (city_hint), otherwise the real
+    geocoded state from geocode_states.py's output if that's been run,
+    otherwise None (let the caller decide how to render "we don't know")."""
+    hint = city_hint(lat, lon)
+    if hint:
+        return hint
+    state = state_lookup.get(raw_bbox)
+    return state if isinstance(state, str) and state.strip() else None
 
 
 # Region names that need a specific English translation, not just a literal
@@ -2445,6 +2483,7 @@ with tab4:
 
     sp_df = load_helipad_locations(SP_COORDS_CSV)
     other_df = load_helipad_locations(COORDS_CSV)
+    state_lookup = load_state_lookup(COORDS_CSV)
 
     if sp_df.empty and other_df.empty:
         st.info(t("map.no_coords.info").format(sp=SP_COORDS_CSV, other=COORDS_CSV))
@@ -2537,7 +2576,7 @@ with tab4:
         other_layer = folium.FeatureGroup(name=f"🔵 {t('map.other_layer')} ({len(other_df)})", show=True)
         for _, row in other_df.iterrows():
             neighborhood = row.get("Nome do Bairro", "Unknown")
-            hint = city_hint(row["lat"], row["lon"])
+            hint = location_hint(row["lat"], row["lon"], row.get("Coordenadas da Bounding Box", ""), state_lookup)
             display_name = f"{neighborhood} ({hint})" if hint else neighborhood
             timestamp = row.get("Carimbo de data/hora", "")
             folium.Marker(
@@ -2769,14 +2808,19 @@ with tab4:
                     sp_df_display["Nome do Bairro"] = sp_df_display["Nome do Bairro"].astype(str).str.replace(
                         r"\btrecho\b", _segment_word, regex=True, case=False
                     )
+                sp_df_display.index = range(1, len(sp_df_display) + 1)
                 st.dataframe(sp_df_display, use_container_width=True)
             with t2:
                 other_df_display = other_df.copy()
                 if not other_df_display.empty:
                     city_col = t("map.raw_data.city_hint_col")
                     other_df_display[city_col] = other_df_display.apply(
-                        lambda r: city_hint(r["lat"], r["lon"]) or "—", axis=1
+                        lambda r: location_hint(
+                            r["lat"], r["lon"], r.get("Coordenadas da Bounding Box", ""), state_lookup
+                        ) or "—",
+                        axis=1,
                     )
+                    other_df_display.index = range(1, len(other_df_display) + 1)
                 st.dataframe(other_df_display, use_container_width=True)
 
         st.divider()
@@ -2797,7 +2841,7 @@ with tab4:
             )
             add_osm_tile_layer(dark_map, density_dark_mode, control=False)
             for _, row in other_df.iterrows():
-                hint = city_hint(row["lat"], row["lon"])
+                hint = location_hint(row["lat"], row["lon"], row.get("Coordenadas da Bounding Box", ""), state_lookup)
                 display_name = f"{row.get('Nome do Bairro', 'Unknown')} ({hint})" if hint else row.get("Nome do Bairro", "Unknown")
                 folium.CircleMarker(
                     location=[row["lat"], row["lon"]],
@@ -2943,6 +2987,15 @@ with tab_about:
                     columns=[t("about.discovery.state_col"), t("about.discovery.count_col")],
                 ),
                 use_container_width=True, hide_index=True,
+                column_config={
+                    # Explicit NumberColumn (not just relying on dtype
+                    # inference) so Streamlit's grid renders + aligns this
+                    # as a real numeric column (right-aligned) instead of
+                    # a generic left-aligned cell.
+                    t("about.discovery.count_col"): st.column_config.NumberColumn(
+                        t("about.discovery.count_col"), format="%d"
+                    ),
+                },
             )
         else:
             st.caption(t("about.discovery.pending"))
@@ -3213,6 +3266,35 @@ with tab_field:
             st.markdown("")
             regions_df = pd.DataFrame(regions).sort_values("detection_rate", ascending=False)
             regions_df["region"] = regions_df["region"].apply(format_region_display)
+
+            # Avenida Paulista is split into two survey segments ("Segment
+            # 1"/"Segment 2", "Trecho 1"/"Trecho 2" in Português) because the
+            # full avenue didn't fit one tile-download batch — it's one
+            # physical street, so for a "most helipads found" ranking
+            # against other, single-piece regions, the two segments are
+            # summed into one combined row instead of quietly competing
+            # against each other as if they were two different places.
+            # Wrapped in try/except so a JSON schema surprise falls back to
+            # the unmerged table instead of breaking this whole tab.
+            try:
+                _segment_suffix_re = re.compile(r"\s*\(?\s*(?:Trecho|Segment)\s*\d+\s*\)?\s*$", re.IGNORECASE)
+                regions_df["region_group"] = regions_df["region"].apply(lambda s: _segment_suffix_re.sub("", s).strip())
+                regions_df_grouped = regions_df.groupby("region_group", as_index=False).agg(
+                    tiles_total=("tiles_total", "sum"),
+                    tiles_detected=("tiles_detected", "sum"),
+                    top_confidence=("top_confidence", "max"),
+                    n_segments=("region", "count"),
+                )
+                regions_df_grouped["detection_rate"] = regions_df_grouped["tiles_detected"] / regions_df_grouped["tiles_total"]
+                _combined_suffix = t("field.segments_combined_suffix")
+                regions_df_grouped["region"] = regions_df_grouped.apply(
+                    lambda r: r["region_group"] + (_combined_suffix if r["n_segments"] > 1 else ""), axis=1
+                )
+                regions_df = regions_df_grouped.drop(columns=["region_group", "n_segments"]).sort_values(
+                    "detection_rate", ascending=False
+                )
+            except Exception:
+                pass  # fall back to the unmerged per-segment rows below
 
             fig_regions = go.Figure(go.Bar(
                 x=regions_df["region"],
