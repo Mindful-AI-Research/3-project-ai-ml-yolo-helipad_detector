@@ -3010,6 +3010,7 @@ with tab_about:
             if _disc_stats["distinct_locations"] is not None:
                 st.metric(t("about.discovery.regions"), _disc_stats["distinct_locations"])
         if _disc_stats["by_state"]:
+            _count_col = t("about.discovery.state_col"), t("about.discovery.count_col")
             _count_col = t("about.discovery.count_col")
             _state_by_count_df = pd.DataFrame(
                 list(_disc_stats["by_state"].items()),
@@ -3020,11 +3021,20 @@ with tab_about:
             # spread across 13 states, a continuous gradient just produces
             # a few repeated blocks of identical color instead of a smooth,
             # readable progression — it looked broken rather than
-            # harmonious. Plain table, numbers right-aligned via the Styler.
+            # harmonious.
+            #
+            # Alignment note: text-align via a pandas Styler (.set_properties)
+            # is NOT one of the style properties st.dataframe actually
+            # honors — it only respects a limited subset (background-color
+            # from .background_gradient()/.apply(), and .format() for number
+            # display), so the last two attempts at this silently did
+            # nothing visually despite the code changing. Converting the
+            # column to plain text instead of a numeric dtype is what
+            # actually works: st.dataframe left-aligns text/object columns
+            # by default, no styling call needed to get there.
+            _state_by_count_df[_count_col] = _state_by_count_df[_count_col].astype(str)
             st.dataframe(
-                _state_by_count_df.style.format({_count_col: "{:.0f}"}).set_properties(
-                    subset=[_count_col], **{"text-align": "center"}
-                ),
+                _state_by_count_df,
                 use_container_width=True, hide_index=True,
             )
         else:
