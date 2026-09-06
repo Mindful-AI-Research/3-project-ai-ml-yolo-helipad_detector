@@ -3010,7 +3010,6 @@ with tab_about:
             if _disc_stats["distinct_locations"] is not None:
                 st.metric(t("about.discovery.regions"), _disc_stats["distinct_locations"])
         if _disc_stats["by_state"]:
-            _count_col = t("about.discovery.state_col"), t("about.discovery.count_col")
             _count_col = t("about.discovery.count_col")
             _state_by_count_df = pd.DataFrame(
                 list(_disc_stats["by_state"].items()),
