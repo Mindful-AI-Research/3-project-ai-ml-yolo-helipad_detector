@@ -215,6 +215,14 @@ TR = {
     "upload.success": {"en": "✅ Helipad detected!", "pt": "✅ Heliponto detectado!"},
     "upload.warning_none": {"en": "No helipad found.", "pt": "Nenhum heliponto encontrado."},
 
+    # ---- Shared: mandatory scope-of-detection disclaimer (shown under any detection result) ----
+    "detection.disclaimer": {
+        "en": "Automated, image-based visual detection, subject to errors, and not equivalent to "
+              "operational, legal, safety, or aeronautical validation.",
+        "pt": "Detecção visual automatizada baseada em imagem, sujeita a erros e não equivalente a "
+              "validação operacional, legal, de segurança ou aeronáutica.",
+    },
+
     # ---- Tab 2: Search by Region ----
     "search.subheader": {"en": "🔎 Search for Helipads in a Region", "pt": "🔎 Buscar Helipontos em uma Região"},
     "search.caption": {
@@ -487,12 +495,14 @@ TR = {
         "- **Transparency:** This dashboard reports the model's real Precision, Recall, and mAP, together with its known false-positive patterns, including rooftop structures, swimming pools, and sports courts that resemble helipad markings.\n"
         "- **Human Oversight:** Model predictions are intended to support human decision-making rather than replace it. All detections should be reviewed qualitatively as part of the evaluation process.\n"
         "- **Known Limitations:** The model was trained on a relatively small dataset (approximately 150 annotated images) collected from specific neighborhoods in São Paulo. Its performance in other cities or architectural contexts has not yet been systematically evaluated.\n"
+        "- **Scope of a Detection:** A detected helipad is only a visual object-detection result. It must never be stated or implied to be safe, legally certified, operationally active, available for landing, approved for drone delivery, authorized by a building, suitable for package delivery, compliant with aviation regulations, or validated for weather and obstacles. *Automated, image-based visual detection, subject to errors, and not equivalent to operational, legal, safety, or aeronautical validation.*\n"
     ),
     "pt": (
         "- **Propósito e Escopo:** O modelo detecta apenas uma classe de objeto (heliponto) em imagens de satélite de domínio público. Ele não identifica, rastreia nem cria perfis de pessoas.\n"
         "- **Transparência:** Este dashboard apresenta os valores reais de Precision, Recall e mAP do modelo, além de seus principais padrões conhecidos de falsos positivos, como estruturas de telhado, piscinas e quadras esportivas semelhantes à marcação de um heliponto.\n"
         "- **Supervisão Humana:** As detecções servem como apoio à decisão e não substituem a análise humana. Todos os resultados devem ser revisados qualitativamente durante o processo de avaliação.\n"
         "- **Limitações Conhecidas:** O modelo foi treinado com um conjunto relativamente pequeno de dados (aproximadamente 150 imagens anotadas), proveniente de bairros específicos da cidade de São Paulo. Seu desempenho em outras cidades ou estilos arquitetônicos ainda não foi avaliado de forma sistemática.\n"
+        "- **Escopo de uma Detecção:** Um heliponto detectado é apenas um resultado visual de detecção de objetos. Nunca deve ser afirmado ou sugerido que ele é seguro, legalmente certificado, operacionalmente ativo, disponível para pouso, aprovado para entrega por drone, autorizado pela edificação, apto para entrega de encomendas, compatível com regulamentação aeronáutica, ou validado quanto a condições climáticas e obstáculos. *Detecção visual automatizada baseada em imagem, sujeita a erros e não equivalente a validação operacional, legal, de segurança ou aeronáutica.*\n"
     ),
 },
 
@@ -2327,6 +2337,7 @@ with tab1:
                         st.success(t("upload.success"))
                     else:
                         st.warning(t("upload.warning_none"))
+                    st.caption(t("detection.disclaimer"))
 
 # ====================== TAB 2: Bounding Box Search ======================
 with tab2:
@@ -2377,6 +2388,7 @@ with tab2:
 
                 if detected_tiles:
                     st.success(f"🎯 **{len(detected_tiles)} {t('search.found')}** {t('search.in_region')}")
+                    st.caption(t("detection.disclaimer"))
 
                     cols = st.columns(3)
                     for idx, (img_array, filename) in enumerate(detected_tiles):
@@ -2476,6 +2488,7 @@ with tab3:
                             st.warning(t("samples.no_detection"))
 
                 st.info(t("samples.summary").format(hits=hits, total=len(sample_files)))
+                st.caption(t("detection.disclaimer"))
 
 # ====================== TAB 4: Interactive Map ======================
 with tab4:
