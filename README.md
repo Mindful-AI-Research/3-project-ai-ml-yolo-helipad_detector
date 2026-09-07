@@ -341,6 +341,9 @@ https://github.com/user-attachments/assets/eab6e951-6b66-4c6c-a2c6-23ee2f902c5f
 
 ##  Table of Contents
 
+## [Table of Contents]()
+
+- [Global Helicopter Traffic Context — Why São Paulo?](#global-helicopter-traffic-context--why-são-paulo)
 - [Project Definition](#project-definition)
 - [Objective](#objective)
 - [Why Helipads?](#why-helipads)
