@@ -42,9 +42,6 @@ secrets.toml
 
 # ============================================================
 # Artefatos de treino grandes (pesos, zips, runs)
-# — mantenha só o necessário versionado; o resto vai para
-# Releases do GitHub, Drive, ou Git LFS se realmente precisar
-# ficar no repositório.
 # ============================================================
 *.zip
 *.rar
@@ -60,8 +57,7 @@ artifacts/runs/runs/detect/*/weights/*.pt
 artifacts/runs/runs/detect/*/weights/*.onnx
 
 # ============================================================
-# Tiles e mosaicos de satelite (grandes, regeneráveis a
-# partir do CSV de coordenadas + script de coleta)
+# Tiles e mosaicos de satelite
 # ============================================================
 src/geospatial/mosaico_*/
 src/geospatial/mosaic_*/
@@ -72,8 +68,6 @@ tile_z*_x*_y*.jpg
 
 # ============================================================
 # Vídeos de demonstração grandes
-# — considere Git LFS ou link externo (YouTube/Drive) em vez
-# de versionar o .mp4 direto no repositório
 # ============================================================
 demo/*.mp4
 
