@@ -108,12 +108,36 @@ TR = {
               "estimated fleet (400+) and roughly 2,200 rooftop landings and takeoffs per day in "
               "the metropolitan area. That real density of rooftop helicopter activity is why this "
               "project specifically targets São Paulo, rather than a city with sparser or "
-              "already-mapped helipad infrastructure.",
+              "already-mapped helipad infrastructure. Key areas include Faria Lima, Itaim Bibi, "
+              "Vila Olímpia, Brooklin, Pinheiros, and Vila Nova Conceição.",
         "pt": "São Paulo lidera o ranking global de presença/tráfego de helicópteros — maior frota "
               "estimada (400+) e cerca de 2.200 pousos e decolagens por dia na região metropolitana. "
               "Essa densidade real de atividade de helicópteros em telhados é o motivo pelo qual "
               "este projeto tem como alvo especificamente São Paulo, em vez de uma cidade com "
-              "infraestrutura de helipontos mais esparsa ou já mapeada.",
+              "infraestrutura de helipontos mais esparsa ou já mapeada. Entre as áreas de maior "
+              "relevância estão Faria Lima, Itaim Bibi, Vila Olímpia, Brooklin, Pinheiros e Vila "
+              "Nova Conceição.",
+    },
+    "cities.interpretation.title": {
+        "en": "📊 How to Read the Ranking",
+        "pt": "📊 Como interpretar o ranking",
+    },
+    "cities.interpretation.text": {
+        "en": "This ranking gives a comparative, editorial overview of helicopter presence and "
+              "activity across major cities — it is general context, not a project measurement. "
+              "Different metrics can be used to describe this kind of activity, including fleet "
+              "size, landing/takeoff movements, heliport operations, executive aviation, tourism, "
+              "emergency services, and offshore operations; this table does not assign a numeric "
+              "score to any of them (see the note above `cities.table.data` for why an earlier "
+              "version's percentage column was removed).",
+        "pt": "Este ranking oferece uma visão comparativa e editorial da presença e atividade de "
+              "helicópteros nas principais cidades analisadas — é contexto geral, não uma medição "
+              "do projeto. Diferentes métricas podem ser usadas para descrever esse tipo de "
+              "atividade, incluindo tamanho da frota, movimentos de pouso e decolagem, operações em "
+              "heliportos, aviação executiva, turismo, serviços de emergência e operações offshore; "
+              "esta tabela não atribui uma nota numérica a nenhuma delas (veja a nota acima de "
+              "`cities.table.data` sobre por que a coluna de percentual de uma versão anterior foi "
+              "removida).",
     },
     "cities.table.columns": {
         "en": ["Rank", "City", "Country", "Main Indicator",
@@ -214,6 +238,14 @@ TR = {
     "upload.detection_caption": {"en": "Detection", "pt": "Detecção"},
     "upload.success": {"en": "✅ Helipad detected!", "pt": "✅ Heliponto detectado!"},
     "upload.warning_none": {"en": "No helipad found.", "pt": "Nenhum heliponto encontrado."},
+
+    # ---- Shared: mandatory scope-of-detection disclaimer (shown under any detection result) ----
+    "detection.disclaimer": {
+        "en": "Automated, image-based visual detection, subject to errors, and not equivalent to "
+              "operational, legal, safety, or aeronautical validation.",
+        "pt": "Detecção visual automatizada baseada em imagem, sujeita a erros e não equivalente a "
+              "validação operacional, legal, de segurança ou aeronáutica.",
+    },
 
     # ---- Tab 2: Search by Region ----
     "search.subheader": {"en": "🔎 Search for Helipads in a Region", "pt": "🔎 Buscar Helipontos em uma Região"},
@@ -487,12 +519,14 @@ TR = {
         "- **Transparency:** This dashboard reports the model's real Precision, Recall, and mAP, together with its known false-positive patterns, including rooftop structures, swimming pools, and sports courts that resemble helipad markings.\n"
         "- **Human Oversight:** Model predictions are intended to support human decision-making rather than replace it. All detections should be reviewed qualitatively as part of the evaluation process.\n"
         "- **Known Limitations:** The model was trained on a relatively small dataset (approximately 150 annotated images) collected from specific neighborhoods in São Paulo. Its performance in other cities or architectural contexts has not yet been systematically evaluated.\n"
+        "- **Scope of a Detection:** A detected helipad is only a visual object-detection result. It must never be stated or implied to be safe, legally certified, operationally active, available for landing, approved for drone delivery, authorized by a building, suitable for package delivery, compliant with aviation regulations, or validated for weather and obstacles. *Automated, image-based visual detection, subject to errors, and not equivalent to operational, legal, safety, or aeronautical validation.*\n"
     ),
     "pt": (
         "- **Propósito e Escopo:** O modelo detecta apenas uma classe de objeto (heliponto) em imagens de satélite de domínio público. Ele não identifica, rastreia nem cria perfis de pessoas.\n"
         "- **Transparência:** Este dashboard apresenta os valores reais de Precision, Recall e mAP do modelo, além de seus principais padrões conhecidos de falsos positivos, como estruturas de telhado, piscinas e quadras esportivas semelhantes à marcação de um heliponto.\n"
         "- **Supervisão Humana:** As detecções servem como apoio à decisão e não substituem a análise humana. Todos os resultados devem ser revisados qualitativamente durante o processo de avaliação.\n"
         "- **Limitações Conhecidas:** O modelo foi treinado com um conjunto relativamente pequeno de dados (aproximadamente 150 imagens anotadas), proveniente de bairros específicos da cidade de São Paulo. Seu desempenho em outras cidades ou estilos arquitetônicos ainda não foi avaliado de forma sistemática.\n"
+        "- **Escopo de uma Detecção:** Um heliponto detectado é apenas um resultado visual de detecção de objetos. Nunca deve ser afirmado ou sugerido que ele é seguro, legalmente certificado, operacionalmente ativo, disponível para pouso, aprovado para entrega por drone, autorizado pela edificação, apto para entrega de encomendas, compatível com regulamentação aeronáutica, ou validado quanto a condições climáticas e obstáculos. *Detecção visual automatizada baseada em imagem, sujeita a erros e não equivalente a validação operacional, legal, de segurança ou aeronáutica.*\n"
     ),
 },
 
@@ -671,6 +705,9 @@ TR = {
 
     # ---- Metrics tab ----
     "metrics.subheader": {"en": "📊 Experiment Metrics", "pt": "📊 Métricas dos Experimentos"},
+    "metrics.comparison_title": {
+        "en": "#### 📋 Side-by-Side Comparison", "pt": "#### 📋 Comparação Lado a Lado"
+    },
     "metrics.no_csv": {
         "en": "No `results.csv` found yet under `artifacts/runs/detect/*/` (or `artifacts/runs/runs/detect/*/`).",
         "pt": "Nenhum `results.csv` encontrado ainda em `artifacts/runs/detect/*/` (ou `artifacts/runs/runs/detect/*/`).",
@@ -714,11 +751,17 @@ TR = {
     "field.overall_rate": {"en": "Overall detection rate", "pt": "Taxa de detecção geral"},
     "field.detection_rate_pct": {"en": "Detection rate (%)", "pt": "Taxa de detecção (%)"},
     "field.rank_col": {"en": "Rank", "pt": "Ranking"},
+    "field.segments_combined_suffix": {
+        "en": " (Segments 1+2 combined)", "pt": " (Trechos 1+2 combinados)"
+    },
     "field.region_col": {"en": "Region", "pt": "Região"},
     "field.tiles_col": {"en": "Tiles", "pt": "Tiles"},
     "field.detected_col": {"en": "Detected", "pt": "Detectado"},
     "field.rate_col": {"en": "Detection Rate", "pt": "Taxa de Detecção"},
     "field.top_confidence_col": {"en": "Top Confidence", "pt": "Confiança Máxima"},
+    "field.ranking_title": {
+        "en": "🏆 Ranking — Helipads Found by Region", "pt": "🏆 Ranking — Helipontos Encontrados por Região"
+    },
     "field.rate_definition": {
         "en": "**Rank** here follows the raw number of helipads found (**Detected**), highest to lowest — not **Detection Rate**, which is Detected ÷ Tiles for that region. A smaller region can show a higher rate with fewer total finds than a larger one (e.g. Inter-Zone Corridor: 133 found, 27.7% rate vs. Itaim Bibi: 191 found, 25.5% rate) simply because it has fewer tiles overall.",
         "pt": "O **ranking** aqui segue o número bruto de helipontos encontrados (**Detectado**), do maior para o menor — não a **Taxa de Detecção**, que é Detectado ÷ Tiles daquela região. Uma região menor pode ter taxa maior com menos achados totais do que uma maior (ex: Inter-Zone Corridor: 133 encontrados, taxa de 27,7% vs. Itaim Bibi: 191 encontrados, taxa de 25,5%) simplesmente por ter menos tiles no total.",
@@ -731,7 +774,10 @@ TR = {
     },
     "field.compare.title": {
         "en": "🔬 Compare all 3 models on the same field validation",
-        "pt": "🔬 Comparar os 3 modelos na mesma validação de campo",
+        "pt": "🔬 Comparar os 3 modelos na mesma validação de campo",    },
+    "field.compare.table_title": {
+        "en": "#### Detection Rate by Region and Experiment",
+        "pt": "#### Taxa de Detecção por Região e Experimento",
     },
     "field.compare.body": {
         "en": "Same 7,943 tiles across the same 10 regions, run separately with each experiment's "
@@ -1269,10 +1315,10 @@ def load_discovery_dataset_stats(csv_path: Path = COORDS_CSV) -> dict | None:
     (src/geospatial/helipad_bot.py output) — total points collected and
     how many distinct location names appear, as a proxy for geographic
     diversity. If src/geospatial/geocode_states.py has been run, its output
-    JSON (discovery_dataset_by_state.json, next to csv_path) is picked up
-    here too and merged in as "by_state" — this is what lets the About tab
-    replace its "State-by-state breakdown pending" caption with real
-    numbers once that script has actually been run."""
+    CSV (helipad_coordinates_com_estado.csv, next to csv_path) is picked up
+    here too and grouped into "by_state" counts — this is what lets the
+    About tab replace its "State-by-state breakdown pending" caption with
+    real numbers once that script has actually been run."""
     if not csv_path.exists():
         return None
     try:
@@ -1286,14 +1332,15 @@ def load_discovery_dataset_stats(csv_path: Path = COORDS_CSV) -> dict | None:
         "by_state": None,
     }
 
-    by_state_path = csv_path.parent / "discovery_dataset_by_state.json"
+    by_state_path = csv_path.parent / "helipad_coordinates_com_estado.csv"
     if by_state_path.exists():
         try:
-            with open(by_state_path, encoding="utf-8") as f:
-                by_state_data = json.load(f)
-            stats["by_state"] = by_state_data.get("by_state")
+            state_df = pd.read_csv(by_state_path)
+            if "Estado" in state_df.columns:
+                counts = state_df["Estado"].fillna("").replace("", "(desconhecido)").value_counts()
+                stats["by_state"] = counts.to_dict()
         except Exception:
-            pass  # malformed/partial JSON — fall back to the pending caption, don't crash the tab
+            pass  # malformed/partial CSV — fall back to the pending caption, don't crash the tab
 
     return stats
 
@@ -1436,6 +1483,41 @@ def city_hint(lat: float, lon: float) -> str | None:
         if dist < best_dist:
             best_city, best_dist = city, dist
     return best_city
+
+
+@st.cache_data(show_spinner=False)
+def load_state_lookup(csv_path: Path = COORDS_CSV) -> dict:
+    """Reads src/geospatial/helipad_coordinates_com_estado.csv (produced by
+    geocode_states.py) if it exists, keyed by the raw 'Coordenadas da
+    Bounding Box' string — a stable, unique-per-point join key that doesn't
+    depend on row order matching between this file and the main coordinates
+    CSV. Used as a fallback wherever city_hint() comes back empty: a point
+    can be too far from any of the 15 hardcoded state capitals to guess a
+    *city* responsibly (city_hint's job), while still having a known
+    *state* from geocode_states.py's real Nominatim lookup — a materially
+    more precise, distance-independent source for that one field."""
+    state_csv = csv_path.parent / "helipad_coordinates_com_estado.csv"
+    if not state_csv.exists():
+        return {}
+    try:
+        df = pd.read_csv(state_csv)
+        if "Coordenadas da Bounding Box" not in df.columns or "Estado" not in df.columns:
+            return {}
+        return dict(zip(df["Coordenadas da Bounding Box"], df["Estado"]))
+    except Exception:
+        return {}
+
+
+def location_hint(lat: float, lon: float, raw_bbox: str, state_lookup: dict) -> str | None:
+    """Best available human-readable hint for a Discovery Dataset point:
+    nearest state capital if close enough (city_hint), otherwise the real
+    geocoded state from geocode_states.py's output if that's been run,
+    otherwise None (let the caller decide how to render "we don't know")."""
+    hint = city_hint(lat, lon)
+    if hint:
+        return hint
+    state = state_lookup.get(raw_bbox)
+    return state if isinstance(state, str) and state.strip() else None
 
 
 # Region names that need a specific English translation, not just a literal
@@ -2279,6 +2361,7 @@ with tab1:
                         st.success(t("upload.success"))
                     else:
                         st.warning(t("upload.warning_none"))
+                    st.caption(t("detection.disclaimer"))
 
 # ====================== TAB 2: Bounding Box Search ======================
 with tab2:
@@ -2329,6 +2412,7 @@ with tab2:
 
                 if detected_tiles:
                     st.success(f"🎯 **{len(detected_tiles)} {t('search.found')}** {t('search.in_region')}")
+                    st.caption(t("detection.disclaimer"))
 
                     cols = st.columns(3)
                     for idx, (img_array, filename) in enumerate(detected_tiles):
@@ -2428,6 +2512,7 @@ with tab3:
                             st.warning(t("samples.no_detection"))
 
                 st.info(t("samples.summary").format(hits=hits, total=len(sample_files)))
+                st.caption(t("detection.disclaimer"))
 
 # ====================== TAB 4: Interactive Map ======================
 with tab4:
@@ -2444,6 +2529,7 @@ with tab4:
 
     sp_df = load_helipad_locations(SP_COORDS_CSV)
     other_df = load_helipad_locations(COORDS_CSV)
+    state_lookup = load_state_lookup(COORDS_CSV)
 
     if sp_df.empty and other_df.empty:
         st.info(t("map.no_coords.info").format(sp=SP_COORDS_CSV, other=COORDS_CSV))
@@ -2536,7 +2622,7 @@ with tab4:
         other_layer = folium.FeatureGroup(name=f"🔵 {t('map.other_layer')} ({len(other_df)})", show=True)
         for _, row in other_df.iterrows():
             neighborhood = row.get("Nome do Bairro", "Unknown")
-            hint = city_hint(row["lat"], row["lon"])
+            hint = location_hint(row["lat"], row["lon"], row.get("Coordenadas da Bounding Box", ""), state_lookup)
             display_name = f"{neighborhood} ({hint})" if hint else neighborhood
             timestamp = row.get("Carimbo de data/hora", "")
             folium.Marker(
@@ -2759,6 +2845,7 @@ with tab4:
             </script>
             """, height=0)
 
+        st.markdown(f"#### {t('map.raw_data_expander')}")
         with st.expander(t("map.raw_data_expander"), expanded=True):
             t1, t2 = st.tabs([t("map.raw_data.sp_tab"), t("map.raw_data.other_tab")])
             with t1:
@@ -2768,14 +2855,32 @@ with tab4:
                     sp_df_display["Nome do Bairro"] = sp_df_display["Nome do Bairro"].astype(str).str.replace(
                         r"\btrecho\b", _segment_word, regex=True, case=False
                     )
+                sp_df_display.index = range(1, len(sp_df_display) + 1)
                 st.dataframe(sp_df_display, use_container_width=True)
             with t2:
                 other_df_display = other_df.copy()
                 if not other_df_display.empty:
                     city_col = t("map.raw_data.city_hint_col")
                     other_df_display[city_col] = other_df_display.apply(
-                        lambda r: city_hint(r["lat"], r["lon"]) or "—", axis=1
+                        lambda r: location_hint(
+                            r["lat"], r["lon"], r.get("Coordenadas da Bounding Box", ""), state_lookup
+                        ) or "—",
+                        axis=1,
                     )
+                    # Most human-readable/general first (which state, which
+                    # neighborhood), then the precise numbers, then the raw
+                    # source string, timestamp metadata last — a zoom-in
+                    # from "where is this, in words" to "the exact technical
+                    # record it came from".
+                    _preferred_order = [
+                        city_col, "Nome do Bairro", "lat", "lon",
+                        "Coordenadas da Bounding Box", "Carimbo de data/hora",
+                    ]
+                    other_df_display = other_df_display[
+                        [c for c in _preferred_order if c in other_df_display.columns]
+                        + [c for c in other_df_display.columns if c not in _preferred_order]
+                    ]
+                    other_df_display.index = range(1, len(other_df_display) + 1)
                 st.dataframe(other_df_display, use_container_width=True)
 
         st.divider()
@@ -2796,7 +2901,7 @@ with tab4:
             )
             add_osm_tile_layer(dark_map, density_dark_mode, control=False)
             for _, row in other_df.iterrows():
-                hint = city_hint(row["lat"], row["lon"])
+                hint = location_hint(row["lat"], row["lon"], row.get("Coordenadas da Bounding Box", ""), state_lookup)
                 display_name = f"{row.get('Nome do Bairro', 'Unknown')} ({hint})" if hint else row.get("Nome do Bairro", "Unknown")
                 folium.CircleMarker(
                     location=[row["lat"], row["lon"]],
@@ -2892,8 +2997,31 @@ with tab_about:
     _cities_cols = t("cities.table.columns")
     _cities_rows = t("cities.table.data")
     _rank_col = _cities_cols[0]
-    cities_df = pd.DataFrame(_cities_rows, columns=_cities_cols)
-    st.dataframe(cities_df.set_index(_rank_col), use_container_width=True)
+    cities_df = pd.DataFrame(_cities_rows, columns=_cities_cols).set_index(_rank_col)
+
+    # Same "Blues" gradient look as "Compare all 3 models" (Field Detections
+    # tab) — matplotlib's actual colormap, not an approximation, so the
+    # shades genuinely match. Gradiented by Rank position (1st..10th), not
+    # by a measured value: the old "Rate (%)" column this table used to
+    # carry was removed earlier (it turned out to be an unrelated table's
+    # numbers copy-pasted in, not a real per-city statistic — see the
+    # comment above cities.table.data) and there's no other numeric column
+    # here that isn't itself editorial ("Estimated Fleet" is "400+"/"—"
+    # strings, not something you can average or gradient). Rank is just
+    # display order, so coloring by it doesn't imply a precision the table
+    # doesn't have — it's a reading aid, not a re-introduced statistic.
+    # Applied across the WHOLE row (every column, same shade) rather than
+    # one narrow column, which reads as more deliberate/cohesive than a
+    # single colored strip next to otherwise-plain cells.
+    def _rank_row_style(row):
+        rank_num = int(re.sub(r"\D", "", str(row.name)) or 1)
+        frac = 1 - (rank_num - 1) / max(len(cities_df) - 1, 1)
+        rgba = plt.colormaps["Blues"](frac)
+        hexcolor = "#{:02x}{:02x}{:02x}".format(*(int(c * 255) for c in rgba[:3]))
+        text_color = readable_text_color(hexcolor)
+        return [f"background-color:{hexcolor}; color:{text_color};"] * len(row)
+
+    st.dataframe(cities_df.style.apply(_rank_row_style, axis=1), use_container_width=True)
 
     st.markdown(f"""
     <div style="border-left:3px solid #14b8a6; background:rgba(14,117,109,0.08);
@@ -2904,7 +3032,52 @@ with tab_about:
     </div>
     """, unsafe_allow_html=True)
 
+    with st.expander(t("cities.interpretation.title")):
+        st.markdown(t("cities.interpretation.text"))
+
     st.markdown(t("about.body_closing"))
+
+    st.markdown(f"### {t('about.discovery.title')}")
+    st.caption(t("about.discovery.body"))
+    _disc_stats = load_discovery_dataset_stats()
+    if _disc_stats is None:
+        st.caption(t("about.discovery.missing").format(path=COORDS_CSV))
+    else:
+        disc_col1, disc_col2 = st.columns(2)
+        with disc_col1:
+            st.metric(t("about.discovery.points"), _disc_stats["total_points"])
+        with disc_col2:
+            if _disc_stats["distinct_locations"] is not None:
+                st.metric(t("about.discovery.regions"), _disc_stats["distinct_locations"])
+        if _disc_stats["by_state"]:
+            _count_col = t("about.discovery.count_col")
+            _state_by_count_df = pd.DataFrame(
+                list(_disc_stats["by_state"].items()),
+                columns=[t("about.discovery.state_col"), _count_col],
+            )
+            # No gradient here (unlike the other ranked tables in this app):
+            # with only a handful of distinct values (mostly 1s and 2s)
+            # spread across 13 states, a continuous gradient just produces
+            # a few repeated blocks of identical color instead of a smooth,
+            # readable progression — it looked broken rather than
+            # harmonious.
+            #
+            # Alignment note: text-align via a pandas Styler (.set_properties)
+            # is NOT one of the style properties st.dataframe actually
+            # honors — it only respects a limited subset (background-color
+            # from .background_gradient()/.apply(), and .format() for number
+            # display), so the last two attempts at this silently did
+            # nothing visually despite the code changing. Converting the
+            # column to plain text instead of a numeric dtype is what
+            # actually works: st.dataframe left-aligns text/object columns
+            # by default, no styling call needed to get there.
+            _state_by_count_df[_count_col] = _state_by_count_df[_count_col].astype(str)
+            st.dataframe(
+                _state_by_count_df,
+                use_container_width=True, hide_index=True,
+            )
+        else:
+            st.caption(t("about.discovery.pending"))
 
     st.markdown(f"""
     <div class="dark-card" style="text-align:left;">
@@ -2922,29 +3095,6 @@ with tab_about:
         </table>
     </div>
     """, unsafe_allow_html=True)
-
-    st.markdown(f"### {t('about.discovery.title')}")
-    st.caption(t("about.discovery.body"))
-    _disc_stats = load_discovery_dataset_stats()
-    if _disc_stats is None:
-        st.caption(t("about.discovery.missing").format(path=COORDS_CSV))
-    else:
-        disc_col1, disc_col2 = st.columns(2)
-        with disc_col1:
-            st.metric(t("about.discovery.points"), _disc_stats["total_points"])
-        with disc_col2:
-            if _disc_stats["distinct_locations"] is not None:
-                st.metric(t("about.discovery.regions"), _disc_stats["distinct_locations"])
-        if _disc_stats["by_state"]:
-            st.dataframe(
-                pd.DataFrame(
-                    list(_disc_stats["by_state"].items()),
-                    columns=[t("about.discovery.state_col"), t("about.discovery.count_col")],
-                ),
-                use_container_width=True, hide_index=True,
-            )
-        else:
-            st.caption(t("about.discovery.pending"))
 
 # ====================== TAB 7: Downloads ======================
 with tab7:
@@ -3091,7 +3241,7 @@ with tab_metrics:
                         st.session_state[load_key] = True
                         st.rerun()
 
-        st.markdown("")
+        st.markdown(t("metrics.comparison_title"))
         st.dataframe(
             metrics_df.set_index("Experiment").style.format({
                 "Precision": "{:.3f}", "Recall": "{:.3f}",
@@ -3213,6 +3363,35 @@ with tab_field:
             regions_df = pd.DataFrame(regions).sort_values("detection_rate", ascending=False)
             regions_df["region"] = regions_df["region"].apply(format_region_display)
 
+            # Avenida Paulista is split into two survey segments ("Segment
+            # 1"/"Segment 2", "Trecho 1"/"Trecho 2" in Português) because the
+            # full avenue didn't fit one tile-download batch — it's one
+            # physical street, so for a "most helipads found" ranking
+            # against other, single-piece regions, the two segments are
+            # summed into one combined row instead of quietly competing
+            # against each other as if they were two different places.
+            # Wrapped in try/except so a JSON schema surprise falls back to
+            # the unmerged table instead of breaking this whole tab.
+            try:
+                _segment_suffix_re = re.compile(r"\s*\(?\s*(?:Trecho|Segment)\s*\d+\s*\)?\s*$", re.IGNORECASE)
+                regions_df["region_group"] = regions_df["region"].apply(lambda s: _segment_suffix_re.sub("", s).strip())
+                regions_df_grouped = regions_df.groupby("region_group", as_index=False).agg(
+                    tiles_total=("tiles_total", "sum"),
+                    tiles_detected=("tiles_detected", "sum"),
+                    top_confidence=("top_confidence", "max"),
+                    n_segments=("region", "count"),
+                )
+                regions_df_grouped["detection_rate"] = regions_df_grouped["tiles_detected"] / regions_df_grouped["tiles_total"]
+                _combined_suffix = t("field.segments_combined_suffix")
+                regions_df_grouped["region"] = regions_df_grouped.apply(
+                    lambda r: r["region_group"] + (_combined_suffix if r["n_segments"] > 1 else ""), axis=1
+                )
+                regions_df = regions_df_grouped.drop(columns=["region_group", "n_segments"]).sort_values(
+                    "detection_rate", ascending=False
+                )
+            except Exception:
+                pass  # fall back to the unmerged per-segment rows below
+
             fig_regions = go.Figure(go.Bar(
                 x=regions_df["region"],
                 y=regions_df["detection_rate"] * 100,
@@ -3238,7 +3417,15 @@ with tab_field:
                 "tiles_detected": t("field.detected_col"), "detection_rate": t("field.rate_col"),
                 "top_confidence": t("field.top_confidence_col"),
             })
+            # Rank, Region, Detected, Tiles, Detection Rate, Top Confidence —
+            # leads with the headline number (Detected) right after the
+            # region name, instead of Tiles (the denominator) coming first.
+            regions_df_display = regions_df_display[[
+                t("field.rank_col"), t("field.region_col"), t("field.detected_col"),
+                t("field.tiles_col"), t("field.rate_col"), t("field.top_confidence_col"),
+            ]]
 
+            st.markdown(f"#### {t('field.ranking_title')}")
             st.dataframe(
                 regions_df_display.set_index(t("field.rank_col")).style.format({
                     t("field.rate_col"): "{:.1%}", t("field.top_confidence_col"): "{:.2f}",
@@ -3280,6 +3467,7 @@ with tab_field:
                     for v in comparison_rows.values()
                 ]).sort_values(exp_names_sorted[0], ascending=False, na_position="last")
 
+                st.markdown(t("field.compare.table_title"))
                 st.dataframe(
                     comp_df.set_index("Region").style.format(
                         {e: "{:.1%}" for e in exp_names_sorted}, na_rep="—"
@@ -3298,7 +3486,7 @@ with tab_field:
 
                 if {"exp1", "exp2", "exp3"} <= set(all_summaries):
                     st.markdown(f"""
-                    <div style="border-left:3px solid #FF2500; background:rgba(14,117,109,0.08);
+                    <div style="border-left:3px solid #14b8a6; background:rgba(14,117,109,0.08);
                                 border-radius:8px; padding:14px 18px; margin-top:14px;">
                         <p style="margin:0; color:#E2E8F0; font-size:14px; line-height:1.65;">
                             {t('field.compare.reality_check')}
