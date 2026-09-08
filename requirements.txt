@@ -1,10 +1,9 @@
-
 ########################
 # AI / YOLO Core
 ########################
 ultralytics>=8.4.73
-torch>=1.8.0
-torchvision>=0.9.0
+torch>=2.2.0
+torchvision>=0.17.0
 tqdm>=4.64.0
 pyyaml>=5.3.1
 scipy>=1.4.1
@@ -34,15 +33,18 @@ plotly>=5.20.0
 reportlab>=4.0.0
 
 ########################
-# Selenium / Browser Automation
-########################
-selenium>=4.0.0
-webdriver-manager>=3.8.0
-
-########################
 # General Utilities
 ########################
 requests>=2.23.0
 psutil
 py-cpuinfo
 
+# NOTE (removed): selenium / webdriver-manager were removed from this file.
+# They belong only to the local scraper (src/geospatial/helipad_bot.py),
+# which you run on your own machine, not to apps/streamlit_app/app.py, which
+# is what actually gets deployed here. Shipping them to the deployed app adds
+# unused weight to the pip install step and, if packages.txt has matching
+# browser/apt entries for them (e.g. firefox, geckodriver), adds unnecessary
+# surface to the apt-get step too. If you still want to run helipad_bot.py
+# from a requirements-managed environment, keep a separate
+# requirements-scraper.txt for local use instead of bundling it here.
