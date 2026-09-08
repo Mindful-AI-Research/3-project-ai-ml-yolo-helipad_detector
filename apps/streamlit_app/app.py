@@ -108,12 +108,36 @@ TR = {
               "estimated fleet (400+) and roughly 2,200 rooftop landings and takeoffs per day in "
               "the metropolitan area. That real density of rooftop helicopter activity is why this "
               "project specifically targets São Paulo, rather than a city with sparser or "
-              "already-mapped helipad infrastructure.",
+              "already-mapped helipad infrastructure. Key areas include Faria Lima, Itaim Bibi, "
+              "Vila Olímpia, Brooklin, Pinheiros, and Vila Nova Conceição.",
         "pt": "São Paulo lidera o ranking global de presença/tráfego de helicópteros — maior frota "
               "estimada (400+) e cerca de 2.200 pousos e decolagens por dia na região metropolitana. "
               "Essa densidade real de atividade de helicópteros em telhados é o motivo pelo qual "
               "este projeto tem como alvo especificamente São Paulo, em vez de uma cidade com "
-              "infraestrutura de helipontos mais esparsa ou já mapeada.",
+              "infraestrutura de helipontos mais esparsa ou já mapeada. Entre as áreas de maior "
+              "relevância estão Faria Lima, Itaim Bibi, Vila Olímpia, Brooklin, Pinheiros e Vila "
+              "Nova Conceição.",
+    },
+    "cities.interpretation.title": {
+        "en": "📊 How to Read the Ranking",
+        "pt": "📊 Como interpretar o ranking",
+    },
+    "cities.interpretation.text": {
+        "en": "This ranking gives a comparative, editorial overview of helicopter presence and "
+              "activity across major cities — it is general context, not a project measurement. "
+              "Different metrics can be used to describe this kind of activity, including fleet "
+              "size, landing/takeoff movements, heliport operations, executive aviation, tourism, "
+              "emergency services, and offshore operations; this table does not assign a numeric "
+              "score to any of them (see the note above `cities.table.data` for why an earlier "
+              "version's percentage column was removed).",
+        "pt": "Este ranking oferece uma visão comparativa e editorial da presença e atividade de "
+              "helicópteros nas principais cidades analisadas — é contexto geral, não uma medição "
+              "do projeto. Diferentes métricas podem ser usadas para descrever esse tipo de "
+              "atividade, incluindo tamanho da frota, movimentos de pouso e decolagem, operações em "
+              "heliportos, aviação executiva, turismo, serviços de emergência e operações offshore; "
+              "esta tabela não atribui uma nota numérica a nenhuma delas (veja a nota acima de "
+              "`cities.table.data` sobre por que a coluna de percentual de uma versão anterior foi "
+              "removida).",
     },
     "cities.table.columns": {
         "en": ["Rank", "City", "Country", "Main Indicator",
@@ -3007,6 +3031,9 @@ with tab_about:
         </p>
     </div>
     """, unsafe_allow_html=True)
+
+    with st.expander(t("cities.interpretation.title")):
+        st.markdown(t("cities.interpretation.text"))
 
     st.markdown(t("about.body_closing"))
 
