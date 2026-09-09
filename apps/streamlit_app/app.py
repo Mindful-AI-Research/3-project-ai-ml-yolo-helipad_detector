@@ -253,8 +253,8 @@ TR = {
     "search.preset_label": {"en": "Jump to a known corridor (optional)", "pt": "Ir direto para um corredor conhecido (opcional)"},
     "search.preset_custom": {"en": "Custom coordinates", "pt": "Coordenadas personalizadas"},
     "search.preset_help": {
-        "en": "Small (~25-tile) boxes centered on corporate corridors with a confirmed detection rate in the field validation (Section 9) — good for a quick live demo without triggering Streamlit's throttle. Approximate public coordinates, not a guaranteed hit.",
-        "pt": "Caixas pequenas (~25 tiles) centradas em corredores corporativos com taxa de detecção confirmada na validação de campo (Seção 9) — boas para uma demo ao vivo rápida, sem disparar o throttle do Streamlit. Coordenadas públicas aproximadas, não é garantia de acerto.",
+        "en": "Small (~20-30 tile) boxes centered on the real bounding box of each field-validation region (Section 9, sp_neighborhoods_bbox.csv) — good for a quick live demo without triggering Streamlit's throttle.",
+        "pt": "Caixas pequenas (~20-30 tiles) centradas na bounding box real de cada região da validação de campo (Seção 9, sp_neighborhoods_bbox.csv) — boas para uma demo ao vivo rápida, sem disparar o throttle do Streamlit.",
     },
     "search.caption": {
         "en": "Use the coordinates of the desired region (e.g. Downtown São Paulo)",
@@ -2378,28 +2378,22 @@ with tab1:
 with tab2:
     st.subheader(t("search.subheader"))
 
-    # Caixas pequenas (~20-25 tiles no zoom 19) centradas em corredores
-    # corporativos de SP com taxa de deteccao ja comprovada na validacao de
-    # campo (Secao 9 do relatorio) -- pensadas para demo ao vivo rapida, sem
-    # disparar o throttle de CPU do Streamlit Cloud como uma busca grande faz.
-    #
-    # NOTA: o relatorio de validacao de campo lista 10 regioes no total.
-    # "Inter-Zone Corridor" fica de fora daqui de proposito -- e descrito
-    # como um corredor ENTRE zonas, nao um bairro com centro fixo, e nao
-    # temos uma coordenada de referencia confiavel para ele (a fonte oficial
-    # seria src/geospatial/sp_neighborhoods_bbox.csv, que nao esta disponivel
-    # aqui). Adicionar as outras 9 primeiro; Inter-Zone Corridor pode entrar
-    # depois se esse CSV for fornecido.
+    # Caixas pequenas (~20-30 tiles no zoom 19), centradas no centroide da
+    # bounding box REAL de cada regiao (fonte: sp_neighborhoods_bbox.csv,
+    # a mesma usada para gerar os mosaicos da validacao de campo, Secao 9
+    # do relatorio) -- pensadas para demo ao vivo rapida, sem disparar o
+    # throttle de CPU do Streamlit Cloud como uma busca grande faz.
     SEARCH_PRESETS = {
-        "Faria Lima":              (-46.690400, -23.576000, -46.687800, -23.573400),
-        "Itaim Bibi":              (-46.676300, -23.586300, -46.673700, -23.583700),
-        "Av. Paulista (Trecho 1)": (-46.657800, -23.562600, -46.655200, -23.560000),
-        "Av. Paulista (Trecho 2)": (-46.650300, -23.574300, -46.647700, -23.571700),
-        "Vila Olímpia":            (-46.690300, -23.596800, -46.687700, -23.594200),
-        "Vila Nova Conceição":     (-46.671900, -23.590800, -46.669300, -23.588200),
-        "Brooklin":                (-46.695700, -23.619600, -46.693100, -23.617000),
-        "Pinheiros":               (-46.693800, -23.568300, -46.691200, -23.565700),
-        "Alphaville Industrial":   (-46.846500, -23.492600, -46.843900, -23.490000),
+        "Faria Lima":              (-46.694992, -23.568424, -46.692392, -23.565824),
+        "Itaim Bibi":              (-46.676300, -23.583800, -46.673700, -23.581200),
+        "Av. Paulista (Trecho 1)": (-46.651300, -23.564800, -46.648700, -23.562200),
+        "Av. Paulista (Trecho 2)": (-46.647970, -23.568537, -46.645370, -23.565936),
+        "Vila Olímpia":            (-46.681300, -23.592800, -46.678700, -23.590200),
+        "Vila Nova Conceição":     (-46.673848, -23.592989, -46.671248, -23.590389),
+        "Brooklin":                (-46.692421, -23.609811, -46.689821, -23.607211),
+        "Pinheiros":               (-46.690646, -23.567815, -46.688046, -23.565215),
+        "Alphaville Industrial":   (-46.851441, -23.499544, -46.848841, -23.496944),
+        "Inter-Zone Corridor":     (-46.687646, -23.590484, -46.685046, -23.587884),
     }
 
     def _apply_search_preset():
