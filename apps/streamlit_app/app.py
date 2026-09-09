@@ -22,6 +22,7 @@ import requests
 from pathlib import Path
 import tempfile
 import shutil
+from concurrent.futures import ThreadPoolExecutor, as_completed
 
 # ========================= LANGUAGE / i18n =========================
 # Only static UI copy (labels, headers, captions, button text, messages) is
@@ -270,6 +271,10 @@ TR = {
     "search.processing": {"en": "Processing", "pt": "Processando"},
     "search.satellite_tiles": {"en": "satellite tiles...", "pt": "tiles de satélite..."},
     "search.progress": {"en": "Progress:", "pt": "Progresso:"},
+    "search.failed_downloads": {
+        "en": "tile(s) could not be downloaded (network hiccup) and were skipped.",
+        "pt": "tile(s) não puderam ser baixados (falha de rede) e foram ignorados.",
+    },
     "search.found": {"en": "helipad(s) found", "pt": "heliponto(s) encontrado(s)"},
     "search.in_region": {"en": "in the region!", "pt": "na região!"},
     "search.download": {"en": "⬇️ Download", "pt": "⬇️ Baixar"},
@@ -1848,7 +1853,7 @@ def download_tile(z, x, y, temp_dir):
         if r.status_code == 200 and len(r.content) > 2000:
             path.write_bytes(r.content)
             return path
-    except:
+    except requests.RequestException:
         pass
     return None
 
@@ -2396,11 +2401,31 @@ with tab2:
                 progress = st.progress(0, f"{t('search.progress')} ")
 
                 detected_tiles = []
+                failed_downloads = 0
 
-                for i, (z, x, y) in enumerate(jobs):
-                    progress.progress((i+1)/len(jobs), f"{t('search.progress')} {i+1}/{len(jobs)} tiles")
+                # Downloads de rede são I/O-bound (esperando resposta do
+                # servidor ESRI), então rodar vários em paralelo com threads
+                # reduz bastante o tempo total de espera — mesma estratégia
+                # já usada em geospatial_image_collection.ipynb. A inferência
+                # do YOLO continua sequencial logo em seguida, tile a tile.
+                tile_paths = {}
+                with ThreadPoolExecutor(max_workers=8) as executor:
+                    future_to_job = {
+                        executor.submit(download_tile, z, x, y, temp_dir): (z, x, y)
+                        for z, x, y in jobs
+                    }
+                    for i, future in enumerate(as_completed(future_to_job)):
+                        z, x, y = future_to_job[future]
+                        progress.progress((i + 1) / len(jobs), f"{t('search.progress')} {i+1}/{len(jobs)} tiles")
+                        tile_path = future.result()
+                        if tile_path:
+                            tile_paths[(z, x, y)] = tile_path
+                        else:
+                            failed_downloads += 1
 
-                    tile_path = download_tile(z, x, y, temp_dir)
+                progress.progress(1.0, t("search.progress"))
+                for z, x, y in jobs:
+                    tile_path = tile_paths.get((z, x, y))
                     if not tile_path:
                         continue
 
@@ -2409,6 +2434,9 @@ with tab2:
 
                     if has_detection:
                         detected_tiles.append((result_img, f"tile_z{z}_x{x}_y{y}.jpg"))
+
+                if failed_downloads:
+                    st.caption(f"⚠️ {failed_downloads}/{len(jobs)} {t('search.failed_downloads')}")
 
                 if detected_tiles:
                     st.success(f"🎯 **{len(detected_tiles)} {t('search.found')}** {t('search.in_region')}")
