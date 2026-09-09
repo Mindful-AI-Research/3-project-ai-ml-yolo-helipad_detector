@@ -2378,17 +2378,28 @@ with tab1:
 with tab2:
     st.subheader(t("search.subheader"))
 
-    # Caixas pequenas (~24-25 tiles no zoom 19) centradas em corredores
+    # Caixas pequenas (~20-25 tiles no zoom 19) centradas em corredores
     # corporativos de SP com taxa de deteccao ja comprovada na validacao de
     # campo (Secao 9 do relatorio) -- pensadas para demo ao vivo rapida, sem
     # disparar o throttle de CPU do Streamlit Cloud como uma busca grande faz.
+    #
+    # NOTA: o relatorio de validacao de campo lista 10 regioes no total.
+    # "Inter-Zone Corridor" fica de fora daqui de proposito -- e descrito
+    # como um corredor ENTRE zonas, nao um bairro com centro fixo, e nao
+    # temos uma coordenada de referencia confiavel para ele (a fonte oficial
+    # seria src/geospatial/sp_neighborhoods_bbox.csv, que nao esta disponivel
+    # aqui). Adicionar as outras 9 primeiro; Inter-Zone Corridor pode entrar
+    # depois se esse CSV for fornecido.
     SEARCH_PRESETS = {
-        "Faria Lima":    (-46.690400, -23.576000, -46.687800, -23.573400),
-        "Itaim Bibi":    (-46.676300, -23.586300, -46.673700, -23.583700),
-        "Av. Paulista":  (-46.657800, -23.562600, -46.655200, -23.560000),
-        "Vila Olímpia":  (-46.690300, -23.596800, -46.687700, -23.594200),
-        "Brooklin":      (-46.695700, -23.619600, -46.693100, -23.617000),
-        "Pinheiros":     (-46.693800, -23.568300, -46.691200, -23.565700),
+        "Faria Lima":              (-46.690400, -23.576000, -46.687800, -23.573400),
+        "Itaim Bibi":              (-46.676300, -23.586300, -46.673700, -23.583700),
+        "Av. Paulista (Trecho 1)": (-46.657800, -23.562600, -46.655200, -23.560000),
+        "Av. Paulista (Trecho 2)": (-46.650300, -23.574300, -46.647700, -23.571700),
+        "Vila Olímpia":            (-46.690300, -23.596800, -46.687700, -23.594200),
+        "Vila Nova Conceição":     (-46.671900, -23.590800, -46.669300, -23.588200),
+        "Brooklin":                (-46.695700, -23.619600, -46.693100, -23.617000),
+        "Pinheiros":               (-46.693800, -23.568300, -46.691200, -23.565700),
+        "Alphaville Industrial":   (-46.846500, -23.492600, -46.843900, -23.490000),
     }
 
     def _apply_search_preset():
