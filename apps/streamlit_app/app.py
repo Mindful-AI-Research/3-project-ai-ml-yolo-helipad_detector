@@ -250,6 +250,12 @@ TR = {
 
     # ---- Tab 2: Search by Region ----
     "search.subheader": {"en": "🔎 Search for Helipads in a Region", "pt": "🔎 Buscar Helipontos em uma Região"},
+    "search.preset_label": {"en": "Jump to a known corridor (optional)", "pt": "Ir direto para um corredor conhecido (opcional)"},
+    "search.preset_custom": {"en": "Custom coordinates", "pt": "Coordenadas personalizadas"},
+    "search.preset_help": {
+        "en": "Small (~25-tile) boxes centered on corporate corridors with a confirmed detection rate in the field validation (Section 9) — good for a quick live demo without triggering Streamlit's throttle. Approximate public coordinates, not a guaranteed hit.",
+        "pt": "Caixas pequenas (~25 tiles) centradas em corredores corporativos com taxa de detecção confirmada na validação de campo (Seção 9) — boas para uma demo ao vivo rápida, sem disparar o throttle do Streamlit. Coordenadas públicas aproximadas, não é garantia de acerto.",
+    },
     "search.caption": {
         "en": "Use the coordinates of the desired region (e.g. Downtown São Paulo)",
         "pt": "Use as coordenadas da região desejada (ex.: Centro de São Paulo)",
@@ -2372,14 +2378,44 @@ with tab1:
 with tab2:
     st.subheader(t("search.subheader"))
 
+    # Caixas pequenas (~24-25 tiles no zoom 19) centradas em corredores
+    # corporativos de SP com taxa de deteccao ja comprovada na validacao de
+    # campo (Secao 9 do relatorio) -- pensadas para demo ao vivo rapida, sem
+    # disparar o throttle de CPU do Streamlit Cloud como uma busca grande faz.
+    SEARCH_PRESETS = {
+        "Faria Lima":    (-46.690400, -23.576000, -46.687800, -23.573400),
+        "Itaim Bibi":    (-46.676300, -23.586300, -46.673700, -23.583700),
+        "Av. Paulista":  (-46.657800, -23.562600, -46.655200, -23.560000),
+        "Vila Olímpia":  (-46.690300, -23.596800, -46.687700, -23.594200),
+        "Brooklin":      (-46.695700, -23.619600, -46.693100, -23.617000),
+        "Pinheiros":     (-46.693800, -23.568300, -46.691200, -23.565700),
+    }
+
+    def _apply_search_preset():
+        choice = st.session_state.get("search_preset_choice")
+        if choice and choice in SEARCH_PRESETS:
+            lon_min_p, lat_min_p, lon_max_p, lat_max_p = SEARCH_PRESETS[choice]
+            st.session_state["search_lon_min"] = lon_min_p
+            st.session_state["search_lat_min"] = lat_min_p
+            st.session_state["search_lon_max"] = lon_max_p
+            st.session_state["search_lat_max"] = lat_max_p
+
+    st.selectbox(
+        t("search.preset_label"),
+        options=[t("search.preset_custom")] + list(SEARCH_PRESETS.keys()),
+        key="search_preset_choice",
+        on_change=_apply_search_preset,
+        help=t("search.preset_help"),
+    )
+
     with st.expander(t("search.caption"), expanded=True):
         col_a, col_b = st.columns(2)
         with col_a:
-            lon_min = st.number_input(t("search.lon_min"), value=-46.6583, format="%.6f")
-            lat_min = st.number_input(t("search.lat_min"), value=-23.5827, format="%.6f")
+            lon_min = st.number_input(t("search.lon_min"), value=-46.6583, format="%.6f", key="search_lon_min")
+            lat_min = st.number_input(t("search.lat_min"), value=-23.5827, format="%.6f", key="search_lat_min")
         with col_b:
-            lon_max = st.number_input(t("search.lon_max"), value=-46.6311, format="%.6f")
-            lat_max = st.number_input(t("search.lat_max"), value=-23.5536, format="%.6f")
+            lon_max = st.number_input(t("search.lon_max"), value=-46.6311, format="%.6f", key="search_lon_max")
+            lat_max = st.number_input(t("search.lat_max"), value=-23.5536, format="%.6f", key="search_lat_max")
 
     zoom = st.slider(t("search.zoom"), 16, 20, 19)
     search_btn = st.button(t("search.button"), type="primary", use_container_width=True)
