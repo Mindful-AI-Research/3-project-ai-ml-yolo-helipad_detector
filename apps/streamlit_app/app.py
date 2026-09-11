@@ -281,6 +281,11 @@ TR = {
         "en": "tile(s) could not be downloaded (network hiccup) and were skipped.",
         "pt": "tile(s) não puderam ser baixados (falha de rede) e foram ignorados.",
     },
+    "search.blank_skipped": {
+        "en": "blank/corrupted tile(s) skipped (partial ESRI download failure).",
+        "pt": "tile(s) vazio(s)/corrompido(s) ignorados (falha parcial no download do ESRI).",
+    },
+    "search.download_all_zip": {"en": "⬇️ Download all as .zip", "pt": "⬇️ Baixar todos em .zip"},
     "search.found": {"en": "helipad(s) found", "pt": "heliponto(s) encontrado(s)"},
     "search.in_region": {"en": "in the region!", "pt": "na região!"},
     "search.download": {"en": "⬇️ Download", "pt": "⬇️ Baixar"},
@@ -1864,6 +1869,17 @@ def download_tile(z, x, y, temp_dir):
     return None
 
 # ========================= DETECTION =========================
+def is_blank_tile(image: Image.Image, threshold: float = 5.0) -> bool:
+    """Detecta tiles quase sem textura -- o sintoma classico de uma falha
+    parcial de download do ESRI (tile fica preto/cinza solido em vez da
+    imagem de satelite de verdade). Um tile real tem bastante variacao de
+    cor entre pixels; um tile vazio ou corrompido fica quase uniforme.
+    Ja documentado como limitacao conhecida no relatorio (Secao 10 e 12.3)
+    -- esta e a implementacao do filtro sugerido la."""
+    arr = np.asarray(image.convert("L"))  # escala de cinza, mais rapido de medir
+    return float(arr.std()) < threshold
+
+
 def detect_helipad(image, model: YOLO, conf: float):
     result = model.predict(source=image, conf=conf, verbose=False)[0]
     plotted = result.plot()[:, :, ::-1]  # BGR -> RGB
@@ -2443,6 +2459,7 @@ with tab2:
 
                 detected_tiles = []
                 failed_downloads = 0
+                blank_skipped = 0
 
                 # Downloads de rede são I/O-bound (esperando resposta do
                 # servidor ESRI), então rodar vários em paralelo com threads
@@ -2471,17 +2488,43 @@ with tab2:
                         continue
 
                     img = Image.open(tile_path)
+
+                    if is_blank_tile(img):
+                        blank_skipped += 1
+                        continue
+
                     result_img, has_detection = detect_helipad(img, model, conf_threshold)
 
                     if has_detection:
                         detected_tiles.append((result_img, f"tile_z{z}_x{x}_y{y}.jpg"))
 
+                status_bits = []
                 if failed_downloads:
-                    st.caption(f"⚠️ {failed_downloads}/{len(jobs)} {t('search.failed_downloads')}")
+                    status_bits.append(f"⚠️ {failed_downloads}/{len(jobs)} {t('search.failed_downloads')}")
+                if blank_skipped:
+                    status_bits.append(f"🕳️ {blank_skipped}/{len(jobs)} {t('search.blank_skipped')}")
+                if status_bits:
+                    st.caption(" · ".join(status_bits))
 
                 if detected_tiles:
                     st.success(f"🎯 **{len(detected_tiles)} {t('search.found')}** {t('search.in_region')}")
                     st.caption(t("detection.disclaimer"))
+
+                    if len(detected_tiles) > 1:
+                        zip_buffer = io.BytesIO()
+                        with zipfile.ZipFile(zip_buffer, "w", zipfile.ZIP_DEFLATED) as zf:
+                            for img_array, filename in detected_tiles:
+                                buf = io.BytesIO()
+                                Image.fromarray(img_array).save(buf, format="PNG")
+                                zf.writestr(filename.replace(".jpg", "_detected.png"), buf.getvalue())
+                        zip_buffer.seek(0)
+                        st.download_button(
+                            label=t("search.download_all_zip"),
+                            data=zip_buffer,
+                            file_name="helipad_search_results.zip",
+                            mime="application/zip",
+                            use_container_width=True,
+                        )
 
                     cols = st.columns(3)
                     for idx, (img_array, filename) in enumerate(detected_tiles):
