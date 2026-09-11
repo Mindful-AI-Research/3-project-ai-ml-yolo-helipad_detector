@@ -117,12 +117,12 @@
 
 
 
-
 <!-- ========= START Streamlit BADGE ========= -->
+
 <p align="center" style="margin: 0;">
   <a href="https://helipad-detector.streamlit.app/" rel="noopener noreferrer">
     <img 
-      src="https://img.shields.io/badge/Streamlit%20Repository-Helipad%20Detector-0f172a?style=for-the-badge&logo=github&logoColor=white" 
+      src="https://img.shields.io/badge/Streamlit%20Repository-Helipad%20Detector-0f172a?style=for-the-badge&logo=streamlit&logoColor=white" 
       alt="Streamlit Repository Helipad Detector"
       style="height: 38px; width: auto;"
     />
@@ -130,38 +130,40 @@
 </p>
 <!-- ========= END Streamlit BADGE ========= -->
 
-
 <!-- ========= START React Presentation BADGE ========= -->
-<p align="center" style="margin: 0;">
 
+<p align="center" style="margin: 0;">
 
   <a href="" target="_blank" rel="noopener noreferrer">
     <img
-      src="https://img.shields.io/badge/React%20Presentation-Slides%20and%20Overview-0f766e?style=for-the-badge&logo=jupyter&logoColor=white"
+      src="https://img.shields.io/badge/React%20Presentation-Slides%20and%20Overview-0f766e?style=for-the-badge&logo=react&logoColor=white"
       alt="React Presentation Slides and Overview"
       style="height: 32px; width: auto; margin-right: 8px;"
     />
   </a> 
 <!-- =========End REeact Presentation BADGE ========= -->
 
-<!-- ========= START Data Analysis Report BADGE ========= -->
-  <a href="https://github.com/Mindful-AI-Research/3-project-ai-ml-yolo-helipad_detector/blob/10868aae295980c4ec9bc1071a358fb8def5593c/reports/helipad_detector_full_report/%F0%9F%87%AC%F0%9F%87%A7Helipad_Detector_Full_Report.pdf" target="_blank" rel="noopener noreferrer">
+<!-- ========= START Helipad Detector Relatório Completo. BADGE ========= -->
+
+ <a href="https://github.com/Mindful-AI-Research/3-project-ai-ml-yolo-helipad_detector/blob/f04e36a2198064ee4f5cde21232c5484a8dae406/reports/helipad_detector_full_report/%F0%9F%87%AC%F0%9F%87%A7Helipad_Detector_Full_Report.pdf" target="_blank" rel="noopener noreferrer">
     <img 
-      src="https://img.shields.io/badge/Data%20Analysis-Report%20and%20PDF-134e4a?style=for-the-badge&logo=streamlit&logoColor=white&labelColor=022c22" 
-      alt="Data Analysis Report and PDF"
+      src="https://img.shields.io/badge/Helipad%20Detector-Relat%C3%B3rio%20Completo-134e4a?style=for-the-badge&logo=github&logoColor=white&labelColor=022c22" 
+      alt="Helipad Detector — Relatório Completo"
       style="height: 32px; width: auto;"
     />
   </a>
 
 </p>
-
+<!-- ========= END Helipad Detector Relatório Completo. BADGE ========= -->
 
 <br><br>
 
 #
 
 <br><br>
-<!-- ========= END Data Analysis Report BADGE ========= -->
+
+<!-- =========  BADGES END Helipad Detector -------  ALL  PORESENBTATIONS  BADGES     ========= -->
+
 
 
 
