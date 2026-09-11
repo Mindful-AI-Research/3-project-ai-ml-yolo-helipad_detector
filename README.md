@@ -116,10 +116,11 @@
 
 
 <!-- ========= START Streamlit BADGE ========= -->
+
 <p align="center" style="margin: 0;">
   <a href="https://helipad-detector-sp.streamlit.app/" rel="noopener noreferrer">
     <img 
-      src="https://img.shields.io/badge/Streamlit%20Repository-Helipad%20Detector-0f172a?style=for-the-badge&logo=github&logoColor=white" 
+      src="https://img.shields.io/badge/Streamlit%20Repository-Helipad%20Detector-0f172a?style=for-the-badge&logo=streamlit&logoColor=white" 
       alt="Streamlit Repository Helipad Detector"
       style="height: 38px; width: auto;"
     />
@@ -127,14 +128,13 @@
 </p>
 <!-- ========= END Streamlit BADGE ========= -->
 
-
 <!-- ========= START React Presentation BADGE ========= -->
-<p align="center" style="margin: 0;">
 
+<p align="center" style="margin: 0;">
 
   <a href="https://mellow-salamander-f81315.netlify.app/" target="_blank" rel="noopener noreferrer">
     <img
-      src="https://img.shields.io/badge/React%20Presentation-Slides%20and%20Overview-0f766e?style=for-the-badge&logo=jupyter&logoColor=white"
+      src="https://img.shields.io/badge/React%20Presentation-Slides%20and%20Overview-0f766e?style=for-the-badge&logo=react&logoColor=white"
       alt="React Presentation Slides and Overview"
       style="height: 32px; width: auto; margin-right: 8px;"
     />
@@ -143,9 +143,10 @@
 
 
 <!-- ========= START Helipad Detector Full Report BADGE ========= -->
+
   <a href="https://github.com/Mindful-AI-Research/3-project-ai-ml-yolo-helipad_detector/blob/f04e36a2198064ee4f5cde21232c5484a8dae406/reports/helipad_detector_full_report/%F0%9F%87%AC%F0%9F%87%A7Helipad_Detector_Full_Report.pdf" target="_blank" rel="noopener noreferrer">
     <img 
-      src="https://img.shields.io/badge/Helipad%20Detector-Full%20Report-134e4a?style=for-the-badge&logo=streamlit&logoColor=white&labelColor=022c22" 
+      src="https://img.shields.io/badge/Helipad%20Detector-Full%20Report-134e4a?style=for-the-badge&logo=github&logoColor=white&labelColor=022c22" 
       alt="Helipad Detector Full Report"
       style="height: 32px; width: auto;"
     />
@@ -154,14 +155,14 @@
 </p>
 <!-- ========= END Helipad Detector Full Report BADGE ========= -->
 
-
-
 <br><br>
 
 #
 
 <br><br>
-<!-- ========= END Data Analysis Report BADGE ========= -->
+
+<!-- ========= BADGES  END ALLL PRESENTATIONS ------ BADGES  ========= -->
+
 
 
 <!-- 🚧<!-- ========= START 🎥 **DEMO** ========= 
