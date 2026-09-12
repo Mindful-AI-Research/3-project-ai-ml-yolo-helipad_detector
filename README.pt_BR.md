@@ -242,9 +242,9 @@ O repositório final representa a evolução do projeto a partir de seu protóti
 <!-- ========= START NOTE ========= -->
 > [!WARNING]
 >
-> ⚠️ Projects may be publicly shared when permitted.  
-> The focus is on applied, hands-on learning with real datasets in AI governance and security contexts.  
-> All sensitive content remains protected in private repositories when required.
+> ⚠️ Os projetos podem ser compartilhados publicamente quando permitido.  
+> O foco está no aprendizado aplicado e prático, utilizando datasets reais em contextos de governança e segurança de IA.  
+> Todo conteúdo sensível permanece protegido em repositórios privados quando necessário.
 >
 
 <br><br>
@@ -257,62 +257,23 @@ O repositório final representa a evolução do projeto a partir de seu protóti
 <!-- =========START MAIN REPO =Projects REFERENCES ========= -->
 > [!TIP]
 >
-> This repository is part of the flagship ecosystem:
+> Este repositório faz parte do ecossistema principal:
 >
-> ## 🧠 AI/ML ✦ Neural Networks  ✦ Hub   ✦
-> 
-> Explore the complete collection of projects, notebooks, research materials, analyses, and interactive applications available in the central repository:
+> ## 🧠 IA/ML ✦ Redes Neurais ✦ Hub ✦
 >
-> 🔗 **[AI/ML ✦ Neural Networks ✦ Hub](https://github.com/Mindful-AI-Research/1-ai-ml_neural-networks_hub)**
+> Explore a coleção completa de projetos, notebooks, materiais de pesquisa, análises e aplicações interativas disponível no repositório central:
 >
-> #
->
-> ###  Related Project in this Series:
->
-> 🔗 **[AI/ML Project 1 · Computer Vision · EMNIST Vision Intelligence](https://github.com/Mindful-AI-Assistants/2-project-ai-ml-emnist-vision-intelligence)**
->
-> A deep learning system for handwritten character recognition using PyTorch and Streamlit.
-
-
-<br><br><br><br>
-<!-- =========END MAIN REPO =Projects REFERENCES ========= -->
-
-
-<!-- ========= START NOTE ========= -->
-> [!WARNING]
->
-> ⚠️ Projects may be publicly shared when permitted.  
-> The focus is on applied, hands-on learning with real datasets in AI governance and security contexts.  
-> All sensitive content remains protected in private repositories when required.
->
-
-<br><br>
-
-#
-
-<br><br>
-<!-- ========= END NOTE ========= -->
-
-<!-- =========START MAIN REPO =Projects REFERENCES ========= -->
-> [!TIP]
->
-> This repository is part of the flagship ecosystem:
->
-> ## 🧠 AI/ML ✦ Neural Networks  ✦ Hub   ✦
-> 
-> Explore the complete collection of projects, notebooks, research materials, analyses, and interactive applications available in the central repository:
->
-> 🔗 **[AI/ML ✦ Neural Networks ✦ Hub](https://github.com/Mindful-AI-Research/1-ai-ml_neural-networks_hub)**
+> 🔗 **[IA/ML ✦ Redes Neurais ✦ Hub](https://github.com/Mindful-AI-Research/1-ai-ml_neural-networks_hub)**
 >
 > #
 >
-> ###  Related Project in this Series:
+> ### Projeto Relacionado nesta Série:
 >
-> 🔗 **[AI/ML Project 1 · Computer Vision · EMNIST Vision Intelligence](https://github.com/Mindful-AI-Assistants/2-project-ai-ml-emnist-vision-intelligence)**
+> 🔗 **[Projeto IA/ML 1 · Visão Computacional · EMNIST Vision Intelligence](https://github.com/Mindful-AI-Assistants/2-project-ai-ml-emnist-vision-intelligence)**
 >
-> A deep learning system for handwritten character recognition using PyTorch and Streamlit.
-
-
+> Um sistema de deep learning para reconhecimento de caracteres manuscritos utilizando PyTorch e Streamlit.
+>
+>
 <br><br><br><br>
 <!-- =========END MAIN REPO =Projects REFERENCES ========= -->
 
