@@ -98,29 +98,28 @@
 <!-- ========= END 🇧🇷 Top CommtributorsE  ========= -->
 
 
-<!-- ======================================= Start Institutional INFO - IA WEEK and PHD SUBMISSIION =========================================== --> 
+<!-- ======================================= Start Institutional INFO - AI WEEK and PhD SUBMISSION =========================================== --> 
 [**Institution:**]() Pontifical Catholic University of São Paulo (PUC-SP) <br>
 [**School:**]() FACEI — Computer Science Department <br>
 [**Course:**]() BSc in Human-Centered AI & Data Science <br>
 [**Subject:**]() Machine Learning / Computer Vision — YOLO <br>
 [**Project:**]() Object Detection in Satellite Images with YOLO <br>
-**Author:** [Fabiana ⚡️ Campanari](https://linktr.ee/fabianacampanari)  
+**Author:** [Fabiana ⚡️ Campanari](https://linktr.ee/fabianacampanari) <br>
 **Collaborators:** [Carlos Antonio dos Santos Roth Gorham]() · [Pedro Vyctor Almeida](https://github.com/ppvyctor/Helipoint-Detector) <br>
-
 
 # <br>
 
 ### [Contribution Attribution]()
 
-This project evolved from an initial foundation of dataset development, model training, and a web prototype into a substantially expanded end-to-end computer vision and geospatial intelligence platform. The three credited contributors participated at different stages and across different technical areas, with distinct scopes, responsibilities, and types of contribution. <br><br>
+This project evolved from an initial foundation involving dataset development, model training, and a web prototype into an end-to-end computer vision and geospatial intelligence platform. The three credited contributors participated at different stages of the project, with contributions spanning distinct technical areas and responsibilities. <br><br>
 
 * [Pedro Vyctor Almeida](https://github.com/ppvyctor/Helipoint-Detector) established the initial foundation of the project, including the original annotated dataset, the initial web application prototype (`Site.py`), and the first training experiment (`exp1`). His prototype consisted of a compact Streamlit application with two main functions: image upload and regional satellite-image search. The original work is documented in his [Helipoint Detector repository](https://github.com/ppvyctor/Helipoint-Detector). <br><br>
 
 * [**Carlos Antonio dos Santos Roth Gorham**]() proposed the concept of geospatial automation for helipad discovery and contributed to the initiation of this implementation direction. <br><br>
 
-* [Fabiana ⚡️ Campanari](https://linktr.ee/fabianacampanari) carried out the subsequent substantial development, expansion, integration, evaluation, and consolidation of the final **Helipad Detector** platform. Her work included: <br>
+* [Fabiana ⚡️ Campanari](https://linktr.ee/fabianacampanari) contributed to the subsequent development, expansion, integration, evaluation, and consolidation of the final **Helipad Detector** platform. Her work included: <br>
 
-  * development and expansion of the geospatial scraping and geocoding automation;
+  * development and expansion of geospatial scraping and geocoding automation;
   * conversion of raw geographic coordinates into decimal coordinates and bounding boxes;
   * integration of satellite imagery acquisition and geographic search workflows;
   * execution of experiments `exp2` and `exp3`;
@@ -142,9 +141,9 @@ This project evolved from an initial foundation of dataset development, model tr
   * development of the project's presentation layer, visual storytelling, interactive elements, and soundtrack integration;
   * market research and comparative analysis of helicopter-presence and activity indicators, including the international comparative ranking used to contextualize the project's practical relevance. <br><br>
 
-The final repository therefore represents a substantial expansion beyond the original prototype, covering not only model inference but also data discovery, geospatial automation, experimentation, benchmarking, comparative model evaluation, field validation, visualization, governance, documentation, presentation, and applied contextual research.
+The final repository represents the evolution of the project from its initial prototype into an integrated computer vision and geospatial intelligence platform, encompassing data discovery, geospatial automation, experimentation, model benchmarking, comparative evaluation, field validation, visualization, governance, documentation, presentation, and applied contextual research.
 
-**All three contributors remain credited for their respective contributions. This note documents the project's development history and the distribution of technical responsibilities across its different stages, without implying equivalence in implementation scope, development volume, or the nature of the activities performed.**
+**All three contributors remain credited for their respective contributions. This attribution is provided to transparently document the project's development history, the evolution of its implementation, and the technical areas contributed by each participant.**
 
 
 <br>
@@ -156,7 +155,6 @@ The final repository therefore represents a substantial expansion beyond the ori
 
 
 <!-- ========= START Streamlit BADGE ========= -->
-
 <p align="center" style="margin: 0;">
   <a href="https://helipad-detector-sp.streamlit.app/" rel="noopener noreferrer">
     <img 
@@ -169,7 +167,6 @@ The final repository therefore represents a substantial expansion beyond the ori
 <!-- ========= END Streamlit BADGE ========= -->
 
 <!-- ========= START React Presentation BADGE ========= -->
-
 <p align="center" style="margin: 0;">
 
   <a href="https://mellow-salamander-f81315.netlify.app/" target="_blank" rel="noopener noreferrer">
@@ -181,9 +178,7 @@ The final repository therefore represents a substantial expansion beyond the ori
   </a> 
 <!-- =========End REeact Presentation BADGE ========= -->
 
-
 <!-- ========= START Helipad Detector Full Report BADGE ========= -->
-
   <a href="https://github.com/Mindful-AI-Research/3-project-ai-ml-yolo-helipad_detector/blob/c912be5be23e6f11f77a4125d1ef774e3b5e6310/reports/helipad_detector_full_report/%F0%9F%87%AC%F0%9F%87%A7Helipad_Detector_Full_Report.pdf" target="_blank" rel="noopener noreferrer">
     <img 
       src="https://img.shields.io/badge/Helipad%20Detector-Full%20Report-134e4a?style=for-the-badge&logo=github&logoColor=white&labelColor=022c22" 
@@ -200,7 +195,6 @@ The final repository therefore represents a substantial expansion beyond the ori
 #
 
 <br><br>
-
 <!-- ========= BADGES  END ALLL PRESENTATIONS ------ BADGES  ========= -->
 
 
