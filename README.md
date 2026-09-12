@@ -286,43 +286,50 @@ The final repository represents the evolution of the project from its initial pr
 <!-- ========= START Overview ========= -->
 ## [Overview]()
 
-[**Helipad Detector**]() is an end-to-end Artificial Intelligence and Computer Vision platform designed to automatically detect and map rooftop helipads from satellite imagery. The project focuses on São Paulo, Brazil, a distinctive urban environment recognized for having one of the world's largest helicopter fleets, with approximately **2,200 takeoffs and landings per day** and operational peaks reaching **one movement every 45 seconds**. The city also operates **HELICONTROL**, a dedicated helicopter air traffic control system designed to manage this exceptionally dense urban air mobility environment.
+[**Helipad Detector**]() is an end-to-end Artificial Intelligence and Computer Vision platform designed to automatically detect and map **potential rooftop helipads** from satellite imagery. The project transforms geospatial imagery into structured information, enabling the identification of visual patterns compatible with helicopter landing areas and their representation on an interactive map.
 
-These characteristics make São Paulo a compelling real-world setting for AI-based geospatial intelligence. By transforming satellite imagery into structured spatial information, the project demonstrates how Computer Vision can support automated infrastructure mapping, urban analysis, and data-driven decision-making for future Smart City applications.
+The project focuses on [**São Paulo, Brazil**](https://www.prefeitura.sp.gov.br/), an urban environment particularly relevant to this type of application. The city is widely recognized for having one of the world's largest urban helicopter fleets. Industry sources report more than **400 registered helicopters**, alongside a network of more than **260 helipads**; operational estimates vary depending on the period and geographic scope, reaching approximately **2,200 takeoffs and landings per day** across the metropolitan area. [São Paulo: the city of helicopters — Folha de S.Paulo](https://www1.folha.uol.com.br/tv/2026/04/sao-paulo-a-cidade-dos-helicopteros.shtml) · [São Paulo has the world's largest helicopter fleet — Exame](https://exame.com/casual/sao-paulo-tem-a-maior-frota-de-helicopteros-do-mundo-e-a-segunda-em-jatos/) · [Helicopter fleet data in São Paulo — Avantto](https://www.avantto.com.br/blog/business/parabens-sao-paulo/)
 
-The platform implements a complete end-to-end AI workflow, including public data collection, geocoding, satellite imagery acquisition, manual annotation with Roboflow, YOLOv8n / YOLO11n model training, and real-world validation across more than **7,900 satellite tiles**. Its interactive dashboard provides transparent access to the pipeline, datasets, model performance, and documented limitations, reinforcing principles of reproducibility, explainability, and Responsible AI.
+To manage this highly complex airspace environment, the city relies on [**HELICONTROL**](https://www.fab.mil.br/noticias/imprime/42060/CONTROLE%20DO%20ESPA%C3%87O%20A%C3%89REO%20-%20HELICONTROL:%20Seguran%C3%A7a%20e%20fluidez%20no%20controle%20de%20helic%C3%B3pteros%20em%20S%C3%A3o%20Paulo), a service developed by the [**Brazilian Air Force (FAB)**](https://www.fab.mil.br/) through the [**Department of Airspace Control (DECEA)**](https://www.decea.mil.br/). Operating within the context of the Congonhas Control Tower, the system coordinates helicopter traffic and contributes to the safe coexistence of helicopter operations with regular aircraft traffic. [DECEA operates helicopter air traffic control — FAB](https://www.fab.mil.br/noticias/imprime/42044/SEGURAN%C3%87A%20DE%20VOO%20-%20DECEA%20atua%20no%20Controle%20de%20Tr%C3%A1fego%20A%C3%A9reo%20de%20Helic%C3%B3pteros%20do%20Brasil) · [CRCEA-SE — DECEA](https://www.decea.mil.br/?i=unidades&p=crcea-se)
 
+These conditions make São Paulo a challenging real-world setting for AI-based geospatial intelligence applications. **Helipad Detector does not perform air traffic control** and does not replace operational systems such as HELICONTROL. Its purpose is to support infrastructure mapping by identifying, from satellite imagery, locations with visual characteristics compatible with helipads and organizing this information as geospatial data for urban analysis, academic research, and future Smart City applications.
+
+The platform implements a complete AI workflow, including public data collection, geocoding, satellite imagery acquisition, manual annotation with [**Roboflow**](https://roboflow.com/), training with [**Ultralytics YOLOv8**](https://docs.ultralytics.com/models/yolov8/) and [**Ultralytics YOLO11**](https://docs.ultralytics.com/models/yolo11/), as well as real-world validation across more than **7,900 satellite tiles**. Its interactive dashboard provides access to the pipeline, datasets, performance results, and identified limitations, reinforcing principles of reproducibility, explainability, and Responsible AI.
 
 <br><br>
 
-
+<!-- ========= START Contexto Global  ========= -->
 ## [Global Helicopter Traffic Context — Why São Paulo?]()
 
+São Paulo's selection is not incidental. Major metropolitan areas such as New York, Tokyo, Rio de Janeiro, London, Mexico City, and Bogotá use helicopters for varying combinations of executive transportation, tourism, medical emergencies, public safety, government services, and specialized operations.
 
-São Paulo's selection as the project's real-world setting is not incidental. The table below positions the city's rooftop helicopter activity in relation to other major global helicopter hubs, using a relative index that combines fleet size and operational density:
+São Paulo, however, stands out through the combination of a large urban helicopter fleet, high building density, a significant presence of rooftop helipads, and a daily operational volume that requires specialized management. The existence of **HELICONTROL** demonstrates the practical complexity of this aerial mobility environment and reinforces the relevance of using the city as a case study for the automated detection of potential helipads.
 
 <br>
 
-| [Rank]() | [City]() | [Country]() | [Main Indicator]() | [Relative Index]() | [Estimated Fleet]() <sub>(Helicopters)</sub> | [Highlight]() |
-|:---:|---|---|---|:---:|:---:|---|
-| [**1st**]() | **São Paulo** | 🇧🇷 Brazil | Largest fleet | **27.7%** | 400+ | ~2,200 daily landings/takeoffs across the metropolitan area |
-| [**2nd**]() | **New York** | 🇺🇸 USA | Fleet + intense urban traffic | **25.5%** | — | Strong executive, tourist, and transport activity |
-| [**3rd**]() | **Tokyo** | 🇯🇵 Japan | Large fleet | **23.9%** | — | Corporate, emergency, and transport operations |
-| [**4th**]() | **Rio de Janeiro** | 🇧🇷 Brazil | Fleet + offshore operations | **22.8%** | — | Significant activity associated with the oil and gas sector |
-| [**5th**]() | **London** | 🇬🇧 United Kingdom | Executive traffic | **21.3%** | — | Strong corporate market and urban heliport infrastructure |
-| [**6th**]() | **Belo Horizonte** | 🇧🇷 Brazil | Large fleet | **20.2%** | — | Strong executive and corporate aviation activity |
-| [**7th**]() | **Santiago** | 🇨🇱 Chile | Large fleet | **20.1%** | — | Executive aviation and special operations |
-| [**8th**]() | **Mexico City** | 🇲🇽 Mexico | Large fleet | **19.8%** | — | Executive transport and government operations |
-| [**9th**]() | **Bogotá** | 🇨🇴 Colombia | Large fleet | **19.1%** | — | Executive, emergency, and special operations |
-| [**10th**]() | **Beijing** | 🇨🇳 China | Large fleet | **13.6%** | — | Executive, governmental, and special operations |
+| City                                                                                                | Country             | Helicopter Air Mobility Context                                                            | Reference Source                                                                                       |
+| --------------------------------------------------------------------------------------------------- | ------------------- | ------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------ |
+| [**São Paulo**](https://www1.folha.uol.com.br/tv/2026/04/sao-paulo-a-cidade-dos-helicopteros.shtml) | 🇧🇷 Brazil         | More than 400 registered helicopters, over 260 helipads, and high daily operational volume | [Folha de S.Paulo](https://www1.folha.uol.com.br/tv/2026/04/sao-paulo-a-cidade-dos-helicopteros.shtml) |
+| [New York](https://www.nyc.gov/site/edc/index.page)                                                 | 🇺🇸 United States  | Tourist, executive, medical, and urban mobility operations                                 | [NYC Economic Development Corporation](https://www.nyc.gov/site/edc/index.page)                        |
+| [Tokyo](https://www.mlit.go.jp/en/)                                                                 | 🇯🇵 Japan          | Corporate, emergency, security, and specialized transport operations                       | [Ministry of Land, Infrastructure, Transport and Tourism](https://www.mlit.go.jp/en/)                  |
+| [Rio de Janeiro](https://www.gov.br/anac/pt-br)                                                     | 🇧🇷 Brazil         | Executive aviation, urban transport, and offshore-related operations                       | [ANAC](https://www.gov.br/anac/pt-br)                                                                  |
+| [London](https://londonheliport.co.uk/)                                                             | 🇬🇧 United Kingdom | Executive aviation market and urban heliport infrastructure                                | [London Heliport](https://londonheliport.co.uk/)                                                       |
+| [Belo Horizonte](https://www.gov.br/anac/pt-br)                                                     | 🇧🇷 Brazil         | Corporate operations and executive aviation                                                | [ANAC](https://www.gov.br/anac/pt-br)                                                                  |
+| [Santiago](https://www.dgac.gob.cl/)                                                                | 🇨🇱 Chile          | Executive, corporate, and specialized operations                                           | [DGAC Chile](https://www.dgac.gob.cl/)                                                                 |
+| [Mexico City](https://www.gob.mx/afac)                                                              | 🇲🇽 Mexico         | Executive transport, government, and security operations                                   | [AFAC Mexico](https://www.gob.mx/afac)                                                                 |
+| [Bogotá](https://www.aerocivil.gov.co/)                                                             | 🇨🇴 Colombia       | Executive, emergency, and special-service operations                                       | [Aerocivil Colombia](https://www.aerocivil.gov.co/)                                                    |
+| [Beijing](https://www.caac.gov.cn/EN/)                                                              | 🇨🇳 China          | Government, executive, and specialized service operations                                  | [CAAC China](https://www.caac.gov.cn/EN/)                                                              |
 
 <br><br>
 
 > [!TIP]
-> **Relative Index** represents a comparative measure of helicopter presence and traffic, combining fleet size and operational density. São Paulo's estimated **400+ helicopters** and approximately **2,200 daily landings/takeoffs** — cited in the Overview above — place it at the top of this comparative ranking. This concentration of helicopter activity is precisely why the project focuses on São Paulo rather than a city with sparser or already extensively mapped helipad infrastructure.
+> São Paulo is the focus of **Helipad Detector** because of its combination of high urban density, extensive building concentration, rooftop helipad infrastructure, and intensive helicopter traffic. The project uses this context to demonstrate how Computer Vision and satellite data can support automated urban infrastructure mapping. Model detections represent **visual candidates** and do not constitute regulatory, operational, or aeronautical confirmation of the existence of a helipad.
 
-<br><br>
+<br><br><br>
+<!-- ========= END Contexto Global  ========= -->
 
+
+<!-- ======== START Key Features  ========= -->
 ## [Key Features]()
 
 [-]() End-to-end Artificial Intelligence and Computer Vision pipeline <br>
@@ -353,7 +360,7 @@ São Paulo's selection as the project's real-world setting is not incidental. Th
 #
 
 <br><br>
-<!-- ========= END Overview ========= -->
+<!-- ========= END Key Features ========= -->
 
  
 <!-- ========= START 🎥 **DEMO** ========= -->
