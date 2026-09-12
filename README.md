@@ -105,14 +105,10 @@
 [**Subject:**]() Machine Learning / Computer Vision — YOLO <br>
 [**Project:**]() Object Detection in Satellite Images with YOLO <br>
 **Author:** [Fabiana ⚡️ Campanari](https://linktr.ee/fabianacampanari)  
-**Collaborators:** [Carlos Antonio dos Santos Roth Gorham]() · [Pedro Vyctor Almeida](https://github.com/ppvyctor/Helipoint-Detector)
+**Collaborators:** [Carlos Antonio dos Santos Roth Gorham]() · [Pedro Vyctor Almeida](https://github.com/ppvyctor/Helipoint-Detector) <br>
 
 
-<br>
-
-#
-
-<br>
+# <br>
 
 ### [Contribution Attribution]()
 
