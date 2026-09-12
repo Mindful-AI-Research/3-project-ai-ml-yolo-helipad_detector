@@ -286,11 +286,12 @@ The final repository represents the evolution of the project from its initial pr
 <!-- ========= START Overview ========= -->
 ## [Overview]()
 
-[**Helipad Detector**]() is an end-to-end Artificial Intelligence and Computer Vision platform designed to automatically detect and map rooftop helipads from satellite imagery. The project focuses on São Paulo, Brazil, a unique urban environment with the world's largest helicopter fleet, handling approximately **2,200 takeoffs and landings per day** and reaching **one operation every 45 seconds during peak hours**. The city also operates **HELICONTROL**, a dedicated helicopter air traffic control system created to safely manage this exceptionally dense urban air mobility environment.
+[**Helipad Detector**]() is an end-to-end Artificial Intelligence and Computer Vision platform designed to automatically detect and map rooftop helipads from satellite imagery. The project focuses on São Paulo, Brazil, a distinctive urban environment recognized for having one of the world's largest helicopter fleets, with approximately **2,200 takeoffs and landings per day** and operational peaks reaching **one movement every 45 seconds**. The city also operates **HELICONTROL**, a dedicated helicopter air traffic control system designed to manage this exceptionally dense urban air mobility environment.
 
-These characteristics make São Paulo an ideal real-world benchmark for AI-based geospatial intelligence. By transforming satellite imagery into structured spatial information, the project demonstrates how Computer Vision can automate infrastructure mapping, support urban analysis, and provide decision-support data for future Smart City applications.
+These characteristics make São Paulo a compelling real-world setting for AI-based geospatial intelligence. By transforming satellite imagery into structured spatial information, the project demonstrates how Computer Vision can support automated infrastructure mapping, urban analysis, and data-driven decision-making for future Smart City applications.
 
-The platform implements a complete end-to-end AI workflow, including public data collection, geocoding, satellite imagery acquisition, manual annotation in Roboflow, YOLOv8n/YOLOv11n training, and field validation on more than **7,900** real satellite tiles. The interactive dashboard provides transparent access to the entire pipeline, dataset, model performance, and documented limitations, emphasizing reproducibility, explainability, and Responsible AI principles.
+The platform implements a complete end-to-end AI workflow, including public data collection, geocoding, satellite imagery acquisition, manual annotation with Roboflow, YOLOv8n / YOLO11n model training, and real-world validation across more than **7,900 satellite tiles**. Its interactive dashboard provides transparent access to the pipeline, datasets, model performance, and documented limitations, reinforcing principles of reproducibility, explainability, and Responsible AI.
+
 
 <br><br>
 
