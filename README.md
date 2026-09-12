@@ -105,18 +105,15 @@
 [**Subject:**]() Machine Learning / Computer Vision — YOLO <br>
 [**Project:**]() Object Detection in Satellite Images with YOLO <br>
 **Author:** [Fabiana ⚡️ Campanari](https://linktr.ee/fabianacampanari)  
-**Collaborators:** Carlos Antonio dos Santos Roth Gorham]() · [Pedro Vyctor Almeida](https://github.com/ppvyctor/Helipoint-Detector)
+**Collaborators:** [Carlos Antonio dos Santos Roth Gorham]() · [Pedro Vyctor Almeida](https://github.com/ppvyctor/Helipoint-Detector)
 
 
-<br><br>
+<br>
 
-### [Contribution Attribution]()
+#
 
-This project evolved from an initial dataset, training, and web-prototype foundation into a substantially expanded end-to-end computer vision and geospatial intelligence platform. The three credited contributors participated in different stages and technical areas, with substantially different scopes, responsibilities, and types of contribution. <br> <br>
+<br>
 
--  [Pedro Vyctor Almeida](https://github.com/ppvyctor/Helipoint-Detector) established the initial foundation of the project, including the original annotated dataset, the initial web application prototype (`Site.py`), and the first trainin[g experiment (`exp1`). His prototype consisted of a compact Streamlit application with two main functions: image upload and regional satellite-image search. The original work is documented in his [Helipoint Detector repository](https://github.com/ppvyctor/Helipoint-Detector). <br><br>
-
-- [**Carlos Antonio dos Santos Roth Gorham**]() proposed the concept of geospatial automation for helipad discovery and contributed to the initiation of that implementation direction. <br><br>
 ### [Contribution Attribution]()
 
 This project evolved from an initial foundation of dataset development, model training, and a web prototype into a substantially expanded end-to-end computer vision and geospatial intelligence platform. The three credited contributors participated at different stages and across different technical areas, with distinct scopes, responsibilities, and types of contribution. <br><br>
@@ -125,7 +122,7 @@ This project evolved from an initial foundation of dataset development, model tr
 
 * [**Carlos Antonio dos Santos Roth Gorham**]() proposed the concept of geospatial automation for helipad discovery and contributed to the initiation of this implementation direction. <br><br>
 
-* [Fabiana ⚡️ Campanari](https://linktr.ee/fabianacampanari) carried out the subsequent substantial development, expansion, integration, evaluation, and consolidation of the final **Helipad Detector** platform. Her work included: <br><br>
+* [Fabiana ⚡️ Campanari](https://linktr.ee/fabianacampanari) carried out the subsequent substantial development, expansion, integration, evaluation, and consolidation of the final **Helipad Detector** platform. Her work included: <br>
 
   * development and expansion of the geospatial scraping and geocoding automation;
   * conversion of raw geographic coordinates into decimal coordinates and bounding boxes;
@@ -147,11 +144,12 @@ This project evolved from an initial foundation of dataset development, model tr
   * creation of the interactive React/HTML executive presentation;
   * preparation of the complete bilingual technical reports, guides, documentation, demonstrations, and supporting materials;
   * development of the project's presentation layer, visual storytelling, interactive elements, and soundtrack integration;
-  * market research and comparative analysis of helicopter-presence and activity indicators, including the international comparative ranking used to contextualize the project's practical relevance.  <br><br>
+  * market research and comparative analysis of helicopter-presence and activity indicators, including the international comparative ranking used to contextualize the project's practical relevance. <br><br>
 
 The final repository therefore represents a substantial expansion beyond the original prototype, covering not only model inference but also data discovery, geospatial automation, experimentation, benchmarking, comparative model evaluation, field validation, visualization, governance, documentation, presentation, and applied contextual research.
 
 All three contributors remain credited for their respective contributions. This note documents the project's development history and the distribution of technical responsibilities across its different stages, without implying equivalence in implementation scope, development volume, or the nature of the activities performed.
+
 
 <br>
 
