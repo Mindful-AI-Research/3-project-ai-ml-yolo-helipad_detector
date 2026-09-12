@@ -316,9 +316,9 @@ São Paulo's selection as the project's real-world setting is not incidental. Th
 | [**9th**]() | **Bogotá** | 🇨🇴 Colombia | Large fleet | **19.1%** | — | Executive, emergency, and special operations |
 | [**10th**]() | **Beijing** | 🇨🇳 China | Large fleet | **13.6%** | — | Executive, governmental, and special operations |
 
-<br>
+<br><br>
 
-> [!NOTE]
+> [!TIP]
 > **Relative Index** represents a comparative measure of helicopter presence and traffic, combining fleet size and operational density. São Paulo's estimated **400+ helicopters** and approximately **2,200 daily landings/takeoffs** — cited in the Overview above — place it at the top of this comparative ranking. This concentration of helicopter activity is precisely why the project focuses on São Paulo rather than a city with sparser or already extensively mapped helipad infrastructure.
 
 <br><br>
