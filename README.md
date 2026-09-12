@@ -280,9 +280,10 @@ The final repository represents the evolution of the project from its initial pr
 
 
 <br><br><br><br>
-<!-- =========ENDMAIN REPO =Projects REFERENCES ========= -->
+<!-- =========END MAIN REPO =Projects REFERENCES ========= -->
 
 
+<!-- ========= START Overview ========= -->
 ## [Overview]()
 
 [**Helipad Detector**]() is an end-to-end Artificial Intelligence and Computer Vision platform designed to automatically detect and map rooftop helipads from satellite imagery. The project focuses on São Paulo, Brazil, a unique urban environment with the world's largest helicopter fleet, handling approximately **2,200 takeoffs and landings per day** and reaching **one operation every 45 seconds during peak hours**. The city also operates **HELICONTROL**, a dedicated helicopter air traffic control system created to safely manage this exceptionally dense urban air mobility environment.
@@ -351,6 +352,7 @@ São Paulo's choice as the project's real-world setting is not incidental. The t
 #
 
 <br><br>
+<!-- ========= END Overview ========= -->
 
  
 <!-- ========= START 🎥 **DEMO** ========= -->
@@ -377,9 +379,8 @@ https://github.com/user-attachments/assets/eab6e951-6b66-4c6c-a2c6-23ee2f902c5f
 <!-- ========= END  🎥 **DEMO** ========= -->
 
 
+<!-- ========= START ToC-->
 ##  Table of Contents
-
-## [Table of Contents]()
 
 - [Global Helicopter Traffic Context — Why São Paulo?](#global-helicopter-traffic-context--why-são-paulo)
 - [Project Definition](#project-definition)
