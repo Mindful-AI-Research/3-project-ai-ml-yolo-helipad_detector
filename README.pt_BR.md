@@ -310,9 +310,9 @@ A escolha de São Paulo como cenário real do projeto não é incidental. A tabe
 | [**9º**]()  | **Bogotá** | 🇨🇴 Colômbia | Frota expressiva | **19,1%** | — | Operações executivas, emergenciais e especiais |
 | [**10º**]()  | **Pequim** | 🇨🇳 China | Frota expressiva | **13,6%** | — | Operações executivas, governamentais e especiais |
 
-<br>
+<br><br>
 
-> [!NOTE]
+> [!TIP]
 > **Índice** representa uma medida relativa de presença/tráfego de helicópteros, combinando tamanho da frota e densidade operacional. A frota estimada de **400+ helicópteros** e os **~2.200 pousos/decolagens diários** de São Paulo — mencionados no Overview acima — colocam a cidade no topo deste ranking global, razão central pela qual o projeto se concentra especificamente em São Paulo, em vez de uma cidade com infraestrutura de helipontos menos densa ou já amplamente mapeada.
 
 
