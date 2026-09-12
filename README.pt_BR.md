@@ -356,29 +356,29 @@ São Paulo's choice as the project's real-world setting is not incidental. The t
 
 <br><br>
 
-## [Key Features]()
+## [Principais Recursos]()
 
-[-]() End-to-end Artificial Intelligence pipeline <br>
+[-]() Pipeline de Inteligência Artificial e Visão Computacional de ponta a ponta <br>
 
-[-]() Automated satellite imagery acquisition  <br>
+[-]() Aquisição e pré-processamento automatizados de imagens de satélite <br>
 
-[-]() Geospatial intelligence workflow <br>
+[-]() Fluxo de trabalho de inteligência geoespacial e processamento de dados espaciais <br>
 
-[-]() YOLOv8n / YOLOv11n object detection <br>
+[-]() Detecção de objetos com YOLOv8n / YOLO11n <br>
 
-[-]() Roboflow annotation workflow <br>
+[-]() Fluxo de anotação de imagens e preparação de datasets com Roboflow <br>
 
-[-]() Interactive maps with MapLibre GL JS + OpenStreetMap <br>
+[-]() Mapas geoespaciais interativos com MapLibre GL JS + OpenStreetMap <br>
 
-[-]() Geocoding with Nominatim (OpenStreetMap) <br>
+[-]() Geocodificação automatizada com Nominatim (OpenStreetMap) <br>
 
-[-]() Field validation on 7,900+ real satellite tiles <br>
+[-]() Validação em condições reais em mais de 7.900 tiles de satélite de 10 bairros de São Paulo <br>
 
-[-]() Interactive Streamlit dashboard <br>
+[-]() Aplicação web e dashboard interativo desenvolvidos com Streamlit <br>
 
-[-]() Fully reproducible repository <br>
+[-]() Repositório de pesquisa totalmente reprodutível <br>
 
-[-]() Downloadable datasets, notebooks and artifacts
+[-]() Datasets, notebooks e artefatos gerados disponíveis para download
 
 
 <br>
@@ -414,7 +414,7 @@ https://github.com/user-attachments/assets/eab6e951-6b66-4c6c-a2c6-23ee2f902c5f
 
 
 <!-- ========= START ToC-->
-##  Table of Contents
+##  Índice
 
 - [Global Helicopter Traffic Context — Why São Paulo?](#global-helicopter-traffic-context--why-são-paulo)
 - [Project Definition](#project-definition)
@@ -428,7 +428,7 @@ https://github.com/user-attachments/assets/eab6e951-6b66-4c6c-a2c6-23ee2f902c5f
 - [Overall Flow Architecture](#overall-flow-architecture)
 - [AI/ML Ops Pipeline](#aiml-ops-pipeline)
 - [Repository Structure](#repository-structure)
-- [What is `data/raw/helipad_dataset.rar`?](#what-is-helipontorar)
+- [What is `data/raw/helipad_dataset.rar`?](#what-is-datarawhelipad_datasetrar)
 - [What is Roboflow in This Project?](#what-is-roboflow-in-this-project)
 - [Methodology](#methodology)
 - [Full Technical Pipeline](#full-technical-pipeline)
@@ -452,5 +452,4 @@ https://github.com/user-attachments/assets/eab6e951-6b66-4c6c-a2c6-23ee2f902c5f
 - [References](#references)
 - [Acknowledgements](#acknowledgements)
 - [Final Statement](#final-statement)
-
 <br><br>
