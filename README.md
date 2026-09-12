@@ -76,7 +76,7 @@
 <!-- ========= END PUC GIF ========= -->
 
 
-<!-- ========= START 🇧🇷 Top CommtributorsE ========= -->
+<!-- ========= START 🇧🇷 Top CommtributorsE ========= 
 <p align="center">
   <a href="https://user-badge.committers.top/brazil/FabianaCampanari">
     <img
@@ -95,7 +95,7 @@
 </p>
 
 <br><br><br>
-<!-- ========= END 🇧🇷 Top CommtributorsE  ========= -->
+========= END 🇧🇷 Top CommtributorsE  ========= -->
 
 
 <!-- ======================================= Start Institutional INFO - AI WEEK and PhD SUBMISSION =========================================== --> 
