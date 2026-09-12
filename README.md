@@ -298,53 +298,53 @@ The platform implements a complete end-to-end AI workflow, including public data
 ## [Global Helicopter Traffic Context — Why São Paulo?]()
 
 
-São Paulo's choice as the project's real-world setting is not incidental. The table below situates the city's rooftop helicopter activity against the world's other major helicopter hubs, using a relative index of fleet size and operational density:
+São Paulo's selection as the project's real-world setting is not incidental. The table below positions the city's rooftop helicopter activity in relation to other major global helicopter hubs, using a relative index that combines fleet size and operational density:
 
 <br>
 
-| [Rank]() | [City]()  | [Country]()  | [Main Indicator]()  |[Rate]()  <sub>(Relative Index)</sub> | [Estimated Fleet]()  <sub>(Helicopters)</sub> | [Highlight]()  |
+| [Rank]() | [City]() | [Country]() | [Main Indicator]() | [Relative Index]() | [Estimated Fleet]() <sub>(Helicopters)</sub> | [Highlight]() |
 |:---:|---|---|---|:---:|:---:|---|
-| [**1st**]()  | **São Paulo** | 🇧🇷 Brazil | Largest fleet | **27.7%** | 400+ | ~2,200 landings/takeoffs daily in the metropolitan area |
-| [**2nd**]()  | **New York** | 🇺🇸 USA | Fleet + intense urban traffic | **25.5%** | — | Strong executive, tourist, and transport use |
-| [**3rd**]()  | **Tokyo** | 🇯🇵 Japan | Large fleet | **23.9%** | — | Corporate, emergency, and transport operations |
-|[**4th**]()  | **Rio de Janeiro** | 🇧🇷 Brazil | Fleet + offshore operations | **22.8%** | — | Significant activity related to oil and gas |
-| [**5th**]()   | **London** | 🇬🇧 United Kingdom | Executive traffic | **21.3%** | — | Strong corporate market and urban heliports |
-| [**6th**]()  | **Belo Horizonte** | 🇧🇷 Brazil | Large fleet | **20.2%** | — | Strong executive and corporate aviation |
-| [**7th**]()  | **Santiago** | 🇨🇱 Chile | Large fleet | **20.1%** | — | Executive aviation and special operations |
-| [**8th**]()  | **Mexico City** | 🇲🇽 Mexico | Large fleet | **19.8%** | — | Executive transport and government operations |
-|[**9th**]()  | **Bogotá** | 🇨🇴 Colombia | Large fleet | **19.1%** | — | Executive, emergency, and special operations |
-| [**10th**]()  | **Beijing** | 🇨🇳 China | Large fleet | **13.6%** | — | Executive, governmental, and special operations |
+| [**1st**]() | **São Paulo** | 🇧🇷 Brazil | Largest fleet | **27.7%** | 400+ | ~2,200 daily landings/takeoffs across the metropolitan area |
+| [**2nd**]() | **New York** | 🇺🇸 USA | Fleet + intense urban traffic | **25.5%** | — | Strong executive, tourist, and transport activity |
+| [**3rd**]() | **Tokyo** | 🇯🇵 Japan | Large fleet | **23.9%** | — | Corporate, emergency, and transport operations |
+| [**4th**]() | **Rio de Janeiro** | 🇧🇷 Brazil | Fleet + offshore operations | **22.8%** | — | Significant activity associated with the oil and gas sector |
+| [**5th**]() | **London** | 🇬🇧 United Kingdom | Executive traffic | **21.3%** | — | Strong corporate market and urban heliport infrastructure |
+| [**6th**]() | **Belo Horizonte** | 🇧🇷 Brazil | Large fleet | **20.2%** | — | Strong executive and corporate aviation activity |
+| [**7th**]() | **Santiago** | 🇨🇱 Chile | Large fleet | **20.1%** | — | Executive aviation and special operations |
+| [**8th**]() | **Mexico City** | 🇲🇽 Mexico | Large fleet | **19.8%** | — | Executive transport and government operations |
+| [**9th**]() | **Bogotá** | 🇨🇴 Colombia | Large fleet | **19.1%** | — | Executive, emergency, and special operations |
+| [**10th**]() | **Beijing** | 🇨🇳 China | Large fleet | **13.6%** | — | Executive, governmental, and special operations |
 
 <br>
 
 > [!NOTE]
-> **Rate** is a relative index of helicopter presence/traffic, combining fleet size and operational density. São Paulo's estimated **400+ fleet** and **~2,200 daily landings/takeoffs** — cited in the Overview above — place it at the top of this global ranking, which is precisely why this project targets São Paulo specifically rather than a city with sparser or already-mapped helipad infrastructure.
+> **Relative Index** represents a comparative measure of helicopter presence and traffic, combining fleet size and operational density. São Paulo's estimated **400+ helicopters** and approximately **2,200 daily landings/takeoffs** — cited in the Overview above — place it at the top of this comparative ranking. This concentration of helicopter activity is precisely why the project focuses on São Paulo rather than a city with sparser or already extensively mapped helipad infrastructure.
 
 <br><br>
 
 ## [Key Features]()
 
-[-]() End-to-end Artificial Intelligence pipeline <br>
+[-]() End-to-end Artificial Intelligence and Computer Vision pipeline <br>
 
-[-]() Automated satellite imagery acquisition  <br>
+[-]() Automated satellite imagery acquisition and preprocessing <br>
 
-[-]() Geospatial intelligence workflow <br>
+[-]() Geospatial intelligence and spatial data processing workflow <br>
 
-[-]() YOLOv8n / YOLOv11n object detection <br>
+[-]() YOLOv8n / YOLO11n object detection <br>
 
-[-]() Roboflow annotation workflow <br>
+[-]() Roboflow-based image annotation and dataset preparation <br>
 
-[-]() Interactive maps with MapLibre GL JS + OpenStreetMap <br>
+[-]() Interactive geospatial maps with MapLibre GL JS + OpenStreetMap <br>
 
-[-]() Geocoding with Nominatim (OpenStreetMap) <br>
+[-]() Automated geocoding with Nominatim (OpenStreetMap) <br>
 
-[-]() Field validation on 7,900+ real satellite tiles <br>
+[-]() Real-world validation across 7,900+ satellite tiles from 10 São Paulo neighborhoods <br>
 
-[-]() Interactive Streamlit dashboard <br>
+[-]() Interactive Streamlit web application and dashboard <br>
 
-[-]() Fully reproducible repository <br>
+[-]() Fully reproducible research repository <br>
 
-[-]() Downloadable datasets, notebooks and artifacts
+[-]() Downloadable datasets, notebooks and generated artifacts
 
 
 <br>
