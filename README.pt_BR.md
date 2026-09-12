@@ -302,26 +302,29 @@ São Paulo, contudo, destaca-se pela combinação de uma frota urbana de grande 
 
 <br>
 
+
 | Cidade | País | Contexto de mobilidade aérea por helicópteros | Fonte de referência |
 |---|---|---|---|
-| [**São Paulo**](https://www.fab.mil.br/noticias/imprime/42060/CONTROLE%20DO%20ESPA%C3%87O%20A%C3%89REO%20-%20HELICONTROL:%20Seguran%C3%A7a%20e%20fluidez%20no%20controle%20de%20helic%C3%B3pteros%20em%20S%C3%A3o%20Paulo) | 🇧🇷 Brasil | Operações urbanas de helicópteros em ambiente de alta densidade, apoiadas pelo gerenciamento dedicado do HELICONTROL na área operacional de Congonhas | [**FAB** - Força Aérea Brasileira  - HELICONTROL](https://www.fab.mil.br/noticias/imprime/42060/CONTROLE%20DO%20ESPA%C3%87O%20A%C3%89REO%20-%20HELICONTROL:%20Seguran%C3%A7a%20e%20fluidez%20no%20controle%20de%20helic%C3%B3pteros%20em%20S%C3%A3o%20Paulo) |
-| [Nova York](https://council.nyc.gov/data/helicopter-noise-and-safety/) | 🇺🇸 Estados Unidos | Heliportos públicos, voos de táxi aéreo, aviação geral, deslocamentos de passageiros, operações militares e passeios turísticos regulamentados | [New York City Council — Helicopter Noise and Safety](https://council.nyc.gov/data/helicopter-noise-and-safety/) |
-| [Tóquio](https://www.mlit.go.jp/en/) | 🇯🇵 Japão | Operações corporativas, de emergência, segurança pública e transporte especializado dentro do sistema nacional de aviação civil | [Ministério da Terra, Infraestrutura, Transporte e Turismo do Japão (MLIT)](https://www.mlit.go.jp/en/) |
-| [Rio de Janeiro](https://www.gov.br/anac/pt-br) | 🇧🇷 Brasil | Aviação executiva, transporte urbano e operações relacionadas às atividades offshore de petróleo e gás | [Agência Nacional de Aviação Civil (ANAC)](https://www.gov.br/anac/pt-br) |
-| [Londres](https://londonheliport.co.uk/) | 🇬🇧 Reino Unido | Infraestrutura de heliporto urbano voltada a operações executivas, serviços VIP, pousos, decolagens, abastecimento e fretamento | [London Heliport](https://londonheliport.co.uk/) |
-| [Belo Horizonte](https://www.gov.br/anac/pt-br) | 🇧🇷 Brasil | Aviação executiva, operações corporativas e uso de helicópteros em serviços especializados | [Agência Nacional de Aviação Civil (ANAC)](https://www.gov.br/anac/pt-br) |
-| [Santiago](https://www.dgac.gob.cl/) | 🇨🇱 Chile | Operações executivas, corporativas e especializadas reguladas pela autoridade de aviação civil chilena | [Dirección General de Aeronáutica Civil de Chile (DGAC)](https://www.dgac.gob.cl/) |
+| [**São Paulo**](https://www.fab.mil.br/noticias/imprime/42060/CONTROLE%20DO%20ESPA%C3%87O%20A%C3%89REO%20-%20HELICONTROL:%20Seguran%C3%A7a%20e%20fluidez%20no%20controle%20de%20helic%C3%B3pteros%20em%20S%C3%A3o%20Paulo) | 🇧🇷 Brasil | Operações urbanas de helicópteros em um ambiente de alta densidade, apoiadas pelo gerenciamento especializado do HELICONTROL na área operacional de Congonhas | [**FAB** — Força Aérea Brasileira: HELICONTROL](https://www.fab.mil.br/noticias/imprime/42060/CONTROLE%20DO%20ESPA%C3%87O%20A%C3%89REO%20-%20HELICONTROL:%20Seguran%C3%A7a%20e%20fluidez%20no%20controle%20de%20helic%C3%B3pteros%20em%20S%C3%A3o%20Paulo) |
+| [Nova York](https://council.nyc.gov/data/helicopter-noise-and-safety/) | 🇺🇸 Estados Unidos | Heliportos públicos, voos de táxi aéreo, aviação geral, transporte de passageiros, operações militares e passeios turísticos regulamentados | [New York City Council — Helicopter Noise and Safety](https://council.nyc.gov/data/helicopter-noise-and-safety/) |
+| [Tóquio](https://www.mlit.go.jp/en/) | 🇯🇵 Japão | Operações corporativas, emergenciais, de segurança pública e de transporte especializado no contexto da aviação civil japonesa | [Ministério da Terra, Infraestrutura, Transporte e Turismo do Japão (MLIT)](https://www.mlit.go.jp/en/) |
+| [Rio de Janeiro](https://www.gov.br/anac/pt-br) | 🇧🇷 Brasil | Aviação executiva, transporte urbano e operações associadas às atividades offshore dos setores de petróleo e gás | [Agência Nacional de Aviação Civil (ANAC)](https://www.gov.br/anac/pt-br) |
+| [Londres](https://londonheliport.co.uk/) | 🇬🇧 Reino Unido | Infraestrutura de heliporto urbano destinada a operações executivas, serviços VIP, pousos, decolagens, abastecimento e voos fretados | [London Heliport](https://londonheliport.co.uk/) |
+| [Belo Horizonte](https://www.gov.br/anac/pt-br) | 🇧🇷 Brasil | Aviação executiva, operações corporativas e utilização de helicópteros em serviços especializados | [Agência Nacional de Aviação Civil (ANAC)](https://www.gov.br/anac/pt-br) |
+| [Santiago](https://www.dgac.gob.cl/) | 🇨🇱 Chile | Operações executivas, corporativas e especializadas sob a regulamentação da autoridade de aviação civil chilena | [Dirección General de Aeronáutica Civil de Chile (DGAC)](https://www.dgac.gob.cl/) |
 | [Cidade do México](https://www.gob.mx/afac) | 🇲🇽 México | Transporte executivo, atividades governamentais, segurança pública e operações aéreas especializadas | [Agencia Federal de Aviación Civil do México (AFAC)](https://www.gob.mx/afac) |
-| [Bogotá](https://www.aerocivil.gov.co/) | 🇨🇴 Colômbia | Operações executivas, emergenciais e serviços aéreos especializados sob regulação da aviação civil colombiana | [Aerocivil Colômbia](https://www.aerocivil.gov.co/) |
+| [Bogotá](https://www.aerocivil.gov.co/) | 🇨🇴 Colômbia | Operações executivas, emergenciais e serviços aéreos especializados sob a regulamentação da autoridade de aviação civil colombiana | [Aerocivil Colômbia](https://www.aerocivil.gov.co/) |
 | [Pequim](http://www.caac.gov.cn/English/) | 🇨🇳 China | Operações governamentais, executivas e serviços aéreos especializados no contexto da aviação civil chinesa | [Administração da Aviação Civil da China (CAAC) — site oficial em inglês](http://www.caac.gov.cn/English/) |
 
+<br><br>
 
-| [Pequim](http://www.caac.gov.cn/English/) | 🇨🇳 China | Operações governamentais, executivas e de serviços especializados | [Administração da Aviação Civil da China (CAAC) — site oficial em inglês](http://www.caac.gov.cn/English/) |
+> [!NOTE]
+> As cidades apresentadas nesta tabela são referências qualitativas de ambientes urbanos que utilizam helicópteros em diferentes contextos operacionais. A seleção não constitui um ranking global oficial, uma comparação estatística padronizada de frotas ou uma base de dados operacional diretamente equivalente entre todas as localidades. São Paulo é a principal área de estudo do **Helipad Detector** e apresenta um contexto operacional específico, incluindo o gerenciamento especializado do tráfego de helicópteros por meio do **HELICONTROL**.
 
 <br><br>
 
 > [!TIP]
-> São Paulo é o foco do **Helipad Detector** pela combinação de alta densidade urbana, grande concentração de edifícios, infraestrutura de helipontos em coberturas e tráfego intenso de helicópteros. O projeto utiliza esse contexto para demonstrar como a Visão Computacional e os dados de satélite podem apoiar o mapeamento automatizado de infraestrutura urbana. As detecções do modelo representam **candidatos visuais** e não constituem confirmação regulatória, operacional ou aeronáutica da existência de um heliponto.
+> São Paulo foi escolhida como foco do **Helipad Detector** pela combinação de elevada densidade urbana, grande concentração de edifícios, presença significativa de infraestrutura de helipontos em coberturas e tráfego intenso de helicópteros. Esse contexto permite demonstrar como a Visão Computacional e os dados de satélite podem apoiar o mapeamento automatizado de infraestrutura urbana. As detecções do modelo representam **candidatos visuais** e não constituem confirmação regulatória, operacional ou aeronáutica da existência de um heliponto.
 
 <br><br>
 <!-- ========= END Overview ========= -->
