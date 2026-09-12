@@ -98,7 +98,7 @@
 <!-- ========= END 🇧🇷 Top CommtributorsE  ========= -->
 
 
-<!-- ======================================= Start Institutional INFO - AI WEEK and PhD SUBMISSION =========================================== --> 
+<!-- ======================================= Start Institutional / mestr/ SUBMISSION =========================================== --> 
 [**Institution:**]() Pontifical Catholic University of São Paulo (PUC-SP) <br>
 [**School:**]() FACEI — Computer Science Department <br>
 [**Course:**]() BSc in Human-Centered AI & Data Science <br>
