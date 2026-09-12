@@ -100,7 +100,6 @@
 **Autora:** [Fabiana ⚡️ Campanari](https://linktr.ee/fabianacampanari) <br>
 **Colaboradores:** [Carlos Antonio dos Santos Roth Gorham]() · [Pedro Vyctor Almeida](https://github.com/ppvyctor/Helipoint-Detector) 
 
-
 # <br>
 <!-- ========= END Institutional INFO ========= -->
 
@@ -141,8 +140,14 @@ Este projeto evoluiu de uma base inicial envolvendo desenvolvimento de dataset, 
 O repositório final representa a evolução do projeto a partir de seu protótipo inicial para uma plataforma integrada de visão computacional e inteligência geoespacial, abrangendo descoberta de dados, automação geoespacial, experimentação, benchmarking de modelos, avaliação comparativa, validação em campo, visualização, governança, documentação, apresentação e pesquisa contextual aplicada.
 
 **Os três colaboradores permanecem creditados por suas respectivas contribuições. Esta atribuição tem como objetivo documentar de forma transparente o histórico de desenvolvimento do projeto, a evolução de sua implementação e as áreas técnicas para as quais cada participante contribuiu.**
-<!-- ======================================= END Institutional / mestr/ SUBMISSION =========================================== --> 
 
+
+<br>
+
+#
+
+<br><br><br>
+<!-- ======================================= END Institutional / mestr/ SUBMISSION =========================================== --> 
 
 
 <!-- ========= START Streamlit BADGE ========= -->
