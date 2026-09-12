@@ -99,15 +99,20 @@
 
 
 <!-- ======================================= Start Institutional INFO - IA WEEK and PHD SUBMISSIION =========================================== --> 
-[**Institution:**]() Pontifical Catholic University of São Paulo (PUC‑SP) <br>
+[**Institution:**]() Pontifical Catholic University of São Paulo (PUC-SP) <br>
 [**School:**]() FACEI — Computer Science Department <br>
-[**Course:**]() BSc in — Human-Centered AI & Data Science  <br> 
-[**Subject:**]() Machine Learning / Computer Vision — YOLO  <br>
-[**Project:**]() Object Detection in Satellite Images with YOLO  <br>
-**Author:** [Fabiana ⚡️ Campanari](https://linktr.ee/fabianacampanari)   
-**Collaborators:** [Carlos Antonio dos Santos Roth Gorham]() (geospatial automation concept) · [Pedro Vyctor Almeida](https://github.com/ppvyctor) (initial prototype and original dataset — see contribution attribution note)
+[**Course:**]() BSc in Human-Centered AI & Data Science <br>
+[**Subject:**]() Machine Learning / Computer Vision — YOLO <br>
+[**Project:**]() Object Detection in Satellite Images with YOLO <br>
+**Author:** [Fabiana ⚡️ Campanari](https://linktr.ee/fabianacampanari)  
+**Collaborators:** Carlos Antonio dos Santos Roth Gorham · [Pedro Vyctor Almeida](https://github.com/ppvyctor/Helipoint-Detector)
 
+[**Contribution attribution:**]()  
+This project evolved from an initial dataset, training, and prototype foundation into a substantially expanded end-to-end computer vision and geospatial intelligence platform. Pedro Vyctor Almeida contributed the original annotated dataset, initial web prototype, and first training experiment (`exp1`), documented in his original [Helipoint Detector repository](https://github.com/ppvyctor/Helipoint-Detector). Carlos Antonio dos Santos Roth Gorham proposed the geospatial automation concept and contributed to the initiation of that implementation direction.
 
+Building on this foundation, Fabiana Campanari carried out the subsequent large-scale expansion, implementation, integration, and consolidation of the final **Helipad Detector** platform, including geospatial scraping and geocoding automation, coordinate transformation and bounding-box generation, experiments `exp2` and `exp3`, model benchmarking, comparative evaluation and performance analysis, field validation across ten São Paulo regions, complete dashboard development and visual design, bilingual Streamlit implementation, repository organization, interactive React/HTML presentation, technical reports, documentation, demonstrations, market research, and comparative analysis of helicopter-presence and activity indicators, including the international ranking used to contextualize the project's practical relevance.
+
+The three contributors remain credited for their respective contributions, which differ substantially in development stage, scope, and technical responsibilities.
 
 <br>
 
