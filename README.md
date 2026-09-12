@@ -318,7 +318,10 @@ São Paulo, however, stands out through the combination of a large urban helicop
 | [Santiago](https://www.dgac.gob.cl/)                                                                | 🇨🇱 Chile          | Executive, corporate, and specialized operations                                           | [DGAC Chile](https://www.dgac.gob.cl/)                                                                 |
 | [Mexico City](https://www.gob.mx/afac)                                                              | 🇲🇽 Mexico         | Executive transport, government, and security operations                                   | [AFAC Mexico](https://www.gob.mx/afac)                                                                 |
 | [Bogotá](https://www.aerocivil.gov.co/)                                                             | 🇨🇴 Colombia       | Executive, emergency, and special-service operations                                       | [Aerocivil Colombia](https://www.aerocivil.gov.co/)                                                    |
-| [Beijing](https://www.caac.gov.cn/EN/)                                                              | 🇨🇳 China          | Government, executive, and specialized service operations                                  | [CAAC China](https://www.caac.gov.cn/EN/)                                                              |
+| [Beijing](http://www.caac.gov.cn/English/) | 🇨🇳 China | Government, executive, and specialized-service operations | [Civil Aviation Administration of China (CAAC)](http://www.caac.gov.cn/English/) |
+
+
+
 
 <br><br>
 
