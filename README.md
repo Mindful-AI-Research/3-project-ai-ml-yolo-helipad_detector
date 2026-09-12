@@ -98,17 +98,19 @@
 ========= END 🇧🇷 Top CommtributorsE  ========= -->
 
 
-<!-- ======================================= Start Institutional / mestr/ SUBMISSION =========================================== --> 
+<!-- ========= START Institutional INFO ========= -->
 [**Institution:**]() Pontifical Catholic University of São Paulo (PUC-SP) <br>
 [**School:**]() FACEI — Computer Science Department <br>
 [**Course:**]() BSc in Human-Centered AI & Data Science <br>
 [**Subject:**]() Machine Learning / Computer Vision — YOLO <br>
 [**Project:**]() Object Detection in Satellite Images with YOLO <br>
 **Author:** [Fabiana ⚡️ Campanari](https://linktr.ee/fabianacampanari) <br>
-**Collaborators:** [Carlos Antonio dos Santos Roth Gorham]() · [Pedro Vyctor Almeida](https://github.com/ppvyctor/Helipoint-Detector) <br>
+**Collaborators:** [Carlos Antonio dos Santos Roth Gorham]() · [Pedro Vyctor Almeida](https://github.com/ppvyctor/Helipoint-Detector) 
 
-# <br><br>
+# <br>
+<!-- ========= END Institutional INFO ========= -->
 
+<!-- ======================================= Start Institutional  Atribuição de Contribuições / subm tidd ======== -->
 ### [Contribution Attribution]()
 
 This project evolved from an initial foundation involving dataset development, model training, and a web prototype into an end-to-end computer vision and geospatial intelligence platform. The three credited contributors participated at different stages of the project, with contributions spanning distinct technical areas and responsibilities. <br><br>
@@ -151,7 +153,7 @@ The final repository represents the evolution of the project from its initial pr
 #
 
 <br><br><br>
-<!-- ========= END Institutional INFO ========= -->
+<!-- ======================================= END Institutional / mestr/ SUBMISSION =========================================== --> 
 
 
 <!-- ========= START Streamlit BADGE ========= -->
