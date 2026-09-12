@@ -253,8 +253,18 @@ TR = {
     "search.preset_label": {"en": "Jump to a known corridor (optional)", "pt": "Ir direto para um corredor conhecido (opcional)"},
     "search.preset_custom": {"en": "Custom coordinates", "pt": "Coordenadas personalizadas"},
     "search.preset_help": {
-        "en": "Small (~20-30 tile) boxes centered on the real bounding box of each field-validation region (Section 9, sp_neighborhoods_bbox.csv) — good for a quick live demo without triggering Streamlit's throttle.",
-        "pt": "Caixas pequenas (~20-30 tiles) centradas na bounding box real de cada região da validação de campo (Seção 9, sp_neighborhoods_bbox.csv) — boas para uma demo ao vivo rápida, sem disparar o throttle do Streamlit.",
+        "en": "Small (~60-80 tile) boxes centered on the real bounding box of each field-validation region (Section 9, sp_neighborhoods_bbox.csv) — good for a quick live demo without triggering Streamlit's throttle.",
+        "pt": "Caixas pequenas (~60-80 tiles) centradas na bounding box real de cada região da validação de campo (Seção 9, sp_neighborhoods_bbox.csv) — boas para uma demo ao vivo rápida, sem disparar o throttle do Streamlit.",
+    },
+    "search.preset_scope_note": {
+        "en": "ℹ️ Each preset is a small, fixed window (~60-80 tiles) centered on that region — not a representative sample of it. "
+              "The full field-validation numbers (hundreds to 1,000+ tiles per region, shown in Field Detections by Region) cover the "
+              "entire mapped area; a preset here can legitimately find zero helipads even in a region with a high detection rate, simply "
+              "because the helipads there sit outside this particular small window. That is expected behavior, not an error.",
+        "pt": "ℹ️ Cada preset é uma janela pequena e fixa (~60-80 tiles) centrada naquela região — não é uma amostra representativa dela. "
+              "Os números completos da validação de campo (centenas a 1.000+ tiles por região, na aba Field Detections by Region) cobrem "
+              "a área mapeada inteira; um preset aqui pode legitimamente não encontrar nenhum heliponto mesmo numa região com taxa de "
+              "detecção alta, simplesmente porque os helipontos de lá ficam fora dessa janela pequena específica. Isso é esperado, não é erro.",
     },
     "search.caption": {
         "en": "Use the coordinates of the desired region (e.g. Downtown São Paulo)",
@@ -2400,16 +2410,16 @@ with tab2:
     # do relatorio) -- pensadas para demo ao vivo rapida, sem disparar o
     # throttle de CPU do Streamlit Cloud como uma busca grande faz.
     SEARCH_PRESETS = {
-        "Faria Lima":              (-46.694992, -23.568424, -46.692392, -23.565824),
-        "Itaim Bibi":              (-46.676300, -23.583800, -46.673700, -23.581200),
-        "Av. Paulista (Trecho 1)": (-46.651300, -23.564800, -46.648700, -23.562200),
-        "Av. Paulista (Trecho 2)": (-46.647970, -23.568537, -46.645370, -23.565936),
-        "Vila Olímpia":            (-46.681300, -23.592800, -46.678700, -23.590200),
-        "Vila Nova Conceição":     (-46.673848, -23.592989, -46.671248, -23.590389),
-        "Brooklin":                (-46.692421, -23.609811, -46.689821, -23.607211),
-        "Pinheiros":               (-46.690646, -23.567815, -46.688046, -23.565215),
-        "Alphaville Industrial":   (-46.851441, -23.499544, -46.848841, -23.496944),
-        "Inter-Zone Corridor":     (-46.687646, -23.590484, -46.685046, -23.587884),
+        "Faria Lima":              (-46.696092, -23.569524, -46.691292, -23.564724),
+        "Itaim Bibi":              (-46.677400, -23.584900, -46.672600, -23.580100),
+        "Av. Paulista (Trecho 1)": (-46.652400, -23.565900, -46.647600, -23.561100),
+        "Av. Paulista (Trecho 2)": (-46.649070, -23.569637, -46.644270, -23.564836),
+        "Vila Olímpia":            (-46.682400, -23.593900, -46.677600, -23.589100),
+        "Vila Nova Conceição":     (-46.674948, -23.594089, -46.670148, -23.589289),
+        "Brooklin":                (-46.693521, -23.610911, -46.688721, -23.606111),
+        "Pinheiros":               (-46.691746, -23.568915, -46.686946, -23.564115),
+        "Alphaville Industrial":   (-46.852541, -23.500644, -46.847741, -23.495844),
+        "Inter-Zone Corridor":     (-46.688746, -23.591584, -46.683946, -23.586784),
     }
 
     def _apply_search_preset():
@@ -2428,6 +2438,7 @@ with tab2:
         on_change=_apply_search_preset,
         help=t("search.preset_help"),
     )
+    st.caption(t("search.preset_scope_note"))
 
     with st.expander(t("search.caption"), expanded=True):
         col_a, col_b = st.columns(2)
@@ -3478,31 +3489,38 @@ with tab_field:
             # Avenida Paulista is split into two survey segments ("Segment
             # 1"/"Segment 2", "Trecho 1"/"Trecho 2" in Português) because the
             # full avenue didn't fit one tile-download batch — it's one
-            # physical street, so for a "most helipads found" ranking
-            # against other, single-piece regions, the two segments are
-            # summed into one combined row instead of quietly competing
-            # against each other as if they were two different places.
+            # physical street. Rather than hiding the two segments behind a
+            # single merged row (which made it impossible to see each
+            # segment's own numbers), we keep both original rows AND add one
+            # extra "combined" row with the sum, so the reader sees Trecho 1,
+            # Trecho 2, and the summed total side by side.
             # Wrapped in try/except so a JSON schema surprise falls back to
             # the unmerged table instead of breaking this whole tab.
             try:
                 _segment_suffix_re = re.compile(r"\s*\(?\s*(?:Trecho|Segment)\s*\d+\s*\)?\s*$", re.IGNORECASE)
                 regions_df["region_group"] = regions_df["region"].apply(lambda s: _segment_suffix_re.sub("", s).strip())
-                regions_df_grouped = regions_df.groupby("region_group", as_index=False).agg(
+                _grouped = regions_df.groupby("region_group", as_index=False).agg(
                     tiles_total=("tiles_total", "sum"),
                     tiles_detected=("tiles_detected", "sum"),
                     top_confidence=("top_confidence", "max"),
                     n_segments=("region", "count"),
                 )
-                regions_df_grouped["detection_rate"] = regions_df_grouped["tiles_detected"] / regions_df_grouped["tiles_total"]
-                _combined_suffix = t("field.segments_combined_suffix")
-                regions_df_grouped["region"] = regions_df_grouped.apply(
-                    lambda r: r["region_group"] + (_combined_suffix if r["n_segments"] > 1 else ""), axis=1
-                )
-                regions_df = regions_df_grouped.drop(columns=["region_group", "n_segments"]).sort_values(
-                    "detection_rate", ascending=False
-                )
+                _multi_segment = _grouped[_grouped["n_segments"] > 1].copy()
+                if not _multi_segment.empty:
+                    _combined_suffix = t("field.segments_combined_suffix")
+                    _multi_segment["detection_rate"] = _multi_segment["tiles_detected"] / _multi_segment["tiles_total"]
+                    _multi_segment["region"] = _multi_segment["region_group"] + _combined_suffix
+                    _combined_rows = _multi_segment.drop(columns=["region_group", "n_segments"])
+                    regions_df = pd.concat(
+                        [regions_df.drop(columns=["region_group"]), _combined_rows],
+                        ignore_index=True,
+                    ).sort_values("detection_rate", ascending=False)
+                else:
+                    regions_df = regions_df.drop(columns=["region_group"]).sort_values(
+                        "detection_rate", ascending=False
+                    )
             except Exception:
-                pass  # fall back to the unmerged per-segment rows below
+                pass  # fall back to the unmerged table below
 
             fig_regions = go.Figure(go.Bar(
                 x=regions_df["region"],
