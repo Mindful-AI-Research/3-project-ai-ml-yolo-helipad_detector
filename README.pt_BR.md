@@ -105,7 +105,8 @@
 [**Course:**]() BSc in — Human-Centered AI & Data Science  <br> 
 [**Subject:**]() Machine Learning / Computer Vision — YOLO  <br>
 [**Project:**]() Object Detection in Satellite Images with YOLO  <br>
- **Author:** [Fabiana ⚡️ Campanari](https://linktr.ee/fabianacampanari)   
+**Author:** [Fabiana ⚡️ Campanari](https://linktr.ee/fabianacampanari)   
+**Colaboradores:** [Carlos Antonio dos Santos Roth Gorham]() (conceito da automação geoespacial) · [Pedro Vyctor Almeida]() (protótipo inicial e dataset original — ver nota de atribuição de contribuição)
 
 
 <br><br>
