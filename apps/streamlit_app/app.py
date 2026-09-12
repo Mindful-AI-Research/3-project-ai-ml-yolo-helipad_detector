@@ -3390,20 +3390,19 @@ with tab_metrics:
             "box-shadow:0 3px 10px rgba(15,23,42,0.25); "
             "border:1px solid rgba(255,255,255,0.10);"
         )
-        # Standardized Blues gradient (blues_scale), scaled by each
-        # experiment's actual mAP@50-95 — the best-performing experiment's
-        # card is the darkest navy, matching the comparison table right
-        # below it, instead of the old blue_scale() navy->teal gradient
-        # tied to row position only.
-        _map_min = metrics_df["mAP@50-95"].min()
-        _map_span = (metrics_df["mAP@50-95"].max() - _map_min) or 1.0
-
+        # Standardized Blues gradient (blues_scale), same fixed 3-step
+        # position scale as the "Field Detections by Region" cards (1.0 /
+        # 0.5 / 0.0 — navy, medium blue, near-white) instead of scaling by
+        # the mAP@50-95 value. This keeps every card family in the app on
+        # the exact same visual tone, regardless of how close/far apart
+        # the underlying numbers happen to be.
         for i, row in metrics_df.iterrows():
             target = cols[i] if n_exp <= 4 else st
             with target:
                 netron_link = netron_url_for(row['Experiment']) or "https://netron.app/"
                 netron_label = t("metrics.netron_view") if row['Experiment'] in MODEL_WEIGHTS_BY_EXP else t("metrics.netron_manual")
-                card_bg = blues_scale((row["mAP@50-95"] - _map_min) / _map_span)
+                _frac = 1 - (i / (n_exp - 1) if n_exp > 1 else 0.0)
+                card_bg = blues_scale(_frac)
                 # Real Blues runs light->navy (unlike the old navy->teal
                 # blue_scale, which was always dark), so text color is
                 # computed per card instead of hardcoded white — keeps the
