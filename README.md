@@ -299,34 +299,29 @@ The platform implements a complete AI workflow, including public data collection
 <br><br>
 
 <!-- ========= START Contexto Global  ========= -->
-## [Global Helicopter Traffic Context — Why São Paulo?]()
+| City | Country | Helicopter Air Mobility Context | Reference Source |
+|---|---|---|---|
+| [**São Paulo**](https://www.fab.mil.br/noticias/imprime/42060/CONTROLE%20DO%20ESPA%C3%87O%20A%C3%89REO%20-%20HELICONTROL:%20Seguran%C3%A7a%20e%20fluidez%20no%20controle%20de%20helic%C3%B3pteros%20em%20S%C3%A3o%20Paulo) | 🇧🇷 Brazil | Urban helicopter operations in a high-density environment, supported by specialized HELICONTROL air traffic management within the Congonhas operational area | [**FAB** - Brazilian Air Force: HELICONTROL](https://www.fab.mil.br/noticias/imprime/42060/CONTROLE%20DO%20ESPA%C3%87O%20A%C3%89REO%20-%20HELICONTROL:%20Seguran%C3%A7a%20e%20fluidez%20no%20controle%20de%20helic%C3%B3pteros%20em%20S%C3%A3o%20Paulo) |
+| [New York City](https://council.nyc.gov/data/helicopter-noise-and-safety/) | 🇺🇸 United States | Public heliports, air taxi flights, general aviation, passenger transport, military operations, and regulated sightseeing flights | [New York City Council — Helicopter Noise and Safety](https://council.nyc.gov/data/helicopter-noise-and-safety/) |
+| [Tokyo](https://www.mlit.go.jp/en/) | 🇯🇵 Japan | Corporate, emergency, public safety, and specialized transport operations within the context of Japanese civil aviation | [Japan Ministry of Land, Infrastructure, Transport and Tourism (MLIT)](https://www.mlit.go.jp/en/) |
+| [Rio de Janeiro](https://www.gov.br/anac/pt-br) | 🇧🇷 Brazil | Executive aviation, urban transport, and operations associated with offshore activities in the oil and gas sectors | [National Civil Aviation Agency (ANAC)](https://www.gov.br/anac/pt-br) |
+| [London](https://londonheliport.co.uk/) | 🇬🇧 United Kingdom | Urban heliport infrastructure serving executive operations, VIP services, landings, takeoffs, refueling, and charter flights | [London Heliport](https://londonheliport.co.uk/) |
+| [Belo Horizonte](https://www.gov.br/anac/pt-br) | 🇧🇷 Brazil | Executive aviation, corporate operations, and helicopter use in specialized services | [National Civil Aviation Agency (ANAC)](https://www.gov.br/anac/pt-br) |
+| [Santiago](https://www.dgac.gob.cl/) | 🇨🇱 Chile | Executive, corporate, and specialized operations under the regulations of the Chilean civil aviation authority | [General Directorate of Civil Aeronautics of Chile (DGAC)](https://www.dgac.gob.cl/) |
+| [Mexico City](https://www.gob.mx/afac) | 🇲🇽 Mexico | Executive transport, government activities, public safety, and specialized aerial operations | [Federal Civil Aviation Agency of Mexico (AFAC)](https://www.gob.mx/afac) |
+| [Bogotá](https://www.aerocivil.gov.co/) | 🇨🇴 Colombia | Executive, emergency, and specialized air services under the regulations of the Colombian civil aviation authority | [Aerocivil Colombia](https://www.aerocivil.gov.co/) |
+| [Beijing](http://www.caac.gov.cn/English/) | 🇨🇳 China | Government, executive, and specialized air services within the context of Chinese civil aviation | [**CAAC** - Civil Aviation Administration of China](http://www.caac.gov.cn/English/) |
 
-São Paulo's selection is not incidental. Major metropolitan areas such as New York, Tokyo, Rio de Janeiro, London, Mexico City, and Bogotá use helicopters for varying combinations of executive transportation, tourism, medical emergencies, public safety, government services, and specialized operations.
+<br><br>
 
-São Paulo, however, stands out through the combination of a large urban helicopter fleet, high building density, a significant presence of rooftop helipads, and a daily operational volume that requires specialized management. The existence of **HELICONTROL** demonstrates the practical complexity of this aerial mobility environment and reinforces the relevance of using the city as a case study for the automated detection of potential helipads.
-
-<br>
-
-| City                                                                                                | Country             | Helicopter Air Mobility Context                                                            | Reference Source                                                                                       |
-| --------------------------------------------------------------------------------------------------- | ------------------- | ------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------ |
-| [**São Paulo**](https://www1.folha.uol.com.br/tv/2026/04/sao-paulo-a-cidade-dos-helicopteros.shtml) | 🇧🇷 Brazil         | More than 400 registered helicopters, over 260 helipads, and high daily operational volume | [Folha de S.Paulo](https://www1.folha.uol.com.br/tv/2026/04/sao-paulo-a-cidade-dos-helicopteros.shtml) |
-| [New York](https://www.nyc.gov/site/edc/index.page)                                                 | 🇺🇸 United States  | Tourist, executive, medical, and urban mobility operations                                 | [NYC Economic Development Corporation](https://www.nyc.gov/site/edc/index.page)                        |
-| [Tokyo](https://www.mlit.go.jp/en/)                                                                 | 🇯🇵 Japan          | Corporate, emergency, security, and specialized transport operations                       | [Ministry of Land, Infrastructure, Transport and Tourism](https://www.mlit.go.jp/en/)                  |
-| [Rio de Janeiro](https://www.gov.br/anac/pt-br)                                                     | 🇧🇷 Brazil         | Executive aviation, urban transport, and offshore-related operations                       | [ANAC](https://www.gov.br/anac/pt-br)                                                                  |
-| [London](https://londonheliport.co.uk/)                                                             | 🇬🇧 United Kingdom | Executive aviation market and urban heliport infrastructure                                | [London Heliport](https://londonheliport.co.uk/)                                                       |
-| [Belo Horizonte](https://www.gov.br/anac/pt-br)                                                     | 🇧🇷 Brazil         | Corporate operations and executive aviation                                                | [ANAC](https://www.gov.br/anac/pt-br)                                                                  |
-| [Santiago](https://www.dgac.gob.cl/)                                                                | 🇨🇱 Chile          | Executive, corporate, and specialized operations                                           | [DGAC Chile](https://www.dgac.gob.cl/)                                                                 |
-| [Mexico City](https://www.gob.mx/afac)                                                              | 🇲🇽 Mexico         | Executive transport, government, and security operations                                   | [AFAC Mexico](https://www.gob.mx/afac)                                                                 |
-| [Bogotá](https://www.aerocivil.gov.co/)                                                             | 🇨🇴 Colombia       | Executive, emergency, and special-service operations                                       | [Aerocivil Colombia](https://www.aerocivil.gov.co/)                                                    |
-| [Beijing](http://www.caac.gov.cn/English/) | 🇨🇳 China | Government, executive, and specialized-service operations | [Civil Aviation Administration of China (CAAC)](http://www.caac.gov.cn/English/) |
-
-
-
+> [!NOTE]
+> The cities presented in this table are qualitative references to urban environments where helicopters are used in different operational contexts. The selection does not constitute an official global ranking, a standardized statistical comparison of fleets, or an operational database directly equivalent across all locations. São Paulo is the primary study area of **Helipad Detector** and presents a specific operational context, including specialized helicopter traffic management through **HELICONTROL**.
 
 <br><br>
 
 > [!TIP]
-> São Paulo is the focus of **Helipad Detector** because of its combination of high urban density, extensive building concentration, rooftop helipad infrastructure, and intensive helicopter traffic. The project uses this context to demonstrate how Computer Vision and satellite data can support automated urban infrastructure mapping. Model detections represent **visual candidates** and do not constitute regulatory, operational, or aeronautical confirmation of the existence of a helipad.
+> São Paulo was selected as the focus of **Helipad Detector** due to the combination of high urban density, a large concentration of buildings, a significant presence of rooftop heliport infrastructure, and intense helicopter traffic. This context demonstrates how Computer Vision and satellite data can support the automated mapping of urban infrastructure. The model's detections represent **visual candidates** and do not constitute regulatory, operational, or aeronautical confirmation of the existence of a heliport.
+
 
 <br><br><br>
 <!-- ========= END Contexto Global  ========= -->
