@@ -313,7 +313,12 @@ São Paulo, contudo, destaca-se pela combinação de uma frota urbana de grande 
 | [Santiago](https://www.dgac.gob.cl/)                                                                | 🇨🇱 Chile          | Operações executivas, corporativas e especializadas                                               | [DGAC Chile](https://www.dgac.gob.cl/)                                                                 |
 | [Cidade do México](https://www.gob.mx/afac)                                                         | 🇲🇽 México         | Transporte executivo, operações governamentais e de segurança                                     | [AFAC México](https://www.gob.mx/afac)                                                                 |
 | [Bogotá](https://www.aerocivil.gov.co/)                                                             | 🇨🇴 Colômbia       | Operações executivas, de emergência e serviços especiais                                          | [Aerocivil Colômbia](https://www.aerocivil.gov.co/)                                                    |
-| [Pequim](https://www.caac.gov.cn/EN/)                                                               | 🇨🇳 China          | Operações governamentais, executivas e serviços especializados                                    | [CAAC China](https://www.caac.gov.cn/EN/)                                                              |
+|[Pequim](http://www.caac.gov.cn/English/)                                                               | 🇨🇳 China          | Operações governamentais, executivas e serviços especializados                                    | [CAAC China - Administração da Aviação Civil da China](http://www.caac.gov.cn/English/)                                                           |
+
+
+
+
+| [Pequim](http://www.caac.gov.cn/English/) | 🇨🇳 China | Operações governamentais, executivas e de serviços especializados | [Administração da Aviação Civil da China (CAAC) — site oficial em inglês](http://www.caac.gov.cn/English/) |
 
 <br><br>
 
