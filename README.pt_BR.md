@@ -318,43 +318,45 @@ O repositório final representa a evolução do projeto a partir de seu protóti
 
 
 <!-- ========= START Overview ========= -->
-## [Overview]()
+## [Visão Geral]()
 
-[**Helipad Detector**]() is an end-to-end Artificial Intelligence and Computer Vision platform designed to automatically detect and map rooftop helipads from satellite imagery. The project focuses on São Paulo, Brazil, a unique urban environment with the world's largest helicopter fleet, handling approximately **2,200 takeoffs and landings per day** and reaching **one operation every 45 seconds during peak hours**. The city also operates **HELICONTROL**, a dedicated helicopter air traffic control system created to safely manage this exceptionally dense urban air mobility environment.
+[**Helipad Detector**]() é uma plataforma de Inteligência Artificial e Visão Computacional de ponta a ponta, desenvolvida para detectar e mapear automaticamente helipontos em coberturas de edifícios a partir de imagens de satélite. O projeto concentra-se em São Paulo, Brasil, um ambiente urbano singular, reconhecido por possuir uma das maiores frotas de helicópteros do mundo, com aproximadamente **2.200 pousos e decolagens por dia** e picos operacionais que chegam a **um movimento a cada 45 segundos**. A cidade também conta com o [**HELICONTROL**](), um sistema dedicado de controle de tráfego aéreo de helicópteros, desenvolvido para gerenciar esse ambiente excepcionalmente denso de mobilidade aérea urbana.
 
-These characteristics make São Paulo an ideal real-world benchmark for AI-based geospatial intelligence. By transforming satellite imagery into structured spatial information, the project demonstrates how Computer Vision can automate infrastructure mapping, support urban analysis, and provide decision-support data for future Smart City applications.
+Essas características tornam São Paulo um cenário real particularmente relevante para aplicações de inteligência geoespacial baseada em IA. Ao transformar imagens de satélite em informações espaciais estruturadas, o projeto demonstra como a Visão Computacional pode apoiar o mapeamento automatizado de infraestrutura, a análise urbana e a tomada de decisões orientada por dados em futuras aplicações de Smart Cities.
 
-The platform implements a complete end-to-end AI workflow, including public data collection, geocoding, satellite imagery acquisition, manual annotation in Roboflow, YOLOv8n/YOLOv11n training, and field validation on more than **7,900** real satellite tiles. The interactive dashboard provides transparent access to the entire pipeline, dataset, model performance, and documented limitations, emphasizing reproducibility, explainability, and Responsible AI principles.
+A plataforma implementa um fluxo completo de IA de ponta a ponta, incluindo coleta de dados públicos, geocodificação, aquisição de imagens de satélite, anotação manual com Roboflow, treinamento de modelos YOLOv8n / YOLO11n e validação em condições reais em mais de **7.900 tiles de satélite**. Seu dashboard interativo oferece acesso transparente ao pipeline, aos datasets, ao desempenho dos modelos e às limitações documentadas, reforçando os princípios de reprodutibilidade, explicabilidade e Inteligência Artificial Responsável.
 
 <br><br>
 
 
-## [Global Helicopter Traffic Context — Why São Paulo?]()
+## [Contexto Global do Tráfego de Helicópteros — Por que São Paulo?]()
 
 
-São Paulo's choice as the project's real-world setting is not incidental. The table below situates the city's rooftop helicopter activity against the world's other major helicopter hubs, using a relative index of fleet size and operational density:
+A escolha de São Paulo como cenário real do projeto não é incidental. A tabela abaixo posiciona a atividade de helicópteros em helipontos localizados em coberturas de edifícios da cidade em relação a outros grandes centros mundiais de aviação de helicópteros, utilizando um índice relativo de tamanho da frota e densidade operacional:
 
 <br>
 
-| [Rank]() | [City]()  | [Country]()  | [Main Indicator]()  |[Rate]()  <sub>(Relative Index)</sub> | [Estimated Fleet]()  <sub>(Helicopters)</sub> | [Highlight]()  |
+| [Posição]() | [Cidade]()  | [País]()  | [Principal Indicador]()  | [Índice]() <sub>(Índice Relativo)</sub> | [Frota Estimada]() <sub>(Helicópteros)</sub> | [Destaque]()  |
 |:---:|---|---|---|:---:|:---:|---|
-| [**1st**]()  | **São Paulo** | 🇧🇷 Brazil | Largest fleet | **27.7%** | 400+ | ~2,200 landings/takeoffs daily in the metropolitan area |
-| [**2nd**]()  | **New York** | 🇺🇸 USA | Fleet + intense urban traffic | **25.5%** | — | Strong executive, tourist, and transport use |
-| [**3rd**]()  | **Tokyo** | 🇯🇵 Japan | Large fleet | **23.9%** | — | Corporate, emergency, and transport operations |
-|[**4th**]()  | **Rio de Janeiro** | 🇧🇷 Brazil | Fleet + offshore operations | **22.8%** | — | Significant activity related to oil and gas |
-| [**5th**]()   | **London** | 🇬🇧 United Kingdom | Executive traffic | **21.3%** | — | Strong corporate market and urban heliports |
-| [**6th**]()  | **Belo Horizonte** | 🇧🇷 Brazil | Large fleet | **20.2%** | — | Strong executive and corporate aviation |
-| [**7th**]()  | **Santiago** | 🇨🇱 Chile | Large fleet | **20.1%** | — | Executive aviation and special operations |
-| [**8th**]()  | **Mexico City** | 🇲🇽 Mexico | Large fleet | **19.8%** | — | Executive transport and government operations |
-|[**9th**]()  | **Bogotá** | 🇨🇴 Colombia | Large fleet | **19.1%** | — | Executive, emergency, and special operations |
-| [**10th**]()  | **Beijing** | 🇨🇳 China | Large fleet | **13.6%** | — | Executive, governmental, and special operations |
+| [**1º**]()  | **São Paulo** | 🇧🇷 Brasil | Maior frota | **27,7%** | 400+ | ~2.200 pousos/decolagens diários na região metropolitana |
+| [**2º**]()  | **Nova York** | 🇺🇸 EUA | Frota + tráfego urbano intenso | **25,5%** | — | Forte uso executivo, turístico e de transporte |
+| [**3º**]()  | **Tóquio** | 🇯🇵 Japão | Frota expressiva | **23,9%** | — | Operações corporativas, emergenciais e de transporte |
+| [**4º**]()  | **Rio de Janeiro** | 🇧🇷 Brasil | Frota + operações offshore | **22,8%** | — | Atividade significativa relacionada a petróleo e gás |
+| [**5º**]()  | **Londres** | 🇬🇧 Reino Unido | Tráfego executivo | **21,3%** | — | Forte mercado corporativo e heliportos urbanos |
+| [**6º**]()  | **Belo Horizonte** | 🇧🇷 Brasil | Frota expressiva | **20,2%** | — | Aviação executiva e corporativa relevante |
+| [**7º**]()  | **Santiago** | 🇨🇱 Chile | Frota expressiva | **20,1%** | — | Aviação executiva e operações especiais |
+| [**8º**]()  | **Cidade do México** | 🇲🇽 México | Frota expressiva | **19,8%** | — | Transporte executivo e operações governamentais |
+| [**9º**]()  | **Bogotá** | 🇨🇴 Colômbia | Frota expressiva | **19,1%** | — | Operações executivas, emergenciais e especiais |
+| [**10º**]()  | **Pequim** | 🇨🇳 China | Frota expressiva | **13,6%** | — | Operações executivas, governamentais e especiais |
 
 <br>
 
 > [!NOTE]
-> **Rate** is a relative index of helicopter presence/traffic, combining fleet size and operational density. São Paulo's estimated **400+ fleet** and **~2,200 daily landings/takeoffs** — cited in the Overview above — place it at the top of this global ranking, which is precisely why this project targets São Paulo specifically rather than a city with sparser or already-mapped helipad infrastructure.
+> **Índice** representa uma medida relativa de presença/tráfego de helicópteros, combinando tamanho da frota e densidade operacional. A frota estimada de **400+ helicópteros** e os **~2.200 pousos/decolagens diários** de São Paulo — mencionados no Overview acima — colocam a cidade no topo deste ranking global, razão central pela qual o projeto se concentra especificamente em São Paulo, em vez de uma cidade com infraestrutura de helipontos menos densa ou já amplamente mapeada.
+
 
 <br><br>
+
 
 ## [Principais Recursos]()
 
