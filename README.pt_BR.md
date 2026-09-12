@@ -46,7 +46,6 @@
 <!-- ========= END TEASER ========= -->
 
 <!-- ========= START SPONSOR BADGE ========= -->
-
 <p align="center">
 
   <a href="https://github.com/sponsors/Mindful-AI-Research">
@@ -58,16 +57,10 @@
   </a>
 
 <br><br>
-
 <!-- ========= END SPONSOR BADGE ========= -->
 
 
-
-
-
-
 <!-- ========= START PUC GIF ========= -->
-
 <p align="center">
    <img src="https://github.com/user-attachments/assets/791a69e2-d09a-429f-9257-f6667fff5c04 ">
  </p>
@@ -76,8 +69,7 @@
 <!-- ========= END PUC GIF ========= -->
 
 
-
-<!-- ========= START 🇧🇷 Top CommtributorsE ========= -->
+<!-- ========= START 🇧🇷 Top CommtributorsE ========= 
 <p align="center">
   <a href="https://user-badge.committers.top/brazil/FabianaCampanari">
     <img
@@ -95,31 +87,65 @@
 
 </p>
 
-<br><br><br><br>
-<!-- ========= END 🇧🇷 Top CommtributorsE  ========= -->
+<br><br><br>
+========= END 🇧🇷 Top CommtributorsE  ========= -->
 
 
-<!-- ======================================= Start Institutional INFO - IA WEEK and PHD SUBMISSIION =========================================== --> 
-[**Institution:**]() Pontifical Catholic University of São Paulo (PUC‑SP) <br>
-[**School:**]() FACEI — Computer Science Department <br>
-[**Course:**]() BSc in — Human-Centered AI & Data Science  <br> 
-[**Subject:**]() Machine Learning / Computer Vision — YOLO  <br>
-[**Project:**]() Object Detection in Satellite Images with YOLO  <br>
-**Author:** [Fabiana ⚡️ Campanari](https://linktr.ee/fabianacampanari)   
-**Colaboradores:** [Carlos Antonio dos Santos Roth Gorham]() (conceito da automação geoespacial) · [Pedro Vyctor Almeida]() (protótipo inicial e dataset original — ver nota de atribuição de contribuição)
+<!-- ========= START Institutional INFO ========= -->
+[**Instituição:**]() Pontifícia Universidade Católica de São Paulo (PUC-SP) <br>
+[**Escola:**]() FACEI — Departamento de Ciência da Computação <br>
+[**Curso:**]() Bacharelado em Human-Centered AI & Data Science  <br>
+[**Disciplina:**]() Machine Learning / Visão Computacional — YOLO <br>
+[**Projeto:**]() Detecção de Objetos em Imagens de Satélite com YOLO <br>
+**Autora:** [Fabiana ⚡️ Campanari](https://linktr.ee/fabianacampanari) <br>
+**Colaboradores:** [Carlos Antonio dos Santos Roth Gorham]() · [Pedro Vyctor Almeida](https://github.com/ppvyctor/Helipoint-Detector) 
 
 
-<br><br>
-
-#
-
-<br><br>
+# <br>
 <!-- ========= END Institutional INFO ========= -->
+
+
+<!-- ======================================= Start Institutional  Atribuição de Contribuições / subm tidd ======== -->
+### [Atribuição de Contribuições]()
+
+Este projeto evoluiu de uma base inicial envolvendo desenvolvimento de dataset, treinamento de modelos e um protótipo web para uma plataforma integrada de visão computacional e inteligência geoespacial. Os três colaboradores creditados participaram em diferentes etapas do projeto, com contribuições abrangendo distintas áreas técnicas e responsabilidades. <br><br>
+
+* [Pedro Vyctor Almeida](https://github.com/ppvyctor/Helipoint-Detector) estabeleceu a base inicial do projeto, incluindo o dataset originalmente anotado, o protótipo inicial da aplicação web (`Site.py`) e o primeiro experimento de treinamento (`exp1`). Seu protótipo consistia em uma aplicação compacta em Streamlit, com duas funções principais: upload de imagens e busca de imagens de satélite por região. O trabalho original está documentado em seu [repositório Helipoint Detector](https://github.com/ppvyctor/Helipoint-Detector). <br><br>
+
+* [**Carlos Antonio dos Santos Roth Gorham**]() propôs o conceito de automação geoespacial para a descoberta de helipontos e contribuiu para o início dessa direção de implementação. <br><br>
+
+* [Fabiana ⚡️ Campanari](https://linktr.ee/fabianacampanari) contribuiu para o desenvolvimento, expansão, integração, avaliação e consolidação subsequentes da plataforma final **Helipad Detector**. Seu trabalho incluiu: <br><br>
+
+  * desenvolvimento e expansão da automação de scraping geoespacial e geocodificação;
+  * conversão de coordenadas geográficas brutas para coordenadas decimais e bounding boxes;
+  * integração da aquisição de imagens de satélite e dos fluxos de busca geográfica;
+  * execução dos experimentos `exp2` e `exp3`;
+  * benchmarking dos modelos, avaliação comparativa e análise de desempenho;
+  * comparação dos modelos treinados utilizando Precision, Recall, mAP@50, mAP@50–95, curvas de treinamento e matrizes de confusão;
+  * avaliação comparativa dos três experimentos utilizando o mesmo dataset de validação em condições reais de campo;
+  * análise da diferença entre o desempenho em benchmarks com dados curados e a generalização em imagens de satélite não curadas;
+  * validação em campo em dez regiões de São Paulo, utilizando mais de 7.900 tiles de imagens de satélite reais;
+  * expansão do protótipo inicial de duas abas para uma plataforma Streamlit bilíngue substancialmente mais ampla;
+  * implementação de descoberta automática de modelos e seleção dos pesos dos experimentos;
+  * desenvolvimento de mapas interativos, camadas geográficas, heatmaps, resumos regionais e visualizações das taxas de detecção;
+  * implementação de inferência com imagens de amostra, inferência por upload, busca regional de imagens de satélite e resultados de detecção para download;
+  * desenvolvimento das seções de governança, transparência, Responsible AI, LGPD, limitações e supervisão humana;
+  * implementação do suporte à interface bilíngue PT/EN;
+  * desenvolvimento completo do design visual, arquitetura da interface, layout, estilização, design de interação e experiência do usuário do dashboard;
+  * organização e consolidação do repositório final completo;
+  * criação da apresentação executiva interativa em React/HTML;
+  * preparação dos relatórios técnicos bilíngues completos, guias, documentação, demonstrações e materiais de apoio;
+  * desenvolvimento da camada de apresentação do projeto, narrativa visual, elementos interativos e integração da trilha sonora;
+  * pesquisa de mercado e análise comparativa de indicadores de presença e atividade de helicópteros, incluindo o ranking comparativo internacional utilizado para contextualizar a relevância prática do projeto. <br><br>
+
+O repositório final representa a evolução do projeto a partir de seu protótipo inicial para uma plataforma integrada de visão computacional e inteligência geoespacial, abrangendo descoberta de dados, automação geoespacial, experimentação, benchmarking de modelos, avaliação comparativa, validação em campo, visualização, governança, documentação, apresentação e pesquisa contextual aplicada.
+
+**Os três colaboradores permanecem creditados por suas respectivas contribuições. Esta atribuição tem como objetivo documentar de forma transparente o histórico de desenvolvimento do projeto, a evolução de sua implementação e as áreas técnicas para as quais cada participante contribuiu.**
+<!-- ======================================= END Institutional / mestr/ SUBMISSION =========================================== --> 
 
 
 
 <!-- ========= START Streamlit BADGE ========= -->
-
 <p align="center" style="margin: 0;">
   <a href="https://helipad-detector.streamlit.app/" rel="noopener noreferrer">
     <img 
@@ -132,7 +158,6 @@
 <!-- ========= END Streamlit BADGE ========= -->
 
 <!-- ========= START React Presentation BADGE ========= -->
-
 <p align="center" style="margin: 0;">
 
   <a href="" target="_blank" rel="noopener noreferrer">
@@ -143,9 +168,9 @@
     />
   </a> 
 <!-- =========End REeact Presentation BADGE ========= -->
+]
 
 <!-- ========= START Helipad Detector Relatório Completo. BADGE ========= -->
-
  <a href="https://github.com/Mindful-AI-Research/3-project-ai-ml-yolo-helipad_detector/blob/34e0c885443ab622df84a65a666995ee8ef118b1/reports/helipad_detector_full_report/%F0%9F%87%A7%F0%9F%87%B7Helipad_Detector_Relatorio_Completo.pdf" target="_blank" rel="noopener noreferrer">
     <img 
       src="https://img.shields.io/badge/Helipad%20Detector-Relat%C3%B3rio%20Completo-134e4a?style=for-the-badge&logo=github&logoColor=white&labelColor=022c22" 
@@ -162,9 +187,7 @@
 #
 
 <br><br>
-
 <!-- =========  BADGES END Helipad Detector -------  ALL  PORESENBTATIONS  BADGES     ========= -->
-
 
 
 
