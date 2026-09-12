@@ -144,7 +144,7 @@ This project evolved from an initial foundation of dataset development, model tr
 
 The final repository therefore represents a substantial expansion beyond the original prototype, covering not only model inference but also data discovery, geospatial automation, experimentation, benchmarking, comparative model evaluation, field validation, visualization, governance, documentation, presentation, and applied contextual research.
 
-All three contributors remain credited for their respective contributions. This note documents the project's development history and the distribution of technical responsibilities across its different stages, without implying equivalence in implementation scope, development volume, or the nature of the activities performed.
+**All three contributors remain credited for their respective contributions. This note documents the project's development history and the distribution of technical responsibilities across its different stages, without implying equivalence in implementation scope, development volume, or the nature of the activities performed.**
 
 
 <br>
