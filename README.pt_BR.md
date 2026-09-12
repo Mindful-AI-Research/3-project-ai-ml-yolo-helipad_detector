@@ -28,22 +28,22 @@
 <br><br>
 
 <!-- ========= START TEASER ========= -->
+###### <p align="center"> <i>Teaching YOLO to spot the city's most exclusive landing spots.</i> ✨</p> 
 
-###### <p align="center"> <i>Ensinando o YOLO a encontrar os pontos de pouso mais exclusivos da cidade.</i> ✨</p>
+###### <p align="center"> 🚁 ***Finding hidden H’s in the concrete jungle*** <br>
 
-###### <p align="center"> 🚁 ***Encontrando H's escondidos na selva de concreto*** <br>
-
-###### <p align="center">Um terraço de cada vez. </b>
+###### <p align="center">One rooftop at a time. <br> 
 
 #### <p align="center"> ⚡️
+
 
 <br>
 
 #
 
 <br><br>
-
 <!-- ========= END TEASER ========= -->
+
 
 <!-- ========= START SPONSOR BADGE ========= -->
 <p align="center">
@@ -56,6 +56,7 @@
     >
   </a>
 
+  
 <br><br>
 <!-- ========= END SPONSOR BADGE ========= -->
 
@@ -152,7 +153,7 @@ O repositório final representa a evolução do projeto a partir de seu protóti
 
 <!-- ========= START Streamlit BADGE ========= -->
 <p align="center" style="margin: 0;">
-  <a href="https://helipad-detector.streamlit.app/" rel="noopener noreferrer">
+  <a href="https://helipad-detector-sp.streamlit.app/" rel="noopener noreferrer">
     <img 
       src="https://img.shields.io/badge/Streamlit%20Repository-Helipad%20Detector-0f172a?style=for-the-badge&logo=streamlit&logoColor=white" 
       alt="Streamlit Repository Helipad Detector"
@@ -162,10 +163,11 @@ O repositório final representa a evolução do projeto a partir de seu protóti
 </p>
 <!-- ========= END Streamlit BADGE ========= -->
 
+
 <!-- ========= START React Presentation BADGE ========= -->
 <p align="center" style="margin: 0;">
 
-  <a href="" target="_blank" rel="noopener noreferrer">
+  <a href="https://mellow-salamander-f81315.netlify.app/" target="_blank" rel="noopener noreferrer">
     <img
       src="https://img.shields.io/badge/React%20Presentation-Slides%20and%20Overview-0f766e?style=for-the-badge&logo=react&logoColor=white"
       alt="React Presentation Slides and Overview"
@@ -173,7 +175,6 @@ O repositório final representa a evolução do projeto a partir de seu protóti
     />
   </a> 
 <!-- =========End REeact Presentation BADGE ========= -->
-]
 
 <!-- ========= START Helipad Detector Relatório Completo. BADGE ========= -->
  <a href="https://github.com/Mindful-AI-Research/3-project-ai-ml-yolo-helipad_detector/blob/34e0c885443ab622df84a65a666995ee8ef118b1/reports/helipad_detector_full_report/%F0%9F%87%A7%F0%9F%87%B7Helipad_Detector_Relatorio_Completo.pdf" target="_blank" rel="noopener noreferrer">
@@ -193,6 +194,21 @@ O repositório final representa a evolução do projeto a partir de seu protóti
 
 <br><br>
 <!-- =========  BADGES END Helipad Detector -------  ALL  PORESENBTATIONS  BADGES     ========= -->
+
+<!-- 🚧<!-- ========= START 🎥 **DEMO** ========= 
+### 🎥 **DEMO: RESTful API & Dashboard Deployment** ✧ ` * Geocoding: Nominatim (OpenStreetMap)` ✧ ` MapLibre GL JS` ✧ `Streamlit`
+
+## Dashboard Preview
+
+###### <p align="center"> 🎬 **Creative Direction, Music Curation & Editing by Fab⚡️**
+###### <p align="center"> 🎶 **Soundtrack:** *"Canon in D"* — Johann Pachelbel
+
+<br>
+
+#
+
+<br><br>
+=========🚧 END 🎥 **DEMO** =========  -->
 
 
 
@@ -221,3 +237,220 @@ O repositório final representa a evolução do projeto a partir de seu protóti
 
 <br><br>
 <!-- =========END TECH STACK / PIPELINE BADGES========= -->
+
+
+<!-- ========= START NOTE ========= -->
+> [!WARNING]
+>
+> ⚠️ Projects may be publicly shared when permitted.  
+> The focus is on applied, hands-on learning with real datasets in AI governance and security contexts.  
+> All sensitive content remains protected in private repositories when required.
+>
+
+<br><br>
+
+#
+
+<br><br>
+<!-- ========= END NOTE ========= -->
+
+<!-- =========START MAIN REPO =Projects REFERENCES ========= -->
+> [!TIP]
+>
+> This repository is part of the flagship ecosystem:
+>
+> ## 🧠 AI/ML ✦ Neural Networks  ✦ Hub   ✦
+> 
+> Explore the complete collection of projects, notebooks, research materials, analyses, and interactive applications available in the central repository:
+>
+> 🔗 **[AI/ML ✦ Neural Networks ✦ Hub](https://github.com/Mindful-AI-Research/1-ai-ml_neural-networks_hub)**
+>
+> #
+>
+> ###  Related Project in this Series:
+>
+> 🔗 **[AI/ML Project 1 · Computer Vision · EMNIST Vision Intelligence](https://github.com/Mindful-AI-Assistants/2-project-ai-ml-emnist-vision-intelligence)**
+>
+> A deep learning system for handwritten character recognition using PyTorch and Streamlit.
+
+
+<br><br><br><br>
+<!-- =========END MAIN REPO =Projects REFERENCES ========= -->
+
+
+<!-- ========= START NOTE ========= -->
+> [!WARNING]
+>
+> ⚠️ Projects may be publicly shared when permitted.  
+> The focus is on applied, hands-on learning with real datasets in AI governance and security contexts.  
+> All sensitive content remains protected in private repositories when required.
+>
+
+<br><br>
+
+#
+
+<br><br>
+<!-- ========= END NOTE ========= -->
+
+<!-- =========START MAIN REPO =Projects REFERENCES ========= -->
+> [!TIP]
+>
+> This repository is part of the flagship ecosystem:
+>
+> ## 🧠 AI/ML ✦ Neural Networks  ✦ Hub   ✦
+> 
+> Explore the complete collection of projects, notebooks, research materials, analyses, and interactive applications available in the central repository:
+>
+> 🔗 **[AI/ML ✦ Neural Networks ✦ Hub](https://github.com/Mindful-AI-Research/1-ai-ml_neural-networks_hub)**
+>
+> #
+>
+> ###  Related Project in this Series:
+>
+> 🔗 **[AI/ML Project 1 · Computer Vision · EMNIST Vision Intelligence](https://github.com/Mindful-AI-Assistants/2-project-ai-ml-emnist-vision-intelligence)**
+>
+> A deep learning system for handwritten character recognition using PyTorch and Streamlit.
+
+
+<br><br><br><br>
+<!-- =========END MAIN REPO =Projects REFERENCES ========= -->
+
+
+<!-- ========= START Overview ========= -->
+## [Overview]()
+
+[**Helipad Detector**]() is an end-to-end Artificial Intelligence and Computer Vision platform designed to automatically detect and map rooftop helipads from satellite imagery. The project focuses on São Paulo, Brazil, a unique urban environment with the world's largest helicopter fleet, handling approximately **2,200 takeoffs and landings per day** and reaching **one operation every 45 seconds during peak hours**. The city also operates **HELICONTROL**, a dedicated helicopter air traffic control system created to safely manage this exceptionally dense urban air mobility environment.
+
+These characteristics make São Paulo an ideal real-world benchmark for AI-based geospatial intelligence. By transforming satellite imagery into structured spatial information, the project demonstrates how Computer Vision can automate infrastructure mapping, support urban analysis, and provide decision-support data for future Smart City applications.
+
+The platform implements a complete end-to-end AI workflow, including public data collection, geocoding, satellite imagery acquisition, manual annotation in Roboflow, YOLOv8n/YOLOv11n training, and field validation on more than **7,900** real satellite tiles. The interactive dashboard provides transparent access to the entire pipeline, dataset, model performance, and documented limitations, emphasizing reproducibility, explainability, and Responsible AI principles.
+
+<br><br>
+
+
+## [Global Helicopter Traffic Context — Why São Paulo?]()
+
+
+São Paulo's choice as the project's real-world setting is not incidental. The table below situates the city's rooftop helicopter activity against the world's other major helicopter hubs, using a relative index of fleet size and operational density:
+
+<br>
+
+| [Rank]() | [City]()  | [Country]()  | [Main Indicator]()  |[Rate]()  <sub>(Relative Index)</sub> | [Estimated Fleet]()  <sub>(Helicopters)</sub> | [Highlight]()  |
+|:---:|---|---|---|:---:|:---:|---|
+| [**1st**]()  | **São Paulo** | 🇧🇷 Brazil | Largest fleet | **27.7%** | 400+ | ~2,200 landings/takeoffs daily in the metropolitan area |
+| [**2nd**]()  | **New York** | 🇺🇸 USA | Fleet + intense urban traffic | **25.5%** | — | Strong executive, tourist, and transport use |
+| [**3rd**]()  | **Tokyo** | 🇯🇵 Japan | Large fleet | **23.9%** | — | Corporate, emergency, and transport operations |
+|[**4th**]()  | **Rio de Janeiro** | 🇧🇷 Brazil | Fleet + offshore operations | **22.8%** | — | Significant activity related to oil and gas |
+| [**5th**]()   | **London** | 🇬🇧 United Kingdom | Executive traffic | **21.3%** | — | Strong corporate market and urban heliports |
+| [**6th**]()  | **Belo Horizonte** | 🇧🇷 Brazil | Large fleet | **20.2%** | — | Strong executive and corporate aviation |
+| [**7th**]()  | **Santiago** | 🇨🇱 Chile | Large fleet | **20.1%** | — | Executive aviation and special operations |
+| [**8th**]()  | **Mexico City** | 🇲🇽 Mexico | Large fleet | **19.8%** | — | Executive transport and government operations |
+|[**9th**]()  | **Bogotá** | 🇨🇴 Colombia | Large fleet | **19.1%** | — | Executive, emergency, and special operations |
+| [**10th**]()  | **Beijing** | 🇨🇳 China | Large fleet | **13.6%** | — | Executive, governmental, and special operations |
+
+<br>
+
+> [!NOTE]
+> **Rate** is a relative index of helicopter presence/traffic, combining fleet size and operational density. São Paulo's estimated **400+ fleet** and **~2,200 daily landings/takeoffs** — cited in the Overview above — place it at the top of this global ranking, which is precisely why this project targets São Paulo specifically rather than a city with sparser or already-mapped helipad infrastructure.
+
+<br><br>
+
+## [Key Features]()
+
+[-]() End-to-end Artificial Intelligence pipeline <br>
+
+[-]() Automated satellite imagery acquisition  <br>
+
+[-]() Geospatial intelligence workflow <br>
+
+[-]() YOLOv8n / YOLOv11n object detection <br>
+
+[-]() Roboflow annotation workflow <br>
+
+[-]() Interactive maps with MapLibre GL JS + OpenStreetMap <br>
+
+[-]() Geocoding with Nominatim (OpenStreetMap) <br>
+
+[-]() Field validation on 7,900+ real satellite tiles <br>
+
+[-]() Interactive Streamlit dashboard <br>
+
+[-]() Fully reproducible repository <br>
+
+[-]() Downloadable datasets, notebooks and artifacts
+
+
+<br>
+
+#
+
+<br><br>
+<!-- ========= END Overview ========= -->
+
+ 
+<!-- ========= START 🎥 **DEMO** ========= -->
+###### <p align="center">  🎥 **DEMO:** **HELIPAD DETECTION** ✧ `YOLO11` ✧ `MODEL TRAINING`  
+
+https://github.com/user-attachments/assets/5b7d581c-ab5e-416e-8471-d91136b2ada0
+
+###### <p align="center"> 🎶 *Feel Good* by Nina Simone - Deep House  Remix  ✧ *Creation by Fabi* ⚡️
+
+<br><br>
+
+#
+
+<br><br>
+<!-- ========= END  🎥 **DEMO** ========= -->
+
+
+<!-- ========= START 🎥 **DEMO** `AUTOMATED HELIPAD SCRAPING` ========= -->
+###### <p align="center"> 🎥 **DEMO:** **AUTOMATED HELIPAD SCRAPING** ✧ `SELENIUM` ✧ `FLIGHTMARKET` ✧ `GEOCODING` ✧ *Creation by Fabi* ⚡️
+
+https://github.com/user-attachments/assets/eab6e951-6b66-4c6c-a2c6-23ee2f902c5f
+
+<br><br><br><br><br>
+<!-- ========= END  🎥 **DEMO** ========= -->
+
+
+<!-- ========= START ToC-->
+##  Table of Contents
+
+- [Global Helicopter Traffic Context — Why São Paulo?](#global-helicopter-traffic-context--why-são-paulo)
+- [Project Definition](#project-definition)
+- [Objective](#objective)
+- [Why Helipads?](#why-helipads)
+- [Data Source](#data-source)
+- [Project Context](#project-context)
+- [Business and Research Problem](#business-and-research-problem)
+- [Extra Automation Contribution](#extra-automation-contribution)
+- [Geospatial Visualization (Kepler.gl)](#geospatial-visualization-keplergl)
+- [Overall Flow Architecture](#overall-flow-architecture)
+- [AI/ML Ops Pipeline](#aiml-ops-pipeline)
+- [Repository Structure](#repository-structure)
+- [What is `data/raw/helipad_dataset.rar`?](#what-is-helipontorar)
+- [What is Roboflow in This Project?](#what-is-roboflow-in-this-project)
+- [Methodology](#methodology)
+- [Full Technical Pipeline](#full-technical-pipeline)
+- [Image Collection and Generation](#image-collection-and-generation)
+- [Annotation and Roboflow](#annotation-and-roboflow)
+- [Modeling with YOLO](#modeling-with-yolo)
+- [Evaluation](#evaluation)
+- [Inference and Generalization](#inference-and-generalization)
+- [Web Application (Optional Layer)](#web-application-optional-layer)
+- [Gains from the Extra Resource](#gains-from-the-extra-resource)
+- [Educational Value](#educational-value)
+- [Image and Text Sources](#image-and-text-sources)
+- [Technologies Used](#technologies-used)
+- [How to Run](#how-to-run)
+- [Deliverables Covered](#deliverables-covered)
+- [Results Analysis](#results-analysis)
+- [Field Validation — Real-World Detection Across 10 São Paulo Neighborhoods](#field-validation--real-world-detection-across-10-são-paulo-neighborhoods)
+- [Strengths, Limitations and Future Improvements](#strengths-limitations-and-future-improvements)
+- [Ethics, LGPD and Governance](#ethics-lgpd-and-governance)
+- [Image Attribution](#image-attribution)
+- [References](#references)
+- [Acknowledgements](#acknowledgements)
+- [Final Statement](#final-statement)
+
+<br><br>
