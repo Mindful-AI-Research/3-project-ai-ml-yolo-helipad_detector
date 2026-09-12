@@ -279,44 +279,50 @@ O repositório final representa a evolução do projeto a partir de seu protóti
 
 
 <!-- ========= START Overview ========= -->
+
 ## [Visão Geral]()
 
-[**Helipad Detector**]() é uma plataforma de Inteligência Artificial e Visão Computacional de ponta a ponta, desenvolvida para detectar e mapear automaticamente helipontos em coberturas de edifícios a partir de imagens de satélite. O projeto concentra-se em São Paulo, Brasil, um ambiente urbano singular, reconhecido por possuir uma das maiores frotas de helicópteros do mundo, com aproximadamente **2.200 pousos e decolagens por dia** e picos operacionais que chegam a **um movimento a cada 45 segundos**. A cidade também conta com o [**HELICONTROL**](), um sistema dedicado de controle de tráfego aéreo de helicópteros, desenvolvido para gerenciar esse ambiente excepcionalmente denso de mobilidade aérea urbana.
+[**Helipad Detector**]() é uma plataforma de Inteligência Artificial e Visão Computacional de ponta a ponta, desenvolvida para detectar e mapear automaticamente **possíveis helipontos em coberturas de edifícios** a partir de imagens de satélite. O projeto transforma imagens geoespaciais em informações estruturadas, permitindo identificar padrões visuais compatíveis com áreas de pouso de helicópteros e representá-los em um mapa interativo.
 
-Essas características tornam São Paulo um cenário real particularmente relevante para aplicações de inteligência geoespacial baseada em IA. Ao transformar imagens de satélite em informações espaciais estruturadas, o projeto demonstra como a Visão Computacional pode apoiar o mapeamento automatizado de infraestrutura, a análise urbana e a tomada de decisões orientada por dados em futuras aplicações de Smart Cities.
+O foco do projeto é [**São Paulo, Brasil**](https://www.prefeitura.sp.gov.br/), um ambiente urbano particularmente relevante para esse tipo de aplicação. A cidade é amplamente reconhecida por concentrar uma das maiores frotas urbanas de helicópteros do mundo. Dados divulgados por fontes do setor indicam mais de **400 helicópteros registrados**, além de uma rede com mais de **260 helipontos**; as estimativas de operação variam conforme o período e o recorte geográfico, chegando a cerca de **2.200 pousos e decolagens por dia** na região metropolitana. [São Paulo: a cidade dos helicópteros — Folha de S.Paulo](https://www1.folha.uol.com.br/tv/2026/04/sao-paulo-a-cidade-dos-helicopteros.shtml) · [São Paulo tem a maior frota de helicópteros do mundo — Exame](https://exame.com/casual/sao-paulo-tem-a-maior-frota-de-helicopteros-do-mundo-e-a-segunda-em-jatos/) · [Dados sobre a frota de helicópteros em São Paulo — Avantto](https://www.avantto.com.br/blog/business/parabens-sao-paulo/)
 
-A plataforma implementa um fluxo completo de IA de ponta a ponta, incluindo coleta de dados públicos, geocodificação, aquisição de imagens de satélite, anotação manual com Roboflow, treinamento de modelos YOLOv8n / YOLO11n e validação em condições reais em mais de **7.900 tiles de satélite**. Seu dashboard interativo oferece acesso transparente ao pipeline, aos datasets, ao desempenho dos modelos e às limitações documentadas, reforçando os princípios de reprodutibilidade, explicabilidade e Inteligência Artificial Responsável.
+Para lidar com esse ambiente aéreo de alta complexidade, a cidade conta com o [**HELICONTROL**](https://www.fab.mil.br/noticias/imprime/42060/CONTROLE%20DO%20ESPA%C3%87O%20A%C3%89REO%20-%20HELICONTROL:%20Seguran%C3%A7a%20e%20fluidez%20no%20controle%20de%20helic%C3%B3pteros%20em%20S%C3%A3o%20Paulo), serviço desenvolvido pela [**Força Aérea Brasileira (FAB)**](https://www.fab.mil.br/) por meio do [**Departamento de Controle do Espaço Aéreo (DECEA)**](https://www.decea.mil.br/). Operado no contexto da Torre de Controle de Congonhas, o sistema coordena o fluxo de helicópteros e contribui para a convivência segura entre as operações dessas aeronaves e o tráfego regular de aviões. [DECEA atua no controle de tráfego aéreo de helicópteros — FAB](https://www.fab.mil.br/noticias/imprime/42044/SEGURAN%C3%87A%20DE%20VOO%20-%20DECEA%20atua%20no%20Controle%20de%20Tr%C3%A1fego%20A%C3%A9reo%20de%20Helic%C3%B3pteros%20do%20Brasil) · [CRCEA-SE — DECEA](https://www.decea.mil.br/?i=unidades&p=crcea-se)
+
+Essas condições tornam São Paulo um cenário real e desafiador para aplicações de inteligência geoespacial baseada em IA. O **Helipad Detector não realiza controle de tráfego aéreo** e não substitui sistemas operacionais como o HELICONTROL. Seu objetivo é apoiar o mapeamento de infraestrutura, identificando, a partir de imagens de satélite, locais com características visuais compatíveis com helipontos e organizando essas informações como dados geográficos para análise urbana, pesquisa acadêmica e futuras aplicações de Smart Cities.
+
+A plataforma implementa um fluxo completo de IA, incluindo coleta de dados públicos, geocodificação, aquisição de imagens de satélite, anotação manual com [**Roboflow**](https://roboflow.com/), treinamento de modelos [**Ultralytics YOLOv8**](https://docs.ultralytics.com/models/yolov8/) e [**Ultralytics YOLO11**](https://docs.ultralytics.com/models/yolo11/), além de validação em condições reais em mais de **7.900 tiles de satélite**. Seu dashboard interativo disponibiliza informações sobre o pipeline, os datasets, os resultados de desempenho e as limitações identificadas, reforçando princípios de reprodutibilidade, explicabilidade e Inteligência Artificial Responsável.
 
 <br><br>
 
-
 ## [Contexto Global do Tráfego de Helicópteros — Por que São Paulo?]()
 
+A escolha de São Paulo não é incidental. Grandes metrópoles como Nova York, Tóquio, Rio de Janeiro, Londres, Cidade do México e Bogotá utilizam helicópteros em diferentes combinações de transporte executivo, turismo, emergência médica, segurança pública, serviços governamentais e operações especializadas.
 
-A escolha de São Paulo como cenário real do projeto não é incidental. A tabela abaixo posiciona a atividade de helicópteros em helipontos localizados em coberturas de edifícios da cidade em relação a outros grandes centros mundiais de aviação de helicópteros, utilizando um índice relativo de tamanho da frota e densidade operacional:
+São Paulo, contudo, destaca-se pela combinação de uma frota urbana de grande porte, elevada densidade de edifícios, presença expressiva de helipontos em coberturas e um volume diário de operações que exige gerenciamento especializado. A existência do **HELICONTROL** evidencia a complexidade prática dessa mobilidade aérea e reforça a pertinência de utilizar a cidade como estudo de caso para a detecção automatizada de possíveis helipontos.
 
 <br>
 
-| [Posição]() | [Cidade]()  | [País]()  | [Principal Indicador]()  | [Índice]() <sub>(Índice Relativo)</sub> | [Frota Estimada]() <sub>(Helicópteros)</sub> | [Destaque]()  |
-|:---:|---|---|---|:---:|:---:|---|
-| [**1º**]()  | **São Paulo** | 🇧🇷 Brasil | Maior frota | **27,7%** | 400+ | ~2.200 pousos/decolagens diários na região metropolitana |
-| [**2º**]()  | **Nova York** | 🇺🇸 EUA | Frota + tráfego urbano intenso | **25,5%** | — | Forte uso executivo, turístico e de transporte |
-| [**3º**]()  | **Tóquio** | 🇯🇵 Japão | Frota expressiva | **23,9%** | — | Operações corporativas, emergenciais e de transporte |
-| [**4º**]()  | **Rio de Janeiro** | 🇧🇷 Brasil | Frota + operações offshore | **22,8%** | — | Atividade significativa relacionada a petróleo e gás |
-| [**5º**]()  | **Londres** | 🇬🇧 Reino Unido | Tráfego executivo | **21,3%** | — | Forte mercado corporativo e heliportos urbanos |
-| [**6º**]()  | **Belo Horizonte** | 🇧🇷 Brasil | Frota expressiva | **20,2%** | — | Aviação executiva e corporativa relevante |
-| [**7º**]()  | **Santiago** | 🇨🇱 Chile | Frota expressiva | **20,1%** | — | Aviação executiva e operações especiais |
-| [**8º**]()  | **Cidade do México** | 🇲🇽 México | Frota expressiva | **19,8%** | — | Transporte executivo e operações governamentais |
-| [**9º**]()  | **Bogotá** | 🇨🇴 Colômbia | Frota expressiva | **19,1%** | — | Operações executivas, emergenciais e especiais |
-| [**10º**]()  | **Pequim** | 🇨🇳 China | Frota expressiva | **13,6%** | — | Operações executivas, governamentais e especiais |
+| Cidade                                                                                              | País                | Contexto de mobilidade aérea por helicópteros                                                     | Fonte de referência                                                                                    |
+| --------------------------------------------------------------------------------------------------- | ------------------- | ------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------ |
+| [**São Paulo**](https://www1.folha.uol.com.br/tv/2026/04/sao-paulo-a-cidade-dos-helicopteros.shtml) | 🇧🇷 Brasil         | Mais de 400 helicópteros registrados, mais de 260 helipontos e elevado volume diário de operações | [Folha de S.Paulo](https://www1.folha.uol.com.br/tv/2026/04/sao-paulo-a-cidade-dos-helicopteros.shtml) |
+| [Nova York](https://www.nyc.gov/site/edc/index.page)                                                | 🇺🇸 Estados Unidos | Operações turísticas, executivas, médicas e de mobilidade urbana                                  | [NYC Economic Development Corporation](https://www.nyc.gov/site/edc/index.page)                        |
+| [Tóquio](https://www.mlit.go.jp/en/)                                                                | 🇯🇵 Japão          | Operações corporativas, emergenciais, de segurança e transporte especializado                     | [Ministry of Land, Infrastructure, Transport and Tourism](https://www.mlit.go.jp/en/)                  |
+| [Rio de Janeiro](https://www.gov.br/anac/pt-br)                                                     | 🇧🇷 Brasil         | Aviação executiva, transporte urbano e operações relacionadas ao setor offshore                   | [ANAC](https://www.gov.br/anac/pt-br)                                                                  |
+| [Londres](https://londonheliport.co.uk/)                                                            | 🇬🇧 Reino Unido    | Mercado executivo e infraestrutura de heliporto urbano                                            | [London Heliport](https://londonheliport.co.uk/)                                                       |
+| [Belo Horizonte](https://www.gov.br/anac/pt-br)                                                     | 🇧🇷 Brasil         | Operações corporativas e aviação executiva                                                        | [ANAC](https://www.gov.br/anac/pt-br)                                                                  |
+| [Santiago](https://www.dgac.gob.cl/)                                                                | 🇨🇱 Chile          | Operações executivas, corporativas e especializadas                                               | [DGAC Chile](https://www.dgac.gob.cl/)                                                                 |
+| [Cidade do México](https://www.gob.mx/afac)                                                         | 🇲🇽 México         | Transporte executivo, operações governamentais e de segurança                                     | [AFAC México](https://www.gob.mx/afac)                                                                 |
+| [Bogotá](https://www.aerocivil.gov.co/)                                                             | 🇨🇴 Colômbia       | Operações executivas, de emergência e serviços especiais                                          | [Aerocivil Colômbia](https://www.aerocivil.gov.co/)                                                    |
+| [Pequim](https://www.caac.gov.cn/EN/)                                                               | 🇨🇳 China          | Operações governamentais, executivas e serviços especializados                                    | [CAAC China](https://www.caac.gov.cn/EN/)                                                              |
 
 <br><br>
 
 > [!TIP]
-> **Índice** representa uma medida relativa de presença/tráfego de helicópteros, combinando tamanho da frota e densidade operacional. A frota estimada de **400+ helicópteros** e os **~2.200 pousos/decolagens diários** de São Paulo — mencionados no Overview acima — colocam a cidade no topo deste ranking global, razão central pela qual o projeto se concentra especificamente em São Paulo, em vez de uma cidade com infraestrutura de helipontos menos densa ou já amplamente mapeada.
-
+> São Paulo é o foco do **Helipad Detector** pela combinação de alta densidade urbana, grande concentração de edifícios, infraestrutura de helipontos em coberturas e tráfego intenso de helicópteros. O projeto utiliza esse contexto para demonstrar como a Visão Computacional e os dados de satélite podem apoiar o mapeamento automatizado de infraestrutura urbana. As detecções do modelo representam **candidatos visuais** e não constituem confirmação regulatória, operacional ou aeronáutica da existência de um heliponto.
 
 <br><br>
+<!-- ========= END Overview ========= -->
+
 
 
 ## [Principais Recursos]()
