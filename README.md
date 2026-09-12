@@ -108,7 +108,7 @@
 **Collaborators:** Carlos Antonio dos Santos Roth Gorham]() · [Pedro Vyctor Almeida](https://github.com/ppvyctor/Helipoint-Detector)
 
 
-<br>
+<br><br>
 
 ### [Contribution Attribution]()
 
