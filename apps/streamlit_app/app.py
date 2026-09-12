@@ -1047,6 +1047,72 @@ def blue_scale(t: float) -> str:
     return _rgb_to_hex(tuple(int(a + (b - a) * t) for a, b in zip(start, end)))
 
 
+# ---- Standardized "Blues" gradient (single source of truth) -----------
+# This is the exact matplotlib "Blues" colormap used by the About tab's
+# "Top 10 Cities" table (the look the team wants everywhere): light blue
+# at frac=0.0, deep navy at frac=1.0. Every ranked/valued table, metric
+# card, bar chart and pipeline step in the dashboard should call
+# blues_scale()/style_rows_by_rank()/style_rows_by_value() below instead
+# of rolling its own gradient — that's what was causing the same visual
+# idea (a blue ranking gradient) to look different in different tabs
+# (navy->teal cards here, a light-to-navy 2-stop hand-rolled scale there,
+# pandas' own per-column .background_gradient() elsewhere, each with a
+# different curve and no guaranteed readable text color).
+def blues_scale(frac: float) -> str:
+    """Returns a hex color from matplotlib's real 'Blues' colormap for a
+    0..1 fraction. frac=1.0 -> darkest navy, frac=0.0 -> lightest blue."""
+    frac = max(0.0, min(1.0, frac))
+    rgba = plt.colormaps["Blues"](frac)
+    return "#{:02x}{:02x}{:02x}".format(*(int(c * 255) for c in rgba[:3]))
+
+
+def style_rows_by_rank(obj):
+    """Paints every row of an already-sorted, best-first table with the
+    standardized Blues gradient (same technique as the Top 10 Cities
+    table): row 0 gets the darkest navy, the last row the lightest blue,
+    with a readable text color computed per row. Accepts either a plain
+    DataFrame or a Styler that already has .format() applied — always
+    returns a Styler. Use this for tables where being FIRST is what
+    matters (a rank column, or rows pre-sorted best-to-worst); use
+    style_rows_by_value() instead when the *value* itself (not row
+    position) should drive how dark a row is."""
+    is_styler = hasattr(obj, "data")
+    df = obj.data if is_styler else obj
+    styler = obj if is_styler else obj.style
+    n = len(df)
+
+    def _row_style(row):
+        pos = df.index.get_loc(row.name)
+        frac = 1 - pos / max(n - 1, 1)
+        bg = blues_scale(frac)
+        return [f"background-color:{bg}; color:{readable_text_color(bg)};"] * len(row)
+
+    return styler.apply(_row_style, axis=1)
+
+
+def style_rows_by_value(obj, value_col: str, higher_is_darker: bool = True):
+    """Paints every row of a table with the standardized Blues gradient,
+    scaled by an actual metric column (value_col) rather than row
+    position — for tables kept in a fixed, meaningful order (e.g.
+    exp1/exp2/exp3 in experiment order) where color should still reflect
+    which rows scored better. Accepts a DataFrame or a Styler (with
+    .format() already applied) and always returns a Styler."""
+    is_styler = hasattr(obj, "data")
+    df = obj.data if is_styler else obj
+    styler = obj if is_styler else obj.style
+    vmin, vmax = df[value_col].min(), df[value_col].max()
+    span = (vmax - vmin) or 1.0
+
+    def _row_style(row):
+        frac = (row[value_col] - vmin) / span
+        if not higher_is_darker:
+            frac = 1 - frac
+        bg = blues_scale(frac)
+        return [f"background-color:{bg}; color:{readable_text_color(bg)};"] * len(row)
+
+    return styler.apply(_row_style, axis=1)
+
+
 # ========================= MAP TILE PROVIDERS =========================
 # Using explicit URL templates (instead of Folium's built-in preset strings
 # like "CartoDB dark_matter") because Folium ignores the custom `name=` we
@@ -3075,17 +3141,29 @@ with tab5:
     for row in rows:
         row_cols = st.columns(3)
         for col, (icon, title, desc) in zip(row_cols, row):
-            frac = step_idx / (n - 1) if n > 1 else 0.0
-            base = blue_scale(frac)
+            # Standardized Blues gradient (blues_scale) instead of the old
+            # blue_scale() navy->teal family — step 1 is the darkest navy,
+            # the last step the lightest blue, same rank scale as Top 10
+            # Cities/the ranking tables/cards above. The diagonal
+            # light/dark 3-stop blend (_shade) is kept for the card's own
+            # depth effect, just recolored onto the Blues base tone.
+            frac = 1 - (step_idx / (n - 1) if n > 1 else 0.0)
+            # Compressed to [0.30, 1.00] instead of the full [0, 1] Blues
+            # range: with 9 steps, the raw range would fade the last cards
+            # to near-white, too pale for a glowing gradient card. Same
+            # colormap/scale as everywhere else, just floored so every
+            # step keeps enough color depth.
+            base = blues_scale(0.30 + 0.70 * frac)
             bg_light = _shade(base, 0.16)
             bg_dark = _shade(base, -0.30)
             gradient = f"linear-gradient(145deg, {bg_light} 0%, {base} 55%, {bg_dark} 100%)"
             accent_rgb = _hex_to_rgb(base)
             glow = f"rgba({accent_rgb[0]},{accent_rgb[1]},{accent_rgb[2]},0.45)"
-            title_color = "#FFFFFF"
-            desc_color = "#E2E8F0"
-            badge_bg = "rgba(255,255,255,0.16)"
-            badge_color = "#FFFFFF"
+            _pipeline_txt = readable_text_color(base)
+            title_color = _pipeline_txt
+            desc_color = "#E2E8F0" if _pipeline_txt == "#ffffff" else "#1E293B"
+            badge_bg = "rgba(255,255,255,0.16)" if _pipeline_txt == "#ffffff" else "rgba(15,23,42,0.16)"
+            badge_color = _pipeline_txt
             with col:
                 st.markdown(f"""
                 <div class="flow-step" style="background:{gradient}; border-top:3px solid rgba(255,255,255,0.35); box-shadow: 0 6px 20px {glow}, inset 0 1px 0 rgba(255,255,255,0.12);">
@@ -3122,29 +3200,21 @@ with tab_about:
     _rank_col = _cities_cols[0]
     cities_df = pd.DataFrame(_cities_rows, columns=_cities_cols).set_index(_rank_col)
 
-    # Same "Blues" gradient look as "Compare all 3 models" (Field Detections
-    # tab) — matplotlib's actual colormap, not an approximation, so the
-    # shades genuinely match. Gradiented by Rank position (1st..10th), not
-    # by a measured value: the old "Rate (%)" column this table used to
-    # carry was removed earlier (it turned out to be an unrelated table's
-    # numbers copy-pasted in, not a real per-city statistic — see the
-    # comment above cities.table.data) and there's no other numeric column
-    # here that isn't itself editorial ("Estimated Fleet" is "400+"/"—"
-    # strings, not something you can average or gradient). Rank is just
-    # display order, so coloring by it doesn't imply a precision the table
-    # doesn't have — it's a reading aid, not a re-introduced statistic.
-    # Applied across the WHOLE row (every column, same shade) rather than
-    # one narrow column, which reads as more deliberate/cohesive than a
-    # single colored strip next to otherwise-plain cells.
-    def _rank_row_style(row):
-        rank_num = int(re.sub(r"\D", "", str(row.name)) or 1)
-        frac = 1 - (rank_num - 1) / max(len(cities_df) - 1, 1)
-        rgba = plt.colormaps["Blues"](frac)
-        hexcolor = "#{:02x}{:02x}{:02x}".format(*(int(c * 255) for c in rgba[:3]))
-        text_color = readable_text_color(hexcolor)
-        return [f"background-color:{hexcolor}; color:{text_color};"] * len(row)
-
-    st.dataframe(cities_df.style.apply(_rank_row_style, axis=1), use_container_width=True)
+    # Standardized Blues row gradient (see style_rows_by_rank) — this is the
+    # reference look every other ranked table/card/chart in the dashboard
+    # now matches. Gradiented by Rank position (1st..10th), not by a
+    # measured value: the old "Rate (%)" column this table used to carry
+    # was removed earlier (it turned out to be an unrelated table's numbers
+    # copy-pasted in, not a real per-city statistic — see the comment above
+    # cities.table.data) and there's no other numeric column here that
+    # isn't itself editorial ("Estimated Fleet" is "400+"/"—" strings, not
+    # something you can average or gradient). Rank is just display order,
+    # so coloring by it doesn't imply a precision the table doesn't have —
+    # it's a reading aid, not a re-introduced statistic. Applied across the
+    # WHOLE row (every column, same shade) rather than one narrow column,
+    # which reads as more deliberate/cohesive than a single colored strip
+    # next to otherwise-plain cells.
+    st.dataframe(style_rows_by_rank(cities_df), use_container_width=True)
 
     st.markdown(f"""
     <div style="border-left:3px solid #14b8a6; background:rgba(14,117,109,0.08);
@@ -3320,26 +3390,39 @@ with tab_metrics:
             "box-shadow:0 3px 10px rgba(15,23,42,0.25); "
             "border:1px solid rgba(255,255,255,0.10);"
         )
+        # Standardized Blues gradient (blues_scale), scaled by each
+        # experiment's actual mAP@50-95 — the best-performing experiment's
+        # card is the darkest navy, matching the comparison table right
+        # below it, instead of the old blue_scale() navy->teal gradient
+        # tied to row position only.
+        _map_min = metrics_df["mAP@50-95"].min()
+        _map_span = (metrics_df["mAP@50-95"].max() - _map_min) or 1.0
 
         for i, row in metrics_df.iterrows():
             target = cols[i] if n_exp <= 4 else st
             with target:
                 netron_link = netron_url_for(row['Experiment']) or "https://netron.app/"
                 netron_label = t("metrics.netron_view") if row['Experiment'] in MODEL_WEIGHTS_BY_EXP else t("metrics.netron_manual")
-                card_bg = blue_scale(i / (n_exp - 1) if n_exp > 1 else 0.0)
+                card_bg = blues_scale((row["mAP@50-95"] - _map_min) / _map_span)
+                # Real Blues runs light->navy (unlike the old navy->teal
+                # blue_scale, which was always dark), so text color is
+                # computed per card instead of hardcoded white — keeps the
+                # lowest-scoring card's paler background readable too.
+                _txt = readable_text_color(card_bg)
+                _sub = "#DCE8F5" if _txt == "#ffffff" else "#1E293B"
                 st.markdown(f"""
                 <div style="{_metric_card_style} background:{card_bg};">
-                    <h4 style="margin:0 0 8px 0; color:#FFFFFF;">{row['Experiment']}</h4>
-                    <p style="margin:2px 0; color:#DCE8F5; font-size:13px;">
+                    <h4 style="margin:0 0 8px 0; color:{_txt};">{row['Experiment']}</h4>
+                    <p style="margin:2px 0; color:{_sub}; font-size:13px;">
                         {t('metrics.best_epoch')} {row['Best Epoch']} / {row['Total Epochs']}
                     </p>
-                    <p style="margin:6px 0; font-size:22px; font-weight:700; color:#FFFFFF;">
+                    <p style="margin:6px 0; font-size:22px; font-weight:700; color:{_txt};">
                         {row['mAP@50-95']:.3f}
                     </p>
-                    <p style="margin:0; color:#DCE8F5; font-size:12px;">mAP@50-95</p>
+                    <p style="margin:0; color:{_sub}; font-size:12px;">mAP@50-95</p>
                     <p style="margin:8px 0 0 0;">
                         <a href="{netron_link}" target="_blank" rel="noopener noreferrer"
-                           style="font-size:12px; color:#FFFFFF; font-weight:600; text-decoration:underline;">
+                           style="font-size:12px; color:{_txt}; font-weight:600; text-decoration:underline;">
                             {netron_label}
                         </a>
                     </p>
@@ -3365,11 +3448,19 @@ with tab_metrics:
                         st.rerun()
 
         st.markdown(t("metrics.comparison_title"))
+        # Standardized Blues row gradient (style_rows_by_value): unlike the
+        # ranked tables above, this one intentionally keeps its natural
+        # exp1/exp2/exp3 order rather than resorting by performance, so the
+        # shade is driven by the mAP@50-95 VALUE of each row (darker =
+        # better) instead of row position. Whole row painted, same readable
+        # text-color logic as every other table — no more single-column
+        # .background_gradient() leaving the rest of the row unstyled.
+        _metrics_table_styler = metrics_df.set_index("Experiment").style.format({
+            "Precision": "{:.3f}", "Recall": "{:.3f}",
+            "mAP@50": "{:.3f}", "mAP@50-95": "{:.3f}",
+        })
         st.dataframe(
-            metrics_df.set_index("Experiment").style.format({
-                "Precision": "{:.3f}", "Recall": "{:.3f}",
-                "mAP@50": "{:.3f}", "mAP@50-95": "{:.3f}",
-            }).background_gradient(cmap="Blues", subset=["mAP@50-95"]),
+            style_rows_by_value(_metrics_table_styler, "mAP@50-95"),
             use_container_width=True,
         )
 
@@ -3456,30 +3547,28 @@ with tab_field:
             "box-shadow:0 3px 10px rgba(15,23,42,0.25); "
             "border:1px solid rgba(255,255,255,0.10);"
         )
-        with card_cols[0]:
-            bg0 = blue_scale(0.0)
-            st.markdown(f"""
-            <div style="{_field_card_style} background:{bg0};">
-                <p style="margin:6px 0; font-size:26px; font-weight:700; color:#FFFFFF;">{total_detected}</p>
-                <p style="margin:0; color:#DCE8F5; font-size:12px;">{t("field.detected_total")}</p>
-            </div>
-            """, unsafe_allow_html=True)
-        with card_cols[1]:
-            bg1 = blue_scale(0.5)
-            st.markdown(f"""
-            <div style="{_field_card_style} background:{bg1};">
-                <p style="margin:6px 0; font-size:26px; font-weight:700; color:#FFFFFF;">{total_tiles}</p>
-                <p style="margin:0; color:#DCE8F5; font-size:12px;">{t("field.tiles_processed")}</p>
-            </div>
-            """, unsafe_allow_html=True)
-        with card_cols[2]:
-            bg2 = blue_scale(1.0)
-            st.markdown(f"""
-            <div style="{_field_card_style} background:{bg2};">
-                <p style="margin:6px 0; font-size:26px; font-weight:700; color:#FFFFFF;">{total_rate*100:.1f}%</p>
-                <p style="margin:0; color:#DCE8F5; font-size:12px;">{t("field.overall_rate")}</p>
-            </div>
-            """, unsafe_allow_html=True)
+        # Standardized Blues gradient (blues_scale), same 3-step rank scale
+        # as Top 10 Cities: card 1 (headline number) darkest navy, fading
+        # to the lightest blue by card 3 — replaces the old blue_scale()
+        # navy->teal gradient so every card family in the app shares one
+        # visual language. Text color is computed per card since real
+        # Blues runs light at the low end.
+        _field_cards = [
+            (total_detected, t("field.detected_total"), 1.0),
+            (total_tiles, t("field.tiles_processed"), 0.5),
+            (f"{total_rate*100:.1f}%", t("field.overall_rate"), 0.0),
+        ]
+        for col, (value, label, frac) in zip(card_cols, _field_cards):
+            with col:
+                bg = blues_scale(frac)
+                txt = readable_text_color(bg)
+                sub = "#DCE8F5" if txt == "#ffffff" else "#1E293B"
+                st.markdown(f"""
+                <div style="{_field_card_style} background:{bg};">
+                    <p style="margin:6px 0; font-size:26px; font-weight:700; color:{txt};">{value}</p>
+                    <p style="margin:0; color:{sub}; font-size:12px;">{label}</p>
+                </div>
+                """, unsafe_allow_html=True)
 
         if regions:
             st.markdown("")
@@ -3522,10 +3611,19 @@ with tab_field:
             except Exception:
                 pass  # fall back to the unmerged table below
 
+            # Standardized Blues gradient (blues_scale), one shade per bar
+            # by rank position — regions_df is already sorted best-first by
+            # detection_rate here, so the tallest bar is darkest navy and
+            # the shortest is lightest blue, matching the ranking table and
+            # Top 10 Cities instead of the old flat single navy color.
+            _n_bars = len(regions_df)
+            _bar_colors = [
+                blues_scale(1 - i / max(_n_bars - 1, 1)) for i in range(_n_bars)
+            ]
             fig_regions = go.Figure(go.Bar(
                 x=regions_df["region"],
                 y=regions_df["detection_rate"] * 100,
-                marker_color="#1E3A8A",
+                marker_color=_bar_colors,
                 text=[f"{v}/{tot}" for v, tot in zip(regions_df["tiles_detected"], regions_df["tiles_total"])],
                 textposition="outside",
             ))
@@ -3556,12 +3654,20 @@ with tab_field:
             ]]
 
             st.markdown(f"#### {t('field.ranking_title')}")
-            st.dataframe(
-                regions_df_display.set_index(t("field.rank_col")).style.format({
-                    t("field.rate_col"): "{:.1%}", t("field.top_confidence_col"): "{:.2f}",
-                }).background_gradient(cmap="Blues", subset=[t("field.detected_col")]),
-                use_container_width=True,
-            )
+            # Standardized Blues row gradient (style_rows_by_rank), same as
+            # the About tab's "Top 10 Cities" table — the whole row is
+            # shaded by rank position (table is already sorted best-first
+            # by tiles_detected), instead of the old .background_gradient()
+            # on a single "Detected" column. That single-column gradient
+            # used pandas' own min/max normalization on just that column,
+            # leaving every other cell in its default (near-white) style —
+            # inconsistent with the rest of the row and with no guaranteed
+            # readable text color, which is what made the table look
+            # mismatched/"feio" after the last update.
+            _ranking_styler = regions_df_display.set_index(t("field.rank_col")).style.format({
+                t("field.rate_col"): "{:.1%}", t("field.top_confidence_col"): "{:.2f}",
+            })
+            st.dataframe(style_rows_by_rank(_ranking_styler), use_container_width=True)
             st.caption(t("field.rate_definition"))
 
             if "Inter-Zone Corridor" in regions_df["region"].values:
@@ -3598,12 +3704,16 @@ with tab_field:
                 ]).sort_values(exp_names_sorted[0], ascending=False, na_position="last")
 
                 st.markdown(t("field.compare.table_title"))
-                st.dataframe(
-                    comp_df.set_index("Region").style.format(
-                        {e: "{:.1%}" for e in exp_names_sorted}, na_rep="—"
-                    ).background_gradient(cmap="Blues", subset=exp_names_sorted),
-                    use_container_width=True,
+                # Standardized Blues row gradient: comp_df is already
+                # sorted best-first by exp_names_sorted[0], so a full-row
+                # rank-based shade (same technique as Top 10 Cities) reads
+                # cleanly instead of pandas' old per-column
+                # .background_gradient() across all 3 experiment columns,
+                # which colored each column on its own separate scale.
+                _comp_styler = comp_df.set_index("Region").style.format(
+                    {e: "{:.1%}" for e in exp_names_sorted}, na_rep="—"
                 )
+                st.dataframe(style_rows_by_rank(_comp_styler), use_container_width=True)
 
                 comp_totals = {
                     exp_name: summary.get("totals", {}).get("detection_rate", 0.0)
