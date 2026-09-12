@@ -107,7 +107,7 @@
 **Author:** [Fabiana ⚡️ Campanari](https://linktr.ee/fabianacampanari) <br>
 **Collaborators:** [Carlos Antonio dos Santos Roth Gorham]() · [Pedro Vyctor Almeida](https://github.com/ppvyctor/Helipoint-Detector) <br>
 
-# <br>
+# <br><br>
 
 ### [Contribution Attribution]()
 
