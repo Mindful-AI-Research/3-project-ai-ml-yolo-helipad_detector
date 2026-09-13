@@ -721,11 +721,20 @@ TR = {
 "about.authors": {"en": "Author", "pt": "Autor"},
 "about.collaborators": {"en": "Collaborators", "pt": "Colaboradores"},
 
-# Demo videos. Only the training run and the scraping bot are embedded
-# here — a dashboard-demo video is intentionally NOT included in the app
-# itself, since the running app *is* the dashboard demo; that video lives
-# only in README.md / the presentation, where a live app isn't available.
-"about.demos.header": {"en": "🎥 Demo Videos", "pt": "🎥 Vídeos de Demonstração"},
+# Demo videos. Split across two locations, each next to its relevant
+# content: the scraping-bot demo sits in About (right below the credits),
+# and the training-run demo sits in Experiment Metrics (right below the
+# Confusion Matrix). No dashboard-demo video is embedded anywhere in the
+# app itself — the running app *is* that demo; that video only appears in
+# README.md / the presentation, where a live app isn't available.
+"about.demos.scraping.header": {
+    "en": "🎥 Demo — Automated Helipad Scraping",
+    "pt": "🎥 Demo — Coleta Automatizada de Helipontos",
+},
+"about.demos.training.header": {
+    "en": "🎥 Demo — Model Training",
+    "pt": "🎥 Demo — Treinamento do Modelo",
+},
 "about.demos.training.caption": {
     "en": "Helipad Detection — YOLO11 model training run.",
     "pt": "Detecção de Helipontos — execução do treinamento do modelo YOLO11.",
@@ -3374,16 +3383,13 @@ with tab_about:
     </div>
     """, unsafe_allow_html=True)
 
-    st.markdown(f"#### {t('about.demos.header')}")
-    demo_col1, demo_col2 = st.columns(2)
-    with demo_col1:
-        st.video("https://github.com/user-attachments/assets/5b7d581c-ab5e-416e-8471-d91136b2ada0")
-        st.caption(t("about.demos.training.caption"))
-        st.caption(t("about.demos.training.soundtrack"))
-    with demo_col2:
-        st.video("https://github.com/user-attachments/assets/eab6e951-6b66-4c6c-a2c6-23ee2f902c5f")
-        st.caption(t("about.demos.scraping.caption"))
-        st.caption(t("about.demos.scraping.soundtrack"))
+    # Scraping demo lives here, full-width, right below the credits — the
+    # training demo moved to the Experiment Metrics tab (below the
+    # Confusion Matrix), closer to where training results are discussed.
+    st.markdown(f"#### {t('about.demos.scraping.header')}")
+    st.video("https://github.com/user-attachments/assets/eab6e951-6b66-4c6c-a2c6-23ee2f902c5f")
+    st.caption(t("about.demos.scraping.caption"))
+    st.caption(t("about.demos.scraping.soundtrack"))
 
 # ====================== TAB 7: Downloads ======================
 with tab7:
@@ -3616,6 +3622,12 @@ with tab_metrics:
                         st.image(str(cm_norm_path), caption=f"{cm_exp} — {t('metrics.cm_norm_caption')}", use_container_width=True)
                     else:
                         st.info(t("metrics.cm_norm_not_found").format(path=cm_norm_path.resolve()))
+
+        # ---- Training-run demo video, right below the Confusion Matrix ----
+        with st.expander(t("about.demos.training.header").lstrip("#").strip(), expanded=True):
+            st.video("https://github.com/user-attachments/assets/5b7d581c-ab5e-416e-8471-d91136b2ada0")
+            st.caption(t("about.demos.training.caption"))
+            st.caption(t("about.demos.training.soundtrack"))
 
 # ========================= FIELD DETECTIONS BY REGION =========================
 with tab_field:
