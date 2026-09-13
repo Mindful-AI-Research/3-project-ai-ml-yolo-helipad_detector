@@ -99,110 +99,146 @@ TR = {
         "pt": "CSV de coordenadas de descoberta não encontrado em `{path}`.",
     },
 
-    # ---- Top 10 helicopter cities table ----
+    # ---- Global Context — helicopter air mobility worldwide ----
+    # This table used to be a "Top 10" ranking with a fabricated "Rate (%)"
+    # column (those numbers were an exact copy of this project's own SP
+    # field-validation detection-rate-by-region table, relabeled onto 10
+    # world cities — unrelated data, invented precision, not a sourced
+    # statistic). It has been replaced with a non-ranked Global Context
+    # table: City / Country / Helicopter Air Mobility Context / Reference
+    # Source, one real official source per city, no numeric column at all.
+    # Mirrors the "Global Context" table and its [!NOTE]/[!TIP] callouts in
+    # README.md exactly — see conteudo_pt_traduzido.md for the approved text.
     "cities.header": {
-        "en": "🚁 Top 10 — Cities with the Highest Presence/Traffic of Helicopters",
-        "pt": "🚁 Top 10 — Cidades com maior presença/tráfego de helicópteros",
+        "en": "🌍 Global Context — Helicopter Air Mobility Worldwide",
+        "pt": "🌍 Contexto Global — Mobilidade Aérea por Helicóptero no Mundo",
     },
+    # Holds the [!TIP] callout text, rendered as the highlighted teal card
+    # right below the table.
     "cities.why_sao_paulo": {
-        "en": "São Paulo leads the global ranking of helicopter presence/traffic — the largest "
-              "estimated fleet (400+) and roughly 2,200 rooftop landings and takeoffs per day in "
-              "the metropolitan area. That real density of rooftop helicopter activity is why this "
-              "project specifically targets São Paulo, rather than a city with sparser or "
-              "already-mapped helipad infrastructure. Key areas include Faria Lima, Itaim Bibi, "
-              "Vila Olímpia, Brooklin, Pinheiros, and Vila Nova Conceição.",
-        "pt": "São Paulo lidera o ranking global de presença/tráfego de helicópteros — maior frota "
-              "estimada (400+) e cerca de 2.200 pousos e decolagens por dia na região metropolitana. "
-              "Essa densidade real de atividade de helicópteros em telhados é o motivo pelo qual "
-              "este projeto tem como alvo especificamente São Paulo, em vez de uma cidade com "
-              "infraestrutura de helipontos mais esparsa ou já mapeada. Entre as áreas de maior "
-              "relevância estão Faria Lima, Itaim Bibi, Vila Olímpia, Brooklin, Pinheiros e Vila "
-              "Nova Conceição.",
+        "en": "São Paulo was selected as the focus of **Helipad Detector** due to the combination "
+              "of high urban density, a large concentration of buildings, a significant presence "
+              "of rooftop heliport infrastructure, and intense helicopter traffic. This context "
+              "demonstrates how Computer Vision and satellite data can support the automated "
+              "mapping of urban infrastructure. The model's detections represent **visual "
+              "candidates** and do not constitute regulatory, operational, or aeronautical "
+              "confirmation of the existence of a heliport.",
+        "pt": "São Paulo foi escolhida como foco do **Helipad Detector** pela combinação de "
+              "elevada densidade urbana, grande concentração de edifícios, presença significativa "
+              "de infraestrutura de helipontos em coberturas e tráfego intenso de helicópteros. "
+              "Esse contexto permite demonstrar como a Visão Computacional e os dados de satélite "
+              "podem apoiar o mapeamento automatizado de infraestrutura urbana. As detecções do "
+              "modelo representam **candidatos visuais** e não constituem confirmação regulatória, "
+              "operacional ou aeronáutica da existência de um heliponto.",
     },
+    # Holds the [!NOTE] callout, rendered as a blockquote right below the table.
     "cities.interpretation.title": {
-        "en": "📊 How to Read the Ranking",
-        "pt": "📊 Como interpretar o ranking",
+        "en": "📌 Note on This Table",
+        "pt": "📌 Nota sobre esta tabela",
     },
     "cities.interpretation.text": {
-        "en": "This ranking gives a comparative, editorial overview of helicopter presence and "
-              "activity across major cities — it is general context, not a project measurement. "
-              "Different metrics can be used to describe this kind of activity, including fleet "
-              "size, landing/takeoff movements, heliport operations, executive aviation, tourism, "
-              "emergency services, and offshore operations; this table does not assign a numeric "
-              "score to any of them (see the note above `cities.table.data` for why an earlier "
-              "version's percentage column was removed).",
-        "pt": "Este ranking oferece uma visão comparativa e editorial da presença e atividade de "
-              "helicópteros nas principais cidades analisadas — é contexto geral, não uma medição "
-              "do projeto. Diferentes métricas podem ser usadas para descrever esse tipo de "
-              "atividade, incluindo tamanho da frota, movimentos de pouso e decolagem, operações em "
-              "heliportos, aviação executiva, turismo, serviços de emergência e operações offshore; "
-              "esta tabela não atribui uma nota numérica a nenhuma delas (veja a nota acima de "
-              "`cities.table.data` sobre por que a coluna de percentual de uma versão anterior foi "
-              "removida).",
+        "en": "The cities presented in this table are qualitative references to urban "
+              "environments where helicopters are used in different operational contexts. The "
+              "selection does not constitute an official global ranking, a standardized "
+              "statistical comparison of fleets, or an operational database directly equivalent "
+              "across all locations. São Paulo is the primary study area of **Helipad Detector** "
+              "and presents a specific operational context, including specialized helicopter "
+              "traffic management through **HELICONTROL**.",
+        "pt": "As cidades apresentadas nesta tabela são referências qualitativas de ambientes "
+              "urbanos que utilizam helicópteros em diferentes contextos operacionais. A seleção "
+              "não constitui um ranking global oficial, uma comparação estatística padronizada de "
+              "frotas ou uma base de dados operacional diretamente equivalente entre todas as "
+              "localidades. São Paulo é a principal área de estudo do **Helipad Detector** e "
+              "apresenta um contexto operacional específico, incluindo o gerenciamento "
+              "especializado do tráfego de helicópteros por meio do **HELICONTROL**.",
     },
     "cities.table.columns": {
-        "en": ["Rank", "City", "Country", "Main Indicator",
-               "Estimated Fleet (Helicopters)", "Highlight"],
-        "pt": ["Rank", "Cidade", "País", "Indicador principal",
-               "Frota estimada (Helicópteros)", "Destaque"],
+        "en": ["City", "Country", "Helicopter Air Mobility Context", "Reference Source"],
+        "pt": ["Cidade", "País", "Contexto de mobilidade aérea por helicópteros", "Fonte de referência"],
     },
-    # NOTE: this table used to carry a "Rate (%)" column presented as each
-    # city's relative helicopter presence/traffic. It was removed — those
-    # numbers (27.7%, 25.5%, 23.9%, ...) turned out to be an exact,
-    # digit-for-digit copy of this project's own SP field-validation
-    # detection-rate-by-region table (see field.rank_col and the Field
-    # Detections tab), sorted descending and relabeled onto 10 world cities.
-    # That's unrelated data — a region's helipad-detection rate says nothing
-    # about a different city's helicopter fleet — so the column was invented
-    # precision, not a sourced statistic, and is better left out than kept
-    # with a caveat nobody will read. The city ranking and fleet-size figures
-    # themselves are left in as general/editorial context (not a project
-    # measurement), consistent with Section 13 of the report's transparency
-    # about known data-integrity issues once found and corrected.
     "cities.table.data": {
         "en": [
-            ["1st", "São Paulo", "🇧🇷 Brazil", "Largest fleet", "400+",
-             "~2,200 landings/takeoffs daily in the metropolitan area"],
-            ["2nd", "New York", "🇺🇸 USA", "Fleet + intense urban traffic", "—",
-             "Strong executive, tourist, and transport use"],
-            ["3rd", "Tokyo", "🇯🇵 Japan", "Large fleet", "—",
-             "Corporate, emergency, and transport operations"],
-            ["4th", "Rio de Janeiro", "🇧🇷 Brazil", "Fleet + offshore operations", "—",
-             "Significant activity related to oil and gas"],
-            ["5th", "London", "🇬🇧 United Kingdom", "Executive traffic", "—",
-             "Strong corporate market and urban heliports"],
-            ["6th", "Belo Horizonte", "🇧🇷 Brazil", "Large fleet", "—",
-             "Strong executive and corporate aviation"],
-            ["7th", "Santiago", "🇨🇱 Chile", "Large fleet", "—",
-             "Executive aviation and special operations"],
-            ["8th", "Mexico City", "🇲🇽 Mexico", "Large fleet", "—",
-             "Executive transport and government operations"],
-            ["9th", "Bogotá", "🇨🇴 Colombia", "Large fleet", "—",
-             "Executive, emergency, and special operations"],
-            ["10th", "Beijing", "🇨🇳 China", "Large fleet", "—",
-             "Executive, governmental, and special operations"],
+            ["**São Paulo**", "🇧🇷 Brazil",
+             "Urban helicopter operations in a high-density environment, supported by specialized "
+             "HELICONTROL air traffic management within the Congonhas operational area",
+             "[**FAB** - Brazilian Air Force: HELICONTROL](https://www.fab.mil.br/noticias/imprime/42060/CONTROLE%20DO%20ESPA%C3%87O%20A%C3%89REO%20-%20HELICONTROL:%20Seguran%C3%A7a%20e%20fluidez%20no%20controle%20de%20helic%C3%B3pteros%20em%20S%C3%A3o%20Paulo)"],
+            ["New York City", "🇺🇸 United States",
+             "Public heliports, air taxi flights, general aviation, passenger transport, military "
+             "operations, and regulated sightseeing flights",
+             "[New York City Council — Helicopter Noise and Safety](https://council.nyc.gov/data/helicopter-noise-and-safety/)"],
+            ["Tokyo", "🇯🇵 Japan",
+             "Corporate, emergency, public safety, and specialized transport operations within the "
+             "context of Japanese civil aviation",
+             "[Japan Ministry of Land, Infrastructure, Transport and Tourism (MLIT)](https://www.mlit.go.jp/en/)"],
+            ["Rio de Janeiro", "🇧🇷 Brazil",
+             "Executive aviation, urban transport, and operations associated with offshore "
+             "activities in the oil and gas sectors",
+             "[National Civil Aviation Agency (ANAC)](https://www.gov.br/anac/pt-br)"],
+            ["London", "🇬🇧 United Kingdom",
+             "Urban heliport infrastructure serving executive operations, VIP services, landings, "
+             "takeoffs, refueling, and charter flights",
+             "[London Heliport](https://londonheliport.co.uk/)"],
+            ["Belo Horizonte", "🇧🇷 Brazil",
+             "Executive aviation, corporate operations, and helicopter use in specialized services",
+             "[National Civil Aviation Agency (ANAC)](https://www.gov.br/anac/pt-br)"],
+            ["Santiago", "🇨🇱 Chile",
+             "Executive, corporate, and specialized operations under the regulations of the "
+             "Chilean civil aviation authority",
+             "[General Directorate of Civil Aeronautics of Chile (DGAC)](https://www.dgac.gob.cl/)"],
+            ["Mexico City", "🇲🇽 Mexico",
+             "Executive transport, government activities, public safety, and specialized aerial "
+             "operations",
+             "[Federal Civil Aviation Agency of Mexico (AFAC)](https://www.gob.mx/afac)"],
+            ["Bogotá", "🇨🇴 Colombia",
+             "Executive, emergency, and specialized air services under the regulations of the "
+             "Colombian civil aviation authority",
+             "[Aerocivil Colombia](https://www.aerocivil.gov.co/)"],
+            ["Beijing", "🇨🇳 China",
+             "Government, executive, and specialized air services within the context of Chinese "
+             "civil aviation",
+             "[**CAAC** - Civil Aviation Administration of China](http://www.caac.gov.cn/English/)"],
         ],
         "pt": [
-            ["1º", "São Paulo", "🇧🇷 Brasil", "Maior frota", "400+",
-             "~2.200 pousos/decolagens diários na região metropolitana"],
-            ["2º", "Nova York", "🇺🇸 EUA", "Frota + intenso tráfego urbano", "—",
-             "Forte uso executivo, turístico e de transporte"],
-            ["3º", "Tóquio", "🇯🇵 Japão", "Grande frota", "—",
-             "Operações corporativas, emergência e transporte"],
-            ["4º", "Rio de Janeiro", "🇧🇷 Brasil", "Frota + operações offshore", "—",
-             "Grande atividade ligada ao petróleo e gás"],
-            ["5º", "Londres", "🇬🇧 Reino Unido", "Tráfego executivo", "—",
-             "Forte mercado corporativo e heliportos urbanos"],
-            ["6º", "Belo Horizonte", "🇧🇷 Brasil", "Grande frota", "—",
-             "Forte aviação executiva e corporativa"],
-            ["7º", "Santiago", "🇨🇱 Chile", "Grande frota", "—",
-             "Aviação executiva e operações especiais"],
-            ["8º", "Cidade do México", "🇲🇽 México", "Grande frota", "—",
-             "Transporte executivo e operações governamentais"],
-            ["9º", "Bogotá", "🇨🇴 Colômbia", "Grande frota", "—",
-             "Executivo, emergência e operações especiais"],
-            ["10º", "Pequim", "🇨🇳 China", "Grande frota", "—",
-             "Executivo, governamental e operações especiais"],
+            ["**São Paulo**", "🇧🇷 Brasil",
+             "Operações urbanas de helicópteros em um ambiente de alta densidade, apoiadas pelo "
+             "gerenciamento especializado do HELICONTROL na área operacional de Congonhas",
+             "[**FAB** - Força Aérea Brasileira: HELICONTROL](https://www.fab.mil.br/noticias/imprime/42060/CONTROLE%20DO%20ESPA%C3%87O%20A%C3%89REO%20-%20HELICONTROL:%20Seguran%C3%A7a%20e%20fluidez%20no%20controle%20de%20helic%C3%B3pteros%20em%20S%C3%A3o%20Paulo)"],
+            ["Nova York", "🇺🇸 Estados Unidos",
+             "Heliportos públicos, voos de táxi aéreo, aviação geral, transporte de passageiros, "
+             "operações militares e passeios turísticos regulamentados",
+             "[New York City Council — Helicopter Noise and Safety](https://council.nyc.gov/data/helicopter-noise-and-safety/)"],
+            ["Tóquio", "🇯🇵 Japão",
+             "Operações corporativas, emergenciais, de segurança pública e de transporte "
+             "especializado no contexto da aviação civil japonesa",
+             "[Ministério da Terra, Infraestrutura, Transporte e Turismo do Japão (MLIT)](https://www.mlit.go.jp/en/)"],
+            ["Rio de Janeiro", "🇧🇷 Brasil",
+             "Aviação executiva, transporte urbano e operações associadas às atividades offshore "
+             "dos setores de petróleo e gás",
+             "[Agência Nacional de Aviação Civil (ANAC)](https://www.gov.br/anac/pt-br)"],
+            ["Londres", "🇬🇧 Reino Unido",
+             "Infraestrutura de heliporto urbano destinada a operações executivas, serviços VIP, "
+             "pousos, decolagens, abastecimento e voos fretados",
+             "[London Heliport](https://londonheliport.co.uk/)"],
+            ["Belo Horizonte", "🇧🇷 Brasil",
+             "Aviação executiva, operações corporativas e utilização de helicópteros em serviços "
+             "especializados",
+             "[Agência Nacional de Aviação Civil (ANAC)](https://www.gov.br/anac/pt-br)"],
+            ["Santiago", "🇨🇱 Chile",
+             "Operações executivas, corporativas e especializadas sob a regulamentação da "
+             "autoridade de aviação civil chilena",
+             "[Dirección General de Aeronáutica Civil de Chile (DGAC)](https://www.dgac.gob.cl/)"],
+            ["Cidade do México", "🇲🇽 México",
+             "Transporte executivo, atividades governamentais, segurança pública e operações "
+             "aéreas especializadas",
+             "[Agencia Federal de Aviación Civil do México (AFAC)](https://www.gob.mx/afac)"],
+            ["Bogotá", "🇨🇴 Colômbia",
+             "Operações executivas, emergenciais e serviços aéreos especializados sob a "
+             "regulamentação da autoridade de aviação civil colombiana",
+             "[Aerocivil Colômbia](https://www.aerocivil.gov.co/)"],
+            ["Pequim", "🇨🇳 China",
+             "Operações governamentais, executivas e serviços aéreos especializados no contexto "
+             "da aviação civil chinesa",
+             "[**CAAC** - Administração da Aviação Civil da China](http://www.caac.gov.cn/English/)"],
         ],
     },
 
@@ -575,6 +611,37 @@ TR = {
     ),
 },
 
+# Short-form Contribution Attribution for the Governance tab. This is a
+# summary, not the full breakdown — the complete, detailed version (with
+# every bullet of Fabiana's contributions) lives in README.md's
+# "Contribution Attribution" section, referenced below rather than
+# duplicated here.
+"gov.contributors": {
+    "en": "🤝 Project Contributors",
+    "pt": "🤝 Colaboradores do Projeto",
+},
+"gov.contributors.body": {
+    "en": (
+        "**Fabiana ⚡️ Campanari** is the project's author, responsible for the platform's "
+        "subsequent development, integration, model benchmarking (`exp2`/`exp3`), comparative "
+        "evaluation, field validation, dashboard, presentation, and documentation.\n\n"
+        "**Collaborators:** Pedro Vyctor Almeida (original annotated dataset, initial web "
+        "prototype, and the first training experiment, `exp1`) and Carlos Antonio dos Santos "
+        "Roth Gorham (proposed the geospatial-automation concept for helipad discovery).\n\n"
+        "See the **Contribution Attribution** section of `README.md` for the complete, "
+        "detailed breakdown of each contributor's work."
+    ),
+    "pt": (
+        "**Fabiana ⚡️ Campanari** é a autora do projeto, responsável pelo desenvolvimento "
+        "subsequente, integração, benchmarking dos modelos (`exp2`/`exp3`), avaliação "
+        "comparativa, validação em campo, dashboard, apresentação e documentação.\n\n"
+        "**Colaboradores:** Pedro Vyctor Almeida (dataset original anotado, protótipo web "
+        "inicial e o primeiro experimento de treinamento, `exp1`) e Carlos Antonio dos Santos "
+        "Roth Gorham (propôs o conceito de automação geoespacial para descoberta de helipontos).\n\n"
+        "Veja a seção **Contribution Attribution** do `README.md` para o detalhamento completo "
+        "do trabalho de cada colaborador."
+    ),
+},
 
 
 # ---- Tab: About ----
@@ -652,6 +719,29 @@ TR = {
 "about.course": {"en": "Course", "pt": "Disciplina"},
 "about.professor": {"en": "Professor", "pt": "Professor"},
 "about.authors": {"en": "Author", "pt": "Autor"},
+"about.collaborators": {"en": "Collaborators", "pt": "Colaboradores"},
+
+# Demo videos. Only the training run and the scraping bot are embedded
+# here — a dashboard-demo video is intentionally NOT included in the app
+# itself, since the running app *is* the dashboard demo; that video lives
+# only in README.md / the presentation, where a live app isn't available.
+"about.demos.header": {"en": "🎥 Demo Videos", "pt": "🎥 Vídeos de Demonstração"},
+"about.demos.training.caption": {
+    "en": "Helipad Detection — YOLO11 model training run.",
+    "pt": "Detecção de Helipontos — execução do treinamento do modelo YOLO11.",
+},
+"about.demos.training.soundtrack": {
+    "en": "🎶 *Feel Good* by Nina Simone – Deep House Remix ✧ Creation by Fabi ⚡️",
+    "pt": "🎶 *Feel Good* de Nina Simone – Deep House Remix ✧ Criação de Fabi ⚡️",
+},
+"about.demos.scraping.caption": {
+    "en": "Automated Helipad Scraping — Selenium ✧ FlightMarket ✧ Geocoding.",
+    "pt": "Coleta Automatizada de Helipontos — Selenium ✧ FlightMarket ✧ Geocodificação.",
+},
+"about.demos.scraping.soundtrack": {
+    "en": "🎶 *Interstellar* by Hans Zimmer – Deep House Remix ✧ Creation by Fabi ⚡️",
+    "pt": "🎶 *Interstellar* de Hans Zimmer – Deep House Remix ✧ Criação de Fabi ⚡️",
+},
 
     
     # ---- Tab 7: Downloads ----
@@ -3183,50 +3273,41 @@ with tab6:
     st.subheader(t("gov.lgpd"))
     st.markdown(t("gov.lgpd.body"))
 
+    st.subheader(t("gov.contributors"))
+    st.markdown(t("gov.contributors.body"))
+
 # ====================== TAB: About ======================
 with tab_about:
     st.header(t("about.header"))
     st.markdown(t("about.body_intro"))
 
-    # ---- Top 10 helicopter cities table ----
-    # This used to apply a Blues background_gradient to a "Rate" column, the
-    # same styling technique as the Field Detections table. That column was
-    # removed (see the comment above cities.table.data) since its numbers
-    # weren't sourced — there's no real per-city percentage left to shade, so
-    # this now renders as a plain table like the rest of the About tab.
+    # ---- Global Context — helicopter air mobility worldwide ----
+    # Not a ranking (see the [!NOTE] below), so this deliberately does NOT
+    # use style_rows_by_rank()/st.dataframe() — a position-based gradient
+    # would visually imply "1st place, 2nd place..." even without a Rank
+    # column, which contradicts the NOTE's own text. Rendered as a plain
+    # markdown table instead (same technique as README.md's mirrored Global
+    # Context table), since st.dataframe doesn't render the [text](url)
+    # reference-source links as clickable — plain st.markdown does.
     st.markdown(f"### {t('cities.header')}")
     _cities_cols = t("cities.table.columns")
     _cities_rows = t("cities.table.data")
-    _rank_col = _cities_cols[0]
-    cities_df = pd.DataFrame(_cities_rows, columns=_cities_cols).set_index(_rank_col)
+    _cities_header = "| " + " | ".join(_cities_cols) + " |"
+    _cities_sep = "|" + "|".join(["---"] * len(_cities_cols)) + "|"
+    _cities_body = "\n".join("| " + " | ".join(row) + " |" for row in _cities_rows)
+    st.markdown(f"{_cities_header}\n{_cities_sep}\n{_cities_body}")
 
-    # Standardized Blues row gradient (see style_rows_by_rank) — this is the
-    # reference look every other ranked table/card/chart in the dashboard
-    # now matches. Gradiented by Rank position (1st..10th), not by a
-    # measured value: the old "Rate (%)" column this table used to carry
-    # was removed earlier (it turned out to be an unrelated table's numbers
-    # copy-pasted in, not a real per-city statistic — see the comment above
-    # cities.table.data) and there's no other numeric column here that
-    # isn't itself editorial ("Estimated Fleet" is "400+"/"—" strings, not
-    # something you can average or gradient). Rank is just display order,
-    # so coloring by it doesn't imply a precision the table doesn't have —
-    # it's a reading aid, not a re-introduced statistic. Applied across the
-    # WHOLE row (every column, same shade) rather than one narrow column,
-    # which reads as more deliberate/cohesive than a single colored strip
-    # next to otherwise-plain cells.
-    st.dataframe(style_rows_by_rank(cities_df), use_container_width=True)
+    # [!NOTE] first, [!TIP] second — same order as README.md.
+    st.markdown(f"> **{t('cities.interpretation.title')}**  \n> {t('cities.interpretation.text')}")
 
     st.markdown(f"""
     <div style="border-left:3px solid #14b8a6; background:rgba(14,117,109,0.08);
                 border-radius:8px; padding:14px 18px; margin:14px 0 4px 0;">
         <p style="margin:0; color:#E2E8F0; font-size:14px; line-height:1.65;">
-            {t('cities.why_sao_paulo')}
+            💡 {t('cities.why_sao_paulo')}
         </p>
     </div>
     """, unsafe_allow_html=True)
-
-    with st.expander(t("cities.interpretation.title")):
-        st.markdown(t("cities.interpretation.text"))
 
     st.markdown(t("about.body_closing"))
 
@@ -3283,11 +3364,26 @@ with tab_about:
                 <td style="padding:6px 0;">Machine Learning / Computer Vision — Project P2</td></tr>
             <tr><td style="padding:6px 0; color:#93C5FD; vertical-align:top;">{t("about.authors")}</td>
                 <td style="padding:6px 0;">
-                    Fabiana ⚡️ Campanari
+                    <a href="https://linktr.ee/fabianacampanari" target="_blank" style="color:#5EEAD4;">Fabiana ⚡️ Campanari</a>
+                </td></tr>
+            <tr><td style="padding:6px 0; color:#93C5FD; vertical-align:top;">{t("about.collaborators")}</td>
+                <td style="padding:6px 0;">
+                    Carlos Antonio dos Santos Roth Gorham · <a href="https://github.com/ppvyctor/Helipoint-Detector" target="_blank" style="color:#5EEAD4;">Pedro Vyctor Almeida</a>
                 </td></tr>
         </table>
     </div>
     """, unsafe_allow_html=True)
+
+    st.markdown(f"#### {t('about.demos.header')}")
+    demo_col1, demo_col2 = st.columns(2)
+    with demo_col1:
+        st.video("https://github.com/user-attachments/assets/5b7d581c-ab5e-416e-8471-d91136b2ada0")
+        st.caption(t("about.demos.training.caption"))
+        st.caption(t("about.demos.training.soundtrack"))
+    with demo_col2:
+        st.video("https://github.com/user-attachments/assets/eab6e951-6b66-4c6c-a2c6-23ee2f902c5f")
+        st.caption(t("about.demos.scraping.caption"))
+        st.caption(t("about.demos.scraping.soundtrack"))
 
 # ====================== TAB 7: Downloads ======================
 with tab7:
