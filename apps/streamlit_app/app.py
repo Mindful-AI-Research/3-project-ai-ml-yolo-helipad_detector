@@ -3316,34 +3316,34 @@ class G1,G2,G3,G4 group;
 linkStyle default stroke:#14b8a6,stroke-width:2.5px,opacity:0.95;"""
 
     _mermaid_html_template = """
-    <div style="background:#020617; border-radius:14px; padding:18px;">
-      <pre class="mermaid">
-__DIAGRAM__
-      </pre>
+    <div style="background:#020617; border-radius:14px; padding:18px; min-height:60px;">
+      <pre class="mermaid" id="pipeline-mermaid-el">__DIAGRAM__</pre>
+      <div id="pipeline-mermaid-fallback" style="display:none; color:#f97316; font-family:monospace; font-size:12px;">
+        Diagram failed to load (network blocked?). Raw source is in README.md.
+      </div>
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/mermaid@10.9.1/dist/mermaid.min.js"></script>
-    <script>
-      mermaid.initialize({ startOnLoad: true, theme: 'dark' });
-      function animatePipelineEdges() {
-        var paths = document.querySelectorAll('.edgePaths path, .edgePath path, path.flowchart-link');
-        paths.forEach(function (p) {
-          p.style.strokeDasharray = '6 6';
-          p.style.animation = 'pipelineFlow 1s linear infinite';
-        });
-      }
-      var _tries = 0;
-      var _iv = setInterval(function () {
-        _tries++;
-        var svg = document.querySelector('svg[id^="mermaid"]');
-        if (svg || _tries > 20) {
-          clearInterval(_iv);
-          animatePipelineEdges();
-        }
-      }, 300);
-    </script>
     <style>
       @keyframes pipelineFlow { to { stroke-dashoffset: -24; } }
     </style>
+    <script
+      src="https://cdn.jsdelivr.net/npm/mermaid@10.9.1/dist/mermaid.min.js"
+      onload="
+        try {
+          mermaid.initialize({ startOnLoad: false, theme: 'dark' });
+          mermaid.run({ querySelector: '.mermaid' }).then(function () {
+            document.querySelectorAll('.edgePaths path, .edgePath path, path.flowchart-link').forEach(function (p) {
+              p.style.strokeDasharray = '6 6';
+              p.style.animation = 'pipelineFlow 1s linear infinite';
+            });
+          }).catch(function () {
+            document.getElementById('pipeline-mermaid-fallback').style.display = 'block';
+          });
+        } catch (e) {
+          document.getElementById('pipeline-mermaid-fallback').style.display = 'block';
+        }
+      "
+      onerror="document.getElementById('pipeline-mermaid-fallback').style.display = 'block';"
+    ></script>
     """
     components.html(
         _mermaid_html_template.replace("__DIAGRAM__", _MERMAID_PIPELINE_SRC),
