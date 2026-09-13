@@ -497,6 +497,14 @@ TR = {
     "en": "Follow the complete workflow from public aviation records to a validated Computer Vision model for helipad detection.",
     "pt": "Acompanhe todo o fluxo de trabalho, desde registros públicos de aviação até um modelo de Visão Computacional validado para detecção de helipontos.",
 },
+"pipeline.flowchart_header": {
+    "en": "🗺️ AI/ML Ops Pipeline — full flowchart",
+    "pt": "🗺️ Pipeline de AI/ML Ops — fluxograma completo",
+},
+"pipeline.steps_header": {
+    "en": "📋 Step-by-Step Breakdown",
+    "pt": "📋 Detalhamento Passo a Passo",
+},
 "pipeline.step1.title": {
     "en": "Discovery",
     "pt": "Descoberta",
@@ -3225,6 +3233,124 @@ with tab4:
 with tab5:
     st.subheader(t("pipeline.subheader"))
     st.caption(t("pipeline.caption"))
+
+    # ---- AI/ML Ops Pipeline flowchart (Mermaid, live-rendered) ----
+    # Same diagram source as README.md's "AI/ML Ops Pipeline" section —
+    # keep both in sync if the pipeline itself changes. Rendered via
+    # mermaid.js pulled from a CDN inside components.html (no new pip
+    # dependency, consistent with how the app already reaches out to ESRI/
+    # Nominatim over the network elsewhere). The dashed "flow" animation on
+    # the edges is a small CSS addition layered on top of Mermaid's own SVG
+    # output — a nod to "data moving through the pipeline" without
+    # replacing the diagram itself.
+    st.markdown(f"### {t('pipeline.flowchart_header')}")
+    _MERMAID_PIPELINE_SRC = r"""%%{
+  init: {
+    "theme": "dark",
+    "themeVariables": {
+      "background": "#020617",
+      "primaryTextColor": "#ffffff",
+      "lineColor": "#14b8a6",
+      "defaultLinkColor": "#14b8a6",
+      "fontFamily": "Inter, Segoe UI, Arial, sans-serif"
+    }
+  }
+}%%
+
+flowchart TD
+
+classDef navy fill:#020817,stroke:#0a1a2f,color:#ffffff,stroke-width:2px;
+classDef group fill:#000000,stroke:#0a1a2f,color:#ffffff,stroke-width:2px;
+
+subgraph G1["Geospatial Discovery"]
+A["FlightMarket / aviation website"]
+B["Selenium automation<br/>src/geospatial/helipad_bot.py"]
+C["Helipad records + metadata"]
+D["Coordinates CSV<br/>src/geospatial/helipad_coordinates.csv"]
+E["Coordinate conversion<br/>src/geospatial/transform_coordinates.py"]
+F["Geographic bounding boxes"]
+A --> B --> C --> D --> E --> F
+end
+
+subgraph G2["Visual Acquisition"]
+G["ESRI World Imagery<br/>XYZ tile download"]
+H["Image mosaics by region<br/>src/geospatial/geospatial_image_collection.ipynb"]
+I["Manual visual triage"]
+J["Selected images with helipads"]
+G --> H --> I --> J
+end
+
+subgraph G3["Dataset Engineering"]
+K["Roboflow upload"]
+L["Bounding box annotation<br/>single class: helipad"]
+M["Preprocessing + augmentations<br/>resize 640x640"]
+N["Dataset split<br/>train / valid / test"]
+O["YOLO export<br/>data.yaml + labels"]
+K --> L --> M --> N --> O
+end
+
+subgraph G4["Modeling and Validation"]
+P["Google Colab training<br/>Ultralytics YOLOv8 / YOLOv11"]
+Q["Runs, weights and metrics<br/>runs/detect/.../best.pt"]
+R["Quantitative evaluation<br/>mAP, Precision, Recall,<br/>confusion matrix"]
+S["Qualitative analysis<br/>hits, false positives,<br/>false negatives"]
+T["Field validation on unseen regions<br/>download_all_regions.py + auto_triage_regions.py<br/>(10 neighborhoods, 7,943 tiles)"]
+U["Generalization assessment"]
+V["Interactive dashboard<br/>apps/streamlit_app/app.py"]
+
+P --> Q
+Q --> R
+Q --> S
+Q --> T
+T --> U
+Q --> V
+end
+
+F --> G
+J --> K
+O --> P
+
+class A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V navy;
+class G1,G2,G3,G4 group;
+
+linkStyle default stroke:#14b8a6,stroke-width:2.5px,opacity:0.95;"""
+
+    _mermaid_html_template = """
+    <div style="background:#020617; border-radius:14px; padding:18px;">
+      <pre class="mermaid">
+__DIAGRAM__
+      </pre>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10.9.1/dist/mermaid.min.js"></script>
+    <script>
+      mermaid.initialize({ startOnLoad: true, theme: 'dark' });
+      function animatePipelineEdges() {
+        var paths = document.querySelectorAll('.edgePaths path, .edgePath path, path.flowchart-link');
+        paths.forEach(function (p) {
+          p.style.strokeDasharray = '6 6';
+          p.style.animation = 'pipelineFlow 1s linear infinite';
+        });
+      }
+      var _tries = 0;
+      var _iv = setInterval(function () {
+        _tries++;
+        var svg = document.querySelector('svg[id^="mermaid"]');
+        if (svg || _tries > 20) {
+          clearInterval(_iv);
+          animatePipelineEdges();
+        }
+      }, 300);
+    </script>
+    <style>
+      @keyframes pipelineFlow { to { stroke-dashoffset: -24; } }
+    </style>
+    """
+    components.html(
+        _mermaid_html_template.replace("__DIAGRAM__", _MERMAID_PIPELINE_SRC),
+        height=1500, scrolling=True,
+    )
+
+    st.markdown(f"#### {t('pipeline.steps_header')}")
 
     pipeline_steps = [
         ("🔍", t("pipeline.step1.title"), t("pipeline.step1.desc")),
