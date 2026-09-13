@@ -3366,7 +3366,13 @@ with tab_about:
     # section it illustrates ("Points collected" above were gathered by
     # this same geospatial automation bot) and above the credits table.
     st.markdown(f"#### {t('about.demos.scraping.header')}")
-    st.video("https://github.com/user-attachments/assets/eab6e951-6b66-4c6c-a2c6-23ee2f902c5f")
+    # Muted by default in the dashboard only — two different soundtracks
+    # living in the same running tool (this one + the training demo in
+    # Experiment Metrics) can clash if someone plays both back to back.
+    # README.md / the presentation keep audio on, since each video is
+    # viewed in isolation there. The player's own sound icon still lets
+    # anyone unmute.
+    st.video("https://github.com/user-attachments/assets/eab6e951-6b66-4c6c-a2c6-23ee2f902c5f", muted=True)
     st.caption(t("about.demos.scraping.caption"))
     st.caption(t("about.demos.scraping.soundtrack"))
 
@@ -3625,7 +3631,9 @@ with tab_metrics:
 
         # ---- Training-run demo video, right below the Confusion Matrix ----
         with st.expander(t("about.demos.training.header").lstrip("#").strip(), expanded=True):
-            st.video("https://github.com/user-attachments/assets/5b7d581c-ab5e-416e-8471-d91136b2ada0")
+            # Muted by default — see the matching comment on the scraping
+            # demo in the About tab for why.
+            st.video("https://github.com/user-attachments/assets/5b7d581c-ab5e-416e-8471-d91136b2ada0", muted=True)
             st.caption(t("about.demos.training.caption"))
             st.caption(t("about.demos.training.soundtrack"))
 
