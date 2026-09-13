@@ -3362,6 +3362,14 @@ with tab_about:
         else:
             st.caption(t("about.discovery.pending"))
 
+    # Scraping demo lives here, right after the Discovery dataset coverage
+    # section it illustrates ("Points collected" above were gathered by
+    # this same geospatial automation bot) and above the credits table.
+    st.markdown(f"#### {t('about.demos.scraping.header')}")
+    st.video("https://github.com/user-attachments/assets/eab6e951-6b66-4c6c-a2c6-23ee2f902c5f")
+    st.caption(t("about.demos.scraping.caption"))
+    st.caption(t("about.demos.scraping.soundtrack"))
+
     st.markdown(f"""
     <div class="dark-card" style="text-align:left;">
         <table style="width:100%; font-size:14px; color:#E2E8F0; border-collapse:collapse;">
@@ -3382,14 +3390,6 @@ with tab_about:
         </table>
     </div>
     """, unsafe_allow_html=True)
-
-    # Scraping demo lives here, full-width, right below the credits — the
-    # training demo moved to the Experiment Metrics tab (below the
-    # Confusion Matrix), closer to where training results are discussed.
-    st.markdown(f"#### {t('about.demos.scraping.header')}")
-    st.video("https://github.com/user-attachments/assets/eab6e951-6b66-4c6c-a2c6-23ee2f902c5f")
-    st.caption(t("about.demos.scraping.caption"))
-    st.caption(t("about.demos.scraping.soundtrack"))
 
 # ====================== TAB 7: Downloads ======================
 with tab7:
