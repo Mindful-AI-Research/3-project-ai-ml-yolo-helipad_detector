@@ -361,28 +361,36 @@ The platform implements a complete AI workflow, including public data collection
 <!-- ========= END Key Features ========= -->
 
  
-<!-- ========= START 🎥 **DEMO** ========= -->
-###### <p align="center">  🎥 **DEMO:** **HELIPAD DETECTION** ✧ `YOLO11` ✧ `MODEL TRAINING`  
+
+<!-- ========= START 🎥 DEMO · HELIPAD DETECTION ========= -->
+###### <p align="center">🎥 **DEMO:** **HELIPAD DETECTION** ✧ `YOLO11` ✧ `MODEL TRAINING`</p>
 
 https://github.com/user-attachments/assets/5b7d581c-ab5e-416e-8471-d91136b2ada0
 
-###### <p align="center"> 🎶 *Feel Good* by Nina Simone - Deep House  Remix  ✧ *Creation by Fabi* ⚡️
+###### <p align="center">🎶 ***Feel Good*** ✦ ***Nina Simone*** ✦ *House Music Version*
+###### <p align="center">Concept · Creative Design
+###### <p align="center">***Fab*** ⚡️  **𝄢 𝄫**</p>
 
 <br><br>
 
 #
 
 <br><br>
-<!-- ========= END  🎥 **DEMO** ========= -->
+<!-- ========= END 🎥 DEMO · HELIPAD DETECTION ========= -->
 
 
-<!-- ========= START 🎥 **DEMO** `AUTOMATED HELIPAD SCRAPING` ========= -->
-###### <p align="center"> 🎥 **DEMO:** **AUTOMATED HELIPAD SCRAPING** ✧ `SELENIUM` ✧ `FLIGHTMARKET` ✧ `GEOCODING` ✧ *Creation by Fabi* ⚡️
+<!-- ========= START 🎥 DEMO · AUTOMATED HELIPAD SCRAPING ========= -->
+###### <p align="center">🎥 **DEMO:** **AUTOMATED HELIPAD SCRAPING** ✦ `SELENIUM` ✦ `FLIGHTMARKET` ✦ `GEOCODING`</p>
 
 https://github.com/user-attachments/assets/eab6e951-6b66-4c6c-a2c6-23ee2f902c5f
 
+###### <p align="center">🎼 ***Interstellar*** ✧ ***Hans Zimmer*** ✧ *Deep House Remix*
+###### <p align="center">Code · Sound · Creative Design
+###### <p align="center">***Fab*** ⚡️  **𝄢 𝄫**
+
 <br><br><br><br><br>
-<!-- ========= END  🎥 **DEMO** ========= -->
+<!-- ========= END 🎥 DEMO · AUTOMATED HELIPAD SCRAPING ========= -->
+
 
 
 <!-- ========= START ToC-->
