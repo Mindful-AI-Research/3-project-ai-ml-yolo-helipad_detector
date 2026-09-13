@@ -94,6 +94,8 @@ TR = {
     },
     "about.discovery.state_col": {"en": "State", "pt": "Estado"},
     "about.discovery.count_col": {"en": "Points", "pt": "Pontos"},
+    "about.discovery.location_col": {"en": "Neighborhood", "pt": "Bairro"},
+    "about.discovery.date_col": {"en": "Collected on", "pt": "Coletado em"},
     "about.discovery.missing": {
         "en": "Discovery coordinates CSV not found at `{path}`.",
         "pt": "CSV de coordenadas de descoberta não encontrado em `{path}`.",
@@ -498,8 +500,8 @@ TR = {
     "pt": "Acompanhe todo o fluxo de trabalho, desde registros públicos de aviação até um modelo de Visão Computacional validado para detecção de helipontos.",
 },
 "pipeline.flowchart_header": {
-    "en": "🗺️ AI/ML Ops Pipeline — full flowchart",
-    "pt": "🗺️ Pipeline de AI/ML Ops — fluxograma completo",
+    "en": "🗺️ AI/ML Ops Pipeline",
+    "pt": "🗺️ Pipeline de AI/ML Ops",
 },
 "pipeline.steps_header": {
     "en": "📋 Step-by-Step Breakdown",
@@ -739,29 +741,25 @@ TR = {
     "en": "🔇 Starts muted — click the speaker icon on the player to enable audio.",
     "pt": "🔇 Começa mudo — clique no ícone de som do player para ativar o áudio.",
 },
-"about.demos.scraping.header": {
-    "en": "🎥 Demo — Automated Helipad Scraping",
-    "pt": "🎥 Demo — Coleta Automatizada de Helipontos",
+"about.demos.scraping.title_line": {
+    "en": '🎥 <strong>DEMO:</strong> <strong>AUTOMATED HELIPAD SCRAPING</strong> ✦ <code>SELENIUM</code> ✦ <code>FLIGHTMARKET</code> ✦ <code>GEOCODING</code>',
+    "pt": '🎥 <strong>DEMO:</strong> <strong>AUTOMATED HELIPAD SCRAPING</strong> ✦ <code>SELENIUM</code> ✦ <code>FLIGHTMARKET</code> ✦ <code>GEOCODING</code>',
 },
-"about.demos.training.header": {
+"about.demos.scraping.credit_line": {
+    "en": '🎼 <strong><em>Interstellar</em></strong> ✧ <strong><em>Hans Zimmer</em></strong> ✧ <em>Deep House Version</em> · Code · Sound · Creative Design · <strong><em>Fab</em></strong> ⚡️ <strong>𝄢 𝄫</strong>',
+    "pt": '🎼 <strong><em>Interstellar</em></strong> ✧ <strong><em>Hans Zimmer</em></strong> ✧ <em>Deep House Version</em> · Código · Som · Direção Criativa · <strong><em>Fab</em></strong> ⚡️ <strong>𝄢 𝄫</strong>',
+},
+"about.demos.training.expander_label": {
     "en": "🎥 Demo — Model Training",
     "pt": "🎥 Demo — Treinamento do Modelo",
 },
-"about.demos.training.caption": {
-    "en": "Helipad Detection — YOLO11 model training run.",
-    "pt": "Detecção de Helipontos — execução do treinamento do modelo YOLO11.",
+"about.demos.training.title_line": {
+    "en": '🎥 <strong>DEMO:</strong> <strong>HELIPAD DETECTION</strong> ✧ <code>YOLO11</code> ✧ <code>MODEL TRAINING</code>',
+    "pt": '🎥 <strong>DEMO:</strong> <strong>HELIPAD DETECTION</strong> ✧ <code>YOLO11</code> ✧ <code>MODEL TRAINING</code>',
 },
-"about.demos.training.soundtrack": {
-    "en": "🎶 *Feel Good* by Nina Simone – Deep House Remix ✧ Creation by Fabi ⚡️",
-    "pt": "🎶 *Feel Good* de Nina Simone – Deep House Remix ✧ Criação de Fabi ⚡️",
-},
-"about.demos.scraping.caption": {
-    "en": "Automated Helipad Scraping — Selenium ✧ FlightMarket ✧ Geocoding.",
-    "pt": "Coleta Automatizada de Helipontos — Selenium ✧ FlightMarket ✧ Geocodificação.",
-},
-"about.demos.scraping.soundtrack": {
-    "en": "🎶 *Interstellar* by Hans Zimmer – Deep House Remix ✧ Creation by Fabi ⚡️",
-    "pt": "🎶 *Interstellar* de Hans Zimmer – Deep House Remix ✧ Criação de Fabi ⚡️",
+"about.demos.training.credit_line": {
+    "en": '🎶 <strong><em>Feel Good</em></strong> ✦ <strong><em>Nina Simone</em></strong> ✦ <em>Deep House Version</em> · Concept · Creative Design · <strong><em>Fab</em></strong> ⚡️ <strong>𝄢 𝄫</strong>',
+    "pt": '🎶 <strong><em>Feel Good</em></strong> ✦ <strong><em>Nina Simone</em></strong> ✦ <em>Deep House Version</em> · Conceito · Direção Criativa · <strong><em>Fab</em></strong> ⚡️ <strong>𝄢 𝄫</strong>',
 },
 
     
@@ -1224,6 +1222,27 @@ def style_rows_by_value(obj, value_col: str, higher_is_darker: bool = True):
     return styler.apply(_row_style, axis=1)
 
 
+def style_rows_by_cycle(obj, cycle: int = 10):
+    """Paints rows with the same standardized Blues gradient as
+    style_rows_by_rank, but restarts the scale every `cycle` rows instead
+    of spanning the whole table in one continuous fade. For long tables
+    (many more rows than the 10-tone scale has distinct shades) a single
+    continuous gradient mostly reads as one flat color by the last row;
+    resetting every `cycle` rows keeps each block visually readable while
+    still using the same darkest-to-lightest Blues progression throughout."""
+    is_styler = hasattr(obj, "data")
+    df = obj.data if is_styler else obj
+    styler = obj if is_styler else obj.style
+
+    def _row_style(row):
+        pos = df.index.get_loc(row.name) % cycle
+        frac = 1 - pos / max(cycle - 1, 1)
+        bg = blues_scale(frac)
+        return [f"background-color:{bg}; color:{readable_text_color(bg)};"] * len(row)
+
+    return styler.apply(_row_style, axis=1)
+
+
 # ========================= MAP TILE PROVIDERS =========================
 # Using explicit URL templates (instead of Folium's built-in preset strings
 # like "CartoDB dark_matter") because Folium ignores the custom `name=` we
@@ -1533,7 +1552,18 @@ def load_discovery_dataset_stats(csv_path: Path = COORDS_CSV) -> dict | None:
         "total_points": len(df),
         "distinct_locations": df[bairro_col].nunique() if bairro_col else None,
         "by_state": None,
+        "points_table": None,
     }
+
+    ts_col = "Carimbo de data/hora" if "Carimbo de data/hora" in df.columns else None
+    points_df = pd.DataFrame({
+        "Nome do Bairro": df[bairro_col] if bairro_col else [""] * len(df),
+    })
+    if ts_col:
+        # Date only (drop the time-of-day) for a cleaner display column.
+        points_df["Coletado em"] = pd.to_datetime(
+            df[ts_col], format="%d/%m/%Y %H:%M:%S", errors="coerce"
+        ).dt.strftime("%d/%m/%Y")
 
     by_state_path = csv_path.parent / "helipad_coordinates_com_estado.csv"
     if by_state_path.exists():
@@ -1542,9 +1572,17 @@ def load_discovery_dataset_stats(csv_path: Path = COORDS_CSV) -> dict | None:
             if "Estado" in state_df.columns:
                 counts = state_df["Estado"].fillna("").replace("", "(desconhecido)").value_counts()
                 stats["by_state"] = counts.to_dict()
+                # Row-level "Estado" only when both files have the exact
+                # same row count — geocode_states.py is expected to process
+                # the coordinates file one-to-one, but there's no shared key
+                # to actually verify alignment by, so mismatched lengths
+                # skip this column rather than risk mismatched rows.
+                if len(state_df) == len(df):
+                    points_df["Estado"] = state_df["Estado"].fillna("(desconhecido)").values
         except Exception:
             pass  # malformed/partial CSV — fall back to the pending caption, don't crash the tab
 
+    stats["points_table"] = points_df
     return stats
 
 
@@ -3424,17 +3462,47 @@ with tab_about:
     # Not a ranking (see the [!NOTE] below), so this deliberately does NOT
     # use style_rows_by_rank()/st.dataframe() — a position-based gradient
     # would visually imply "1st place, 2nd place..." even without a Rank
-    # column, which contradicts the NOTE's own text. Rendered as a plain
-    # markdown table instead (same technique as README.md's mirrored Global
-    # Context table), since st.dataframe doesn't render the [text](url)
-    # reference-source links as clickable — plain st.markdown does.
+    # column, which contradicts the NOTE's own text. Rendered as raw HTML
+    # (not plain st.markdown pipe-table) for two reasons: st.dataframe
+    # doesn't render the [text](url) reference-source links as clickable,
+    # and a plain markdown table only gets Streamlit's default thin 1px
+    # border — this needs the same visual weight (thick teal accent) used
+    # elsewhere in the dashboard (e.g. the 3px teal-bordered card below).
     st.markdown(f"### {t('cities.header')}")
     _cities_cols = t("cities.table.columns")
     _cities_rows = t("cities.table.data")
-    _cities_header = "| " + " | ".join(_cities_cols) + " |"
-    _cities_sep = "|" + "|".join(["---"] * len(_cities_cols)) + "|"
-    _cities_body = "\n".join("| " + " | ".join(row) + " |" for row in _cities_rows)
-    st.markdown(f"{_cities_header}\n{_cities_sep}\n{_cities_body}")
+
+    def _md_cell_to_html(cell: str) -> str:
+        """Cell text here only ever uses two tiny markdown patterns —
+        **bold** and [text](url) links — so a couple of targeted regex
+        substitutions are enough; avoids depending on how Streamlit's
+        markdown parser treats content nested inside raw HTML tags."""
+        cell = re.sub(
+            r"\[([^\]]+)\]\(([^)]+)\)",
+            r'<a href="\2" target="_blank" style="color:#5EEAD4;">\1</a>',
+            cell,
+        )
+        cell = re.sub(r"\*\*([^*]+)\*\*", r"<strong>\1</strong>", cell)
+        return cell
+
+    _cities_thead = "".join(
+        f'<th style="text-align:left; padding:10px 14px; border-bottom:3px solid #14b8a6; '
+        f'color:#5EEAD4; font-size:12px; text-transform:uppercase; letter-spacing:.04em;">{c}</th>'
+        for c in _cities_cols
+    )
+    _cities_tbody = "".join(
+        "<tr>" + "".join(
+            f'<td style="padding:10px 14px; border-bottom:1px solid rgba(94,234,212,0.18); '
+            f'color:#E2E8F0; font-size:13.5px; vertical-align:top;">{_md_cell_to_html(cell)}</td>'
+            for cell in row
+        ) + "</tr>"
+        for row in _cities_rows
+    )
+    st.markdown(
+        f'<div style="overflow-x:auto;"><table style="width:100%; border-collapse:collapse;">'
+        f'<thead><tr>{_cities_thead}</tr></thead><tbody>{_cities_tbody}</tbody></table></div>',
+        unsafe_allow_html=True,
+    )
 
     # [!NOTE] first, [!TIP] second — same order as README.md.
     st.markdown(f"> **{t('cities.interpretation.title')}**  \n> {t('cities.interpretation.text')}")
@@ -3462,32 +3530,25 @@ with tab_about:
         with disc_col2:
             if _disc_stats["distinct_locations"] is not None:
                 st.metric(t("about.discovery.regions"), _disc_stats["distinct_locations"])
-        if _disc_stats["by_state"]:
-            _count_col = t("about.discovery.count_col")
-            _state_by_count_df = pd.DataFrame(
-                list(_disc_stats["by_state"].items()),
-                columns=[t("about.discovery.state_col"), _count_col],
-            )
-            # No gradient here (unlike the other ranked tables in this app):
-            # with only a handful of distinct values (mostly 1s and 2s)
-            # spread across 13 states, a continuous gradient just produces
-            # a few repeated blocks of identical color instead of a smooth,
-            # readable progression — it looked broken rather than
-            # harmonious.
-            #
-            # Alignment note: text-align via a pandas Styler (.set_properties)
-            # is NOT one of the style properties st.dataframe actually
-            # honors — it only respects a limited subset (background-color
-            # from .background_gradient()/.apply(), and .format() for number
-            # display), so the last two attempts at this silently did
-            # nothing visually despite the code changing. Converting the
-            # column to plain text instead of a numeric dtype is what
-            # actually works: st.dataframe left-aligns text/object columns
-            # by default, no styling call needed to get there.
-            _state_by_count_df[_count_col] = _state_by_count_df[_count_col].astype(str)
+
+        _points_df = _disc_stats.get("points_table")
+        if _points_df is not None and not _points_df.empty:
+            # Row-level listing (one row per discovered helipad point) —
+            # not aggregated by state — so the 10-row cycling gradient
+            # actually cycles a few times over and is visible, rather than
+            # barely completing once across a dozen-ish aggregated rows.
+            # "Estado" only appears if src/geospatial/geocode_states.py has
+            # been run AND its output lines up 1:1 with this CSV (see
+            # load_discovery_dataset_stats) — otherwise this table still
+            # renders fine with just Neighborhood + Collected-on.
+            _display_df = _points_df.rename(columns={
+                "Nome do Bairro": t("about.discovery.location_col"),
+                "Coletado em": t("about.discovery.date_col"),
+                "Estado": t("about.discovery.state_col"),
+            })
             st.dataframe(
-                _state_by_count_df,
-                use_container_width=True, hide_index=True,
+                style_rows_by_cycle(_display_df, cycle=10),
+                use_container_width=True, hide_index=True, height=420,
             )
         else:
             st.caption(t("about.discovery.pending"))
@@ -3495,8 +3556,10 @@ with tab_about:
     # Scraping demo lives here, right after the Discovery dataset coverage
     # section it illustrates ("Points collected" above were gathered by
     # this same geospatial automation bot) and above the credits table.
-    st.markdown(f"#### {t('about.demos.scraping.header')}")
-    st.caption(t("about.demos.muted_notice"))
+    # Layout: centered title line -> muted notice -> player -> centered
+    # credit line, matching the README's demo-video formatting.
+    st.markdown(f"<p style='text-align:center;'>{t('about.demos.scraping.title_line')}</p>", unsafe_allow_html=True)
+    st.markdown(f"<p style='text-align:center; color:#94A3B8; font-size:12.5px;'>{t('about.demos.muted_notice')}</p>", unsafe_allow_html=True)
     # Muted by default in the dashboard only — two different soundtracks
     # living in the same running tool (this one + the training demo in
     # Experiment Metrics) can clash if someone plays both back to back.
@@ -3504,8 +3567,7 @@ with tab_about:
     # viewed in isolation there. The player's own sound icon still lets
     # anyone unmute.
     st.video("https://github.com/user-attachments/assets/eab6e951-6b66-4c6c-a2c6-23ee2f902c5f", muted=True)
-    st.caption(t("about.demos.scraping.caption"))
-    st.caption(t("about.demos.scraping.soundtrack"))
+    st.markdown(f"<p style='text-align:center;'>{t('about.demos.scraping.credit_line')}</p>", unsafe_allow_html=True)
 
     st.markdown(f"""
     <div class="dark-card" style="text-align:left;">
@@ -3761,13 +3823,13 @@ with tab_metrics:
                         st.info(t("metrics.cm_norm_not_found").format(path=cm_norm_path.resolve()))
 
         # ---- Training-run demo video, right below the Confusion Matrix ----
-        with st.expander(t("about.demos.training.header").lstrip("#").strip(), expanded=True):
-            st.caption(t("about.demos.muted_notice"))
+        with st.expander(t("about.demos.training.expander_label"), expanded=True):
+            st.markdown(f"<p style='text-align:center;'>{t('about.demos.training.title_line')}</p>", unsafe_allow_html=True)
+            st.markdown(f"<p style='text-align:center; color:#94A3B8; font-size:12.5px;'>{t('about.demos.muted_notice')}</p>", unsafe_allow_html=True)
             # Muted by default — see the matching comment on the scraping
             # demo in the About tab for why.
             st.video("https://github.com/user-attachments/assets/5b7d581c-ab5e-416e-8471-d91136b2ada0", muted=True)
-            st.caption(t("about.demos.training.caption"))
-            st.caption(t("about.demos.training.soundtrack"))
+            st.markdown(f"<p style='text-align:center;'>{t('about.demos.training.credit_line')}</p>", unsafe_allow_html=True)
 
 # ========================= FIELD DETECTIONS BY REGION =========================
 with tab_field:
