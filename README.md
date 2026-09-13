@@ -360,16 +360,15 @@ The platform implements a complete AI workflow, including public data collection
 <br><br>
 <!-- ========= END Key Features ========= -->
 
- 
+
+<!-- =========================== START DEMOS JOY ====================================================== -->
 
 <!-- ========= START 🎥 DEMO · HELIPAD DETECTION ========= -->
 ###### <p align="center">🎥 **DEMO:** **HELIPAD DETECTION** ✧ `YOLO11` ✧ `MODEL TRAINING`</p>
 
 https://github.com/user-attachments/assets/5b7d581c-ab5e-416e-8471-d91136b2ada0
 
-###### <p align="center">🎶 ***Feel Good*** ✦ ***Nina Simone*** ✦ *House Music Version*
-###### <p align="center">Concept · Creative Design
-###### <p align="center">***Fab*** ⚡️  **𝄢 𝄫**</p>
+###### <p align="center">🎶 ***Feel Good*** ✦ ***Nina Simone*** ✦ *Deep House Version* · Concept · Creative Design · ***Fab*** ⚡️ **𝄢 𝄫**</p>
 
 <br><br>
 
@@ -384,12 +383,14 @@ https://github.com/user-attachments/assets/5b7d581c-ab5e-416e-8471-d91136b2ada0
 
 https://github.com/user-attachments/assets/eab6e951-6b66-4c6c-a2c6-23ee2f902c5f
 
-###### <p align="center">🎼 ***Interstellar*** ✧ ***Hans Zimmer*** ✧ *Deep House Remix*
-###### <p align="center">Code · Sound · Creative Design
-###### <p align="center">***Fab*** ⚡️  **𝄢 𝄫**
+###### <p align="center">🎼 ***Interstellar*** ✧ ***Hans Zimmer*** ✧ *Deep House Version* · Code · Sound · Creative Design · ***Fab*** ⚡️ **𝄢 𝄫**</p>
 
 <br><br><br><br><br>
 <!-- ========= END 🎥 DEMO · AUTOMATED HELIPAD SCRAPING ========= -->
+
+
+<!-- =========================== END DEMOS JOY ====================================================== -->
+
 
 
 
