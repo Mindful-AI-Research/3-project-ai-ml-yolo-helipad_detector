@@ -727,6 +727,10 @@ TR = {
 # Confusion Matrix). No dashboard-demo video is embedded anywhere in the
 # app itself — the running app *is* that demo; that video only appears in
 # README.md / the presentation, where a live app isn't available.
+"about.demos.muted_notice": {
+    "en": "🔇 Starts muted — click the speaker icon on the player to enable audio.",
+    "pt": "🔇 Começa mudo — clique no ícone de som do player para ativar o áudio.",
+},
 "about.demos.scraping.header": {
     "en": "🎥 Demo — Automated Helipad Scraping",
     "pt": "🎥 Demo — Coleta Automatizada de Helipontos",
@@ -3366,6 +3370,7 @@ with tab_about:
     # section it illustrates ("Points collected" above were gathered by
     # this same geospatial automation bot) and above the credits table.
     st.markdown(f"#### {t('about.demos.scraping.header')}")
+    st.caption(t("about.demos.muted_notice"))
     # Muted by default in the dashboard only — two different soundtracks
     # living in the same running tool (this one + the training demo in
     # Experiment Metrics) can clash if someone plays both back to back.
@@ -3631,6 +3636,7 @@ with tab_metrics:
 
         # ---- Training-run demo video, right below the Confusion Matrix ----
         with st.expander(t("about.demos.training.header").lstrip("#").strip(), expanded=True):
+            st.caption(t("about.demos.muted_notice"))
             # Muted by default — see the matching comment on the scraping
             # demo in the About tab for why.
             st.video("https://github.com/user-attachments/assets/5b7d581c-ab5e-416e-8471-d91136b2ada0", muted=True)
