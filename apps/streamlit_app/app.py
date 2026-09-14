@@ -503,10 +503,6 @@ TR = {
     "en": "🗺️ AI/ML Ops Pipeline",
     "pt": "🗺️ Pipeline de AI/ML Ops",
 },
-"pipeline.mermaid_missing_asset": {
-    "en": "Diagram library not found at `assets/vendor/mermaid.min.js` — showing the raw Mermaid source below instead (same diagram documented in README.md).",
-    "pt": "Biblioteca do diagrama não encontrada em `assets/vendor/mermaid.min.js` — mostrando o código-fonte Mermaid bruto abaixo (mesmo diagrama documentado no README.md).",
-},
 "pipeline.steps_header": {
     "en": "📋 Step-by-Step Breakdown",
     "pt": "📋 Detalhamento Passo a Passo",
@@ -3357,51 +3353,67 @@ class G1,G2,G3,G4 group;
 
 linkStyle default stroke:#14b8a6,stroke-width:2.5px,opacity:0.95;"""
 
-    _mermaid_lib_path = Path("assets/vendor/mermaid.min.js")
-    if _mermaid_lib_path.exists():
-        # Vendored locally (not loaded from a CDN <script src>): the
-        # previous version pulled mermaid.js from jsdelivr inside
-        # components.html's sandboxed iframe, and that external script
-        # never actually executed there (silently — no diagram, no error,
-        # no fallback message either, since the failure happened before any
-        # of our own JS ever ran). Inlining the library's own source
-        # removes that entire failure mode: nothing to fetch, nothing that
-        # can be blocked, and it runs synchronously the moment the iframe's
-        # HTML parses — no onload/timing dependency needed either.
-        _mermaid_js_source = _mermaid_lib_path.read_text(encoding="utf-8")
-        _mermaid_html_template = """
-        <div style="background:#020617; border-radius:14px; padding:18px; min-height:60px;">
-          <pre class="mermaid" id="pipeline-mermaid-el">__DIAGRAM__</pre>
-        </div>
-        <style>
-          @keyframes pipelineFlow { to { stroke-dashoffset: -24; } }
-        </style>
-        <script>__MERMAID_JS__</script>
-        <script>
+    # Loaded from a CDN rather than vendored locally — a 3.3MB mermaid.min.js
+    # committed to the repo just to draw one diagram was more weight than
+    # it's worth. Two things that made the earlier CDN attempt fail
+    # silently are fixed here: (1) startOnLoad:true depends on the iframe's
+    # own 'load' event, which is unreliable timing inside components.html's
+    # sandboxed iframe — replaced with an explicit onload handler on the
+    # <script> tag itself, guaranteed to fire right when that specific
+    # script finishes; (2) the background color only covered the diagram's
+    # own <div>, not the full reserved iframe height — any leftover empty
+    # space below a shorter-than-expected diagram showed the page's own
+    # starfield background through it, which looked exactly like "nothing
+    # rendered" even when it had. Both fixed below, plus a status line that
+    # always shows *something* (rendering / success / the exact JS error)
+    # so a future failure is never silent again.
+    _mermaid_html_template = """
+    <html><head><style>
+      html, body { margin:0; padding:0; background:#020617; min-height:100%; }
+      @keyframes pipelineFlow { to { stroke-dashoffset: -24; } }
+    </style></head>
+    <body>
+      <div id="pipeline-mermaid-status" style="color:#5EEAD4; font-family:monospace; font-size:11px; padding:6px 18px 0 18px;">
+        ⏳ Loading diagram library…
+      </div>
+      <div style="background:#020617; border-radius:14px; padding:18px; min-height:60px;">
+        <pre class="mermaid" id="pipeline-mermaid-el">__DIAGRAM__</pre>
+      </div>
+      <script
+        src="https://cdn.jsdelivr.net/npm/mermaid@10.9.1/dist/mermaid.min.js"
+        onload="
+          var statusEl = document.getElementById('pipeline-mermaid-status');
+          statusEl.textContent = '⏳ Rendering diagram…';
           try {
             mermaid.initialize({ startOnLoad: false, theme: 'dark' });
             mermaid.run({ querySelector: '.mermaid' }).then(function () {
+              statusEl.remove();
               document.querySelectorAll('.edgePaths path, .edgePath path, path.flowchart-link').forEach(function (p) {
                 p.style.strokeDasharray = '6 6';
                 p.style.animation = 'pipelineFlow 1s linear infinite';
               });
+            }).catch(function (e) {
+              statusEl.textContent = '⚠️ Diagram failed to render: ' + e.message;
+              statusEl.style.color = '#f97316';
             });
           } catch (e) {
-            document.getElementById('pipeline-mermaid-el').outerHTML =
-              '<pre style="color:#f97316; font-family:monospace; font-size:12px; white-space:pre-wrap;">' +
-              'Diagram failed to render (' + e.message + '). Raw source is documented in README.md.</pre>';
+            statusEl.textContent = '⚠️ Diagram failed to render: ' + e.message;
+            statusEl.style.color = '#f97316';
           }
-        </script>
-        """
-        components.html(
-            _mermaid_html_template
-            .replace("__DIAGRAM__", _MERMAID_PIPELINE_SRC)
-            .replace("__MERMAID_JS__", _mermaid_js_source),
-            height=1500, scrolling=True,
-        )
-    else:
-        st.info(t("pipeline.mermaid_missing_asset"))
-        st.code(_MERMAID_PIPELINE_SRC, language="text")
+        "
+        onerror="
+          var s = document.getElementById('pipeline-mermaid-status');
+          s.textContent = '⚠️ Could not load the diagram library from the CDN (network blocked?). Raw source is documented in README.md.';
+          s.style.color = '#f97316';
+        "
+      ></script>
+    </body></html>
+    """
+    components.html(
+        _mermaid_html_template.replace("__DIAGRAM__", _MERMAID_PIPELINE_SRC),
+        height=1100, scrolling=True,
+    )
+
 
     st.markdown(f"#### {t('pipeline.steps_header')}")
 
