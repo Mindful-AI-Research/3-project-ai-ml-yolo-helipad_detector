@@ -51,19 +51,16 @@
 <!-- ========= END TEASER ========= -->
 
 
-<!-- ========= START SPONSOR BADGE ========= -->
+<!-- ========= Start SPONSOR BADGE ========= -->
 <p align="center">
 
   <a href="https://github.com/sponsors/Mindful-AI-Research">
     <img
-      src="https://img.shields.io/badge/Sponsor-%E0%A5%90%20%E2%8B%86%20Mindful%20AI%20%E2%8B%86%20Research%20%26%20Consulting%20%F0%96%A4%90%20%E2%8B%86-3A424C?style=for-the-badge&logo=githubsponsors&logoColor=white&labelColor=07111F"
-      alt="Sponsor ॐ ⋆ Mindful AI ⋆ Research & Consulting 𖤐 ⋆"
+      src="https://img.shields.io/badge/Sponsor-%E0%A5%90%20Mindful%20AI%20%E2%8B%86%20Research%20%26%20Consulting%20%F0%96%A4%90-3A424C?style=for-the-badge&logo=githubsponsors&logoColor=white&labelColor=07111F"
+      alt="Sponsor ॐ Mindful AI ⋆ Research & Consulting 𖤐"
       height="36"
-    >
   </a>
-
-  
-<br><br>
+</p>
 <!-- ========= END SPONSOR BADGE ========= -->
 
 
@@ -104,6 +101,7 @@
 [**Course:**]() BSc in Human-Centered AI & Data Science <br>
 [**Subject:**]() Machine Learning / Computer Vision — YOLO <br>
 [**Project:**]() Object Detection in Satellite Images with YOLO <br>
+
 **Author:** [Fabiana ⚡️ Campanari](https://linktr.ee/fabianacampanari) <br>
 **Collaborators:** [Carlos Antonio dos Santos Roth Gorham]() · [Pedro Vyctor Almeida](https://github.com/ppvyctor/Helipoint-Detector) 
 
