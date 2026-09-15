@@ -589,10 +589,6 @@ The discovery-dataset layer is additionally rendered as an interactive [Kepler.g
 
 ## [Overall Flow Architecture]()
 
-<br><br>
-
-## [Overall Flow Architecture]()
-
 The solution can be viewed as an architecture with [**seven main blocks**]():
 
 1. [**Helipad discovery**]()  — automation on an aviation website to locate records with coordinates  
@@ -606,6 +602,8 @@ The solution can be viewed as an architecture with [**seven main blocks**]():
 <br><br>
 
 ## [AI/ML Ops Pipeline]()
+
+<img width="1220" height="2083" alt="Image" src="https://github.com/user-attachments/assets/1e2432d1-aef2-4d5f-857b-1a41e5adfad2" />
 
 ```mermaid
 %%{
@@ -634,7 +632,7 @@ The solution can be viewed as an architecture with [**seven main blocks**]():
   }
 }%%
 
-flowchart TD
+flowchart T
 
     A["FlightMarket / aviation website"] --> B["Selenium automation<br/>BOTHELIPONTO.py"]
     B --> C["Helipad records + metadata"]
@@ -706,89 +704,7 @@ flowchart TD
 
 The repository structure was organized to reflect pipeline stages, including geographic automation, image generation, training, inference, evaluation and documentation.
 
-```bash
-Helipoint Detector
-├── .devcontainer
-│   └── devcontainer.json
-├── analysis_yolo_results
-│   ├── Analysis.ipynb
-│   └── Analysis_yolo_results.md
-├── apps
-│   └── streamlit_app
-│       └── app.py
-├── artifacts
-│   └──runs
-│   └──detect
-│         ├──exp1
-│         ├──exp2
-│         └── exp3
-│   
-├── briefing
-│   ├── 3315-264
-│   │   ├── T_ORTO_3315-264_IRGB_1000.j2w
-│   │   └── T_ORTO_3315-264_IRGB_1000.jp2
-│   ├── briefing_assets 
-│   │   ├── 3315-264
-│   │   ├── 🇧🇷1-Briefing.pdf
-│   │   └── 🇬🇧1-Briefing_en.pdf
-│   └── notebooks
-│       ├── Projeto_P2_Mosaico_Perdizes.ipynb
-│       └── Projeto_P2_Mosaico_Perdizes_HIRES.ipynb
-├── configs
-│   └── data.yaml
-├── data
-│   ├── README.dataset.txt
-│   ├── README.roboflow.txt
-│   ├── raw
-│   │   └── helipad_dataset.rar
-│   ├── tiles
-│   │   ├── center_hires_annotated_mosaic.png
-│   │   ├── center_hires_full_mosaic.jpg
-│   │   ├── center_hires_mosaic_preview.jpg
-│   │   ├── center_hires_tiles_sample.png
-│   │   ├── center_mosaic_tiles
-│   │   ├── tile_z19_x194543_y298181.jpg
-│   │   ├── tile_z19_x194545_y298183.jpg
-│   │   ├── tile_z19_x194545_y298184.jpg
-│   │   ├── tile_z19_x194546_y298177.jpg
-│   │   ├── tile_z19_x194546_y298178.jpg
-│   │   ├── tile_z19_x194546_y298179.jpg
-│   │   ├── tile_z19_x194546_y298180.jpg
-│   │   ├── tile_z19_x194547_y298176.jpg
-│   │   ├── tile_z19_x194548_y298180.jpg
-│   │   ├── tile_z19_x194548_y298181.jpg
-│   │   ├── tile_z19_x194548_y298183.jpg
-│   │   └── tile_z19_x194549_y298187.jpg
-│   └── training
-│       └── yolo_dataset
-├── docs
-│   ├── MLOps-Architecture.md
-│   └── governance
-│       └── On the Economic and Governance Mechanisms forthe Agentic Web -  A Global South Perspective.pdf
-├── notebooks
-│   └── model_analysis.ipynb
-├── packages.txt
-├── reports
-│   ├── executive_analysis
-│   │   ├── 🇧🇷Helipoint_Detector_Model_Performance_and_Data_Analysis.pages
-│   │   ├── 🇧🇷Helipoint_Detector_Model_Performance_and_Data_Analysis.pdf
-│   │   ├── 🇬🇧Helipoint_Detector_Model_Performance_and_Data_Analysis.pages
-│   │   └── 🇬🇧Helipoint_Detector_Model_Performance_and_Data_Analysis.pdf
-│   ├── model_outputs
-│   │   └── detect
-│   └── yolo_results_analysis.md
-├── requirements.txt
-├── src
-│   ├── data_preparation
-│   │   └── image_preprocessing.ipynb
-│   ├── geospatial
-│   │   ├── geospatial_image_collection.ipynb
-│   │   ├── helipad_bot.py
-│   │   ├── helipad_coordinates.csv
-│   │   └── transform_coordinates.py
-│   └── training
-│       └── yolo_training.ipynb
-```
+<img width="1220" height="2083" alt="Image" src="https://github.com/user-attachments/assets/1e2432d1-aef2-4d5f-857b-1a41e5adfad2" />
 
 <br>
 
