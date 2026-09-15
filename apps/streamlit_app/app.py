@@ -745,6 +745,14 @@ TR = {
     "en": "🔇 Starts muted — click the speaker icon on the player to enable audio.",
     "pt": "🔇 Começa mudo — clique no ícone de som do player para ativar o áudio.",
 },
+"about.demos.scraping.expander_label": {
+    "en": "🎥 Demo — Automated Helipad Scraping",
+    "pt": "🎥 Demo — Coleta Automatizada de Helipontos",
+},
+"about.credits.expander_label": {
+    "en": "🎓 Institutional Credits",
+    "pt": "🎓 Créditos Institucionais",
+},
 "about.demos.scraping.title_line": {
     "en": '🎥 <strong>DEMO:</strong> <strong>AUTOMATED HELIPAD SCRAPING</strong> ✦ <code>SELENIUM</code> ✦ <code>FLIGHTMARKET</code> ✦ <code>GEOCODING</code>',
     "pt": '🎥 <strong>DEMO:</strong> <strong>AUTOMATED HELIPAD SCRAPING</strong> ✦ <code>SELENIUM</code> ✦ <code>FLIGHTMARKET</code> ✦ <code>GEOCODING</code>',
@@ -3484,37 +3492,41 @@ with tab_about:
     # this same geospatial automation bot) and above the credits table.
     # Layout: centered title line -> muted notice -> player -> centered
     # credit line, matching the README's demo-video formatting.
-    st.markdown(f"<p style='text-align:center;'>{t('about.demos.scraping.title_line')}</p>", unsafe_allow_html=True)
-    st.markdown(f"<p style='text-align:center; color:#94A3B8; font-size:12.5px;'>{t('about.demos.muted_notice')}</p>", unsafe_allow_html=True)
-    # Muted by default in the dashboard only — two different soundtracks
-    # living in the same running tool (this one + the training demo in
-    # Experiment Metrics) can clash if someone plays both back to back.
-    # README.md / the presentation keep audio on, since each video is
-    # viewed in isolation there. The player's own sound icon still lets
-    # anyone unmute.
-    st.video("https://github.com/user-attachments/assets/eab6e951-6b66-4c6c-a2c6-23ee2f902c5f", muted=True)
-    st.markdown(f"<p style='text-align:center;'>{t('about.demos.scraping.credit_line')}</p>", unsafe_allow_html=True)
+    with st.expander(t("about.demos.scraping.expander_label"), expanded=True):
+        st.markdown(f"<p style='text-align:center;'>{t('about.demos.scraping.title_line')}</p>", unsafe_allow_html=True)
+        st.markdown(f"<p style='text-align:center; color:#94A3B8; font-size:12.5px;'>{t('about.demos.muted_notice')}</p>", unsafe_allow_html=True)
+        # Muted by default in the dashboard only — two different soundtracks
+        # living in the same running tool (this one + the training demo in
+        # Experiment Metrics) can clash if someone plays both back to back.
+        # README.md / the presentation keep audio on, since each video is
+        # viewed in isolation there. The player's own sound icon still lets
+        # anyone unmute.
+        st.video("https://github.com/user-attachments/assets/eab6e951-6b66-4c6c-a2c6-23ee2f902c5f", muted=True)
+        st.markdown(f"<p style='text-align:center;'>{t('about.demos.scraping.credit_line')}</p>", unsafe_allow_html=True)
 
-    st.markdown(f"""
-    <div class="dark-card" style="text-align:left;">
-        <table style="width:100%; font-size:14px; color:#E2E8F0; border-collapse:collapse;">
-            <tr><td style="padding:6px 0; color:#93C5FD; width:160px; vertical-align:top;">{t("about.institution")}</td>
-                <td style="padding:6px 0;"><b>PUC-SP — FACEI</b></td></tr>
-            <tr><td style="padding:6px 0; color:#93C5FD; vertical-align:top;">{t("about.program")}</td>
-                <td style="padding:6px 0;">BSc in Human Centered-AI & Data Science</td></tr>
-            <tr><td style="padding:6px 0; color:#93C5FD; vertical-align:top;">{t("about.course")}</td>
-                <td style="padding:6px 0;">Machine Learning / Computer Vision — Project P2</td></tr>
-            <tr><td style="padding:6px 0; color:#93C5FD; vertical-align:top;">{t("about.authors")}</td>
-                <td style="padding:6px 0;">
-                    <a href="https://linktr.ee/fabianacampanari" target="_blank" style="color:#5EEAD4;">Fabiana ⚡️ Campanari</a>
-                </td></tr>
-            <tr><td style="padding:6px 0; color:#93C5FD; vertical-align:top;">{t("about.collaborators")}</td>
-                <td style="padding:6px 0;">
-                    Carlos Antonio dos Santos Roth Gorham · <a href="https://github.com/ppvyctor/Helipoint-Detector" target="_blank" style="color:#5EEAD4;">Pedro Vyctor Almeida</a>
-                </td></tr>
-        </table>
-    </div>
-    """, unsafe_allow_html=True)
+    st.markdown("<div style='margin-top:28px;'></div>", unsafe_allow_html=True)
+
+    with st.expander(t("about.credits.expander_label"), expanded=True):
+        st.markdown(f"""
+        <div style="text-align:left;">
+            <table style="width:100%; font-size:14px; color:#E2E8F0; border-collapse:collapse;">
+                <tr><td style="padding:6px 0; color:#93C5FD; width:160px; vertical-align:top;">{t("about.institution")}</td>
+                    <td style="padding:6px 0;"><b>PUC-SP — FACEI</b></td></tr>
+                <tr><td style="padding:6px 0; color:#93C5FD; vertical-align:top;">{t("about.program")}</td>
+                    <td style="padding:6px 0;">BSc in Human Centered-AI & Data Science</td></tr>
+                <tr><td style="padding:6px 0; color:#93C5FD; vertical-align:top;">{t("about.course")}</td>
+                    <td style="padding:6px 0;">Machine Learning / Computer Vision — Project P2</td></tr>
+                <tr><td style="padding:6px 0; color:#93C5FD; vertical-align:top;">{t("about.authors")}</td>
+                    <td style="padding:6px 0;">
+                        <a href="https://linktr.ee/fabianacampanari" target="_blank" style="color:#5EEAD4;">Fabiana ⚡️ Campanari</a>
+                    </td></tr>
+                <tr><td style="padding:6px 0; color:#93C5FD; vertical-align:top;">{t("about.collaborators")}</td>
+                    <td style="padding:6px 0;">
+                        Carlos Antonio dos Santos Roth Gorham · <a href="https://github.com/ppvyctor/Helipoint-Detector" target="_blank" style="color:#5EEAD4;">Pedro Vyctor Almeida</a>
+                    </td></tr>
+            </table>
+        </div>
+        """, unsafe_allow_html=True)
 
 # ====================== TAB 7: Downloads ======================
 with tab7:
