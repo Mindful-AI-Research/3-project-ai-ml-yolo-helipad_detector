@@ -3354,14 +3354,16 @@ with tab5:
 
 # ====================== TAB 6: Governance ======================
 with tab6:
-    st.subheader(t("gov.responsible_ai"))
-    st.markdown(t("gov.responsible_ai.body"))
+    with st.expander(t("gov.responsible_ai"), expanded=True):
+        st.markdown(t("gov.responsible_ai.body"))
 
-    st.subheader(t("gov.lgpd"))
-    st.markdown(t("gov.lgpd.body"))
+    st.markdown("")
+    with st.expander(t("gov.lgpd"), expanded=True):
+        st.markdown(t("gov.lgpd.body"))
 
-    st.subheader(t("gov.contributors"))
-    st.markdown(t("gov.contributors.body"))
+    st.markdown("")
+    with st.expander(t("gov.contributors"), expanded=True):
+        st.markdown(t("gov.contributors.body"))
 
 # ====================== TAB: About ======================
 with tab_about:
@@ -3378,90 +3380,104 @@ with tab_about:
     # and a plain markdown table only gets Streamlit's default thin 1px
     # border — this needs the same visual weight (thick teal accent) used
     # elsewhere in the dashboard (e.g. the 3px teal-bordered card below).
-    st.markdown(f"### {t('cities.header')}")
-    _cities_cols = t("cities.table.columns")
-    _cities_rows = t("cities.table.data")
+    #
+    # Wrapped in st.expander (like every themed sub-section in Experiment
+    # Metrics — Model Evolution, Confusion Matrix, etc.) purely for the
+    # matching teal-outline "frame" that comes from this app's global
+    # [data-testid="stExpander"] CSS rule — not for collapsibility, hence
+    # expanded=True everywhere it's used this way.
+    with st.expander(t("cities.header"), expanded=True):
+        _cities_cols = t("cities.table.columns")
+        _cities_rows = t("cities.table.data")
 
-    def _md_cell_to_html(cell: str) -> str:
-        """Cell text here only ever uses two tiny markdown patterns —
-        **bold** and [text](url) links — so a couple of targeted regex
-        substitutions are enough; avoids depending on how Streamlit's
-        markdown parser treats content nested inside raw HTML tags."""
-        cell = re.sub(
-            r"\[([^\]]+)\]\(([^)]+)\)",
-            r'<a href="\2" target="_blank" style="color:#5EEAD4;">\1</a>',
-            cell,
+        def _md_cell_to_html(cell: str) -> str:
+            """Cell text here only ever uses two tiny markdown patterns —
+            **bold** and [text](url) links — so a couple of targeted regex
+            substitutions are enough; avoids depending on how Streamlit's
+            markdown parser treats content nested inside raw HTML tags."""
+            cell = re.sub(
+                r"\[([^\]]+)\]\(([^)]+)\)",
+                r'<a href="\2" target="_blank" style="color:#5EEAD4;">\1</a>',
+                cell,
+            )
+            cell = re.sub(r"\*\*([^*]+)\*\*", r"<strong>\1</strong>", cell)
+            return cell
+
+        _cities_thead = "".join(
+            f'<th style="text-align:left; padding:10px 14px; border-bottom:3px solid #14b8a6; '
+            f'color:#5EEAD4; font-size:12px; text-transform:uppercase; letter-spacing:.04em;">{c}</th>'
+            for c in _cities_cols
         )
-        cell = re.sub(r"\*\*([^*]+)\*\*", r"<strong>\1</strong>", cell)
-        return cell
+        _cities_tbody = "".join(
+            "<tr>" + "".join(
+                f'<td style="padding:10px 14px; border-bottom:1px solid rgba(94,234,212,0.18); '
+                f'color:#E2E8F0; font-size:13.5px; vertical-align:top;">{_md_cell_to_html(cell)}</td>'
+                for cell in row
+            ) + "</tr>"
+            for row in _cities_rows
+        )
+        st.markdown(
+            f'<div style="overflow-x:auto;"><table style="width:100%; border-collapse:collapse;">'
+            f'<thead><tr>{_cities_thead}</tr></thead><tbody>{_cities_tbody}</tbody></table></div>',
+            unsafe_allow_html=True,
+        )
 
-    _cities_thead = "".join(
-        f'<th style="text-align:left; padding:10px 14px; border-bottom:3px solid #14b8a6; '
-        f'color:#5EEAD4; font-size:12px; text-transform:uppercase; letter-spacing:.04em;">{c}</th>'
-        for c in _cities_cols
-    )
-    _cities_tbody = "".join(
-        "<tr>" + "".join(
-            f'<td style="padding:10px 14px; border-bottom:1px solid rgba(94,234,212,0.18); '
-            f'color:#E2E8F0; font-size:13.5px; vertical-align:top;">{_md_cell_to_html(cell)}</td>'
-            for cell in row
-        ) + "</tr>"
-        for row in _cities_rows
-    )
-    st.markdown(
-        f'<div style="overflow-x:auto;"><table style="width:100%; border-collapse:collapse;">'
-        f'<thead><tr>{_cities_thead}</tr></thead><tbody>{_cities_tbody}</tbody></table></div>',
-        unsafe_allow_html=True,
-    )
+        # [!NOTE] first, [!TIP] second — same order as README.md.
+        st.markdown(f"> **{t('cities.interpretation.title')}**  \n> {t('cities.interpretation.text')}")
 
-    # [!NOTE] first, [!TIP] second — same order as README.md.
-    st.markdown(f"> **{t('cities.interpretation.title')}**  \n> {t('cities.interpretation.text')}")
+        st.markdown(f"""
+        <div style="border-left:3px solid #14b8a6; background:rgba(14,117,109,0.08);
+                    border-radius:8px; padding:14px 18px; margin:14px 0 4px 0;">
+            <p style="margin:0; color:#E2E8F0; font-size:14px; line-height:1.65;">
+                💡 {t('cities.why_sao_paulo')}
+            </p>
+        </div>
+        """, unsafe_allow_html=True)
 
-    st.markdown(f"""
-    <div style="border-left:3px solid #14b8a6; background:rgba(14,117,109,0.08);
-                border-radius:8px; padding:14px 18px; margin:14px 0 4px 0;">
-        <p style="margin:0; color:#E2E8F0; font-size:14px; line-height:1.65;">
-            💡 {t('cities.why_sao_paulo')}
-        </p>
-    </div>
-    """, unsafe_allow_html=True)
+    # Extra vertical gap between framed sections — st.expander's own
+    # margin alone read as too tight once every section got the same
+    # bordered "card" treatment; this is the "increase and define the
+    # spacing between each subtitle" adjustment.
+    st.markdown("<div style='margin-top:28px;'></div>", unsafe_allow_html=True)
 
     st.markdown(t("about.body_closing"))
 
-    st.markdown(f"### {t('about.discovery.title')}")
-    st.caption(t("about.discovery.body"))
-    _disc_stats = load_discovery_dataset_stats()
-    if _disc_stats is None:
-        st.caption(t("about.discovery.missing").format(path=COORDS_CSV))
-    else:
-        disc_col1, disc_col2 = st.columns(2)
-        with disc_col1:
-            st.metric(t("about.discovery.points"), _disc_stats["total_points"])
-        with disc_col2:
-            if _disc_stats["distinct_locations"] is not None:
-                st.metric(t("about.discovery.regions"), _disc_stats["distinct_locations"])
-
-        _points_df = _disc_stats.get("points_table")
-        if _points_df is not None and not _points_df.empty:
-            # Row-level listing (one row per discovered helipad point) —
-            # not aggregated by state — so the 10-row cycling gradient
-            # actually cycles a few times over and is visible, rather than
-            # barely completing once across a dozen-ish aggregated rows.
-            # "Estado" only appears if src/geospatial/geocode_states.py has
-            # been run AND its output lines up 1:1 with this CSV (see
-            # load_discovery_dataset_stats) — otherwise this table still
-            # renders fine with just Neighborhood + Collected-on.
-            _display_df = _points_df.rename(columns={
-                "Nome do Bairro": t("about.discovery.location_col"),
-                "Coletado em": t("about.discovery.date_col"),
-                "Estado": t("about.discovery.state_col"),
-            })
-            st.dataframe(
-                style_rows_by_cycle(_display_df, cycle=10),
-                use_container_width=True, hide_index=True, height=420,
-            )
+    with st.expander(t("about.discovery.title"), expanded=True):
+        st.caption(t("about.discovery.body"))
+        _disc_stats = load_discovery_dataset_stats()
+        if _disc_stats is None:
+            st.caption(t("about.discovery.missing").format(path=COORDS_CSV))
         else:
-            st.caption(t("about.discovery.pending"))
+            disc_col1, disc_col2 = st.columns(2)
+            with disc_col1:
+                st.metric(t("about.discovery.points"), _disc_stats["total_points"])
+            with disc_col2:
+                if _disc_stats["distinct_locations"] is not None:
+                    st.metric(t("about.discovery.regions"), _disc_stats["distinct_locations"])
+
+            _points_df = _disc_stats.get("points_table")
+            if _points_df is not None and not _points_df.empty:
+                # Row-level listing (one row per discovered helipad point) —
+                # not aggregated by state — so the 10-row cycling gradient
+                # actually cycles a few times over and is visible, rather than
+                # barely completing once across a dozen-ish aggregated rows.
+                # "Estado" only appears if src/geospatial/geocode_states.py has
+                # been run AND its output lines up 1:1 with this CSV (see
+                # load_discovery_dataset_stats) — otherwise this table still
+                # renders fine with just Neighborhood + Collected-on.
+                _display_df = _points_df.rename(columns={
+                    "Nome do Bairro": t("about.discovery.location_col"),
+                    "Coletado em": t("about.discovery.date_col"),
+                    "Estado": t("about.discovery.state_col"),
+                })
+                st.dataframe(
+                    style_rows_by_cycle(_display_df, cycle=10),
+                    use_container_width=True, hide_index=True, height=420,
+                )
+            else:
+                st.caption(t("about.discovery.pending"))
+
+    st.markdown("<div style='margin-top:28px;'></div>", unsafe_allow_html=True)
 
     # Scraping demo lives here, right after the Discovery dataset coverage
     # section it illustrates ("Points collected" above were gathered by
