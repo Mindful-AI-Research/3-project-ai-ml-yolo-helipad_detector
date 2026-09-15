@@ -503,6 +503,10 @@ TR = {
     "en": "🗺️ AI/ML Ops Pipeline",
     "pt": "🗺️ Pipeline de AI/ML Ops",
 },
+"pipeline.diagram_missing_asset": {
+    "en": "Diagram image not found at `assets/pipeline_diagram.svg` — the full flowchart is documented in README.md.",
+    "pt": "Imagem do diagrama não encontrada em `assets/pipeline_diagram.svg` — o fluxograma completo está documentado no README.md.",
+},
 "pipeline.steps_header": {
     "en": "📋 Step-by-Step Breakdown",
     "pt": "📋 Detalhamento Passo a Passo",
@@ -3272,148 +3276,27 @@ with tab5:
     st.subheader(t("pipeline.subheader"))
     st.caption(t("pipeline.caption"))
 
-    # ---- AI/ML Ops Pipeline flowchart (Mermaid, live-rendered) ----
-    # Same diagram source as README.md's "AI/ML Ops Pipeline" section —
-    # keep both in sync if the pipeline itself changes. Rendered via
-    # mermaid.js pulled from a CDN inside components.html (no new pip
-    # dependency, consistent with how the app already reaches out to ESRI/
-    # Nominatim over the network elsewhere). The dashed "flow" animation on
-    # the edges is a small CSS addition layered on top of Mermaid's own SVG
-    # output — a nod to "data moving through the pipeline" without
-    # replacing the diagram itself.
+    # ---- AI/ML Ops Pipeline flowchart ----
+    # Same diagram documented in README.md's "AI/ML Ops Pipeline" section —
+    # keep both in sync if the pipeline itself changes. Rendered as a
+    # pre-generated static SVG (assets/pipeline_diagram.svg) via st.image(),
+    # not a live Mermaid/JS embed inside components.html: that approach was
+    # tried twice (CDN <script src>, then a fully vendored local copy of
+    # mermaid.min.js) and neither one actually displayed anything in the
+    # deployed app — not even a static status line with zero JS/network
+    # dependency of its own, which means the failure was components.html's
+    # sandboxed iframe not rendering at all in that environment (browser
+    # extension or Streamlit Cloud's iframe policy — unclear which, and not
+    # worth chasing further). st.image() is core Streamlit rendering with no
+    # iframe involved, so it doesn't share that failure mode. The flowing
+    # dashed-line animation on the edges is embedded as CSS directly inside
+    # the SVG file itself, so it still animates as a plain static image.
     st.markdown(f"### {t('pipeline.flowchart_header')}")
-    _MERMAID_PIPELINE_SRC = r"""%%{
-  init: {
-    "theme": "dark",
-    "themeVariables": {
-      "background": "#020617",
-      "primaryTextColor": "#ffffff",
-      "lineColor": "#14b8a6",
-      "defaultLinkColor": "#14b8a6",
-      "fontFamily": "Inter, Segoe UI, Arial, sans-serif"
-    }
-  }
-}%%
-
-flowchart TD
-
-classDef navy fill:#020817,stroke:#0a1a2f,color:#ffffff,stroke-width:2px;
-classDef group fill:#000000,stroke:#0a1a2f,color:#ffffff,stroke-width:2px;
-
-subgraph G1["Geospatial Discovery"]
-A["FlightMarket / aviation website"]
-B["Selenium automation<br/>src/geospatial/helipad_bot.py"]
-C["Helipad records + metadata"]
-D["Coordinates CSV<br/>src/geospatial/helipad_coordinates.csv"]
-E["Coordinate conversion<br/>src/geospatial/transform_coordinates.py"]
-F["Geographic bounding boxes"]
-A --> B --> C --> D --> E --> F
-end
-
-subgraph G2["Visual Acquisition"]
-G["ESRI World Imagery<br/>XYZ tile download"]
-H["Image mosaics by region<br/>src/geospatial/geospatial_image_collection.ipynb"]
-I["Manual visual triage"]
-J["Selected images with helipads"]
-G --> H --> I --> J
-end
-
-subgraph G3["Dataset Engineering"]
-K["Roboflow upload"]
-L["Bounding box annotation<br/>single class: helipad"]
-M["Preprocessing + augmentations<br/>resize 640x640"]
-N["Dataset split<br/>train / valid / test"]
-O["YOLO export<br/>data.yaml + labels"]
-K --> L --> M --> N --> O
-end
-
-subgraph G4["Modeling and Validation"]
-P["Google Colab training<br/>Ultralytics YOLOv8 / YOLOv11"]
-Q["Runs, weights and metrics<br/>runs/detect/.../best.pt"]
-R["Quantitative evaluation<br/>mAP, Precision, Recall,<br/>confusion matrix"]
-S["Qualitative analysis<br/>hits, false positives,<br/>false negatives"]
-T["Field validation on unseen regions<br/>download_all_regions.py + auto_triage_regions.py<br/>(10 neighborhoods, 7,943 tiles)"]
-U["Generalization assessment"]
-V["Interactive dashboard<br/>apps/streamlit_app/app.py"]
-
-P --> Q
-Q --> R
-Q --> S
-Q --> T
-T --> U
-Q --> V
-end
-
-F --> G
-J --> K
-O --> P
-
-class A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V navy;
-class G1,G2,G3,G4 group;
-
-linkStyle default stroke:#14b8a6,stroke-width:2.5px,opacity:0.95;"""
-
-    # Loaded from a CDN rather than vendored locally — a 3.3MB mermaid.min.js
-    # committed to the repo just to draw one diagram was more weight than
-    # it's worth. Two things that made the earlier CDN attempt fail
-    # silently are fixed here: (1) startOnLoad:true depends on the iframe's
-    # own 'load' event, which is unreliable timing inside components.html's
-    # sandboxed iframe — replaced with an explicit onload handler on the
-    # <script> tag itself, guaranteed to fire right when that specific
-    # script finishes; (2) the background color only covered the diagram's
-    # own <div>, not the full reserved iframe height — any leftover empty
-    # space below a shorter-than-expected diagram showed the page's own
-    # starfield background through it, which looked exactly like "nothing
-    # rendered" even when it had. Both fixed below, plus a status line that
-    # always shows *something* (rendering / success / the exact JS error)
-    # so a future failure is never silent again.
-    _mermaid_html_template = """
-    <html><head><style>
-      html, body { margin:0; padding:0; background:#020617; min-height:100%; }
-      @keyframes pipelineFlow { to { stroke-dashoffset: -24; } }
-    </style></head>
-    <body>
-      <div id="pipeline-mermaid-status" style="color:#5EEAD4; font-family:monospace; font-size:11px; padding:6px 18px 0 18px;">
-        ⏳ Loading diagram library…
-      </div>
-      <div style="background:#020617; border-radius:14px; padding:18px; min-height:60px;">
-        <pre class="mermaid" id="pipeline-mermaid-el">__DIAGRAM__</pre>
-      </div>
-      <script
-        src="https://cdn.jsdelivr.net/npm/mermaid@10.9.1/dist/mermaid.min.js"
-        onload="
-          var statusEl = document.getElementById('pipeline-mermaid-status');
-          statusEl.textContent = '⏳ Rendering diagram…';
-          try {
-            mermaid.initialize({ startOnLoad: false, theme: 'dark' });
-            mermaid.run({ querySelector: '.mermaid' }).then(function () {
-              statusEl.remove();
-              document.querySelectorAll('.edgePaths path, .edgePath path, path.flowchart-link').forEach(function (p) {
-                p.style.strokeDasharray = '6 6';
-                p.style.animation = 'pipelineFlow 1s linear infinite';
-              });
-            }).catch(function (e) {
-              statusEl.textContent = '⚠️ Diagram failed to render: ' + e.message;
-              statusEl.style.color = '#f97316';
-            });
-          } catch (e) {
-            statusEl.textContent = '⚠️ Diagram failed to render: ' + e.message;
-            statusEl.style.color = '#f97316';
-          }
-        "
-        onerror="
-          var s = document.getElementById('pipeline-mermaid-status');
-          s.textContent = '⚠️ Could not load the diagram library from the CDN (network blocked?). Raw source is documented in README.md.';
-          s.style.color = '#f97316';
-        "
-      ></script>
-    </body></html>
-    """
-    components.html(
-        _mermaid_html_template.replace("__DIAGRAM__", _MERMAID_PIPELINE_SRC),
-        height=1100, scrolling=True,
-    )
-
+    _pipeline_svg_path = Path("assets/pipeline_diagram.svg")
+    if _pipeline_svg_path.exists():
+        st.image(str(_pipeline_svg_path), use_container_width=True)
+    else:
+        st.info(t("pipeline.diagram_missing_asset"))
 
     st.markdown(f"#### {t('pipeline.steps_header')}")
 
