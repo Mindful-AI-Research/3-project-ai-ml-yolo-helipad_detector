@@ -603,98 +603,13 @@ The solution can be viewed as an architecture with [**seven main blocks**]():
 
 <img width="1220" height="2083" alt="Image" src="https://github.com/user-attachments/assets/1e2432d1-aef2-4d5f-857b-1a41e5adfad2" />
 
-```mermaid
-%%{
-  init: {
-    "theme": "dark",
-    "themeVariables": {
-      "background": "#0b1220",
-      "primaryColor": "#000000",
-      "primaryTextColor": "#ffffff",
-      "primaryBorderColor": "#000000",
-      "lineColor": "#14b8a6",
-      "secondaryColor": "#000000",
-      "secondaryTextColor": "#ffffff",
-      "secondaryBorderColor": "#000000",
-      "tertiaryColor": "#000000",
-      "tertiaryTextColor": "#ffffff",
-      "tertiaryBorderColor": "#000000",
-      "mainBkg": "#000000",
-      "nodeBorder": "#000000",
-      "clusterBkg": "#020617",
-      "clusterBorder": "#000000",
-      "titleColor": "#ffffff",
-      "edgeLabelBackground": "#0b1220",
-      "fontFamily": "Inter, Segoe UI, Arial, sans-serif"
-    }
-  }
-}%%
-
-flowchart T
-
-    A["FlightMarket / aviation website"] --> B["Selenium automation<br/>BOTHELIPONTO.py"]
-    B --> C["Helipad records + metadata"]
-    C --> D["Coordinates CSV<br/>cordenadasheli.csv"]
-    D --> E["Coordinate conversion<br/>Transformarcordenadas.py"]
-    E --> F["Geographic bounding boxes"]
-    F --> G["ESRI World Imagery<br/>XYZ tile download"]
-    G --> H["Image mosaics by region<br/>Imagens.ipynb"]
-    H --> I["Manual visual triage"]
-    I --> J["Selected images with helipads"]
-    J --> K["Roboflow upload"]
-    K --> L["Bounding box annotation<br/>single class: helipad"]
-    L --> M["Preprocessing + augmentations<br/>resize 640x640"]
-    M --> N["Dataset split<br/>train / valid / test"]
-    N --> O["YOLO export<br/>data.yaml + labels"]
-    O --> P["Google Colab training<br/>Ultralytics YOLOv8 / YOLOv11"]
-    P --> Q["Runs, weights and metrics<br/>runs/detect/.../best.pt"]
-    Q --> R["Quantitative evaluation<br/>mAP, Precision, Recall, confusion matrix"]
-    Q --> S["Qualitative analysis<br/>hits, false positives, false negatives"]
-    Q --> T["Inference on unseen neighborhood<br/>New Images/"]
-    T --> U["Generalization assessment"]
-    Q --> V["Optional web app<br/>Site.py"]
-
-    subgraph G1["Geospatial Discovery"]
-      A
-      B
-      C
-      D
-      E
-      F
-    end
-
-    subgraph G2["Visual Acquisition"]
-      G
-      H
-      I
-      J
-    end
-
-    subgraph G3["Dataset Engineering"]
-      K
-      L
-      M
-      N
-      O
-    end
-
-    subgraph G4["Modeling and Validation"]
-      P
-      Q
-      R
-      S
-      T
-      U
-      V
-    end
-```
 
 
 <br>
 
 > [!TIP]
 >
-> The pipeline should be understood as a learning architecture as much as a software architecture. It shows how raw geospatial imagery is > > gradually transformed into a validated and demonstrable AI artifact.
+> The pipeline should be understood as a learning architecture as much as a software architecture. It shows how raw geospatial imagery is gradually transformed into a validated and demonstrable AI artifact.
 
 <br><br>
 
@@ -702,7 +617,107 @@ flowchart T
 
 The repository structure was organized to reflect pipeline stages, including geographic automation, image generation, training, inference, evaluation and documentation.
 
-<img width="1220" height="2083" alt="Image" src="https://github.com/user-attachments/assets/1e2432d1-aef2-4d5f-857b-1a41e5adfad2" />
+```bash
+Helipoint Detector
+├── .devcontainer
+│   └── devcontainer.json
+├── yolo_results_analysis
+│   ├── Analysis.ipynb
+│   └── Analysis_yolo_results.md
+├── apps
+│   └── streamlit_app
+│       └── app.py
+├── artifacts
+│   └── runs
+│       └── runs
+│           ├── exp1
+│           ├── exp2
+│           └── exp3     
+├── briefing
+│   ├── 3315-264
+│   │   ├── T_ORTO_3315-264_IRGB_1000.j2w
+│   │   └── T_ORTO_3315-264_IRGB_1000.jp2
+│   ├── briefing_assets 
+│   │   ├── 3315-264
+│   │   ├── 🇧🇷1-Briefing.pdf
+│   │   └── 🇬🇧1-Briefing_en.pdf
+│   └── notebooks
+│       ├── Projeto_P2_Mosaico_Perdizes.ipynb
+│       └── Projeto_P2_Mosaico_Perdizes_HIRES.ipynb
+├── configs
+│   └── data.yaml
+├── data
+│   ├── README.dataset.txt
+│   ├── README.roboflow.txt
+│   ├── raw
+│   │   └── helipad_dataset.rar
+│   ├── tiles
+│   │   ├── center_hires_annotated_mosaic.png
+│   │   ├── center_hires_full_mosaic.jpg
+│   │   ├── center_hires_mosaic_preview.jpg
+│   │   ├── center_hires_tiles_sample.png
+│   │   ├── center_mosaic_tiles
+│   │   ├── tile_z19_x194543_y298181.jpg
+│   │   ├── tile_z19_x194545_y298183.jpg
+│   │   ├── tile_z19_x194545_y298184.jpg
+│   │   ├── tile_z19_x194546_y298177.jpg
+│   │   ├── tile_z19_x194546_y298178.jpg
+│   │   ├── tile_z19_x194546_y298179.jpg
+│   │   ├── tile_z19_x194546_y298180.jpg
+│   │   ├── tile_z19_x194547_y298176.jpg
+│   │   ├── tile_z19_x194548_y298180.jpg
+│   │   ├── tile_z19_x194548_y298181.jpg
+│   │   ├── tile_z19_x194548_y298183.jpg
+│   │   └── tile_z19_x194549_y298187.jpg
+│   └── training
+│       └── yolo_dataset
+├── docs
+│   ├── MLOps-Architecture.md
+│   ├── 🇧🇷Portugues
+│   │   ├── README_MESTRE.MD
+│   │   └── ANALISE_QUALITATIVA_FARIA_LIMA.MD
+│   ├── 🇬🇧English
+│   │   ├── README_MESTRE.MD
+│   │   ├── ANALYSIS_YOLO_RESULTS.MD
+│   │   └── QUALITATIVE_ANALYSIS_FARIA_LIMA.MD
+│   └── governance
+│       └── On the Economic and Governance Mechanisms forthe Agentic Web -  A Global South Perspective.pdf
+├── notebooks
+│   └── model_analysis.ipynb
+├── packages.txt
+├── reports
+│   ├── executive_analysis
+│   │   ├── helipad_detector_analise_dados_sumario_executivo_pt.docx
+│   │   ├── helipad_detector_data_analysis_executive_summary_en.docx
+│   │   ├── 🇧🇷Helipoint_Detector_Model_Performance_and_Data_Analysis.pages
+│   │   ├── 🇧🇷Helipoint_Detector_Model_Performance_and_Data_Analysis.pdf
+│   │   ├── 🇬🇧Helipoint_Detector_Model_Performance_and_Data_Analysis.pages
+│   │   └── 🇬🇧Helipoint_Detector_Model_Performance_and_Data_Analysis.pdf
+│   ├── model_outputs
+│   │   └── detect
+│   ├── detection_summary_by_region.json
+│   ├── download_all_regions_log.txt
+│   ├── auto_triage_regions_log.txt
+│   └── yolo_results_analysis.md
+├── requirements.txt
+├── src
+│   ├── data_preparation
+│   │   └── image_preprocessing.ipynb
+│   ├── geospatial
+│   │   ├── geospatial_image_collection.ipynb
+│   │   ├── geospatial_image_collection_faria_lima.ipynb
+│   │   ├── helipad_bot.py
+│   │   ├── helipad_coordinates.csv
+│   │   ├── helipad_coordinates_bbox.csv
+│   │   ├── sp_neighborhoods_bbox.csv
+│   │   ├── transform_coordinates.py
+│   │   ├── auto_triage_faria_lima.py
+│   │   ├── download_all_regions.py
+│   │   ├── auto_triage_regions.py
+│   │   └── mosaico_<neighborhood>/   (10 folders, one per region, gitignored)
+│   └── training
+│       └── yolo_training.ipynb
+```
 
 <br>
 
