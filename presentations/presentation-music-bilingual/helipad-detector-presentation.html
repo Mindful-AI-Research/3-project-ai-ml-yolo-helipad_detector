@@ -175,7 +175,7 @@
     .roadmap-desc { font-size: .78rem; color: var(--w50) }
 
     .code { background: var(--surface2); border: 1px solid var(--border); border-radius: 12px; padding: 18px 20px; font-family: var(--mono); font-size: .74rem; color: #8fe0d8; line-height: 1.7; overflow-x: auto; white-space: pre }
-    .hl { background: rgba(14, 117, 109, .06); border: 1px solid var(--border); border-left: 3px solid var(--red); border-radius: 10px; padding: 13px 17px; font-size: .86rem; color: var(--w70); line-height: 1.6 }
+    .hl { background: rgba(14, 117, 109, .06); backdrop-filter: blur(14px); border: 1px solid var(--border); border-left: 3px solid var(--red); border-radius: 10px; padding: 13px 17px; font-size: .86rem; color: var(--w70); line-height: 1.6 }
 
     @keyframes fadeUp { from { opacity: 0; transform: translateY(18px) } to { opacity: 1; transform: translateY(0) } }
     @keyframes pipelineFlow { to { stroke-dashoffset: -24 } }
@@ -213,7 +213,7 @@
     .three-cover:active { cursor: grabbing }
     .three-cover canvas { display: block; width: 100% !important; height: 100% !important }
 
-    .heli-ambient { position: fixed; inset: 0; pointer-events: none; z-index: 0 }
+    .heli-ambient { position: fixed; inset: 0; pointer-events: none; z-index: -1 }
     .heli-svg { position: absolute; width: 42px; height: 42px; opacity: .55; color: #FF2500; filter: drop-shadow(0 0 4px rgba(255,37,0,.3)); animation: heliPerimeterA 28s cubic-bezier(.42,0,.58,1) infinite; will-change: transform, top, left }
     .heli-svg .drone-blade { transform-box: fill-box; transform-origin: center; animation: rotorSpin .75s linear infinite }
     @keyframes rotorSpin { from { transform: rotate(0deg) } to { transform: rotate(360deg) } }
@@ -229,12 +229,12 @@
       34%  { top: 8%;   left: 92%;   transform: rotate(45deg)  scale(1.03) }
       40%  { top: 20%;  left: 95%;   transform: rotate(75deg)  scale(1.05) }
       48%  { top: 40%;  left: 95.5%; transform: rotate(90deg)  scale(1.03) }
-      56%  { top: 62%;  left: 94%;   transform: rotate(100deg) scale(1) }
-      64%  { top: 82%;  left: 88%;   transform: rotate(130deg) scale(.99) }
-      70%  { top: 89%;  left: 72%;   transform: rotate(165deg) scale(1.02) }
-      76%  { top: 90%;  left: 50%;   transform: rotate(180deg) scale(1) }
-      82%  { top: 89%;  left: 28%;   transform: rotate(185deg) scale(1.02) }
-      88%  { top: 80%;  left: 8%;    transform: rotate(220deg) scale(.97) }
+      56%  { top: 68%;  left: 94%;   transform: rotate(100deg) scale(1) }
+      64%  { top: 90%;  left: 88%;   transform: rotate(130deg) scale(.99) }
+      70%  { top: 96%;  left: 72%;   transform: rotate(165deg) scale(1.02) }
+      76%  { top: 97%;  left: 50%;   transform: rotate(180deg) scale(1) }
+      82%  { top: 96%;  left: 28%;   transform: rotate(185deg) scale(1.02) }
+      88%  { top: 88%;  left: 8%;    transform: rotate(220deg) scale(.97) }
       94%  { top: 55%;  left: 3%;    transform: rotate(270deg) scale(.93) }
       98%  { top: 20%;  left: 2.5%;  transform: rotate(320deg) scale(.9) }
       100% { top: 4%;   left: 3%;    transform: rotate(356deg) scale(.92) }
