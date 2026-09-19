@@ -601,11 +601,11 @@ The solution can be viewed as an architecture with [**seven main blocks**]():
 
 ## [AI/ML Ops Pipeline]()
 
+<br>
+
 <img width="1220" height="2083" alt="Image" src="https://github.com/user-attachments/assets/1e2432d1-aef2-4d5f-857b-1a41e5adfad2" />
 
-
-
-<br>
+<br><br>
 
 > [!TIP]
 >
@@ -616,6 +616,8 @@ The solution can be viewed as an architecture with [**seven main blocks**]():
 ## [Repository Structure]()
 
 The repository structure was organized to reflect pipeline stages, including geographic automation, image generation, training, inference, evaluation and documentation.
+
+<br>
 
 ```bash
 Helipoint Detector
@@ -719,7 +721,7 @@ Helipoint Detector
 │       └── yolo_training.ipynb
 ```
 
-<br>
+<br><br>
 
 > [!TIP]
 >
@@ -760,7 +762,7 @@ The project follows an end-to-end methodology aligned with educational best prac
 8. [**Application layer**:]() a lightweight interface makes the model easier to demonstrate and inspect.
 
 
-<br>
+<br><br>
 
 > [!IMPORTANT]
 >
@@ -788,7 +790,7 @@ The Helipoint Detector technical pipeline can be summarized in 12 steps:
 [11.]() Train YOLO models in Colab, monitoring metrics and train/validation curves <br>
 [12.]() Run inference on unseen neighborhoods and analyze results
 
-<br>
+<br><br>
 
 > [!TIP]
 >
@@ -810,7 +812,7 @@ Programmatic collection follows the XYZ tile pattern of the **ESRI World Imagery
 [-]() download each tile, checking HTTP status and filtering placeholders
 [-]() organize tiles into folders by neighborhood and zoom
 
-<br>
+<br><br>
 
 > [!TIP]
 >
@@ -826,7 +828,7 @@ In some cases, **Google Earth Web** may be used as a complement:
 [-]() preserving consistent zoom
 [-]() cropping approximately square areas and resizing to `640×640`
 
-<br>
+<br><br>
 
 > [!TIP]
 >
@@ -843,7 +845,7 @@ In alignment with the project:
 [-]() holdout of at least **1 fully unseen neighborhood** for final generalization testing
 [-]() manual triage of tiles, discarding crops without helipads
 
-<br>
+<br><br>
 
 > [!TIP]
 >
@@ -869,7 +871,7 @@ Image annotation was carried out with focus on consistency and alignment with co
 [-]() splitting into `train / valid / test`
 [-]() exporting in **YOLOv8/YOLOv11** format
 
-<br>
+<br><br>
 
 > [!TIP]
 >
@@ -893,8 +895,9 @@ In Roboflow, the following were configured:
 [-]() resize to `640×640` <br>
 [-]()augmentations such as 90° rotations, horizontal/vertical flips and small brightness/contrast changes <br>
 [-]() standard splits: <br>
-  - [**70% train**]()
-  - [**20% validation**]()
+
+  - [**70% train**]() <br>
+  - [**20% validation**]() <br>
   - [**10% test**]()
  
 <br>
@@ -917,7 +920,7 @@ dataset/
     └── labels/
 ```
 
-<br>
+<br><br>
 
 > [!TIP]
 >
@@ -966,7 +969,7 @@ results = model.train(
 )
 ```
 
-<br>
+<br><br>
 
 ### [***Experiment Strategy***]()
 
