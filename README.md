@@ -601,14 +601,16 @@ The solution can be viewed as an architecture with [**seven main blocks**]():
 
 ## [AI/ML Ops Pipeline]()
 
+
 <img width="1220" height="2083" alt="Image" src="https://github.com/user-attachments/assets/1e2432d1-aef2-4d5f-857b-1a41e5adfad2" />
 
 
-<br>
+
+<br><br>
 
 > [!TIP]
 >
-> The pipeline should be understood as a learning architecture as much as a software architecture. It shows how raw geospatial imagery is > > gradually transformed into a validated and demonstrable AI artifact.
+> The pipeline should be understood as a learning architecture as much as a software architecture. It shows how raw geospatial imagery is gradually transformed into a validated and demonstrable AI artifact.
 
 <br><br>
 
@@ -616,9 +618,111 @@ The solution can be viewed as an architecture with [**seven main blocks**]():
 
 The repository structure was organized to reflect pipeline stages, including geographic automation, image generation, training, inference, evaluation and documentation.
 
-<img width="1220" height="2083" alt="Image" src="https://github.com/user-attachments/assets/1e2432d1-aef2-4d5f-857b-1a41e5adfad2" />
-
 <br>
+
+```bash
+Helipoint Detector
+├── .devcontainer
+│   └── devcontainer.json
+├── yolo_results_analysis
+│   ├── Analysis.ipynb
+│   └── Analysis_yolo_results.md
+├── apps
+│   └── streamlit_app
+│       └── app.py
+├── artifacts
+│   └── runs
+│       └── runs
+│           ├── exp1
+│           ├── exp2
+│           └── exp3     
+├── briefing
+│   ├── 3315-264
+│   │   ├── T_ORTO_3315-264_IRGB_1000.j2w
+│   │   └── T_ORTO_3315-264_IRGB_1000.jp2
+│   ├── briefing_assets 
+│   │   ├── 3315-264
+│   │   ├── 🇧🇷1-Briefing.pdf
+│   │   └── 🇬🇧1-Briefing_en.pdf
+│   └── notebooks
+│       ├── Projeto_P2_Mosaico_Perdizes.ipynb
+│       └── Projeto_P2_Mosaico_Perdizes_HIRES.ipynb
+├── configs
+│   └── data.yaml
+├── data
+│   ├── README.dataset.txt
+│   ├── README.roboflow.txt
+│   ├── raw
+│   │   └── helipad_dataset.rar
+│   ├── tiles
+│   │   ├── center_hires_annotated_mosaic.png
+│   │   ├── center_hires_full_mosaic.jpg
+│   │   ├── center_hires_mosaic_preview.jpg
+│   │   ├── center_hires_tiles_sample.png
+│   │   ├── center_mosaic_tiles
+│   │   ├── tile_z19_x194543_y298181.jpg
+│   │   ├── tile_z19_x194545_y298183.jpg
+│   │   ├── tile_z19_x194545_y298184.jpg
+│   │   ├── tile_z19_x194546_y298177.jpg
+│   │   ├── tile_z19_x194546_y298178.jpg
+│   │   ├── tile_z19_x194546_y298179.jpg
+│   │   ├── tile_z19_x194546_y298180.jpg
+│   │   ├── tile_z19_x194547_y298176.jpg
+│   │   ├── tile_z19_x194548_y298180.jpg
+│   │   ├── tile_z19_x194548_y298181.jpg
+│   │   ├── tile_z19_x194548_y298183.jpg
+│   │   └── tile_z19_x194549_y298187.jpg
+│   └── training
+│       └── yolo_dataset
+├── docs
+│   ├── MLOps-Architecture.md
+│   ├── 🇧🇷Portugues
+│   │   ├── README_MESTRE.MD
+│   │   └── ANALISE_QUALITATIVA_FARIA_LIMA.MD
+│   ├── 🇬🇧English
+│   │   ├── README_MESTRE.MD
+│   │   ├── ANALYSIS_YOLO_RESULTS.MD
+│   │   └── QUALITATIVE_ANALYSIS_FARIA_LIMA.MD
+│   └── governance
+│       └── On the Economic and Governance Mechanisms forthe Agentic Web -  A Global South Perspective.pdf
+├── notebooks
+│   └── model_analysis.ipynb
+├── packages.txt
+├── reports
+│   ├── executive_analysis
+│   │   ├── helipad_detector_analise_dados_sumario_executivo_pt.docx
+│   │   ├── helipad_detector_data_analysis_executive_summary_en.docx
+│   │   ├── 🇧🇷Helipoint_Detector_Model_Performance_and_Data_Analysis.pages
+│   │   ├── 🇧🇷Helipoint_Detector_Model_Performance_and_Data_Analysis.pdf
+│   │   ├── 🇬🇧Helipoint_Detector_Model_Performance_and_Data_Analysis.pages
+│   │   └── 🇬🇧Helipoint_Detector_Model_Performance_and_Data_Analysis.pdf
+│   ├── model_outputs
+│   │   └── detect
+│   ├── detection_summary_by_region.json
+│   ├── download_all_regions_log.txt
+│   ├── auto_triage_regions_log.txt
+│   └── yolo_results_analysis.md
+├── requirements.txt
+├── src
+│   ├── data_preparation
+│   │   └── image_preprocessing.ipynb
+│   ├── geospatial
+│   │   ├── geospatial_image_collection.ipynb
+│   │   ├── geospatial_image_collection_faria_lima.ipynb
+│   │   ├── helipad_bot.py
+│   │   ├── helipad_coordinates.csv
+│   │   ├── helipad_coordinates_bbox.csv
+│   │   ├── sp_neighborhoods_bbox.csv
+│   │   ├── transform_coordinates.py
+│   │   ├── auto_triage_faria_lima.py
+│   │   ├── download_all_regions.py
+│   │   ├── auto_triage_regions.py
+│   │   └── mosaico_<neighborhood>/   (10 folders, one per region, gitignored)
+│   └── training
+│       └── yolo_training.ipynb
+```
+
+<br><br>
 
 > [!TIP]
 >
@@ -659,7 +763,7 @@ The project follows an end-to-end methodology aligned with educational best prac
 8. [**Application layer**:]() a lightweight interface makes the model easier to demonstrate and inspect.
 
 
-<br>
+<br><br>
 
 > [!IMPORTANT]
 >
@@ -687,7 +791,7 @@ The Helipoint Detector technical pipeline can be summarized in 12 steps:
 [11.]() Train YOLO models in Colab, monitoring metrics and train/validation curves <br>
 [12.]() Run inference on unseen neighborhoods and analyze results
 
-<br>
+<br><br>
 
 > [!TIP]
 >
@@ -709,7 +813,7 @@ Programmatic collection follows the XYZ tile pattern of the **ESRI World Imagery
 [-]() download each tile, checking HTTP status and filtering placeholders
 [-]() organize tiles into folders by neighborhood and zoom
 
-<br>
+<br><br>
 
 > [!TIP]
 >
@@ -725,7 +829,7 @@ In some cases, **Google Earth Web** may be used as a complement:
 [-]() preserving consistent zoom
 [-]() cropping approximately square areas and resizing to `640×640`
 
-<br>
+<br><br>
 
 > [!TIP]
 >
@@ -742,7 +846,7 @@ In alignment with the project:
 [-]() holdout of at least **1 fully unseen neighborhood** for final generalization testing
 [-]() manual triage of tiles, discarding crops without helipads
 
-<br>
+<br><br>
 
 > [!TIP]
 >
@@ -768,7 +872,7 @@ Image annotation was carried out with focus on consistency and alignment with co
 [-]() splitting into `train / valid / test`
 [-]() exporting in **YOLOv8/YOLOv11** format
 
-<br>
+<br><br>
 
 > [!TIP]
 >
@@ -792,8 +896,9 @@ In Roboflow, the following were configured:
 [-]() resize to `640×640` <br>
 [-]()augmentations such as 90° rotations, horizontal/vertical flips and small brightness/contrast changes <br>
 [-]() standard splits: <br>
-  - [**70% train**]()
-  - [**20% validation**]()
+
+  - [**70% train**]() <br>
+  - [**20% validation**]() <br>
   - [**10% test**]()
  
 <br>
@@ -816,7 +921,7 @@ dataset/
     └── labels/
 ```
 
-<br>
+<br><br>
 
 > [!TIP]
 >
@@ -865,7 +970,7 @@ results = model.train(
 )
 ```
 
-<br>
+<br><br>
 
 ### [***Experiment Strategy***]()
 
