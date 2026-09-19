@@ -1,0 +1,565 @@
+.
+|-- .devcontainer
+|   `-- devcontainer.json
+|-- .streamlit
+|   `-- config.toml
+|-- apps
+|   `-- streamlit_app
+|       |-- app.py
+|       `-- streamlit_deploy_link.md
+|-- artifacts
+|   `-- runs
+|       `-- runs
+|           `-- detect
+|               |-- exp1
+|               |   |-- weights
+|               |   |   |-- best.pt
+|               |   |   `-- last.pt
+|               |   |-- BoxF1_curve.png
+|               |   |-- BoxPR_curve.png
+|               |   |-- BoxP_curve.png
+|               |   |-- BoxR_curve.png
+|               |   |-- args.yaml
+|               |   |-- confusion_matrix.png
+|               |   |-- confusion_matrix_normalized.png
+|               |   |-- exp1_results.csv
+|               |   |-- labels.jpg
+|               |   |-- results.png
+|               |   |-- train_batch0.jpg
+|               |   |-- train_batch1.jpg
+|               |   |-- train_batch2.jpg
+|               |   |-- train_batch600.jpg
+|               |   |-- train_batch601.jpg
+|               |   |-- train_batch602.jpg
+|               |   |-- val_batch0_labels.jpg
+|               |   |-- val_batch0_pred.jpg
+|               |   |-- val_batch1_labels.jpg
+|               |   `-- val_batch1_pred.jpg
+|               |-- exp2
+|               |   |-- weights
+|               |   |   |-- best.onnx
+|               |   |   |-- best.pt
+|               |   |   `-- last.pt
+|               |   |-- BoxF1_curve.png
+|               |   |-- BoxPR_curve.png
+|               |   |-- BoxP_curve.png
+|               |   |-- BoxR_curve.png
+|               |   |-- args.yaml
+|               |   |-- confusion_matrix.png
+|               |   |-- confusion_matrix_normalized.png
+|               |   |-- labels.jpg
+|               |   |-- results.png
+|               |   |-- results_exp2.csv
+|               |   |-- train_batch0.jpg
+|               |   |-- train_batch1.jpg
+|               |   |-- train_batch1080.jpg
+|               |   |-- train_batch1081.jpg
+|               |   |-- train_batch1082.jpg
+|               |   |-- train_batch2.jpg
+|               |   |-- val_batch0_labels.jpg
+|               |   |-- val_batch0_pred.jpg
+|               |   |-- val_batch1_labels.jpg
+|               |   `-- val_batch1_pred.jpg
+|               `-- exp3
+|                   |-- weights
+|                   |   |-- best.onnx
+|                   |   |-- best.pt
+|                   |   `-- last.pt
+|                   |-- BoxF1_curve.png
+|                   |-- BoxPR_curve.png
+|                   |-- BoxP_curve.png
+|                   |-- BoxR_curve.png
+|                   |-- args.yaml
+|                   |-- confusion_matrix.png
+|                   |-- confusion_matrix_normalized.png
+|                   |-- labels.jpg
+|                   |-- results.png
+|                   |-- results_exp3.csv
+|                   |-- train_batch0.jpg
+|                   |-- train_batch1.jpg
+|                   |-- train_batch2.jpg
+|                   |-- train_batch2070.jpg
+|                   |-- train_batch2071.jpg
+|                   |-- train_batch2072.jpg
+|                   |-- val_batch0_labels.jpg
+|                   |-- val_batch0_pred.jpg
+|                   |-- val_batch1_labels.jpg
+|                   `-- val_batch1_pred.jpg
+|-- assets
+|   |-- audio
+|   |   `-- passacaglia-deep-house-remix.mp3
+|   |-- exp_1
+|   |   |-- Img1-loss_curves.png
+|   |   |-- Img2-precision_recall.png
+|   |   |-- Img3-map_curves.png
+|   |   |-- img1-confusion_matrix.png
+|   |   `-- img5_training_validation_metrics_epochs.png
+|   |-- exp_2
+|   |   `-- img1-confusion_matrix.png
+|   |-- exp_3
+|   |   |-- Img3_mAP_metrics_epochs.png
+|   |   |-- img1-confusion_matrix.png
+|   |   |-- img2_validation_box_class_dfl_losses_epochs.png
+|   |   |-- img4-box-loss_epochs.png
+|   |   |-- img5-losses_epochs.png
+|   |   |-- img6_training_validation_metrics_epochs.png
+|   |   `-- mg6-training_validation_correlation_heatmap.png
+|   `-- pipeline_diagram.svg
+|-- briefing
+|   |-- geo_reference
+|   |   |-- T_ORTO_3315-264_IRGB_1000.j2w
+|   |   `-- T_ORTO_3315-264_IRGB_1000.jp2
+|   |-- notebooks
+|   |   |-- mosaic_perdizes.ipynb
+|   |   `-- mosaic_perdizes_hires.ipynb
+|   |-- briefing_en.pdf
+|   `-- briefing_pt.pdf
+|-- config
+|   `-- data.yaml
+|-- data
+|   |-- inference
+|   |   `-- unseen_neighborhood
+|   |       |-- tile_z19_x194543_y298181.jpg
+|   |       |-- tile_z19_x194545_y298183.jpg
+|   |       |-- tile_z19_x194545_y298184.jpg
+|   |       |-- tile_z19_x194546_y298177.jpg
+|   |       |-- tile_z19_x194546_y298178.jpg
+|   |       |-- tile_z19_x194546_y298179.jpg
+|   |       |-- tile_z19_x194546_y298180.jpg
+|   |       |-- tile_z19_x194547_y298176.jpg
+|   |       |-- tile_z19_x194548_y298180.jpg
+|   |       |-- tile_z19_x194548_y298181.jpg
+|   |       |-- tile_z19_x194548_y298183.jpg
+|   |       `-- tile_z19_x194549_y298187.jpg
+|   |-- raw
+|   |   `-- helipad_dataset.rar
+|   |-- samples
+|   |   |-- tile_z19_x193904_y297375.jpg
+|   |   |-- tile_z19_x193912_y297377.jpg
+|   |   |-- tile_z19_x193914_y297375.jpg
+|   |   |-- tile_z19_x193916_y297358.jpg
+|   |   |-- tile_z19_x193921_y297376.jpg
+|   |   |-- tile_z19_x193921_y297378.jpg
+|   |   |-- tile_z19_x194126_y297483.jpg
+|   |   |-- tile_z19_x194126_y297485.jpg
+|   |   |-- tile_z19_x194127_y297474.jpg
+|   |   |-- tile_z19_x194129_y297480.jpg
+|   |   |-- tile_z19_x194133_y297561.jpg
+|   |   |-- tile_z19_x194134_y297486.jpg
+|   |   |-- tile_z19_x194134_y297487.jpg
+|   |   |-- tile_z19_x194136_y297538.jpg
+|   |   |-- tile_z19_x194136_y297542.jpg
+|   |   |-- tile_z19_x194137_y297489.jpg
+|   |   |-- tile_z19_x194137_y297490.jpg
+|   |   |-- tile_z19_x194139_y297465.jpg
+|   |   |-- tile_z19_x194139_y297467.jpg
+|   |   |-- tile_z19_x194140_y297475.jpg
+|   |   |-- tile_z19_x194140_y297536.jpg
+|   |   |-- tile_z19_x194141_y297481.jpg
+|   |   |-- tile_z19_x194142_y297479.jpg
+|   |   |-- tile_z19_x194142_y297532.jpg
+|   |   |-- tile_z19_x194143_y297481.jpg
+|   |   |-- tile_z19_x194143_y297531.jpg
+|   |   |-- tile_z19_x194144_y297480.jpg
+|   |   |-- tile_z19_x194147_y297488.jpg
+|   |   |-- tile_z19_x194149_y297489.jpg
+|   |   |-- tile_z19_x194151_y297482.jpg
+|   |   |-- tile_z19_x194151_y297514.jpg
+|   |   |-- tile_z19_x194152_y297521.jpg
+|   |   |-- tile_z19_x194156_y297499.jpg
+|   |   |-- tile_z19_x194156_y297505.jpg
+|   |   |-- tile_z19_x194156_y297510.jpg
+|   |   |-- tile_z19_x194156_y297512.jpg
+|   |   |-- tile_z19_x194157_y297513.jpg
+|   |   |-- tile_z19_x194159_y297509.jpg
+|   |   |-- tile_z19_x194159_y297515.jpg
+|   |   |-- tile_z19_x194160_y297506.jpg
+|   |   |-- tile_z19_x194160_y297516.jpg
+|   |   |-- tile_z19_x194161_y297499.jpg
+|   |   |-- tile_z19_x194170_y297514.jpg
+|   |   |-- tile_z19_x194173_y297505.jpg
+|   |   |-- tile_z19_x194191_y297465.jpg
+|   |   |-- tile_z19_x194196_y297476.jpg
+|   |   |-- tile_z19_x194198_y297471.jpg
+|   |   |-- tile_z19_x194208_y297478.jpg
+|   |   |-- tile_z19_x194210_y297477.jpg
+|   |   |-- tile_z19_x194211_y297479.jpg
+|   |   |-- tile_z19_x194214_y297486.jpg
+|   |   |-- tile_z19_x194215_y297475.jpg
+|   |   |-- tile_z19_x194543_y298181.jpg
+|   |   |-- tile_z19_x194545_y298183.jpg
+|   |   |-- tile_z19_x194545_y298184.jpg
+|   |   |-- tile_z19_x194546_y298177.jpg
+|   |   |-- tile_z19_x194546_y298178.jpg
+|   |   |-- tile_z19_x194546_y298179.jpg
+|   |   |-- tile_z19_x194546_y298180.jpg
+|   |   |-- tile_z19_x194547_y298176.jpg
+|   |   |-- tile_z19_x194548_y298180.jpg
+|   |   |-- tile_z19_x194548_y298181.jpg
+|   |   |-- tile_z19_x194548_y298183.jpg
+|   |   `-- tile_z19_x194549_y298187.jpg
+|   |-- tiles
+|   |   |-- mosaic_centro_tiles
+|   |   |   |-- tile_z19_x194543_y298181.jpg
+|   |   |   |-- tile_z19_x194545_y298183.jpg
+|   |   |   |-- tile_z19_x194545_y298184.jpg
+|   |   |   |-- tile_z19_x194546_y298177.jpg
+|   |   |   |-- tile_z19_x194546_y298178.jpg
+|   |   |   |-- tile_z19_x194546_y298179.jpg
+|   |   |   |-- tile_z19_x194546_y298180.jpg
+|   |   |   |-- tile_z19_x194547_y298176.jpg
+|   |   |   |-- tile_z19_x194548_y298180.jpg
+|   |   |   |-- tile_z19_x194548_y298181.jpg
+|   |   |   |-- tile_z19_x194548_y298183.jpg
+|   |   |   `-- tile_z19_x194549_y298187.jpg
+|   |   |-- mosaic_Centro_hires_annotated.png
+|   |   |-- mosaic_Centro_hires_full.jpg
+|   |   |-- mosaic_Centro_hires_preview.jpg
+|   |   `-- tile_sample_hires_Centro.png
+|   `-- training
+|       |-- exp1
+|       |   |-- test
+|       |   |   |-- images
+|       |   |   |   |-- tile_z19_x193912_y297372_jpg.rf.f3bc503dfaa9c4a59363791ebe1e286a.jpg
+|       |   |   |   |-- tile_z19_x194133_y297485_jpg.rf.246bb260bcda9714658faf9ed07b6775.jpg
+|       |   |   |   |-- tile_z19_x194134_y297486_jpg.rf.0b0865bebf00e49a97e2192c3d2fd5e5.jpg
+|       |   |   |   |-- tile_z19_x194135_y297544_jpg.rf.681ae03be2c7fa51f1b87724d22e3eca.jpg
+|       |   |   |   |-- tile_z19_x194135_y297545_jpg.rf.a74fb1b8be537adc50d66c376afba768.jpg
+|       |   |   |   |-- tile_z19_x194143_y297531_jpg.rf.1c844d797b51ba031630f96f91789316.jpg
+|       |   |   |   |-- tile_z19_x194146_y297518_itaim_bibi-15-_jpg.rf.56284ba5402125b03424f2f007c2a280.jpg
+|       |   |   |   |-- tile_z19_x194146_y297518_itaim_bibi-29-_jpg.rf.aa50aeef4641b8f86f628c81487112fd.jpg
+|       |   |   |   |-- tile_z19_x194149_y297489_jpg.rf.fe7a610c5002ee24385a956f611d60d6.jpg
+|       |   |   |   |-- tile_z19_x194149_y297523_jpg.rf.a990e3da7c48a51a35305f92871105ab.jpg
+|       |   |   |   |-- tile_z19_x194158_y297511_jpg.rf.05d82ab09d479cf4c843ae11bd9f6738.jpg
+|       |   |   |   |-- tile_z19_x194193_y297463_jpg.rf.d0066af7d3515341f81c17199c19e3ab.jpg
+|       |   |   |   |-- tile_z19_x194201_y297462_jpg.rf.88b8cd86778975e6ff3b4230edc439f3.jpg
+|       |   |   |   `-- tile_z19_x194226_y297440_jpg.rf.40cb0f536bdb588c908865b67e5548af.jpg
+|       |   |   `-- labels
+|       |   |       |-- tile_z19_x193912_y297372_jpg.rf.f3bc503dfaa9c4a59363791ebe1e286a.txt
+|       |   |       |-- tile_z19_x194133_y297485_jpg.rf.246bb260bcda9714658faf9ed07b6775.txt
+|       |   |       |-- tile_z19_x194134_y297486_jpg.rf.0b0865bebf00e49a97e2192c3d2fd5e5.txt
+|       |   |       |-- tile_z19_x194135_y297544_jpg.rf.681ae03be2c7fa51f1b87724d22e3eca.txt
+|       |   |       |-- tile_z19_x194135_y297545_jpg.rf.a74fb1b8be537adc50d66c376afba768.txt
+|       |   |       |-- tile_z19_x194143_y297531_jpg.rf.1c844d797b51ba031630f96f91789316.txt
+|       |   |       |-- tile_z19_x194146_y297518_itaim_bibi-15-_jpg.rf.56284ba5402125b03424f2f007c2a280.txt
+|       |   |       |-- tile_z19_x194146_y297518_itaim_bibi-29-_jpg.rf.aa50aeef4641b8f86f628c81487112fd.txt
+|       |   |       |-- tile_z19_x194149_y297489_jpg.rf.fe7a610c5002ee24385a956f611d60d6.txt
+|       |   |       |-- tile_z19_x194149_y297523_jpg.rf.a990e3da7c48a51a35305f92871105ab.txt
+|       |   |       |-- tile_z19_x194158_y297511_jpg.rf.05d82ab09d479cf4c843ae11bd9f6738.txt
+|       |   |       |-- tile_z19_x194193_y297463_jpg.rf.d0066af7d3515341f81c17199c19e3ab.txt
+|       |   |       |-- tile_z19_x194201_y297462_jpg.rf.88b8cd86778975e6ff3b4230edc439f3.txt
+|       |   |       `-- tile_z19_x194226_y297440_jpg.rf.40cb0f536bdb588c908865b67e5548af.txt
+|       |   |-- train
+|       |   |   |-- images.zip
+|       |   |   |-- labels.cache
+|       |   |   `-- labels.zip
+|       |   |-- valid
+|       |   |   |-- images
+|       |   |   |   |-- tile_z19_x193909_y297359_jpg.rf.65713181c89839cb48023c6525bd4167.jpg
+|       |   |   |   |-- tile_z19_x193914_y297358_jpg.rf.b931fb7500d3c03e7c728b35a48795c1.jpg
+|       |   |   |   |-- tile_z19_x193931_y297379_jpg.rf.7c95e7d5fa294eaf71842c610392b942.jpg
+|       |   |   |   |-- tile_z19_x194125_y297568_jpg.rf.a547fdab80afbe7af1cc34cd95eae944.jpg
+|       |   |   |   |-- tile_z19_x194126_y297485_jpg.rf.e52e67940a8f81f191e5a2ac5e482de5.jpg
+|       |   |   |   |-- tile_z19_x194126_y297567_jpg.rf.ade1a3141d0301d324804e6c52dcd31b.jpg
+|       |   |   |   |-- tile_z19_x194126_y297568_jpg.rf.e7795fff1364a69a001abd5ba99cba3d.jpg
+|       |   |   |   |-- tile_z19_x194127_y297474_jpg.rf.c9df2660d7b7b183120b3450274a3f59.jpg
+|       |   |   |   |-- tile_z19_x194132_y297556_jpg.rf.005f69d52a8161af269b87ec9ce6636f.jpg
+|       |   |   |   |-- tile_z19_x194136_y297542_jpg.rf.3648c4f33c211d7e68dc04e067ae770d.jpg
+|       |   |   |   |-- tile_z19_x194140_y297475_jpg.rf.440f30b6045695a0e158af1bb96df034.jpg
+|       |   |   |   |-- tile_z19_x194142_y297531_jpg.rf.6bfe2269c5b5f023abba79b62df67f49.jpg
+|       |   |   |   |-- tile_z19_x194142_y297532_jpg.rf.f58c1533c9f2db52ff953cb3531fa028.jpg
+|       |   |   |   |-- tile_z19_x194146_y297518_itaim_bibi-10-_jpg.rf.98ff9775c92535aff3c592271e3102ba.jpg
+|       |   |   |   |-- tile_z19_x194146_y297518_itaim_bibi-11-_jpg.rf.1268765d7a48e646dbcbd1a77286040e.jpg
+|       |   |   |   |-- tile_z19_x194146_y297518_itaim_bibi-32-_jpg.rf.322b3971ebeb09bcdc2725ed331918ab.jpg
+|       |   |   |   |-- tile_z19_x194146_y297518_itaim_bibi-4-_jpg.rf.f2329217865a53f32317d608942b31b9.jpg
+|       |   |   |   |-- tile_z19_x194151_y297476_jpg.rf.9eaaedb6f6b9b2b94b0bb88e31a31d58.jpg
+|       |   |   |   |-- tile_z19_x194152_y297525_jpg.rf.baa01fc0e4d36ef51a5e583cbc2d9083.jpg
+|       |   |   |   |-- tile_z19_x194155_y297503_jpg.rf.8c11191477d4f8297ccf4e30de0b88fe.jpg
+|       |   |   |   |-- tile_z19_x194156_y297512_jpg.rf.485af1bbe86ad75847e0b1429d6f73e9.jpg
+|       |   |   |   |-- tile_z19_x194160_y297506_jpg.rf.ee50d4087c2c4c7d036f6d972c243b04.jpg
+|       |   |   |   |-- tile_z19_x194172_y297509_jpg.rf.12ad1920fa8346ad92e880b355226653.jpg
+|       |   |   |   |-- tile_z19_x194173_y297502_jpg.rf.8fa8c33e713b381fe43e79a81a392acd.jpg
+|       |   |   |   |-- tile_z19_x194192_y297455_jpg.rf.a289cd1ceed7cb88b3c808d6b62126ac.jpg
+|       |   |   |   |-- tile_z19_x194194_y297463_jpg.rf.dcfa4dadef7238b5885a9c51a8b536da.jpg
+|       |   |   |   |-- tile_z19_x194196_y297470_jpg.rf.8404536b1f338d806e07d7fc4f34d320.jpg
+|       |   |   |   |-- tile_z19_x194197_y297468_jpg.rf.938369a5942b7ff70bbb3be57806ccf7.jpg
+|       |   |   |   |-- tile_z19_x194209_y297480_jpg.rf.d48d074e3c033720a80fba99b0825580.jpg
+|       |   |   |   |-- tile_z19_x194211_y297483_jpg.rf.bbaeb868729c177b3dd7cfe9fe2bbef1.jpg
+|       |   |   |   |-- tile_z19_x194230_y297443_jpg.rf.7d8037bf9d78d38aec34f228c63da972.jpg
+|       |   |   |   |-- tile_z19_x194260_y297476_jpg.rf.75c1290ba493d33f31f813b2f5faba94.jpg
+|       |   |   |   |-- tile_z19_x194547_y298176_jpg.rf.f27aa3eb95624a12a484792b386e8bc8.jpg
+|       |   |   |   `-- tile_z19_x194662_y298101_jpg.rf.8fa3c93e125b235e9a1954fba6036be7.jpg
+|       |   |   |-- labels
+|       |   |   |   |-- tile_z19_x193909_y297359_jpg.rf.65713181c89839cb48023c6525bd4167.txt
+|       |   |   |   |-- tile_z19_x193914_y297358_jpg.rf.b931fb7500d3c03e7c728b35a48795c1.txt
+|       |   |   |   |-- tile_z19_x193931_y297379_jpg.rf.7c95e7d5fa294eaf71842c610392b942.txt
+|       |   |   |   |-- tile_z19_x194125_y297568_jpg.rf.a547fdab80afbe7af1cc34cd95eae944.txt
+|       |   |   |   |-- tile_z19_x194126_y297485_jpg.rf.e52e67940a8f81f191e5a2ac5e482de5.txt
+|       |   |   |   |-- tile_z19_x194126_y297567_jpg.rf.ade1a3141d0301d324804e6c52dcd31b.txt
+|       |   |   |   |-- tile_z19_x194126_y297568_jpg.rf.e7795fff1364a69a001abd5ba99cba3d.txt
+|       |   |   |   |-- tile_z19_x194127_y297474_jpg.rf.c9df2660d7b7b183120b3450274a3f59.txt
+|       |   |   |   |-- tile_z19_x194132_y297556_jpg.rf.005f69d52a8161af269b87ec9ce6636f.txt
+|       |   |   |   |-- tile_z19_x194136_y297542_jpg.rf.3648c4f33c211d7e68dc04e067ae770d.txt
+|       |   |   |   |-- tile_z19_x194140_y297475_jpg.rf.440f30b6045695a0e158af1bb96df034.txt
+|       |   |   |   |-- tile_z19_x194142_y297531_jpg.rf.6bfe2269c5b5f023abba79b62df67f49.txt
+|       |   |   |   |-- tile_z19_x194142_y297532_jpg.rf.f58c1533c9f2db52ff953cb3531fa028.txt
+|       |   |   |   |-- tile_z19_x194146_y297518_itaim_bibi-10-_jpg.rf.98ff9775c92535aff3c592271e3102ba.txt
+|       |   |   |   |-- tile_z19_x194146_y297518_itaim_bibi-11-_jpg.rf.1268765d7a48e646dbcbd1a77286040e.txt
+|       |   |   |   |-- tile_z19_x194146_y297518_itaim_bibi-32-_jpg.rf.322b3971ebeb09bcdc2725ed331918ab.txt
+|       |   |   |   |-- tile_z19_x194146_y297518_itaim_bibi-4-_jpg.rf.f2329217865a53f32317d608942b31b9.txt
+|       |   |   |   |-- tile_z19_x194151_y297476_jpg.rf.9eaaedb6f6b9b2b94b0bb88e31a31d58.txt
+|       |   |   |   |-- tile_z19_x194152_y297525_jpg.rf.baa01fc0e4d36ef51a5e583cbc2d9083.txt
+|       |   |   |   |-- tile_z19_x194155_y297503_jpg.rf.8c11191477d4f8297ccf4e30de0b88fe.txt
+|       |   |   |   |-- tile_z19_x194156_y297512_jpg.rf.485af1bbe86ad75847e0b1429d6f73e9.txt
+|       |   |   |   |-- tile_z19_x194160_y297506_jpg.rf.ee50d4087c2c4c7d036f6d972c243b04.txt
+|       |   |   |   |-- tile_z19_x194172_y297509_jpg.rf.12ad1920fa8346ad92e880b355226653.txt
+|       |   |   |   |-- tile_z19_x194173_y297502_jpg.rf.8fa8c33e713b381fe43e79a81a392acd.txt
+|       |   |   |   |-- tile_z19_x194192_y297455_jpg.rf.a289cd1ceed7cb88b3c808d6b62126ac.txt
+|       |   |   |   |-- tile_z19_x194194_y297463_jpg.rf.dcfa4dadef7238b5885a9c51a8b536da.txt
+|       |   |   |   |-- tile_z19_x194196_y297470_jpg.rf.8404536b1f338d806e07d7fc4f34d320.txt
+|       |   |   |   |-- tile_z19_x194197_y297468_jpg.rf.938369a5942b7ff70bbb3be57806ccf7.txt
+|       |   |   |   |-- tile_z19_x194209_y297480_jpg.rf.d48d074e3c033720a80fba99b0825580.txt
+|       |   |   |   |-- tile_z19_x194211_y297483_jpg.rf.bbaeb868729c177b3dd7cfe9fe2bbef1.txt
+|       |   |   |   |-- tile_z19_x194230_y297443_jpg.rf.7d8037bf9d78d38aec34f228c63da972.txt
+|       |   |   |   |-- tile_z19_x194260_y297476_jpg.rf.75c1290ba493d33f31f813b2f5faba94.txt
+|       |   |   |   |-- tile_z19_x194547_y298176_jpg.rf.f27aa3eb95624a12a484792b386e8bc8.txt
+|       |   |   |   `-- tile_z19_x194662_y298101_jpg.rf.8fa3c93e125b235e9a1954fba6036be7.txt
+|       |   |   `-- labels.cache
+|       |   |-- README.dataset.txt
+|       |   |-- README.roboflow.txt
+|       |   `-- data.yaml
+|       `-- exp2
+|           |-- test
+|           |   |-- images
+|           |   |   |-- tile_z19_x193912_y297372_jpg.rf.f3bc503dfaa9c4a59363791ebe1e286a.jpg
+|           |   |   |-- tile_z19_x194133_y297485_jpg.rf.246bb260bcda9714658faf9ed07b6775.jpg
+|           |   |   |-- tile_z19_x194134_y297486_jpg.rf.0b0865bebf00e49a97e2192c3d2fd5e5.jpg
+|           |   |   |-- tile_z19_x194135_y297544_jpg.rf.681ae03be2c7fa51f1b87724d22e3eca.jpg
+|           |   |   |-- tile_z19_x194135_y297545_jpg.rf.a74fb1b8be537adc50d66c376afba768.jpg
+|           |   |   |-- tile_z19_x194143_y297531_jpg.rf.1c844d797b51ba031630f96f91789316.jpg
+|           |   |   |-- tile_z19_x194146_y297518_itaim_bibi-15-_jpg.rf.56284ba5402125b03424f2f007c2a280.jpg
+|           |   |   |-- tile_z19_x194146_y297518_itaim_bibi-29-_jpg.rf.aa50aeef4641b8f86f628c81487112fd.jpg
+|           |   |   |-- tile_z19_x194149_y297489_jpg.rf.fe7a610c5002ee24385a956f611d60d6.jpg
+|           |   |   |-- tile_z19_x194149_y297523_jpg.rf.a990e3da7c48a51a35305f92871105ab.jpg
+|           |   |   |-- tile_z19_x194158_y297511_jpg.rf.05d82ab09d479cf4c843ae11bd9f6738.jpg
+|           |   |   |-- tile_z19_x194193_y297463_jpg.rf.d0066af7d3515341f81c17199c19e3ab.jpg
+|           |   |   |-- tile_z19_x194201_y297462_jpg.rf.88b8cd86778975e6ff3b4230edc439f3.jpg
+|           |   |   `-- tile_z19_x194226_y297440_jpg.rf.40cb0f536bdb588c908865b67e5548af.jpg
+|           |   `-- labels
+|           |       |-- tile_z19_x193912_y297372_jpg.rf.f3bc503dfaa9c4a59363791ebe1e286a.txt
+|           |       |-- tile_z19_x194133_y297485_jpg.rf.246bb260bcda9714658faf9ed07b6775.txt
+|           |       |-- tile_z19_x194134_y297486_jpg.rf.0b0865bebf00e49a97e2192c3d2fd5e5.txt
+|           |       |-- tile_z19_x194135_y297544_jpg.rf.681ae03be2c7fa51f1b87724d22e3eca.txt
+|           |       |-- tile_z19_x194135_y297545_jpg.rf.a74fb1b8be537adc50d66c376afba768.txt
+|           |       |-- tile_z19_x194143_y297531_jpg.rf.1c844d797b51ba031630f96f91789316.txt
+|           |       |-- tile_z19_x194146_y297518_itaim_bibi-15-_jpg.rf.56284ba5402125b03424f2f007c2a280.txt
+|           |       |-- tile_z19_x194146_y297518_itaim_bibi-29-_jpg.rf.aa50aeef4641b8f86f628c81487112fd.txt
+|           |       |-- tile_z19_x194149_y297489_jpg.rf.fe7a610c5002ee24385a956f611d60d6.txt
+|           |       |-- tile_z19_x194149_y297523_jpg.rf.a990e3da7c48a51a35305f92871105ab.txt
+|           |       |-- tile_z19_x194158_y297511_jpg.rf.05d82ab09d479cf4c843ae11bd9f6738.txt
+|           |       |-- tile_z19_x194193_y297463_jpg.rf.d0066af7d3515341f81c17199c19e3ab.txt
+|           |       |-- tile_z19_x194201_y297462_jpg.rf.88b8cd86778975e6ff3b4230edc439f3.txt
+|           |       `-- tile_z19_x194226_y297440_jpg.rf.40cb0f536bdb588c908865b67e5548af.txt
+|           |-- valid
+|           |   |-- images
+|           |   |   |-- tile_z19_x193909_y297359_jpg.rf.65713181c89839cb48023c6525bd4167.jpg
+|           |   |   |-- tile_z19_x193914_y297358_jpg.rf.b931fb7500d3c03e7c728b35a48795c1.jpg
+|           |   |   |-- tile_z19_x193931_y297379_jpg.rf.7c95e7d5fa294eaf71842c610392b942.jpg
+|           |   |   |-- tile_z19_x194125_y297568_jpg.rf.a547fdab80afbe7af1cc34cd95eae944.jpg
+|           |   |   |-- tile_z19_x194126_y297485_jpg.rf.e52e67940a8f81f191e5a2ac5e482de5.jpg
+|           |   |   |-- tile_z19_x194126_y297567_jpg.rf.ade1a3141d0301d324804e6c52dcd31b.jpg
+|           |   |   |-- tile_z19_x194126_y297568_jpg.rf.e7795fff1364a69a001abd5ba99cba3d.jpg
+|           |   |   |-- tile_z19_x194127_y297474_jpg.rf.c9df2660d7b7b183120b3450274a3f59.jpg
+|           |   |   |-- tile_z19_x194132_y297556_jpg.rf.005f69d52a8161af269b87ec9ce6636f.jpg
+|           |   |   |-- tile_z19_x194136_y297542_jpg.rf.3648c4f33c211d7e68dc04e067ae770d.jpg
+|           |   |   |-- tile_z19_x194140_y297475_jpg.rf.440f30b6045695a0e158af1bb96df034.jpg
+|           |   |   |-- tile_z19_x194142_y297531_jpg.rf.6bfe2269c5b5f023abba79b62df67f49.jpg
+|           |   |   |-- tile_z19_x194142_y297532_jpg.rf.f58c1533c9f2db52ff953cb3531fa028.jpg
+|           |   |   |-- tile_z19_x194146_y297518_itaim_bibi-10-_jpg.rf.98ff9775c92535aff3c592271e3102ba.jpg
+|           |   |   |-- tile_z19_x194146_y297518_itaim_bibi-11-_jpg.rf.1268765d7a48e646dbcbd1a77286040e.jpg
+|           |   |   |-- tile_z19_x194146_y297518_itaim_bibi-32-_jpg.rf.322b3971ebeb09bcdc2725ed331918ab.jpg
+|           |   |   |-- tile_z19_x194146_y297518_itaim_bibi-4-_jpg.rf.f2329217865a53f32317d608942b31b9.jpg
+|           |   |   |-- tile_z19_x194151_y297476_jpg.rf.9eaaedb6f6b9b2b94b0bb88e31a31d58.jpg
+|           |   |   |-- tile_z19_x194152_y297525_jpg.rf.baa01fc0e4d36ef51a5e583cbc2d9083.jpg
+|           |   |   |-- tile_z19_x194155_y297503_jpg.rf.8c11191477d4f8297ccf4e30de0b88fe.jpg
+|           |   |   |-- tile_z19_x194156_y297512_jpg.rf.485af1bbe86ad75847e0b1429d6f73e9.jpg
+|           |   |   |-- tile_z19_x194160_y297506_jpg.rf.ee50d4087c2c4c7d036f6d972c243b04.jpg
+|           |   |   |-- tile_z19_x194172_y297509_jpg.rf.12ad1920fa8346ad92e880b355226653.jpg
+|           |   |   |-- tile_z19_x194173_y297502_jpg.rf.8fa8c33e713b381fe43e79a81a392acd.jpg
+|           |   |   |-- tile_z19_x194192_y297455_jpg.rf.a289cd1ceed7cb88b3c808d6b62126ac.jpg
+|           |   |   |-- tile_z19_x194194_y297463_jpg.rf.dcfa4dadef7238b5885a9c51a8b536da.jpg
+|           |   |   |-- tile_z19_x194196_y297470_jpg.rf.8404536b1f338d806e07d7fc4f34d320.jpg
+|           |   |   |-- tile_z19_x194197_y297468_jpg.rf.938369a5942b7ff70bbb3be57806ccf7.jpg
+|           |   |   |-- tile_z19_x194209_y297480_jpg.rf.d48d074e3c033720a80fba99b0825580.jpg
+|           |   |   |-- tile_z19_x194211_y297483_jpg.rf.bbaeb868729c177b3dd7cfe9fe2bbef1.jpg
+|           |   |   |-- tile_z19_x194230_y297443_jpg.rf.7d8037bf9d78d38aec34f228c63da972.jpg
+|           |   |   |-- tile_z19_x194260_y297476_jpg.rf.75c1290ba493d33f31f813b2f5faba94.jpg
+|           |   |   |-- tile_z19_x194547_y298176_jpg.rf.f27aa3eb95624a12a484792b386e8bc8.jpg
+|           |   |   `-- tile_z19_x194662_y298101_jpg.rf.8fa3c93e125b235e9a1954fba6036be7.jpg
+|           |   |-- labels
+|           |   |   |-- tile_z19_x193909_y297359_jpg.rf.65713181c89839cb48023c6525bd4167.txt
+|           |   |   |-- tile_z19_x193914_y297358_jpg.rf.b931fb7500d3c03e7c728b35a48795c1.txt
+|           |   |   |-- tile_z19_x193931_y297379_jpg.rf.7c95e7d5fa294eaf71842c610392b942.txt
+|           |   |   |-- tile_z19_x194125_y297568_jpg.rf.a547fdab80afbe7af1cc34cd95eae944.txt
+|           |   |   |-- tile_z19_x194126_y297485_jpg.rf.e52e67940a8f81f191e5a2ac5e482de5.txt
+|           |   |   |-- tile_z19_x194126_y297567_jpg.rf.ade1a3141d0301d324804e6c52dcd31b.txt
+|           |   |   |-- tile_z19_x194126_y297568_jpg.rf.e7795fff1364a69a001abd5ba99cba3d.txt
+|           |   |   |-- tile_z19_x194127_y297474_jpg.rf.c9df2660d7b7b183120b3450274a3f59.txt
+|           |   |   |-- tile_z19_x194132_y297556_jpg.rf.005f69d52a8161af269b87ec9ce6636f.txt
+|           |   |   |-- tile_z19_x194136_y297542_jpg.rf.3648c4f33c211d7e68dc04e067ae770d.txt
+|           |   |   |-- tile_z19_x194140_y297475_jpg.rf.440f30b6045695a0e158af1bb96df034.txt
+|           |   |   |-- tile_z19_x194142_y297531_jpg.rf.6bfe2269c5b5f023abba79b62df67f49.txt
+|           |   |   |-- tile_z19_x194142_y297532_jpg.rf.f58c1533c9f2db52ff953cb3531fa028.txt
+|           |   |   |-- tile_z19_x194146_y297518_itaim_bibi-10-_jpg.rf.98ff9775c92535aff3c592271e3102ba.txt
+|           |   |   |-- tile_z19_x194146_y297518_itaim_bibi-11-_jpg.rf.1268765d7a48e646dbcbd1a77286040e.txt
+|           |   |   |-- tile_z19_x194146_y297518_itaim_bibi-32-_jpg.rf.322b3971ebeb09bcdc2725ed331918ab.txt
+|           |   |   |-- tile_z19_x194146_y297518_itaim_bibi-4-_jpg.rf.f2329217865a53f32317d608942b31b9.txt
+|           |   |   |-- tile_z19_x194151_y297476_jpg.rf.9eaaedb6f6b9b2b94b0bb88e31a31d58.txt
+|           |   |   |-- tile_z19_x194152_y297525_jpg.rf.baa01fc0e4d36ef51a5e583cbc2d9083.txt
+|           |   |   |-- tile_z19_x194155_y297503_jpg.rf.8c11191477d4f8297ccf4e30de0b88fe.txt
+|           |   |   |-- tile_z19_x194156_y297512_jpg.rf.485af1bbe86ad75847e0b1429d6f73e9.txt
+|           |   |   |-- tile_z19_x194160_y297506_jpg.rf.ee50d4087c2c4c7d036f6d972c243b04.txt
+|           |   |   |-- tile_z19_x194172_y297509_jpg.rf.12ad1920fa8346ad92e880b355226653.txt
+|           |   |   |-- tile_z19_x194173_y297502_jpg.rf.8fa8c33e713b381fe43e79a81a392acd.txt
+|           |   |   |-- tile_z19_x194192_y297455_jpg.rf.a289cd1ceed7cb88b3c808d6b62126ac.txt
+|           |   |   |-- tile_z19_x194194_y297463_jpg.rf.dcfa4dadef7238b5885a9c51a8b536da.txt
+|           |   |   |-- tile_z19_x194196_y297470_jpg.rf.8404536b1f338d806e07d7fc4f34d320.txt
+|           |   |   |-- tile_z19_x194197_y297468_jpg.rf.938369a5942b7ff70bbb3be57806ccf7.txt
+|           |   |   |-- tile_z19_x194209_y297480_jpg.rf.d48d074e3c033720a80fba99b0825580.txt
+|           |   |   |-- tile_z19_x194211_y297483_jpg.rf.bbaeb868729c177b3dd7cfe9fe2bbef1.txt
+|           |   |   |-- tile_z19_x194230_y297443_jpg.rf.7d8037bf9d78d38aec34f228c63da972.txt
+|           |   |   |-- tile_z19_x194260_y297476_jpg.rf.75c1290ba493d33f31f813b2f5faba94.txt
+|           |   |   |-- tile_z19_x194547_y298176_jpg.rf.f27aa3eb95624a12a484792b386e8bc8.txt
+|           |   |   `-- tile_z19_x194662_y298101_jpg.rf.8fa3c93e125b235e9a1954fba6036be7.txt
+|           |   `-- labels.cache
+|           |-- README.dataset.txt
+|           |-- README.roboflow.txt
+|           |-- data.yaml
+|           `-- train.zip
+|-- demo
+|   |-- Helipad-Detection\ -YOLO11\ -\ Model\ Training\ -\ Demo\ 2\ \360\237\232\201.mp4
+|   |-- Helipad-Detection\ -YOLO11\ -\ Model\ Training\ -\ Demo\ \360\237\232\201\ -\ Low\ Resolution.mp4
+|   `-- demos_links.md
+|-- docs
+|   |-- \ \360\237\207\247\360\237\207\267Portugues
+|   |   `-- ANALYSIS_YOLO_RESULTS.md
+|   |-- governance
+|   |   `-- On\ the\ Economic\ and\ Governance\ Mechanisms\ forthe\ Agentic\ Web\ -\ \ A\ Global\ South\ Perspective.pdf
+|   |-- \360\237\207\254\360\237\207\247English
+|   |   `-- ANALYSIS_YOLO_RESULTS.md
+|   |-- MLOps-Architecture.md
+|   `-- top-10-ranked-helicopter-cities.md
+|-- execution_guide
+|   |-- \360\237\207\247\360\237\207\267HELIPAD\ DETECTOR\ \342\200\224\ MANUAL\ COMPLETO\ DE\ EXECUC\314\247A\314\203O.md
+|   |-- \360\237\207\247\360\237\207\267HELIPAD_DISCOVERY_COORDINATE_CONVERSION_DATASET_UPDATE.md
+|   |-- \360\237\207\254\360\237\207\247\ HELIPAD\ DETECTOR\ \342\200\224\ COMPLETE\ EXECUTION\ MANUAL.md
+|   `-- \360\237\207\254\360\237\207\247\360\237\207\247\360\237\207\267HELIPAD_DISCOVERY_COORDINATE_CONVERSION_DATASET_UPDATE.md
+|-- notebooks
+|   `-- model_analysis.ipynb
+|-- presentations
+|   `-- presentation-music-bilingual
+|       |-- Passacaglia_Deep_House_Remix.mp3
+|       `-- presentation-deployment-link.md
+|-- reports
+|   |-- helipad_detector_full_report
+|   |   |-- \360\237\207\247\360\237\207\267Helipad_Detector_Relatorio_Completo.docx
+|   |   |-- \360\237\207\247\360\237\207\267Helipad_Detector_Relatorio_Completo.pages
+|   |   |-- \360\237\207\247\360\237\207\267Helipad_Detector_Relatorio_Completo.pdf
+|   |   |-- \360\237\207\254\360\237\207\247Helipad_Detector_Full_Report.docx
+|   |   |-- \360\237\207\254\360\237\207\247Helipad_Detector_Full_Report.pages
+|   |   `-- \360\237\207\254\360\237\207\247Helipad_Detector_Full_Report.pdf
+|   |-- model_outputs
+|   |   `-- detect
+|   |       `-- exp1_predictions
+|   |           |-- tile_z19_x194543_y298181.jpg
+|   |           |-- tile_z19_x194545_y298183.jpg
+|   |           |-- tile_z19_x194545_y298184.jpg
+|   |           |-- tile_z19_x194546_y298177.jpg
+|   |           |-- tile_z19_x194546_y298178.jpg
+|   |           |-- tile_z19_x194546_y298179.jpg
+|   |           |-- tile_z19_x194546_y298180.jpg
+|   |           |-- tile_z19_x194547_y298176.jpg
+|   |           |-- tile_z19_x194548_y298180.jpg
+|   |           |-- tile_z19_x194548_y298181.jpg
+|   |           |-- tile_z19_x194548_y298183.jpg
+|   |           `-- tile_z19_x194549_y298187.jpg
+|   |-- auto_triage_regions_log.txt
+|   |-- detection_summary_by_region.json
+|   |-- detection_summary_by_region_exp1.json
+|   |-- detection_summary_by_region_exp2.json
+|   |-- detection_summary_by_region_exp3.json
+|   |-- download_all_regions_log.txt
+|   `-- faria_lima_triage_log.txt
+|-- src
+|   |-- data_preparation
+|   |   `-- IMAGE_PREPROCESSING.ipynb
+|   |-- geospatial
+|   |   |-- brazilian-states-helipad-discovery-folium-open-street-map
+|   |   |   |-- Manual\ da\ Autotransformac\314\247a\314\203o\ \342\200\223\ Manual\ da\ Autotransformac\314\247a\314\203o.pdf
+|   |   |   |-- helipad_coordinates_bbox.csv
+|   |   |   |-- helipontos_resultado.csv
+|   |   |   |-- helipontos_resultado_.csv
+|   |   |   |-- helipontos_resultado_2.csv
+|   |   |   |-- helipontos_resultado_3.csv
+|   |   |   `-- helipontos_resultado_4.csv
+|   |   |-- mosaic_Alphaville_Industrial
+|   |   |   `-- mosaic_Alphaville_Industrial.zip
+|   |   |-- mosaic_Av_Paulista_segment_1
+|   |   |   `-- mosaic_Av_Paulista_segment_1.zip
+|   |   |-- mosaic_Av_Paulista_segment_2
+|   |   |   `-- mosaic_Av_Paulista_segment_2_Tiles.zip
+|   |   |-- mosaic_Brooklin
+|   |   |   `-- mosaic_Brooklin_tiles.zip
+|   |   |-- mosaic_Faria_Lima
+|   |   |   |-- mosaic_Faria_Lima_1.zip
+|   |   |   |-- mosaic_Faria_Lima_2.zip
+|   |   |   |-- mosaic_Faria_Lima_3.zip
+|   |   |   |-- mosaic_Faria_Lima_4.zip
+|   |   |   `-- mosaic_Faria_Lima_5.zip
+|   |   |-- mosaic_Inter_Zonas
+|   |   |   `-- mosaic_Inter_Zonas.zip
+|   |   |-- mosaic_Itaim_Bibi
+|   |   |   `-- mosaic_Itaim_Bibi.zip
+|   |   |-- mosaic_Pinheiros
+|   |   |   `-- mosaic_Pinheiros.zip
+|   |   |-- mosaic_Vila_Olimpia
+|   |   |   `-- mosaic_Vila_Olimpia.zip
+|   |   |-- mosaic_Vila_nova_Conceicao
+|   |   |   `-- mosaic_Vila_nova_Conceicao.zip
+|   |   |-- auto_triage_faria_lima.py
+|   |   |-- auto_triage_regions.py
+|   |   |-- auto_triage_regions_exp1.py
+|   |   |-- auto_triage_regions_exp2.py
+|   |   |-- auto_triage_regions_exp3.py
+|   |   |-- detection_summary_by_region.json
+|   |   |-- download_all_regions.py
+|   |   |-- faria_lima_input.csv
+|   |   |-- geocode_states.py
+|   |   |-- geospatial_image_collection.ipynb
+|   |   |-- geospatial_image_collection_faria_lima.ipynb
+|   |   |-- helipad_bot.py
+|   |   |-- helipad_coordinates_bbox.csv
+|   |   |-- helipad_coordinates_com_estado.csv
+|   |   |-- helipad_coordinates_processed.csv
+|   |   |-- helipad_coordinates_raw.csv
+|   |   |-- helipad_scraper.py
+|   |   |-- helipontos_convertido.csv
+|   |   |-- keplergl_map_config.json
+|   |   |-- keplergl_map_loaded\ .html
+|   |   |-- keplergl_map_loaded.html
+|   |   |-- run_scraping_pipeline.py
+|   |   |-- sp_neighborhoods_bbox.csv
+|   |   `-- transform_coordinates.py
+|   `-- training
+|       |-- exp4.ipynb
+|       |-- yolo_training_exp1.ipynb
+|       |-- yolo_training_exp2.ipynb
+|       `-- yolo_training_exp3.ipynb
+|-- .gitignore
+|-- README.md
+|-- README.pt_BR.md
+|-- packages.txt
+|-- pytest.ini
+`-- requirements.txt
+
+76 directories, 487 files
