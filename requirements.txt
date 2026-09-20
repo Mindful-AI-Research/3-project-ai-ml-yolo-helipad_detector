@@ -20,7 +20,7 @@ seaborn>=0.13.2
 # Computer Vision & Image Processing
 ########################
 pillow>=7.1.2
-opencv-python-headless>=4.6.0
+opencv-python-headless>=5.0.0.93
 
 ########################
 # Web, APIs & Applications
