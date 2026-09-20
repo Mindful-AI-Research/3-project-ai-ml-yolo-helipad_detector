@@ -1,0 +1,10 @@
+
+cff-version: 1.2.0
+title: "3- AI / ML - Project 2 - Helipad Detector"
+message: "If you use this repository, please cite it using the metadata below."
+type: software
+authors:
+  - given-names: "Fabiana"
+    family-names: "Campanari"
+repository-code: "https://github.com/Mindful-AI-Research/3-project-ai-ml-yolo-helipad_detector"
+license: "MIT"
