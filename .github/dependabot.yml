@@ -6,7 +6,7 @@ updates:
     schedule:
       interval: "weekly"
     assignees:
-      - "SEU-USUARIO-GITHUB"
+      - "FabianaCampanari"
     labels:
       - "dependencies"
       - "python"
@@ -16,7 +16,7 @@ updates:
     schedule:
       interval: "weekly"
     assignees:
-      - "SEU-USUARIO-GITHUB"
+      - "FabianaCampanari"
     labels:
       - "dependencies"
       - "docker"
@@ -26,8 +26,7 @@ updates:
     schedule:
       interval: "weekly"
     assignees:
-      - assignees:
-  - "FabianaCampanari"
+      - "FabianaCampanari"
     labels:
       - "dependencies"
       - "github-actions"
