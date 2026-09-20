@@ -5,13 +5,8 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
-      day: "monday"
-      time: "09:00"
-      timezone: "America/Sao_Paulo"
-    open-pull-requests-limit: 5
-    commit-message:
-      prefix: "build"
-      include: "scope"
+    assignees:
+      - "SEU-USUARIO-GITHUB"
     labels:
       - "dependencies"
       - "python"
@@ -20,13 +15,8 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
-      day: "monday"
-      time: "09:00"
-      timezone: "America/Sao_Paulo"
-    open-pull-requests-limit: 3
-    commit-message:
-      prefix: "build"
-      include: "scope"
+    assignees:
+      - "SEU-USUARIO-GITHUB"
     labels:
       - "dependencies"
       - "docker"
@@ -35,13 +25,9 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
-      day: "monday"
-      time: "09:00"
-      timezone: "America/Sao_Paulo"
-    open-pull-requests-limit: 3
-    commit-message:
-      prefix: "ci"
-      include: "scope"
+    assignees:
+      - assignees:
+  - "FabianaCampanari"
     labels:
       - "dependencies"
       - "github-actions"
