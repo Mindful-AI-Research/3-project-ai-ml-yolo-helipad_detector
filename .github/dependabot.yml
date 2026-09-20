@@ -9,38 +9,21 @@ updates:
       - "FabianaCampanari"
     labels:
       - "dependencies"
-      - "python"
 
   - package-ecosystem: "docker"
     directory: "/"
     schedule:
       interval: "weekly"
-      day: "monday"
-      time: "09:00"
-      timezone: "America/Sao_Paulo"
-    open-pull-requests-limit: 3
-    commit-message:
-      prefix: "build"
-      include: "scope"
     assignees:
       - "FabianaCampanari"
     labels:
       - "dependencies"
-      - "docker"
 
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
       interval: "weekly"
-      day: "monday"
-      time: "09:00"
-      timezone: "America/Sao_Paulo"
-    open-pull-requests-limit: 3
-    commit-message:
-      prefix: "ci"
-      include: "scope"
     assignees:
       - "FabianaCampanari"
     labels:
       - "dependencies"
-      - "github-actions"
