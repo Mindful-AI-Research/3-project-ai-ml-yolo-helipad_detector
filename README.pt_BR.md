@@ -428,12 +428,6 @@ https://github.com/user-attachments/assets/eab6e951-6b66-4c6c-a2c6-23ee2f902c5f
 - [Acknowledgements](#acknowledgements)
 - [Final Statement](#final-statement)
 
-
-<br><br>
-<br><br>
-<br><br>
-<br><br>
-<br><br>
 <br><br>
 
 
@@ -441,12 +435,11 @@ https://github.com/user-attachments/assets/eab6e951-6b66-4c6c-a2c6-23ee2f902c5f
 
 
 
-
-
-
-
-
-
+<br><br>
+<br><br>
+<br><br>
+<br><br>
+<br><br>
 
 
 
@@ -457,3 +450,64 @@ https://github.com/user-attachments/assets/eab6e951-6b66-4c6c-a2c6-23ee2f902c5f
 ## [AI/ML Ops Pipeline]()
 
 <img width="1220" height="2083" alt="Image" src="https://github.com/user-attachments/assets/a240578e-d803-4049-95cb-73a52b6de848" />
+
+<br><br>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<br><br>
+<br><br>
+<br><br>
+<br><br>
+<br><br>
+<br><br>
+<br><br>
+
+
+## 💌 [Let the data flow... Ping Us !](mailto:fabicampanari@proton.me)
+
+<br>
+
+
+#### <p align="center">  🛸๋ My Contacts [Hub](https://linktr.ee/fabianacampanari)
+
+
+<br>
+
+### <p align="center"> <img src="https://github.com/user-attachments/assets/517fc573-7607-4c5d-82a7-38383cc0537d" />
+
+
+<br><br>
+
+<p align="center">  ────────────── ⊹🔭๋ ──────────────
+
+<!--
+<p align="center">  ────────────── 🛸๋*ੈ✩* 🔭*ੈ₊ ──────────────
+-->
+
+<br>
+
+<p align="center"> ➣➢➤ <a href="#top">Back to Top </a>
+  
+
+  
+#
+ 
+##### <p align="center">Copyright 2026 Mindful-AI-Assistants. Code released under the  [MIT license.](https://github.com/Mindful-AI-Research/3-project-ai-ml-yolo-helipad_detector/blob/4586f556d93b38ac3a9f81fbe8a73e4c58daa88f/LICENSE.md)
+
+
+
+
+
+

@@ -5,13 +5,8 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
-      day: "monday"
-      time: "09:00"
-      timezone: "America/Sao_Paulo"
-    open-pull-requests-limit: 5
-    commit-message:
-      prefix: "build"
-      include: "scope"
+    assignees:
+      - "FabianaCampanari"
     labels:
       - "dependencies"
       - "python"
@@ -27,6 +22,8 @@ updates:
     commit-message:
       prefix: "build"
       include: "scope"
+    assignees:
+      - "FabianaCampanari"
     labels:
       - "dependencies"
       - "docker"
@@ -42,6 +39,8 @@ updates:
     commit-message:
       prefix: "ci"
       include: "scope"
+    assignees:
+      - "FabianaCampanari"
     labels:
       - "dependencies"
       - "github-actions"
