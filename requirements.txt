@@ -1,7 +1,7 @@
 ########################
 # AI / YOLO Core
 ########################
-ultralytics>=8.4.73
+ultralytics>=8.4.154
 torch>=2.14.0
 torchvision>=0.17.0
 tqdm>=4.70.1
