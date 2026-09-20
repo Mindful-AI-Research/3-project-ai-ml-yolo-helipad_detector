@@ -14,7 +14,7 @@ scipy>=1.4.1
 numpy>=1.22.2
 pandas>=1.1.4
 matplotlib>=3.3.0
-seaborn>=0.11.0
+seaborn>=0.13.2
 
 ########################
 # Computer Vision & Image Processing
