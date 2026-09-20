@@ -427,4 +427,33 @@ https://github.com/user-attachments/assets/eab6e951-6b66-4c6c-a2c6-23ee2f902c5f
 - [References](#references)
 - [Acknowledgements](#acknowledgements)
 - [Final Statement](#final-statement)
+
+
 <br><br>
+<br><br>
+<br><br>
+<br><br>
+<br><br>
+<br><br>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<br><br>
+
+## [AI/ML Ops Pipeline]()
+
+<img width="1220" height="2083" alt="Image" src="https://github.com/user-attachments/assets/a240578e-d803-4049-95cb-73a52b6de848" />
