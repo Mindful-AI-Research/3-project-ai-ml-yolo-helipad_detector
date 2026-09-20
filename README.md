@@ -620,107 +620,88 @@ The repository structure was organized to reflect pipeline stages, including geo
 
 <br>
 
-```bash
-Helipoint Detector
+Helipad Detector
 ├── .devcontainer
 │   └── devcontainer.json
-├── yolo_results_analysis
-│   ├── Analysis.ipynb
-│   └── Analysis_yolo_results.md
+├── .streamlit
+│   └── config.toml
 ├── apps
-│   └── streamlit_app
-│       └── app.py
+│   └── streamlit_app
+│       ├── app.py
+│       └── streamlit_deploy_link.md
 ├── artifacts
-│   └── runs
-│       └── runs
-│           ├── exp1
-│           ├── exp2
-│           └── exp3     
+│   └── runs/runs/detect
+│       ├── exp1/  (weights/best.pt + last.pt, curvas, matriz de confusão, batches de treino/val)
+│       ├── exp2/  (idem + best.onnx)
+│       └── exp3/  (idem + best.onnx)
+├── assets
+│   ├── audio/passacaglia-deep-house-remix.mp3
+│   ├── exp_1/, exp_2/, exp_3/   (gráficos de loss, precisão/recall, mAP, matriz de confusão)
+│   └── pipeline_diagram.svg
 ├── briefing
-│   ├── 3315-264
-│   │   ├── T_ORTO_3315-264_IRGB_1000.j2w
-│   │   └── T_ORTO_3315-264_IRGB_1000.jp2
-│   ├── briefing_assets 
-│   │   ├── 3315-264
-│   │   ├── 🇧🇷1-Briefing.pdf
-│   │   └── 🇬🇧1-Briefing_en.pdf
-│   └── notebooks
-│       ├── Projeto_P2_Mosaico_Perdizes.ipynb
-│       └── Projeto_P2_Mosaico_Perdizes_HIRES.ipynb
-├── configs
-│   └── data.yaml
+│   ├── geo_reference/            (T_ORTO_3315-264 .j2w / .jp2)
+│   ├── notebooks/                (mosaic_perdizes.ipynb, mosaic_perdizes_hires.ipynb)
+│   ├── briefing_en.pdf
+│   └── briefing_pt.pdf
+├── config
+│   └── data.yaml
 ├── data
-│   ├── README.dataset.txt
-│   ├── README.roboflow.txt
-│   ├── raw
-│   │   └── helipad_dataset.rar
-│   ├── tiles
-│   │   ├── center_hires_annotated_mosaic.png
-│   │   ├── center_hires_full_mosaic.jpg
-│   │   ├── center_hires_mosaic_preview.jpg
-│   │   ├── center_hires_tiles_sample.png
-│   │   ├── center_mosaic_tiles
-│   │   ├── tile_z19_x194543_y298181.jpg
-│   │   ├── tile_z19_x194545_y298183.jpg
-│   │   ├── tile_z19_x194545_y298184.jpg
-│   │   ├── tile_z19_x194546_y298177.jpg
-│   │   ├── tile_z19_x194546_y298178.jpg
-│   │   ├── tile_z19_x194546_y298179.jpg
-│   │   ├── tile_z19_x194546_y298180.jpg
-│   │   ├── tile_z19_x194547_y298176.jpg
-│   │   ├── tile_z19_x194548_y298180.jpg
-│   │   ├── tile_z19_x194548_y298181.jpg
-│   │   ├── tile_z19_x194548_y298183.jpg
-│   │   └── tile_z19_x194549_y298187.jpg
-│   └── training
-│       └── yolo_dataset
+│   ├── inference/unseen_neighborhood/   (12 tiles — bairro nunca visto no treino)
+│   ├── raw/helipad_dataset.rar
+│   ├── samples/                          (64 tiles de exemplo)
+│   ├── tiles/mosaic_centro_tiles/ + mosaicos Centro (hi-res, preview, anotado)
+│   └── training/
+│       ├── exp1/   (train/valid/test YOLO + data.yaml)
+│       └── exp2/   (idem)
+├── demo
+│   ├── Helipad-Detection - YOLO11 - Model Training - Demo 🚁.mp4  (2 vídeos)
+│   └── demos_links.md
 ├── docs
+│   ├── 🇧🇷Portugues/ANALYSIS_YOLO_RESULTS.md
+│   ├── 🇬🇧English/ANALYSIS_YOLO_RESULTS.md
+│   ├── governance/On the Economic and Governance Mechanisms for the Agentic Web.pdf
 │   ├── MLOps-Architecture.md
-│   ├── 🇧🇷Portugues
-│   │   ├── README_MESTRE.MD
-│   │   └── ANALISE_QUALITATIVA_FARIA_LIMA.MD
-│   ├── 🇬🇧English
-│   │   ├── README_MESTRE.MD
-│   │   ├── ANALYSIS_YOLO_RESULTS.MD
-│   │   └── QUALITATIVE_ANALYSIS_FARIA_LIMA.MD
-│   └── governance
-│       └── On the Economic and Governance Mechanisms forthe Agentic Web -  A Global South Perspective.pdf
+│   └── top-10-ranked-helicopter-cities.md
+├── execution_guide
+│   ├── 🇧🇷HELIPAD DETECTOR — MANUAL COMPLETO DE EXECUÇÃO.md
+│   ├── 🇧🇷HELIPAD_DISCOVERY_COORDINATE_CONVERSION_DATASET_UPDATE.md
+│   ├── 🇬🇧HELIPAD DETECTOR — COMPLETE EXECUTION MANUAL.md
+│   └── 🇬🇧HELIPAD_DISCOVERY_COORDINATE_CONVERSION_DATASET_UPDATE.md
 ├── notebooks
 │   └── model_analysis.ipynb
-├── packages.txt
+├── presentations
+│   └── presentation-music-bilingual/
+│       ├── Passacaglia_Deep_House_Remix.mp3
+│       └── presentation-deployment-link.md
 ├── reports
-│   ├── executive_analysis
-│   │   ├── helipad_detector_analise_dados_sumario_executivo_pt.docx
-│   │   ├── helipad_detector_data_analysis_executive_summary_en.docx
-│   │   ├── 🇧🇷Helipoint_Detector_Model_Performance_and_Data_Analysis.pages
-│   │   ├── 🇧🇷Helipoint_Detector_Model_Performance_and_Data_Analysis.pdf
-│   │   ├── 🇬🇧Helipoint_Detector_Model_Performance_and_Data_Analysis.pages
-│   │   └── 🇬🇧Helipoint_Detector_Model_Performance_and_Data_Analysis.pdf
-│   ├── model_outputs
-│   │   └── detect
-│   ├── detection_summary_by_region.json
-│   ├── download_all_regions_log.txt
+│   ├── helipad_detector_full_report/   (relatório completo PT/EN — .docx, .pages, .pdf)
+│   ├── model_outputs/detect/exp1_predictions/   (12 tiles)
+│   ├── detection_summary_by_region.json (+ _exp1 / _exp2 / _exp3)
 │   ├── auto_triage_regions_log.txt
-│   └── yolo_results_analysis.md
-├── requirements.txt
+│   ├── download_all_regions_log.txt
+│   └── faria_lima_triage_log.txt
 ├── src
 │   ├── data_preparation
-│   │   └── image_preprocessing.ipynb
+│   │   └── IMAGE_PREPROCESSING.ipynb
 │   ├── geospatial
-│   │   ├── geospatial_image_collection.ipynb
-│   │   ├── geospatial_image_collection_faria_lima.ipynb
-│   │   ├── helipad_bot.py
-│   │   ├── helipad_coordinates.csv
-│   │   ├── helipad_coordinates_bbox.csv
-│   │   ├── sp_neighborhoods_bbox.csv
-│   │   ├── transform_coordinates.py
-│   │   ├── auto_triage_faria_lima.py
-│   │   ├── download_all_regions.py
-│   │   ├── auto_triage_regions.py
-│   │   └── mosaico_<neighborhood>/   (10 folders, one per region, gitignored)
+│   │   ├── brazilian-states-helipad-discovery-folium-open-street-map/
+│   │   ├── mosaic_<bairro>/   (10 pastas: Alphaville, Av. Paulista 1/2, Brooklin, Faria Lima,
+│   │   │                       Inter-Zonas, Itaim Bibi, Pinheiros, Vila Olímpia, Vila Nova Conceição)
+│   │   ├── helipad_bot.py, helipad_scraper.py, run_scraping_pipeline.py, geocode_states.py
+│   │   ├── transform_coordinates.py, download_all_regions.py, auto_triage_regions*.py
+│   │   ├── geospatial_image_collection*.ipynb
+│   │   ├── keplergl_map_config.json / keplergl_map_loaded.html
+│   │   └── helipad_coordinates_*.csv, sp_neighborhoods_bbox.csv, faria_lima_input.csv
 │   └── training
-│       └── yolo_training.ipynb
-```
+│       ├── yolo_training_exp1.ipynb
+│       ├── yolo_training_exp2.ipynb
+│       ├── yolo_training_exp3.ipynb
+│       └── exp4.ipynb
+├── .gitignore
+├── README.md / README.pt_BR.md
+├── packages.txt
+├── pytest.ini
+└── requirements.txt
 
 <br><br>
 
