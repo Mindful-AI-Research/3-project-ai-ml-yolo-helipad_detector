@@ -620,6 +620,7 @@ The repository structure was organized to reflect pipeline stages, including geo
 
 <br>
 
+```bash
 Helipad Detector
 ├── .devcontainer
 │   └── devcontainer.json
@@ -702,6 +703,7 @@ Helipad Detector
 ├── packages.txt
 ├── pytest.ini
 └── requirements.txt
+```
 
 <br><br>
 
