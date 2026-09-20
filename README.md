@@ -1129,7 +1129,7 @@ results = model.predict(
   
 #
  
-##### <p align="center">Copyright 2026 Mindful-AI-Assistants. Code released under the  [MIT license.](https://github.com/Mindful-AI-Assistants/CDIA-Entrepreneurship-Soft-Skills-PUC-SP/blob/21961c2693169d461c6e05900e3d25e28a292297/LICENSE)
+##### <p align="center">Copyright 2026 Mindful-AI-Assistants. Code released under the  [MIT license.](https://github.com/Mindful-AI-Research/3-project-ai-ml-yolo-helipad_detector/blob/4586f556d93b38ac3a9f81fbe8a73e4c58daa88f/LICENSE.md)
 
 
 
