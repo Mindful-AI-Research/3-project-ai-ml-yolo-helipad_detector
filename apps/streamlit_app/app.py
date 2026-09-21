@@ -489,6 +489,69 @@ TR = {
     "pt": "Nenhuma coordenada foi encontrada em `{path}` para gerar o mapa de densidade.",
 },
 
+"map.flights_layer": {
+    "en": "🚁 Live helicopter traffic",
+    "pt": "🚁 Tráfego de helicópteros ao vivo",
+},
+
+"map.flights_caption": {
+    "en": "Real-time aircraft positions over the São Paulo metro area, filtered to the ADS-B "
+          "\"Rotorcraft\" category and sourced live from **OpenSky Network** (free, anonymous public API). "
+          "This is live radar-like telemetry, not a YOLO detection — it is unrelated to the satellite-image "
+          "pipeline used elsewhere in this app.",
+    "pt": "Posições de aeronaves em tempo real na região metropolitana de São Paulo, filtradas pela categoria "
+          "ADS-B \"Rotorcraft\" (helicóptero) e obtidas ao vivo da **OpenSky Network** (API pública, gratuita, "
+          "sem necessidade de conta). Isso é telemetria ao vivo, do tipo radar — não é uma detecção do YOLO, "
+          "e não tem relação com o pipeline de imagens de satélite usado no restante do app.",
+},
+
+"map.flights_disclaimer": {
+    "en": "⚠️ **Coverage is partial, not exhaustive.** OpenSky only sees aircraft within range of a "
+          "volunteer ADS-B receiver that are actively broadcasting a recognizable aircraft-category code — "
+          "many helicopters (especially older or Brazilian-registered airframes without upgraded transponders) "
+          "report no category or don't appear at all. An empty map means \"none detected by this feed right now\", "
+          "never \"no helicopters flying\".",
+    "pt": "⚠️ **A cobertura é parcial, não exaustiva.** A OpenSky só enxerga aeronaves dentro do alcance de um "
+          "receptor ADS-B voluntário e que estejam de fato transmitindo um código de categoria reconhecível — "
+          "muitos helicópteros (especialmente aeronaves mais antigas ou de matrícula brasileira sem transponder "
+          "atualizado) não reportam categoria ou simplesmente não aparecem. Um mapa vazio significa \"nenhum "
+          "detectado por este feed agora\", nunca \"nenhum helicóptero voando\".",
+},
+
+"map.flights_trail_note": {
+    "en": "Flight trails are built session-locally, point by point, from the moments this dashboard was open "
+          "and refreshed — they are **not** the aircraft's full historical route (that requires an authenticated "
+          "OpenSky account, out of scope here).",
+    "pt": "Os rastros de voo são construídos localmente, nesta sessão, ponto a ponto, a partir dos momentos em "
+          "que este dashboard esteve aberto e foi atualizado — **não** são o trajeto histórico completo da "
+          "aeronave (isso exigiria uma conta autenticada na OpenSky, fora do escopo aqui).",
+},
+
+"map.flights_refresh": {
+    "en": "🔄 Refresh live positions",
+    "pt": "🔄 Atualizar posições ao vivo",
+},
+
+"map.flights_last_update": {
+    "en": "Last updated: {time} (auto-refreshes every 30s on interaction)",
+    "pt": "Última atualização: {time} (atualiza sozinho a cada 30s, ao interagir com a página)",
+},
+
+"map.flights_count": {
+    "en": "**{n} helicopter(s)** currently matched by OpenSky in the São Paulo area.",
+    "pt": "**{n} helicóptero(s)** identificados agora pela OpenSky na área de São Paulo.",
+},
+
+"map.flights_error": {
+    "en": "Could not reach OpenSky Network right now ({err}). This layer will retry on the next refresh.",
+    "pt": "Não foi possível contatar a OpenSky Network agora ({err}). Esta camada tenta de novo na próxima atualização.",
+},
+
+"map.flights_popup": {
+    "en": "<b>{callsign}</b><br>Origin: {country}<br>Altitude: {alt}<br>Speed: {speed}<br>Heading: {heading}°",
+    "pt": "<b>{callsign}</b><br>Origem: {country}<br>Altitude: {alt}<br>Velocidade: {speed}<br>Rumo: {heading}°",
+},
+
    
 ## ---- Tab 5: Pipeline ----
 "pipeline.subheader": {
@@ -1907,6 +1970,89 @@ def netron_url_for(exp_name: str) -> str | None:
     raw_url = f"{GITHUB_REPO_RAW_BASE}/{weights_path.as_posix()}"
     return f"https://netron.app/?url={raw_url}"
 
+# ========================= LIVE HELICOPTER TRAFFIC (OpenSky Network) =========================
+# Extra map layer, added on course feedback: overlays real-time ADS-B-derived aircraft
+# positions (filtered to the "Rotorcraft" category) over the static helipad map, so the
+# dashboard also shows actual air traffic, not only ground infrastructure detected from
+# satellite imagery. Uses OpenSky Network's free, anonymous public REST API — no account
+# or API key required. This is fundamentally different in kind from the YOLO detections
+# used elsewhere in this app: it is live radar-like telemetry, not image-based inference,
+# and it inherits OpenSky's own coverage gaps — see the "map.flights_disclaimer" caption
+# rendered next to this layer, which must stay visible whenever the layer is shown.
+SP_FLIGHTS_BBOX = {"lamin": -23.90, "lomin": -46.95, "lamax": -23.30, "lomax": -46.30}  # Greater São Paulo
+OPENSKY_STATES_URL = "https://opensky-network.org/api/states/all"
+# ADS-B "aircraft category" codes (DO-260B emitter category set A). Different published
+# references disagree by one on which value means "Rotorcraft" (7 vs 8) — both are
+# accepted here rather than picking one as authoritative, since being wrong in either
+# direction either hides real helicopters or silently shows none.
+HELICOPTER_CATEGORY_CODES = {7, 8}
+MAX_FLIGHT_TRAIL_POINTS = 20  # per aircraft, session-local only — see map.flights_trail_note
+
+
+@st.cache_data(ttl=30, show_spinner=False)
+def fetch_live_helicopter_flights(bbox: dict) -> tuple[list[dict], str | None]:
+    """Queries OpenSky Network's public REST API for aircraft currently inside
+    `bbox`, keeping only those whose declared ADS-B category matches a
+    helicopter. Returns (flights, error_message); never raises — a network
+    hiccup, timeout, or exhausted anonymous quota degrades this layer
+    gracefully (empty list + short error string) instead of crashing the tab.
+    Cached for 30s so normal Streamlit reruns don't burn through OpenSky's
+    anonymous daily request quota.
+    """
+    try:
+        resp = requests.get(OPENSKY_STATES_URL, params=bbox, timeout=8)
+        resp.raise_for_status()
+        payload = resp.json()
+    except requests.exceptions.RequestException as exc:
+        return [], str(exc)
+    except ValueError:
+        return [], "invalid (non-JSON) response"
+
+    states = payload.get("states") or []
+    flights = []
+    for s in states:
+        if not s or len(s) < 18:
+            continue
+        icao24, callsign = s[0], (s[1] or "").strip()
+        origin_country = s[2]
+        lon, lat = s[5], s[6]
+        on_ground = s[8]
+        velocity, heading, vertical_rate = s[9], s[10], s[11]
+        geo_alt = s[13]
+        category = s[17]
+        if lat is None or lon is None or on_ground:
+            continue
+        if category not in HELICOPTER_CATEGORY_CODES:
+            continue
+        flights.append({
+            "icao24": icao24,
+            "callsign": callsign or icao24,
+            "origin_country": origin_country or "—",
+            "lat": lat,
+            "lon": lon,
+            "altitude_m": geo_alt,
+            "speed_ms": velocity,
+            "heading": heading or 0.0,
+            "vertical_rate": vertical_rate,
+        })
+    return flights, None
+
+
+def update_flight_trails(flights: list[dict]) -> None:
+    """Appends this poll's positions to a per-aircraft trail kept in
+    st.session_state, capped at MAX_FLIGHT_TRAIL_POINTS. Session-local,
+    best-effort trace built only from moments this dashboard was open and
+    refreshed — see map.flights_trail_note for the disclaimer shown in the UI."""
+    trails = st.session_state.setdefault("flight_trails", {})
+    for f in flights:
+        trail = trails.setdefault(f["icao24"], [])
+        point = (f["lat"], f["lon"])
+        if not trail or trail[-1] != point:
+            trail.append(point)
+        if len(trail) > MAX_FLIGHT_TRAIL_POINTS:
+            del trail[: len(trail) - MAX_FLIGHT_TRAIL_POINTS]
+
+
 # ========================= BACKGROUND MUSIC (sidebar widget) =========================
 # Track: "Passacaglia – Deep House Remix" — used here for educational /
 # academic-presentation purposes. Embedded as base64 so no separate static
@@ -2918,13 +3064,15 @@ with tab4:
         # above the map, instead of Leaflet's own floating control panel that
         # used to sit on top of (and cover part of) the map canvas.
         st.caption(t("map.layers_caption"))
-        col_l1, col_l2, col_l3 = st.columns(3)
+        col_l1, col_l2, col_l3, col_l4 = st.columns(4)
         with col_l1:
             show_sp_layer = st.checkbox(f"🔴 {t('map.sp_layer')} ({len(sp_df)})", value=True, key="map_show_sp")
         with col_l2:
             show_other_layer = st.checkbox(f"🔵 {t('map.other_layer')} ({len(other_df)})", value=True, key="map_show_other")
         with col_l3:
             show_detection_layer = st.checkbox(t("map.detection_rate_layer"), value=True, key="map_show_detection")
+        with col_l4:
+            show_flights_layer = st.checkbox(t("map.flights_layer"), value=True, key="map_show_flights")
 
         sp_layer = folium.FeatureGroup(name=f"🔴 {t('map.sp_layer')} ({len(sp_df)})", show=True)
         for _, row in sp_df.iterrows():
@@ -3031,6 +3179,56 @@ with tab4:
                 ).add_to(detection_layer)
             if matched and show_detection_layer:
                 detection_layer.add_to(fmap)
+
+        # ---- Layer 4: live helicopter traffic (OpenSky Network, ADS-B) ----
+        if show_flights_layer:
+            st.caption(t("map.flights_caption"))
+            st.warning(t("map.flights_disclaimer"))
+
+            refresh_col, time_col = st.columns([1, 3])
+            with refresh_col:
+                if st.button(t("map.flights_refresh"), key="flights_refresh_btn"):
+                    fetch_live_helicopter_flights.clear()
+
+            flights, flights_err = fetch_live_helicopter_flights(SP_FLIGHTS_BBOX)
+
+            with time_col:
+                st.caption(t("map.flights_last_update").format(time=datetime.now().strftime("%H:%M:%S")))
+
+            if flights_err:
+                st.info(t("map.flights_error").format(err=flights_err))
+            else:
+                update_flight_trails(flights)
+                st.caption(t("map.flights_count").format(n=len(flights)))
+
+                flights_layer = folium.FeatureGroup(name=t("map.flights_layer"), show=True)
+                trails = st.session_state.get("flight_trails", {})
+                for f in flights:
+                    trail = trails.get(f["icao24"], [])
+                    if len(trail) > 1:
+                        folium.PolyLine(
+                            trail, color="#FF2500", weight=2, opacity=0.6, dash_array="4 6",
+                        ).add_to(flights_layer)
+
+                    alt_txt = f"{f['altitude_m']:.0f} m" if f["altitude_m"] is not None else "—"
+                    speed_txt = f"{f['speed_ms'] * 3.6:.0f} km/h" if f["speed_ms"] is not None else "—"
+                    popup_html = t("map.flights_popup").format(
+                        callsign=f["callsign"], country=f["origin_country"],
+                        alt=alt_txt, speed=speed_txt, heading=int(f["heading"]),
+                    )
+                    icon_html = (
+                        f'<div style="font-size:20px; line-height:1; '
+                        f'transform: rotate({int(f["heading"])}deg);">🚁</div>'
+                    )
+                    folium.Marker(
+                        location=[f["lat"], f["lon"]],
+                        popup=folium.Popup(popup_html, max_width=220),
+                        tooltip=f["callsign"],
+                        icon=folium.DivIcon(html=icon_html, icon_size=(24, 24), icon_anchor=(12, 12)),
+                    ).add_to(flights_layer)
+                flights_layer.add_to(fmap)
+
+            st.caption(t("map.flights_trail_note"))
 
         # The layer-control panel that used to render here (folium.LayerControl,
         # floating over the map's top-right corner) was replaced by the
