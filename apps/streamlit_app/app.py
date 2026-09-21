@@ -495,27 +495,41 @@ TR = {
 },
 
 "map.flights_caption": {
-    "en": "Real-time aircraft positions over the São Paulo metro area, filtered to the ADS-B "
-          "\"Rotorcraft\" category and sourced live from **OpenSky Network** (free, anonymous public API). "
-          "This is live radar-like telemetry, not a YOLO detection — it is unrelated to the satellite-image "
-          "pipeline used elsewhere in this app.",
-    "pt": "Posições de aeronaves em tempo real na região metropolitana de São Paulo, filtradas pela categoria "
-          "ADS-B \"Rotorcraft\" (helicóptero) e obtidas ao vivo da **OpenSky Network** (API pública, gratuita, "
-          "sem necessidade de conta). Isso é telemetria ao vivo, do tipo radar — não é uma detecção do YOLO, "
-          "e não tem relação com o pipeline de imagens de satélite usado no restante do app.",
+    "en": "Real-time aircraft positions over the São Paulo metro area, sourced live from **OpenSky Network** "
+          "(free, anonymous public API). This is live radar-like telemetry, not a YOLO detection — it is "
+          "unrelated to the satellite-image pipeline used elsewhere in this app.",
+    "pt": "Posições de aeronaves em tempo real na região metropolitana de São Paulo, obtidas ao vivo da "
+          "**OpenSky Network** (API pública, gratuita, sem necessidade de conta). Isso é telemetria ao vivo, "
+          "do tipo radar — não é uma detecção do YOLO, e não tem relação com o pipeline de imagens de satélite "
+          "usado no restante do app.",
 },
 
 "map.flights_disclaimer": {
-    "en": "⚠️ **Coverage is partial, not exhaustive.** OpenSky only sees aircraft within range of a "
-          "volunteer ADS-B receiver that are actively broadcasting a recognizable aircraft-category code — "
-          "many helicopters (especially older or Brazilian-registered airframes without upgraded transponders) "
-          "report no category or don't appear at all. An empty map means \"none detected by this feed right now\", "
-          "never \"no helicopters flying\".",
-    "pt": "⚠️ **A cobertura é parcial, não exaustiva.** A OpenSky só enxerga aeronaves dentro do alcance de um "
-          "receptor ADS-B voluntário e que estejam de fato transmitindo um código de categoria reconhecível — "
-          "muitos helicópteros (especialmente aeronaves mais antigas ou de matrícula brasileira sem transponder "
-          "atualizado) não reportam categoria ou simplesmente não aparecem. Um mapa vazio significa \"nenhum "
-          "detectado por este feed agora\", nunca \"nenhum helicóptero voando\".",
+    "en": "⚠️ **This is not a reliable helicopter-only feed.** OpenSky's ADS-B \"aircraft category\" field "
+          "(which would confirm a rotorcraft) is absent from most responses in this area — in practice, this "
+          "layer excludes known commercial-airline callsigns and shows everything else as an **unconfirmed** "
+          "candidate (⚠️ badge on the map), which may include small fixed-wing aircraft, air taxis or executive "
+          "jets, not only helicopters. Coverage is also partial: OpenSky only sees aircraft within range of a "
+          "volunteer ADS-B receiver that are actively transmitting. An empty or sparse map means \"nothing "
+          "detected/confirmed by this feed right now\", never \"no helicopters flying\".",
+    "pt": "⚠️ **Isto não é um feed confiável de \"só helicóptero\".** O campo de categoria ADS-B da OpenSky "
+          "(que confirmaria uma aeronave de asa rotativa) vem ausente na maioria das respostas para esta área — "
+          "na prática, esta camada exclui callsigns de companhias aéreas conhecidas e mostra o restante como "
+          "candidato **não confirmado** (badge ⚠️ no mapa), o que pode incluir aviões pequenos, táxi aéreo ou "
+          "jatos executivos, não só helicópteros. A cobertura também é parcial: a OpenSky só enxerga aeronaves "
+          "dentro do alcance de um receptor ADS-B voluntário e que estejam de fato transmitindo. Um mapa vazio "
+          "ou com poucos pontos significa \"nada detectado/confirmado por este feed agora\", nunca \"nenhum "
+          "helicóptero voando\".",
+},
+
+"map.flights_confirmed": {
+    "en": "Confirmed rotorcraft (ADS-B category)",
+    "pt": "Helicóptero confirmado (categoria ADS-B)",
+},
+
+"map.flights_unconfirmed": {
+    "en": "Unconfirmed — small aircraft, not necessarily a helicopter",
+    "pt": "Não confirmado — aeronave pequena, não necessariamente helicóptero",
 },
 
 "map.flights_trail_note": {
@@ -538,8 +552,10 @@ TR = {
 },
 
 "map.flights_count": {
-    "en": "**{n} helicopter(s)** currently matched by OpenSky in the São Paulo area.",
-    "pt": "**{n} helicóptero(s)** identificados agora pela OpenSky na área de São Paulo.",
+    "en": "**{n} aircraft** currently shown (excluding known commercial airlines) — see the disclaimer above "
+          "for what \"confirmed\" vs \"unconfirmed\" means.",
+    "pt": "**{n} aeronave(s)** exibidas agora (excluindo companhias aéreas conhecidas) — veja o aviso acima "
+          "sobre o que significa \"confirmado\" vs. \"não confirmado\".",
 },
 
 "map.flights_error": {
@@ -548,8 +564,8 @@ TR = {
 },
 
 "map.flights_popup": {
-    "en": "<b>{callsign}</b><br>Origin: {country}<br>Altitude: {alt}<br>Speed: {speed}<br>Heading: {heading}°",
-    "pt": "<b>{callsign}</b><br>Origem: {country}<br>Altitude: {alt}<br>Velocidade: {speed}<br>Rumo: {heading}°",
+    "en": "<b>{callsign}</b> — <i>{confidence}</i><br>Origin: {country}<br>Altitude: {alt}<br>Speed: {speed}<br>Heading: {heading}°",
+    "pt": "<b>{callsign}</b> — <i>{confidence}</i><br>Origem: {country}<br>Altitude: {alt}<br>Velocidade: {speed}<br>Rumo: {heading}°",
 },
 
    
@@ -1996,6 +2012,44 @@ OPENSKY_MAX_ATTEMPTS = 2   # one retry on transient connect/read failures before
 HELICOPTER_CATEGORY_CODES = {7, 8}
 MAX_FLIGHT_TRAIL_POINTS = 20  # per aircraft, session-local only — see map.flights_trail_note
 
+# Best-effort fallback for when OpenSky's category field is absent (the common case —
+# see the comment in fetch_live_helicopter_flights): a short, NOT exhaustive list of
+# ICAO 3-letter callsign prefixes for major airlines serving Greater São Paulo's
+# airports (Congonhas/Guarulhos/Viracopos). Any callsign starting with one of these is
+# confidently a scheduled commercial flight and is excluded; everything else (blank
+# callsigns, Brazilian registration-style callsigns like PP-/PR-/PT-/PS-xxx, unlisted
+# 3-letter codes) is kept as an unconfirmed "possible small aircraft" — which may be a
+# helicopter, an air taxi, an executive jet, or general aviation. This deliberately
+# trades recall for precision on commercial traffic; it does NOT positively confirm
+# any result is a helicopter.
+KNOWN_AIRLINE_CALLSIGN_PREFIXES = {
+    "TAM", "JJ", "GLO", "G3", "AZU", "AD", "PTB", "TTL", "ONE", "AVJ",
+    "ARE", "ARG", "AVA", "CMP", "LAN", "LPE", "AAL", "UAL", "DAL", "JBU",
+    "ASA", "SWA", "FDX", "UPS", "BAW", "AFR", "DLH", "KLM", "IBE", "TAP",
+    "AZA", "SWR", "AUA", "SAS", "FIN", "ANA", "JAL", "UAE", "QTR", "ETD",
+    "THY", "ACA", "AMX", "AVT", "ABD", "GAI", "MPX",
+}
+
+
+def classify_possible_helicopter(callsign: str, category) -> str | None:
+    """Returns "confirmed" if OpenSky's own ADS-B category says Rotorcraft,
+    "heuristic" if the category is unavailable but the callsign doesn't match
+    a known commercial airline (so it's kept as an unconfirmed candidate), or
+    None if it should be excluded (confidently a scheduled airline flight).
+    See KNOWN_AIRLINE_CALLSIGN_PREFIXES for what "known airline" means here —
+    it is a short, non-exhaustive list, so some airline flights will slip
+    through as "heuristic" rather than being excluded; that is an accepted,
+    documented trade-off, not a claim of completeness.
+    """
+    if category in HELICOPTER_CATEGORY_CODES:
+        return "confirmed"
+    cs = (callsign or "").strip().upper()
+    prefix3 = cs[:3]
+    prefix2 = cs[:2]
+    if prefix3 in KNOWN_AIRLINE_CALLSIGN_PREFIXES or prefix2 in KNOWN_AIRLINE_CALLSIGN_PREFIXES:
+        return None
+    return "heuristic"
+
 
 def _opensky_auth():
     """Optional escape hatch: if a free OpenSky account's credentials are set in
@@ -2055,19 +2109,26 @@ def fetch_live_helicopter_flights(bbox: dict) -> tuple[list[dict], str | None]:
     states = payload.get("states") or []
     flights = []
     for s in states:
-        if not s or len(s) < 18:
+        if not s or len(s) < 12:
             continue
         icao24, callsign = s[0], (s[1] or "").strip()
         origin_country = s[2]
         lon, lat = s[5], s[6]
         on_ground = s[8]
         velocity, heading, vertical_rate = s[9], s[10], s[11]
-        geo_alt = s[13]
-        category = s[17]
+        geo_alt = s[13] if len(s) > 13 else None
+        # OpenSky's docs list "category" as the 18th field, but in practice the
+        # anonymous /states/all feed for this bbox returns 17-field arrays with
+        # no category at all (confirmed against a live response on 2026-09-21) —
+        # so this is read defensively and is usually None, not a bug if so.
+        category = s[17] if len(s) > 17 else None
         if lat is None or lon is None or on_ground:
             continue
-        if category not in HELICOPTER_CATEGORY_CODES:
-            continue
+
+        confidence = classify_possible_helicopter(callsign, category)
+        if confidence is None:
+            continue  # confidently a commercial airline flight — excluded
+
         flights.append({
             "icao24": icao24,
             "callsign": callsign or icao24,
@@ -2078,6 +2139,7 @@ def fetch_live_helicopter_flights(bbox: dict) -> tuple[list[dict], str | None]:
             "speed_ms": velocity,
             "heading": heading or 0.0,
             "vertical_rate": vertical_rate,
+            "confidence": confidence,  # "confirmed" | "heuristic"
         })
     return flights, None
 
@@ -3256,18 +3318,33 @@ with tab4:
 
                     alt_txt = f"{f['altitude_m']:.0f} m" if f["altitude_m"] is not None else "—"
                     speed_txt = f"{f['speed_ms'] * 3.6:.0f} km/h" if f["speed_ms"] is not None else "—"
+                    is_confirmed = f["confidence"] == "confirmed"
+                    confidence_txt = t("map.flights_confirmed") if is_confirmed else t("map.flights_unconfirmed")
                     popup_html = t("map.flights_popup").format(
                         callsign=f["callsign"], country=f["origin_country"],
                         alt=alt_txt, speed=speed_txt, heading=int(f["heading"]),
+                        confidence=confidence_txt,
+                    )
+                    # Confirmed rotorcraft (rare — needs OpenSky's category field, usually
+                    # absent) get a solid, full-opacity icon; heuristic/unconfirmed
+                    # candidates render lower-opacity with a "?" badge, so the two
+                    # confidence levels are visually distinguishable on the map itself,
+                    # not only in the popup text.
+                    opacity = "1" if is_confirmed else "0.55"
+                    badge = "" if is_confirmed else (
+                        '<span style="position:absolute; top:-4px; right:-4px; '
+                        'background:#fbbf24; color:#000; border-radius:50%; width:12px; '
+                        'height:12px; font-size:9px; line-height:12px; text-align:center; '
+                        'font-weight:700;">?</span>'
                     )
                     icon_html = (
-                        f'<div style="font-size:20px; line-height:1; '
-                        f'transform: rotate({int(f["heading"])}deg);">🚁</div>'
+                        f'<div style="position:relative; font-size:20px; line-height:1; opacity:{opacity};">'
+                        f'<div style="transform: rotate({int(f["heading"])}deg);">🚁</div>{badge}</div>'
                     )
                     folium.Marker(
                         location=[f["lat"], f["lon"]],
-                        popup=folium.Popup(popup_html, max_width=220),
-                        tooltip=f["callsign"],
+                        popup=folium.Popup(popup_html, max_width=240),
+                        tooltip=f"{f['callsign']} — {confidence_txt}",
                         icon=folium.DivIcon(html=icon_html, icon_size=(24, 24), icon_anchor=(12, 12)),
                     ).add_to(flights_layer)
                 flights_layer.add_to(fmap)
