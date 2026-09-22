@@ -1,37 +1,43 @@
+
 ########################
 # AI / YOLO Core
 ########################
-ultralytics>=8.4.154
-torch>=2.14.0
-torchvision>=0.17.0
-tqdm>=4.70.1
-pyyaml>=6.0.3
-scipy>=1.18.1
+ultralytics>=8.4.73
+torch>=1.8.0
+torchvision>=0.9.0
+tqdm>=4.64.0
+pyyaml>=5.3.1
+scipy>=1.4.1
 
 ########################
 # Scientific Computing / Data Analysis
 ########################
-numpy>=2.5.3
+numpy>=1.22.2
 pandas>=1.1.4
-matplotlib>=3.11.2
-seaborn>=0.13.2
+matplotlib>=3.3.0
+seaborn>=0.11.0
 
 ########################
 # Computer Vision & Image Processing
 ########################
 pillow>=7.1.2
-opencv-python-headless>=5.0.0.93
+opencv-python-headless>=4.6.0
 
 ########################
 # Web, APIs & Applications
 ########################
-flask>=3.1.3
-streamlit>=1.64.0
-folium>=0.20.0
-streamlit-folium>=0.27.4
-plotly>=7.1.0
-opensky-test
-reportlab>=5.0.1
+flask>=2.0.0
+streamlit>=1.42.0
+folium>=0.16.0
+streamlit-folium>=0.23.0
+plotly>=5.20.0
+reportlab>=4.0.0
+
+########################
+# Selenium / Browser Automation
+########################
+selenium>=4.0.0
+webdriver-manager>=3.8.0
 
 ########################
 # General Utilities
@@ -40,12 +46,3 @@ requests>=2.23.0
 psutil
 py-cpuinfo
 
-# NOTE (removed): selenium / webdriver-manager were removed from this file.
-# They belong only to the local scraper (src/geospatial/helipad_bot.py),
-# which you run on your own machine, not to apps/streamlit_app/app.py, which
-# is what actually gets deployed here. Shipping them to the deployed app adds
-# unused weight to the pip install step and, if packages.txt has matching
-# browser/apt entries for them (e.g. firefox, geckodriver), adds unnecessary
-# surface to the apt-get step too. If you still want to run helipad_bot.py
-# from a requirements-managed environment, keep a separate
-# requirements-scraper.txt for local use instead of bundling it here.
