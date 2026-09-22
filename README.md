@@ -105,10 +105,26 @@
 **Author:** [Fabiana ⚡️ Campanari](https://linktr.ee/fabianacampanari) <br>
 **Collaborators:** [Carlos Antonio dos Santos Roth Gorham]() · [Pedro Vyctor Almeida](https://github.com/ppvyctor/Helipoint-Detector) 
 
-# <br>
+# 
+
+<br><br><br>
 <!-- ========= END Institutional INFO ========= -->
 
-<!-- ======================================= Start Institutional  Atribuição de Contribuições / subm tidd ======== -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- ======================================= Start Institutional  Atribuição de Contribuições / subm tidd ======== 
 ### [Contribution Attribution]()
 
 This project evolved from an initial foundation involving dataset development, model training, and a web prototype into an end-to-end computer vision and geospatial intelligence platform. The three credited contributors participated at different stages of the project, with contributions spanning distinct technical areas and responsibilities. <br><br>
@@ -154,6 +170,7 @@ The final repository represents the evolution of the project from its initial pr
 <!-- ======================================= END Institutional / mestr/ SUBMISSION =========================================== --> 
 
 
+
 <!-- ========= START Streamlit BADGE ========= -->
 <p align="center" style="margin: 0;">
   <a href="https://helipad-detector-sp.streamlit.app/" rel="noopener noreferrer">
@@ -194,7 +211,7 @@ The final repository represents the evolution of the project from its initial pr
 
 #
 
-<br><br>
+<br><br><br><br>
 <!-- ========= BADGES  END ALLL PRESENTATIONS ------ BADGES  ========= -->
 
 
