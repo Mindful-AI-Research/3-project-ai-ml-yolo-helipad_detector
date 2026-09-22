@@ -2,7 +2,7 @@
  Create a ROS workspace for the VNAV 
 
 
-```
+```python
 $ mkdir -p ~/vnav_ws/src
 $ cd ~/vnav_ws/
 $ catkin init
@@ -34,3 +34,25 @@ Blacklisted Packages:        None
 Workspace configuration appears valid.
 --------------------------------------------------------------
 ```
+
+Getting the Lab code
+Go the folder where you cloned the Labs codebase and run git pull. This command will update the folder with the latest code. Let’s suppose we have the codebase in ~/labs. In ~/labs/lab2 you now have the two_drones_pkg folder, which is a ROS package. Copy this folder in your VNAV workspace and build the workspace as follows:
+
+```python
+cp -a ~/labs/lab2/two_drones_pkg ~/vnav_ws/src
+```
+
+Building the code
+Building the code is as easy as running:
+
+```python
+catkin build
+```
+
+Now that you built the code you see that catkin added a bunch of new folders. In order to use our workspace, we need to make ROS aware of all the components by sourcing the corresponding environment. This is done by running the following in every single terminal where you intend to use the workspace:
+
+
+```python
+source devel/setup.bash
+```
+
