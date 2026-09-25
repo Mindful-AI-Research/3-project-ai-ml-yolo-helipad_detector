@@ -489,6 +489,86 @@ TR = {
     "pt": "Nenhuma coordenada foi encontrada em `{path}` para gerar o mapa de densidade.",
 },
 
+"map.flights_layer": {
+    "en": "🚁 Live helicopter traffic",
+    "pt": "🚁 Tráfego de helicópteros ao vivo",
+},
+
+"map.flights_caption": {
+    "en": "Real-time aircraft positions over the São Paulo metro area, sourced live from **adsb.fi** "
+          "(free, no-key public API). This is live radar-like telemetry, not a YOLO detection — it is "
+          "unrelated to the satellite-image pipeline used elsewhere in this app.",
+    "pt": "Posições de aeronaves em tempo real na região metropolitana de São Paulo, obtidas ao vivo do "
+          "**adsb.fi** (API pública, gratuita, sem necessidade de chave). Isso é telemetria ao vivo, "
+          "do tipo radar — não é uma detecção do YOLO, e não tem relação com o pipeline de imagens de satélite "
+          "usado no restante do app.",
+},
+
+"map.flights_disclaimer": {
+    "en": "⚠️ **Helicopter identification is best-effort, not guaranteed.** Most contacts report a real "
+          "aircraft type code, which confirms a rotorcraft reliably (✈️ shown as \"Confirmed\" below); for "
+          "the rest, this layer falls back to excluding known commercial-airline callsigns and shows "
+          "everything else as an **unconfirmed** candidate (⚠️ badge on the map), which may include small "
+          "fixed-wing aircraft, air taxis or executive jets, not only helicopters. Coverage is also partial: "
+          "the feed only sees aircraft within range of a volunteer ADS-B receiver that are actively "
+          "transmitting. An empty or sparse map means \"nothing detected/confirmed by this feed right now\", "
+          "never \"no helicopters flying\".",
+    "pt": "⚠️ **A identificação de helicóptero é um melhor esforço, não uma garantia.** A maioria dos "
+          "contatos reporta um código real de tipo de aeronave, o que confirma um helicóptero de forma "
+          "confiável (mostrado como \"confirmado\" abaixo); para o restante, esta camada cai para excluir "
+          "callsigns de companhias aéreas conhecidas e mostra o restante como candidato **não confirmado** "
+          "(badge ⚠️ no mapa), o que pode incluir aviões pequenos, táxi aéreo ou jatos executivos, não só "
+          "helicópteros. A cobertura também é parcial: o feed só enxerga aeronaves dentro do alcance de um "
+          "receptor ADS-B voluntário e que estejam de fato transmitindo. Um mapa vazio ou com poucos pontos "
+          "significa \"nada detectado/confirmado por este feed agora\", nunca \"nenhum helicóptero voando\".",
+},
+
+"map.flights_confirmed": {
+    "en": "Confirmed rotorcraft (aircraft type)",
+    "pt": "Helicóptero confirmado (tipo da aeronave)",
+},
+
+"map.flights_unconfirmed": {
+    "en": "Unconfirmed — small aircraft, not necessarily a helicopter",
+    "pt": "Não confirmado — aeronave pequena, não necessariamente helicóptero",
+},
+
+"map.flights_trail_note": {
+    "en": "Flight trails are built session-locally, point by point, from the moments this dashboard was open "
+          "and refreshed — they are **not** the aircraft's full historical route (that requires a paid "
+          "historical-data feed, out of scope here).",
+    "pt": "Os rastros de voo são construídos localmente, nesta sessão, ponto a ponto, a partir dos momentos em "
+          "que este dashboard esteve aberto e foi atualizado — **não** são o trajeto histórico completo da "
+          "aeronave (isso exigiria um feed histórico pago, fora do escopo aqui).",
+},
+
+"map.flights_refresh": {
+    "en": "🔄 Refresh live positions",
+    "pt": "🔄 Atualizar posições ao vivo",
+},
+
+"map.flights_last_update": {
+    "en": "Last updated: {time} (auto-refreshes every 30s on interaction)",
+    "pt": "Última atualização: {time} (atualiza sozinho a cada 30s, ao interagir com a página)",
+},
+
+"map.flights_count": {
+    "en": "**{n} aircraft** currently shown (excluding known commercial airlines) — see the disclaimer above "
+          "for what \"confirmed\" vs \"unconfirmed\" means.",
+    "pt": "**{n} aeronave(s)** exibidas agora (excluindo companhias aéreas conhecidas) — veja o aviso acima "
+          "sobre o que significa \"confirmado\" vs. \"não confirmado\".",
+},
+
+"map.flights_error": {
+    "en": "Could not reach the live flight feed right now ({err}). This layer will retry on the next refresh.",
+    "pt": "Não foi possível contatar o feed de voos ao vivo agora ({err}). Esta camada tenta de novo na próxima atualização.",
+},
+
+"map.flights_popup": {
+    "en": "<b>{callsign}</b> — <i>{confidence}</i><br>Origin: {country}<br>Altitude: {alt}<br>Speed: {speed}<br>Heading: {heading}°",
+    "pt": "<b>{callsign}</b> — <i>{confidence}</i><br>Origem: {country}<br>Altitude: {alt}<br>Velocidade: {speed}<br>Rumo: {heading}°",
+},
+
    
 ## ---- Tab 5: Pipeline ----
 "pipeline.subheader": {
@@ -1907,6 +1987,179 @@ def netron_url_for(exp_name: str) -> str | None:
     raw_url = f"{GITHUB_REPO_RAW_BASE}/{weights_path.as_posix()}"
     return f"https://netron.app/?url={raw_url}"
 
+# ========================= LIVE HELICOPTER TRAFFIC (adsb.fi) =========================
+# Extra map layer, added on course feedback: overlays real-time ADS-B-derived aircraft
+# positions over the static helipad map, so the dashboard also shows actual air
+# traffic, not only ground infrastructure detected from satellite imagery. This is
+# fundamentally different in kind from the YOLO detections used elsewhere in this app:
+# it is live radar-like telemetry, not image-based inference, and it inherits its
+# provider's own coverage gaps — see the "map.flights_disclaimer" caption rendered
+# next to this layer, which must stay visible whenever the layer is shown.
+#
+# Provider history (why adsb.fi, not OpenSky): OpenSky Network was tried first (free,
+# no key), but its anonymous /states/all endpoint hard-times-out from every cloud host
+# tested (Streamlit Community Cloud and Hugging Face Spaces both fail identically with
+# a raw TCP connect timeout — confirmed 2026-09-21/22 — while the same URL works fine
+# from a home ISP connection via curl), which is consistent with OpenSky, a small
+# volunteer-run network, blocking datacenter/cloud IP ranges as an anti-abuse measure.
+# Two other free community feeds were also ruled out on the same investigation:
+# api.airplanes.live (403 on every endpoint, now key-gated) and api.adsb.lol
+# (always returns an empty aircraft list). adsb.fi's public v2 endpoint was still
+# serving real data with no API key as of this writing, and — because it is what
+# backs other cloud-hosted OSINT dashboards (independently confirmed by inspecting
+# github.com/simplifaisoul/osiris, MIT-licensed, which fetches this exact endpoint
+# from a Vercel-hosted Next.js app) — is a much better bet against the same cloud-IP
+# blocking problem than another volunteer ADS-B network would be.
+#
+# The other thing adsb.fi buys us that OpenSky structurally cannot: an actual aircraft
+# type code (field "t", e.g. "R44", "EC35", "S76") for most contacts, instead of
+# OpenSky's ADS-B "category" field, which the same Osiris investigation measured as
+# blank for ~96% of aircraft even when explicitly requested. Real type codes let this
+# layer classify helicopters by aircraft model — a materially stronger signal than the
+# airline-callsign-exclusion heuristic used in the previous OpenSky-based version of
+# this function — while still degrading gracefully to that same callsign heuristic for
+# the contacts that report no type, so it never regresses below what already worked.
+SP_LAT, SP_LON, SP_DIST_NM = -23.55, -46.63, 50  # São Paulo center, 50 nm radius (~92 km)
+ADSBFI_URL = f"https://opendata.adsb.fi/api/v2/lat/{SP_LAT}/lon/{SP_LON}/dist/{SP_DIST_NM}"
+ADSBFI_HEADERS = {"User-Agent": "HelipadDetector-Dashboard/1.0 (+https://github.com/Mindful-AI-Research/3-project-ai-ml-yolo-helipad_detector)"}
+ADSBFI_TIMEOUT = (5, 12)  # (connect, read) seconds
+ADSBFI_MAX_ATTEMPTS = 2   # one retry on transient connect/read failures before giving up
+MAX_FLIGHT_TRAIL_POINTS = 20  # per aircraft, session-local only — see map.flights_trail_note
+
+# ICAO type-designator codes for rotorcraft actually in civil/EMS/executive service —
+# adapted from the equivalent table in github.com/simplifaisoul/osiris (MIT-licensed),
+# trimmed to models plausible over São Paulo. Not exhaustive: any type absent from this
+# set falls through to the callsign heuristic below rather than being silently dropped.
+HELICOPTER_TYPE_CODES = {
+    "R22", "R44", "R66", "B06", "B06T", "B204", "B205", "B206", "B212", "B222", "B230",
+    "B407", "B412", "B427", "B429", "B430", "B505", "B525",
+    "AS32", "AS35", "AS50", "AS55", "AS65",
+    "EC20", "EC25", "EC30", "EC35", "EC45", "EC55", "EC75",
+    "H125", "H130", "H135", "H145", "H155", "H160", "H175", "H215", "H225",
+    "S55", "S58", "S61", "S64", "S70", "S76", "S92",
+    "A109", "A119", "A139", "A169", "A189", "AW09",
+    "MD52", "MD60", "MDHI", "MD90", "NOTR",
+}
+
+# Fallback for the contacts adsb.fi reports with no type code at all: a short, NOT
+# exhaustive list of ICAO 3-letter callsign prefixes for major airlines serving Greater
+# São Paulo's airports (Congonhas/Guarulhos/Viracopos). Any callsign starting with one
+# of these is confidently a scheduled commercial flight and is excluded; everything
+# else (blank callsigns, Brazilian registration-style callsigns like PP-/PR-/PT-/PS-xxx,
+# unlisted 3-letter codes) is kept as an unconfirmed "possible small aircraft" — which
+# may be a helicopter, an air taxi, an executive jet, or general aviation.
+KNOWN_AIRLINE_CALLSIGN_PREFIXES = {
+    "TAM", "JJ", "GLO", "G3", "AZU", "AD", "PTB", "TTL", "ONE", "AVJ",
+    "ARE", "ARG", "AVA", "CMP", "LAN", "LPE", "AAL", "UAL", "DAL", "JBU",
+    "ASA", "SWA", "FDX", "UPS", "BAW", "AFR", "DLH", "KLM", "IBE", "TAP",
+    "AZA", "SWR", "AUA", "SAS", "FIN", "ANA", "JAL", "UAE", "QTR", "ETD",
+    "THY", "ACA", "AMX", "AVT", "ABD", "GAI", "MPX",
+}
+
+
+def classify_possible_helicopter(callsign: str, type_code: str) -> str | None:
+    """Returns "confirmed" if adsb.fi reports a type code found in
+    HELICOPTER_TYPE_CODES, "heuristic" if there's no usable type code but the
+    callsign doesn't match a known commercial airline (kept as an unconfirmed
+    candidate), or None if it should be excluded (a typed non-rotorcraft, e.g.
+    an airliner, or a confidently-commercial callsign).
+    """
+    tc = (type_code or "").strip().upper()
+    if tc:
+        return "confirmed" if tc in HELICOPTER_TYPE_CODES else None
+    cs = (callsign or "").strip().upper()
+    prefix3, prefix2 = cs[:3], cs[:2]
+    if prefix3 in KNOWN_AIRLINE_CALLSIGN_PREFIXES or prefix2 in KNOWN_AIRLINE_CALLSIGN_PREFIXES:
+        return None
+    return "heuristic"
+
+
+@st.cache_data(ttl=30, show_spinner=False)
+def fetch_live_helicopter_flights(_unused_bbox=None) -> tuple[list[dict], str | None]:
+    """Queries adsb.fi's public v2 REST API for aircraft currently within
+    SP_DIST_NM of São Paulo, keeping only those classified as a possible
+    helicopter (see classify_possible_helicopter). Returns
+    (flights, error_message); never raises — a network hiccup, timeout, or
+    provider outage degrades this layer gracefully (empty list + short error
+    string) instead of crashing the tab. Cached for 30s so normal Streamlit
+    reruns don't hammer the provider.
+
+    `_unused_bbox` is accepted and ignored so the call site (and its cache
+    key) didn't need to change when this function moved from OpenSky's
+    lat/lon-bbox query shape to adsb.fi's center+radius shape.
+
+    Retries once on connection/timeout errors (covers most transient network
+    blips) before reporting the failure; does not retry on HTTP error status
+    codes, since those won't resolve by repeating the same request immediately.
+    """
+    payload = None
+    last_error = None
+    for attempt in range(ADSBFI_MAX_ATTEMPTS):
+        try:
+            resp = requests.get(ADSBFI_URL, headers=ADSBFI_HEADERS, timeout=ADSBFI_TIMEOUT)
+            resp.raise_for_status()
+            payload = resp.json()
+            last_error = None
+            break
+        except requests.exceptions.HTTPError as exc:
+            return [], str(exc)  # 4xx/5xx — retrying immediately won't help
+        except requests.exceptions.RequestException as exc:
+            last_error = str(exc)
+            continue
+        except ValueError:
+            return [], "invalid (non-JSON) response"
+
+    if payload is None:
+        return [], last_error or "unknown error"
+
+    aircraft = payload.get("aircraft") or []
+    flights = []
+    for ac in aircraft:
+        lat, lon = ac.get("lat"), ac.get("lon")
+        if lat is None or lon is None:
+            continue
+        alt_baro = ac.get("alt_baro")
+        on_ground = alt_baro == "ground" or (isinstance(alt_baro, (int, float)) and alt_baro < 100)
+        if on_ground:
+            continue
+
+        callsign = (ac.get("flight") or "").strip()
+        type_code = ac.get("t") or ""
+        confidence = classify_possible_helicopter(callsign, type_code)
+        if confidence is None:
+            continue
+
+        flights.append({
+            "icao24": ac.get("hex", ""),
+            "callsign": callsign or ac.get("hex", "—"),
+            "origin_country": "—",  # adsb.fi doesn't report this; kept for popup compatibility
+            "lat": lat,
+            "lon": lon,
+            "altitude_m": alt_baro * 0.3048 if isinstance(alt_baro, (int, float)) else None,
+            "speed_ms": ac.get("gs", 0) * 0.514444 if ac.get("gs") is not None else None,  # knots -> m/s
+            "heading": ac.get("track") or 0.0,
+            "vertical_rate": ac.get("baro_rate"),
+            "type_code": type_code or "—",
+            "confidence": confidence,  # "confirmed" | "heuristic"
+        })
+    return flights, None
+
+
+def update_flight_trails(flights: list[dict]) -> None:
+    """Appends this poll's positions to a per-aircraft trail kept in
+    st.session_state, capped at MAX_FLIGHT_TRAIL_POINTS. Session-local,
+    best-effort trace built only from moments this dashboard was open and
+    refreshed — see map.flights_trail_note for the disclaimer shown in the UI."""
+    trails = st.session_state.setdefault("flight_trails", {})
+    for f in flights:
+        trail = trails.setdefault(f["icao24"], [])
+        point = (f["lat"], f["lon"])
+        if not trail or trail[-1] != point:
+            trail.append(point)
+        if len(trail) > MAX_FLIGHT_TRAIL_POINTS:
+            del trail[: len(trail) - MAX_FLIGHT_TRAIL_POINTS]
+
+
 # ========================= BACKGROUND MUSIC (sidebar widget) =========================
 # Track: "Passacaglia – Deep House Remix" — used here for educational /
 # academic-presentation purposes. Embedded as base64 so no separate static
@@ -2918,13 +3171,15 @@ with tab4:
         # above the map, instead of Leaflet's own floating control panel that
         # used to sit on top of (and cover part of) the map canvas.
         st.caption(t("map.layers_caption"))
-        col_l1, col_l2, col_l3 = st.columns(3)
+        col_l1, col_l2, col_l3, col_l4 = st.columns(4)
         with col_l1:
             show_sp_layer = st.checkbox(f"🔴 {t('map.sp_layer')} ({len(sp_df)})", value=True, key="map_show_sp")
         with col_l2:
             show_other_layer = st.checkbox(f"🔵 {t('map.other_layer')} ({len(other_df)})", value=True, key="map_show_other")
         with col_l3:
             show_detection_layer = st.checkbox(t("map.detection_rate_layer"), value=True, key="map_show_detection")
+        with col_l4:
+            show_flights_layer = st.checkbox(t("map.flights_layer"), value=True, key="map_show_flights")
 
         sp_layer = folium.FeatureGroup(name=f"🔴 {t('map.sp_layer')} ({len(sp_df)})", show=True)
         for _, row in sp_df.iterrows():
@@ -3031,6 +3286,73 @@ with tab4:
                 ).add_to(detection_layer)
             if matched and show_detection_layer:
                 detection_layer.add_to(fmap)
+
+        # ---- Layer 4: live helicopter traffic (adsb.fi, ADS-B) ----
+        if show_flights_layer:
+            st.caption(t("map.flights_caption"))
+            st.warning(t("map.flights_disclaimer"))
+
+            refresh_col, time_col = st.columns([1, 3])
+            with refresh_col:
+                if st.button(t("map.flights_refresh"), key="flights_refresh_btn"):
+                    fetch_live_helicopter_flights.clear()
+
+            flights, flights_err = fetch_live_helicopter_flights()
+
+            with time_col:
+                st.caption(t("map.flights_last_update").format(time=datetime.now().strftime("%H:%M:%S")))
+
+            if flights_err:
+                st.info(t("map.flights_error").format(err=flights_err))
+            else:
+                update_flight_trails(flights)
+                st.caption(t("map.flights_count").format(n=len(flights)))
+
+                flights_layer = folium.FeatureGroup(name=t("map.flights_layer"), show=True)
+                trails = st.session_state.get("flight_trails", {})
+                for f in flights:
+                    trail = trails.get(f["icao24"], [])
+                    if len(trail) > 1:
+                        folium.PolyLine(
+                            trail, color="#FF2500", weight=2, opacity=0.6, dash_array="4 6",
+                        ).add_to(flights_layer)
+
+                    alt_txt = f"{f['altitude_m']:.0f} m" if f["altitude_m"] is not None else "—"
+                    speed_txt = f"{f['speed_ms'] * 3.6:.0f} km/h" if f["speed_ms"] is not None else "—"
+                    is_confirmed = f["confidence"] == "confirmed"
+                    confidence_txt = t("map.flights_confirmed") if is_confirmed else t("map.flights_unconfirmed")
+                    if is_confirmed and f.get("type_code", "—") != "—":
+                        confidence_txt = f"{confidence_txt} ({f['type_code']})"
+                    popup_html = t("map.flights_popup").format(
+                        callsign=f["callsign"], country=f["origin_country"],
+                        alt=alt_txt, speed=speed_txt, heading=int(f["heading"]),
+                        confidence=confidence_txt,
+                    )
+                    # Confirmed rotorcraft (has a real type code matched against
+                    # HELICOPTER_TYPE_CODES) get a solid, full-opacity icon; heuristic/unconfirmed
+                    # candidates render lower-opacity with a "?" badge, so the two
+                    # confidence levels are visually distinguishable on the map itself,
+                    # not only in the popup text.
+                    opacity = "1" if is_confirmed else "0.55"
+                    badge = "" if is_confirmed else (
+                        '<span style="position:absolute; top:-4px; right:-4px; '
+                        'background:#fbbf24; color:#000; border-radius:50%; width:12px; '
+                        'height:12px; font-size:9px; line-height:12px; text-align:center; '
+                        'font-weight:700;">?</span>'
+                    )
+                    icon_html = (
+                        f'<div style="position:relative; font-size:20px; line-height:1; opacity:{opacity};">'
+                        f'<div style="transform: rotate({int(f["heading"])}deg);">🚁</div>{badge}</div>'
+                    )
+                    folium.Marker(
+                        location=[f["lat"], f["lon"]],
+                        popup=folium.Popup(popup_html, max_width=240),
+                        tooltip=f"{f['callsign']} — {confidence_txt}",
+                        icon=folium.DivIcon(html=icon_html, icon_size=(24, 24), icon_anchor=(12, 12)),
+                    ).add_to(flights_layer)
+                flights_layer.add_to(fmap)
+
+            st.caption(t("map.flights_trail_note"))
 
         # The layer-control panel that used to render here (folium.LayerControl,
         # floating over the map's top-right corner) was replaced by the
