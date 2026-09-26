@@ -395,9 +395,9 @@ https://github.com/user-attachments/assets/861e142f-0ada-4154-9edf-08fba5503b7e
 
 
 <!-- ========= START 🎥 DEMO · HELIPAD DETECTION ========= -->
-###### <p align="center">🎥 **DEMO:** **HELIPAD DETECTION** ✧ `YOLO-11` ✧ `MODEL TRAINING`</p>
+###### <p align="center">🎥 **DEMO:** **HELIPAD DETECTION** ✧ `Exp4` ✧ `YOLO-11` ✧ `MODEL TRAINING`</p>
 
-!!!!!!!
+https://github.com/user-attachments/assets/0e54ba0f-90e6-47ba-aaa8-d1ae59190158)
 
 ###### <p align="center">🎶 ***Feel Good*** ✦ ***Nina Simone*** ✦ *Deep House Version* · Concept · Creative Design · ***Fab*** ⚡️ **𝄢 𝄫**</p>
 
