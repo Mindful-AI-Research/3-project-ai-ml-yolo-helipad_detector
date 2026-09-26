@@ -569,6 +569,37 @@ TR = {
     "pt": "<b>{callsign}</b> — <i>{confidence}</i><br>Origem: {country}<br>Altitude: {alt}<br>Velocidade: {speed}<br>Rumo: {heading}°",
 },
 
+# ---- Map sub-tabs (helipad map vs. live traffic) — added when the live-traffic
+# layer was pulled out of the main Folium map into its own view, so a live ADS-B
+# feed (unrelated to the YOLO pipeline) never visually blends with the helipad
+# detection map. "Beta" in the tab label is a permanent, deliberate signal: this
+# view depends on a third-party feed and a best-effort classification heuristic,
+# not on this project's own model or dataset.
+"map.subtab_helipads": {
+    "en": "🗺️ Helipad Map",
+    "pt": "🗺️ Mapa de Helipontos",
+},
+
+"map.subtab_flights": {
+    "en": "🚁 Live Traffic · Beta",
+    "pt": "🚁 Tráfego ao Vivo · Beta",
+},
+
+"map.flights_notice_short": {
+    "en": "Live aircraft positions near São Paulo, from a third-party feed — helicopter identification is best-effort, not guaranteed. Details below.",
+    "pt": "Posições de aeronaves ao vivo perto de São Paulo, vindas de um feed de terceiros — a identificação de helicóptero é um melhor esforço, não uma garantia. Detalhes abaixo.",
+},
+
+"map.flights_details_title": {
+    "en": "ℹ️ How this works, and its limitations (technical details)",
+    "pt": "ℹ️ Como isso funciona, e suas limitações (detalhes técnicos)",
+},
+
+"map.flights_legend_title": {
+    "en": "Legend",
+    "pt": "Legenda",
+},
+
    
 ## ---- Tab 5: Pipeline ----
 "pipeline.subheader": {
@@ -3129,485 +3160,537 @@ with tab3:
 with tab4:
     st.subheader(t("map.subheader"))
 
-    col_caption, col_toggle = st.columns([4, 1])
-    with col_caption:
-        st.caption(t("map.caption"))
-    with col_toggle:
-        dark_mode = st.toggle(t("map.dark_mode"), value=True, key="map_theme")
+    map_subtab_helipads, map_subtab_flights = st.tabs([
+        t("map.subtab_helipads"), t("map.subtab_flights")
+    ])
 
-    map_tiles = "OSM dark" if dark_mode else "OSM light"
-    map_tiles_label = t("map.dark_base") if dark_mode else t("map.light_base")
+    with map_subtab_helipads:
+        col_caption, col_toggle = st.columns([4, 1])
+        with col_caption:
+            st.caption(t("map.caption"))
+        with col_toggle:
+            dark_mode = st.toggle(t("map.dark_mode"), value=True, key="map_theme")
 
-    sp_df = load_helipad_locations(SP_COORDS_CSV)
-    other_df = load_helipad_locations(COORDS_CSV)
-    state_lookup = load_state_lookup(COORDS_CSV)
+        map_tiles = "OSM dark" if dark_mode else "OSM light"
+        map_tiles_label = t("map.dark_base") if dark_mode else t("map.light_base")
 
-    if sp_df.empty and other_df.empty:
-        st.info(t("map.no_coords.info").format(sp=SP_COORDS_CSV, other=COORDS_CSV))
-    else:
-        lat_parts = [df["lat"] for df in (sp_df, other_df) if not df.empty]
-        lon_parts = [df["lon"] for df in (sp_df, other_df) if not df.empty]
-        center_lat = pd.concat(lat_parts).mean() if lat_parts else -23.5505  # fallback: São Paulo center
-        center_lon = pd.concat(lon_parts).mean() if lon_parts else -46.6333
+        sp_df = load_helipad_locations(SP_COORDS_CSV)
+        other_df = load_helipad_locations(COORDS_CSV)
+        state_lookup = load_state_lookup(COORDS_CSV)
 
-        # tiles=None avoids Folium auto-adding a base layer with an internal,
-        # unreadable name (e.g. "cartodbdarkmatter") to the layer control —
-        # we add our own TileLayer below, built from an explicit URL template
-        # (not a Folium preset string) so our friendly `name=` is always honored.
-        fmap = folium.Map(location=[center_lat, center_lon], zoom_start=5, tiles=None)
-        # container_id="map_div": this map is rendered via st_folium() further
-        # down, which hardcodes the map into a div with that literal id
-        # regardless of Folium's own generated name — see add_osm_tile_layer's
-        # docstring for how this was confirmed.
-        # control=False: the layer-control panel that used to float on top of
-        # the map (basemap name + the 3 feature-group checkboxes below) was
-        # moved out of the map canvas entirely, into the Streamlit checkboxes
-        # right below — this tile layer has nothing left to be listed in.
-        add_osm_tile_layer(fmap, dark_mode, name=map_tiles_label, control=False, container_id="map_div")
+        if sp_df.empty and other_df.empty:
+            st.info(t("map.no_coords.info").format(sp=SP_COORDS_CSV, other=COORDS_CSV))
+        else:
+            lat_parts = [df["lat"] for df in (sp_df, other_df) if not df.empty]
+            lon_parts = [df["lon"] for df in (sp_df, other_df) if not df.empty]
+            center_lat = pd.concat(lat_parts).mean() if lat_parts else -23.5505  # fallback: São Paulo center
+            center_lon = pd.concat(lon_parts).mean() if lon_parts else -46.6333
 
-        # Field-validation results (helipads found per region), loaded early so
-        # the training-region markers below can show a count, not just a name.
-        field_summary_for_map = load_field_detection_summary()
-        regions_by_slug = {}
-        min_rate, max_rate = 0.0, 1.0
-        if field_summary_for_map:
-            regions_by_slug = {r["region"]: r for r in field_summary_for_map.get("regions", [])}
-            rates = [r["detection_rate"] for r in regions_by_slug.values()]
-            min_rate, max_rate = (min(rates), max(rates)) if rates else (0.0, 1.0)
+            # tiles=None avoids Folium auto-adding a base layer with an internal,
+            # unreadable name (e.g. "cartodbdarkmatter") to the layer control —
+            # we add our own TileLayer below, built from an explicit URL template
+            # (not a Folium preset string) so our friendly `name=` is always honored.
+            fmap = folium.Map(location=[center_lat, center_lon], zoom_start=5, tiles=None)
+            # container_id="map_div": this map is rendered via st_folium() further
+            # down, which hardcodes the map into a div with that literal id
+            # regardless of Folium's own generated name — see add_osm_tile_layer's
+            # docstring for how this was confirmed.
+            # control=False: the layer-control panel that used to float on top of
+            # the map (basemap name + the 3 feature-group checkboxes below) was
+            # moved out of the map canvas entirely, into the Streamlit checkboxes
+            # right below — this tile layer has nothing left to be listed in.
+            add_osm_tile_layer(fmap, dark_mode, name=map_tiles_label, control=False, container_id="map_div")
 
-        # Layer visibility now lives here, as ordinary Streamlit checkboxes
-        # above the map, instead of Leaflet's own floating control panel that
-        # used to sit on top of (and cover part of) the map canvas.
-        st.caption(t("map.layers_caption"))
-        col_l1, col_l2, col_l3, col_l4 = st.columns(4)
-        with col_l1:
-            show_sp_layer = st.checkbox(f"🔴 {t('map.sp_layer')} ({len(sp_df)})", value=True, key="map_show_sp")
-        with col_l2:
-            show_other_layer = st.checkbox(f"🔵 {t('map.other_layer')} ({len(other_df)})", value=True, key="map_show_other")
-        with col_l3:
-            show_detection_layer = st.checkbox(t("map.detection_rate_layer"), value=True, key="map_show_detection")
-        with col_l4:
-            show_flights_layer = st.checkbox(t("map.flights_layer"), value=True, key="map_show_flights")
+            # Field-validation results (helipads found per region), loaded early so
+            # the training-region markers below can show a count, not just a name.
+            field_summary_for_map = load_field_detection_summary()
+            regions_by_slug = {}
+            min_rate, max_rate = 0.0, 1.0
+            if field_summary_for_map:
+                regions_by_slug = {r["region"]: r for r in field_summary_for_map.get("regions", [])}
+                rates = [r["detection_rate"] for r in regions_by_slug.values()]
+                min_rate, max_rate = (min(rates), max(rates)) if rates else (0.0, 1.0)
 
-        sp_layer = folium.FeatureGroup(name=f"🔴 {t('map.sp_layer')} ({len(sp_df)})", show=True)
-        for _, row in sp_df.iterrows():
-            raw_name = row.get("Nome do Bairro", "Unknown")
-            name = format_region_display(raw_name)
-            region_stats = regions_by_slug.get(slugify_region(raw_name))
+            # Layer visibility now lives here, as ordinary Streamlit checkboxes
+            # above the map, instead of Leaflet's own floating control panel that
+            # used to sit on top of (and cover part of) the map canvas.
+            st.caption(t("map.layers_caption"))
+            col_l1, col_l2, col_l3 = st.columns(3)
+            with col_l1:
+                show_sp_layer = st.checkbox(f"🔴 {t('map.sp_layer')} ({len(sp_df)})", value=True, key="map_show_sp")
+            with col_l2:
+                show_other_layer = st.checkbox(f"🔵 {t('map.other_layer')} ({len(other_df)})", value=True, key="map_show_other")
+            with col_l3:
+                show_detection_layer = st.checkbox(t("map.detection_rate_layer"), value=True, key="map_show_detection")
+            # Live helicopter traffic (adsb.fi) moved out of this layer-toggle row into
+            # its own sub-tab — see "map.subtab_flights" below — so it never renders as
+            # a 4th checkbox mixed in with the YOLO/dataset-derived map layers above.
 
-            if region_stats is not None:
-                found = region_stats["tiles_detected"]
-                rate = region_stats["detection_rate"]
-                tooltip_text = f"{name} · {found} {t('map.tiles_detected')} ({rate*100:.1f}%)"
-                # Same blue_scale color-coding as the detection-rate circles
-                # (detection_rate_to_color), applied to BOTH the hover
-                # tooltip and the click popup here — per explicit request,
-                # one shared blue signal for "how many points this region
-                # has" everywhere that number shows up, rather than a
-                # separate color per marker family.
-                color = detection_rate_to_color(rate, min_rate, max_rate)
-                text_color = readable_text_color(color)
-                tooltip_style = (
-                    f"background-color:{color}; color:{text_color}; "
-                    f"border:1px solid {text_color}22; border-radius:4px; "
-                    f"padding:4px 8px; font-weight:600; box-shadow:0 1px 4px rgba(0,0,0,0.35);"
-                )
-                tooltip = folium.Tooltip(tooltip_text, style=tooltip_style)
-                popup_html = rate_popup_html(
-                    f"<b>{name}</b><br>{t('map.training_region')}<br>"
-                    f"🚁 <b>{found}</b> {t('map.tiles_detected')} "
-                    f"({region_stats['tiles_detected']}/{region_stats['tiles_total']} · {rate*100:.1f}%)",
-                    color, text_color,
-                )
-            else:
-                tooltip = tooltip_text = name
-                popup_html = f"<b>{name}</b><br>{t('map.training_region')}"
-
-            folium.Marker(
-                location=[row["lat"], row["lon"]],
-                popup=folium.Popup(popup_html, max_width=250),
-                tooltip=tooltip,
-                icon=folium.Icon(color="red", icon="home"),
-            ).add_to(sp_layer)
-        if show_sp_layer:
-            sp_layer.add_to(fmap)
-
-        other_layer = folium.FeatureGroup(name=f"🔵 {t('map.other_layer')} ({len(other_df)})", show=True)
-        for _, row in other_df.iterrows():
-            neighborhood = row.get("Nome do Bairro", "Unknown")
-            hint = location_hint(row["lat"], row["lon"], row.get("Coordenadas da Bounding Box", ""), state_lookup)
-            display_name = f"{neighborhood} ({hint})" if hint else neighborhood
-            timestamp = row.get("Carimbo de data/hora", "")
-            folium.Marker(
-                location=[row["lat"], row["lon"]],
-                popup=folium.Popup(f"<b>{display_name}</b><br>{timestamp}", max_width=250),
-                tooltip=display_name,
-                icon=folium.Icon(color="blue", icon="info-sign"),
-            ).add_to(other_layer)
-        if show_other_layer:
-            other_layer.add_to(fmap)
-
-        # ---- Layer 3: field detection rate by region (blue scale, same as tables) ----
-        if regions_by_slug and not sp_df.empty:
-            detection_layer = folium.FeatureGroup(name=t("map.detection_rate_layer"), show=True)
-            matched = 0
+            sp_layer = folium.FeatureGroup(name=f"🔴 {t('map.sp_layer')} ({len(sp_df)})", show=True)
             for _, row in sp_df.iterrows():
-                name = row.get("Nome do Bairro", "")
-                slug = slugify_region(name)
-                region_stats = regions_by_slug.get(slug)
-                if region_stats is None:
-                    continue
-                matched += 1
-                display_name = format_region_display(name)
-                rate = region_stats["detection_rate"]
-                color = detection_rate_to_color(rate, min_rate, max_rate)
-                text_color = readable_text_color(color)
-                # Tooltip background matches this marker's own fill color (same
-                # blue_scale gradient, light=low rate -> navy=high rate), so
-                # the hover balloon reads as an extension of the marker's own
-                # color-coding instead of a plain white Leaflet default.
-                tooltip = folium.Tooltip(
-                    f"{display_name}: {region_stats['tiles_detected']}/{region_stats['tiles_total']} ({rate*100:.1f}%)",
-                    style=(
+                raw_name = row.get("Nome do Bairro", "Unknown")
+                name = format_region_display(raw_name)
+                region_stats = regions_by_slug.get(slugify_region(raw_name))
+
+                if region_stats is not None:
+                    found = region_stats["tiles_detected"]
+                    rate = region_stats["detection_rate"]
+                    tooltip_text = f"{name} · {found} {t('map.tiles_detected')} ({rate*100:.1f}%)"
+                    # Same blue_scale color-coding as the detection-rate circles
+                    # (detection_rate_to_color), applied to BOTH the hover
+                    # tooltip and the click popup here — per explicit request,
+                    # one shared blue signal for "how many points this region
+                    # has" everywhere that number shows up, rather than a
+                    # separate color per marker family.
+                    color = detection_rate_to_color(rate, min_rate, max_rate)
+                    text_color = readable_text_color(color)
+                    tooltip_style = (
                         f"background-color:{color}; color:{text_color}; "
                         f"border:1px solid {text_color}22; border-radius:4px; "
                         f"padding:4px 8px; font-weight:600; box-shadow:0 1px 4px rgba(0,0,0,0.35);"
-                    ),
-                )
-                folium.CircleMarker(
+                    )
+                    tooltip = folium.Tooltip(tooltip_text, style=tooltip_style)
+                    popup_html = rate_popup_html(
+                        f"<b>{name}</b><br>{t('map.training_region')}<br>"
+                        f"🚁 <b>{found}</b> {t('map.tiles_detected')} "
+                        f"({region_stats['tiles_detected']}/{region_stats['tiles_total']} · {rate*100:.1f}%)",
+                        color, text_color,
+                    )
+                else:
+                    tooltip = tooltip_text = name
+                    popup_html = f"<b>{name}</b><br>{t('map.training_region')}"
+
+                folium.Marker(
                     location=[row["lat"], row["lon"]],
-                    radius=10 + rate * 40,
-                    color=color,
-                    fill=True,
-                    fill_color=color,
-                    fill_opacity=0.85,
+                    popup=folium.Popup(popup_html, max_width=250),
                     tooltip=tooltip,
-                    popup=folium.Popup(
-                        rate_popup_html(
-                            f"<b>{display_name}</b><br>"
-                            f"{region_stats['tiles_detected']} {t('map.tiles_detected')}<br>"
-                            f"{t('map.rate')}: {rate*100:.1f}%",
-                            color, text_color,
+                    icon=folium.Icon(color="red", icon="home"),
+                ).add_to(sp_layer)
+            if show_sp_layer:
+                sp_layer.add_to(fmap)
+
+            other_layer = folium.FeatureGroup(name=f"🔵 {t('map.other_layer')} ({len(other_df)})", show=True)
+            for _, row in other_df.iterrows():
+                neighborhood = row.get("Nome do Bairro", "Unknown")
+                hint = location_hint(row["lat"], row["lon"], row.get("Coordenadas da Bounding Box", ""), state_lookup)
+                display_name = f"{neighborhood} ({hint})" if hint else neighborhood
+                timestamp = row.get("Carimbo de data/hora", "")
+                folium.Marker(
+                    location=[row["lat"], row["lon"]],
+                    popup=folium.Popup(f"<b>{display_name}</b><br>{timestamp}", max_width=250),
+                    tooltip=display_name,
+                    icon=folium.Icon(color="blue", icon="info-sign"),
+                ).add_to(other_layer)
+            if show_other_layer:
+                other_layer.add_to(fmap)
+
+            # ---- Layer 3: field detection rate by region (blue scale, same as tables) ----
+            if regions_by_slug and not sp_df.empty:
+                detection_layer = folium.FeatureGroup(name=t("map.detection_rate_layer"), show=True)
+                matched = 0
+                for _, row in sp_df.iterrows():
+                    name = row.get("Nome do Bairro", "")
+                    slug = slugify_region(name)
+                    region_stats = regions_by_slug.get(slug)
+                    if region_stats is None:
+                        continue
+                    matched += 1
+                    display_name = format_region_display(name)
+                    rate = region_stats["detection_rate"]
+                    color = detection_rate_to_color(rate, min_rate, max_rate)
+                    text_color = readable_text_color(color)
+                    # Tooltip background matches this marker's own fill color (same
+                    # blue_scale gradient, light=low rate -> navy=high rate), so
+                    # the hover balloon reads as an extension of the marker's own
+                    # color-coding instead of a plain white Leaflet default.
+                    tooltip = folium.Tooltip(
+                        f"{display_name}: {region_stats['tiles_detected']}/{region_stats['tiles_total']} ({rate*100:.1f}%)",
+                        style=(
+                            f"background-color:{color}; color:{text_color}; "
+                            f"border:1px solid {text_color}22; border-radius:4px; "
+                            f"padding:4px 8px; font-weight:600; box-shadow:0 1px 4px rgba(0,0,0,0.35);"
                         ),
-                        max_width=250,
-                    ),
-                ).add_to(detection_layer)
-            if matched and show_detection_layer:
-                detection_layer.add_to(fmap)
+                    )
+                    folium.CircleMarker(
+                        location=[row["lat"], row["lon"]],
+                        radius=10 + rate * 40,
+                        color=color,
+                        fill=True,
+                        fill_color=color,
+                        fill_opacity=0.85,
+                        tooltip=tooltip,
+                        popup=folium.Popup(
+                            rate_popup_html(
+                                f"<b>{display_name}</b><br>"
+                                f"{region_stats['tiles_detected']} {t('map.tiles_detected')}<br>"
+                                f"{t('map.rate')}: {rate*100:.1f}%",
+                                color, text_color,
+                            ),
+                            max_width=250,
+                        ),
+                    ).add_to(detection_layer)
+                if matched and show_detection_layer:
+                    detection_layer.add_to(fmap)
 
-        # ---- Layer 4: live helicopter traffic (adsb.fi, ADS-B) ----
-        if show_flights_layer:
-            st.caption(t("map.flights_caption"))
-            st.warning(t("map.flights_disclaimer"))
+            # Live helicopter traffic (adsb.fi) used to render here as "Layer 4" of
+            # this same map. It now has its own sub-tab — see map_subtab_flights,
+            # rendered right after this `with map_subtab_helipads:` block — built as
+            # a separate folium.Map so it never shares a canvas with the YOLO/dataset
+            # helipad layers above.
 
-            refresh_col, time_col = st.columns([1, 3])
-            with refresh_col:
-                if st.button(t("map.flights_refresh"), key="flights_refresh_btn"):
-                    fetch_live_helicopter_flights.clear()
+            # The layer-control panel that used to render here (folium.LayerControl,
+            # floating over the map's top-right corner) was replaced by the
+            # Streamlit checkboxes above, outside the map canvas.
+            _force_leaflet_resize(fmap)
 
-            flights, flights_err = fetch_live_helicopter_flights()
+            st.write(t("map.summary").format(sp=len(sp_df), other=len(other_df)))
+            map_state = st_folium(fmap, use_container_width=True, height=520, key=f"main_map_{map_tiles}")
 
-            with time_col:
-                st.caption(t("map.flights_last_update").format(time=datetime.now().strftime("%H:%M:%S")))
+            # ---- Helicopter reacts to real zoom: turn, land, pause, take off ----
+            # st_folium returns the live zoom/center of the Leaflet map after every
+            # pan/zoom, so "zoomed into a region" below is real map state, not a
+            # simulated one. When the visible center sits close enough to one of
+            # the SP training-region markers at a close-enough zoom, the ambient
+            # helicopter (persistent overlay defined earlier in this file) plays a
+            # bank-turn > land > pause > take-off sequence and a toast names the
+            # region, then it resumes its normal patrol.
+            #
+            # The touchdown spot is viewport-relative (bottom-center), not a
+            # pixel-accurate landing on the Leaflet marker itself: the map lives
+            # inside streamlit-folium's own nested iframe with its own coordinate
+            # system, and translating a lat/lon into the parent page's pixel
+            # space would need a second round-trip through Leaflet's internal
+            # projection — too fragile to chase for a decorative flourish.
+            #
+            # This runs as its OWN components.html call (its own iframe/script
+            # scope) rather than reusing the functions defined in the main
+            # helicopter script above, because two separate components.html
+            # iframes never share JS scope even though both inject into the same
+            # parent document. The one thing they DO share is the actual DOM node
+            # (`#heli-flyby-global`) and its `dataset` attributes, which is used
+            # here the same way `heli_replay_nonce`/`heli_spin_nonce` are used
+            # above: a nonce written by Python, compared against the last nonce
+            # the DOM element remembers, so the sequence fires once per landing
+            # rather than once per rerun.
+            LAND_ZOOM_THRESHOLD = 12
+            LAND_DISTANCE_DEG = 0.08  # ~9 km at this latitude — generous on purpose
 
-            if flights_err:
-                st.info(t("map.flights_error").format(err=flights_err))
+            landed_region = None
+            if map_state and not sp_df.empty:
+                zoom_level = map_state.get("zoom")
+                center = map_state.get("center") or {}
+                center_lat_live, center_lon_live = center.get("lat"), center.get("lng")
+                if zoom_level is not None and zoom_level >= LAND_ZOOM_THRESHOLD \
+                        and center_lat_live is not None and center_lon_live is not None:
+                    distances = ((sp_df["lat"] - center_lat_live) ** 2 + (sp_df["lon"] - center_lon_live) ** 2) ** 0.5
+                    nearest_idx = distances.idxmin()
+                    if distances.loc[nearest_idx] <= LAND_DISTANCE_DEG:
+                        landed_region = format_region_display(sp_df.loc[nearest_idx, "Nome do Bairro"])
+
+            if landed_region != st.session_state.get("heli_landed_region"):
+                st.session_state["heli_landed_region"] = landed_region
+                st.session_state["heli_land_nonce"] = st.session_state.get("heli_land_nonce", 0) + 1
+
+            if landed_region:
+                region_name_js = json.dumps(landed_region)
+                components.html(f"""
+                <script>
+                (function() {{
+                  try {{
+                    var doc = window.parent.document;
+                    var heli = doc.getElementById('heli-flyby-global');
+                    if (!heli) return; // main helicopter overlay hasn't mounted yet — skip this run
+
+                    var landNonce = "{st.session_state['heli_land_nonce']}";
+                    if (heli.dataset.lastLandNonce === landNonce) return; // already played this landing
+                    heli.dataset.lastLandNonce = landNonce;
+
+                    var isPt = "{st.session_state.get('lang', 'pt')}" === 'pt';
+                    var isPaused = {"true" if st.session_state.get("heli_paused") else "false"};
+                    if (isPaused) return; // respect the sidebar pause toggle — don't force a landing over it
+                    var regionName = {region_name_js};
+
+                    if (!doc.getElementById('heli-landing-style')) {{
+                      var style = doc.createElement('style');
+                      style.id = 'heli-landing-style';
+                      style.textContent = `
+                        @keyframes heli-land-sequence {{
+                          0%   {{ top: var(--heli-cur-top); left: var(--heli-cur-left); transform: rotate(0deg) scale(1); }}
+                          25%  {{ transform: rotate(-22deg) scale(0.95); }}
+                          50%  {{ top: calc(100vh - 150px); left: 48%; transform: rotate(8deg) scale(0.88); }}
+                          75%  {{ top: calc(100vh - 110px); left: 48%; transform: rotate(-4deg) scale(0.80); }}
+                          100% {{ top: calc(100vh - 92px);  left: 48%; transform: rotate(0deg)  scale(0.72); }}
+                        }}
+                        @keyframes heli-takeoff-sequence {{
+                          0%   {{ top: calc(100vh - 92px);  left: 48%; transform: rotate(0deg)   scale(0.72); }}
+                          35%  {{ top: calc(100vh - 150px); left: 48%; transform: rotate(-14deg) scale(0.85); }}
+                          100% {{ top: 64px; left: 48%; transform: rotate(-4deg) scale(1); }}
+                        }}
+                        #heli-landing-pad {{
+                          position: fixed; left: 48%; top: calc(100vh - 58px); width: 46px; height: 14px;
+                          transform: translateX(-50%); border-radius: 50%;
+                          background: radial-gradient(ellipse at center, rgba(14,117,109,0.55), rgba(14,117,109,0) 72%);
+                          z-index: 999997; opacity: 0; transition: opacity .4s ease; pointer-events: none;
+                        }}
+                        #heli-landing-pad.show {{ opacity: 1; }}
+                      `;
+                      doc.head.appendChild(style);
+                    }}
+
+                    var pad = doc.getElementById('heli-landing-pad');
+                    if (!pad) {{
+                      pad = doc.createElement('div');
+                      pad.id = 'heli-landing-pad';
+                      doc.body.appendChild(pad);
+                    }}
+
+                    var toast = doc.getElementById('heli-tab-toast');
+                    function announce(text, ms) {{
+                      if (!toast) return;
+                      toast.textContent = text;
+                      toast.classList.add('show');
+                      clearTimeout(toast.dataset._landTimer);
+                      toast.dataset._landTimer = setTimeout(function() {{
+                        toast.classList.remove('show');
+                      }}, ms);
+                    }}
+
+                    // Same 4 patrol flights the main script uses, duplicated here
+                    // (small maintenance cost) since this iframe can't reach the
+                    // other iframe's FLIGHTS array — see comment above.
+                    var FLIGHTS = [
+                      {{ name: 'heli-fly-v0', duration: 7  }},
+                      {{ name: 'heli-fly-v1', duration: 11 }},
+                      {{ name: 'heli-fly-v2', duration: 9  }},
+                      {{ name: 'heli-fly-v3', duration: 6  }},
+                    ];
+
+                    // 1) Freeze current position into CSS vars, then bank-turn + descend.
+                    var rect = heli.getBoundingClientRect();
+                    heli.style.setProperty('--heli-cur-top', rect.top + 'px');
+                    heli.style.setProperty('--heli-cur-left', ((rect.left / doc.documentElement.clientWidth) * 100) + '%');
+                    heli.style.animation = 'none';
+                    void heli.offsetWidth;
+                    heli.style.animation = 'heli-land-sequence 2.2s cubic-bezier(.3,.6,.3,1) forwards';
+                    announce((isPt ? '🚁 Pousando em ' : '🚁 Landing in ') + regionName + '...', 2200);
+
+                    // 2) Touch down: glow the pad, pause on the ground.
+                    setTimeout(function() {{
+                      pad.classList.add('show');
+                    }}, 2100);
+
+                    // 3) Take back off after a short dwell on the ground.
+                    setTimeout(function() {{
+                      pad.classList.remove('show');
+                      announce((isPt ? '🚁 Decolando de ' : '🚁 Taking off from ') + regionName + '...', 2000);
+                      heli.style.animation = 'none';
+                      void heli.offsetWidth;
+                      heli.style.animation = 'heli-takeoff-sequence 1.8s cubic-bezier(.3,.1,.3,1) forwards';
+                    }}, 4300);
+
+                    // 4) Resume normal patrol once the take-off climb finishes.
+                    setTimeout(function() {{
+                      var f = FLIGHTS[Math.floor(Math.random() * FLIGHTS.length)];
+                      heli.style.left = '0';
+                      heli.style.animation = 'none';
+                      void heli.offsetWidth;
+                      heli.style.animation = f.name + ' ' + f.duration + 's cubic-bezier(.45,.05,.55,.95) infinite alternate';
+                    }}, 6150);
+                  }} catch (e) {{ /* cross-origin iframe — feature unavailable in this Streamlit setup */ }}
+                }})();
+                </script>
+                """, height=0)
+
+            st.markdown(f"#### {t('map.raw_data_expander')}")
+            with st.expander(t("map.raw_data_expander"), expanded=True):
+                t1, t2 = st.tabs([t("map.raw_data.sp_tab"), t("map.raw_data.other_tab")])
+                with t1:
+                    sp_df_display = sp_df.copy()
+                    if "Nome do Bairro" in sp_df_display.columns:
+                        _segment_word = "Trecho" if st.session_state.get("lang") == "pt" else "Segment"
+                        sp_df_display["Nome do Bairro"] = sp_df_display["Nome do Bairro"].astype(str).str.replace(
+                            r"\btrecho\b", _segment_word, regex=True, case=False
+                        )
+                    sp_df_display.index = range(1, len(sp_df_display) + 1)
+                    st.dataframe(sp_df_display, use_container_width=True)
+                with t2:
+                    other_df_display = other_df.copy()
+                    if not other_df_display.empty:
+                        city_col = t("map.raw_data.city_hint_col")
+                        other_df_display[city_col] = other_df_display.apply(
+                            lambda r: location_hint(
+                                r["lat"], r["lon"], r.get("Coordenadas da Bounding Box", ""), state_lookup
+                            ) or "—",
+                            axis=1,
+                        )
+                        # Most human-readable/general first (which state, which
+                        # neighborhood), then the precise numbers, then the raw
+                        # source string, timestamp metadata last — a zoom-in
+                        # from "where is this, in words" to "the exact technical
+                        # record it came from".
+                        _preferred_order = [
+                            city_col, "Nome do Bairro", "lat", "lon",
+                            "Coordenadas da Bounding Box", "Carimbo de data/hora",
+                        ]
+                        other_df_display = other_df_display[
+                            [c for c in _preferred_order if c in other_df_display.columns]
+                            + [c for c in other_df_display.columns if c not in _preferred_order]
+                        ]
+                        other_df_display.index = range(1, len(other_df_display) + 1)
+                    st.dataframe(other_df_display, use_container_width=True)
+
+            st.divider()
+            col_density_title, col_density_toggle = st.columns([4, 1])
+            with col_density_title:
+                st.subheader(t("map.density.subheader"))
+                st.caption(t("map.density.caption"))
+            with col_density_toggle:
+                density_dark_mode = st.toggle(t("map.dark_mode"), value=True, key="density_map_theme")
+
+            if other_df.empty:
+                st.info(t("map.density.no_coords").format(path=COORDS_CSV))
             else:
-                update_flight_trails(flights)
-                st.caption(t("map.flights_count").format(n=len(flights)))
+                dark_map = folium.Map(
+                    location=[other_df["lat"].mean(), other_df["lon"].mean()],
+                    zoom_start=5,
+                    tiles=None,
+                )
+                add_osm_tile_layer(dark_map, density_dark_mode, control=False)
+                for _, row in other_df.iterrows():
+                    hint = location_hint(row["lat"], row["lon"], row.get("Coordenadas da Bounding Box", ""), state_lookup)
+                    display_name = f"{row.get('Nome do Bairro', 'Unknown')} ({hint})" if hint else row.get("Nome do Bairro", "Unknown")
+                    folium.CircleMarker(
+                        location=[row["lat"], row["lon"]],
+                        radius=5,
+                        color="#00CED1",
+                        fill=True,
+                        fill_color="#00CED1",
+                        fill_opacity=0.8,
+                        tooltip=display_name,
+                    ).add_to(dark_map)
+                HeatMap(
+                    other_df[["lat", "lon"]].values.tolist(),
+                    radius=18,
+                    blur=22,
+                    gradient={"0.2": "#FFF8DC", "0.5": "#FFA855", "0.8": "#FF7804", "1.0": "#FF6800"},
+                ).add_to(dark_map)
+                _force_leaflet_resize(dark_map)
+                # Rendered as a plain HTML embed (not st_folium) because this view never
+                # needs the map's returned click/data — st_folium is a bidirectional custom
+                # component that negotiates its iframe height with the browser on mount, and
+                # that handshake was unreliable as the *second* such component on this tab
+                # (it kept rendering at 0 height until some later rerun, e.g. toggling Dark
+                # mode, happened to re-trigger it). components.html() just embeds static HTML
+                # in a fixed-height iframe, no handshake needed, so it always paints on the
+                # very first render.
+                components.html(dark_map.get_root().render(), height=550, scrolling=False)
 
-                flights_layer = folium.FeatureGroup(name=t("map.flights_layer"), show=True)
-                trails = st.session_state.get("flight_trails", {})
-                for f in flights:
-                    trail = trails.get(f["icao24"], [])
-                    if len(trail) > 1:
-                        folium.PolyLine(
-                            trail, color="#FF2500", weight=2, opacity=0.6, dash_array="4 6",
-                        ).add_to(flights_layer)
+    with map_subtab_flights:
+        # Standalone view: deliberately its own folium.Map (not a layer toggle on
+        # the helipad map above) — this is live ADS-B telemetry from a third-party
+        # feed (adsb.fi), unrelated to the satellite-image / YOLO pipeline used
+        # everywhere else in this app, and must never visually blend with it.
+        st.info(t("map.flights_notice_short"), icon="🛰️")
 
-                    alt_txt = f"{f['altitude_m']:.0f} m" if f["altitude_m"] is not None else "—"
-                    speed_txt = f"{f['speed_ms'] * 3.6:.0f} km/h" if f["speed_ms"] is not None else "—"
-                    is_confirmed = f["confidence"] == "confirmed"
-                    confidence_txt = t("map.flights_confirmed") if is_confirmed else t("map.flights_unconfirmed")
-                    if is_confirmed and f.get("type_code", "—") != "—":
-                        confidence_txt = f"{confidence_txt} ({f['type_code']})"
-                    popup_html = t("map.flights_popup").format(
-                        callsign=f["callsign"], country=f["origin_country"],
-                        alt=alt_txt, speed=speed_txt, heading=int(f["heading"]),
-                        confidence=confidence_txt,
-                    )
-                    # Confirmed rotorcraft (has a real type code matched against
-                    # HELICOPTER_TYPE_CODES) get a solid, full-opacity icon; heuristic/unconfirmed
-                    # candidates render lower-opacity with a "?" badge, so the two
-                    # confidence levels are visually distinguishable on the map itself,
-                    # not only in the popup text.
-                    opacity = "1" if is_confirmed else "0.55"
-                    badge = "" if is_confirmed else (
-                        '<span style="position:absolute; top:-4px; right:-4px; '
-                        'background:#fbbf24; color:#000; border-radius:50%; width:12px; '
-                        'height:12px; font-size:9px; line-height:12px; text-align:center; '
-                        'font-weight:700;">?</span>'
-                    )
-                    icon_html = (
-                        f'<div style="position:relative; font-size:20px; line-height:1; opacity:{opacity};">'
-                        f'<div style="transform: rotate({int(f["heading"])}deg);">🚁</div>{badge}</div>'
-                    )
-                    folium.Marker(
-                        location=[f["lat"], f["lon"]],
-                        popup=folium.Popup(popup_html, max_width=240),
-                        tooltip=f"{f['callsign']} — {confidence_txt}",
-                        icon=folium.DivIcon(html=icon_html, icon_size=(24, 24), icon_anchor=(12, 12)),
-                    ).add_to(flights_layer)
-                flights_layer.add_to(fmap)
-
+        with st.expander(t("map.flights_details_title"), expanded=False):
+            st.markdown(t("map.flights_caption"))
+            st.markdown(t("map.flights_disclaimer"))
             st.caption(t("map.flights_trail_note"))
 
-        # The layer-control panel that used to render here (folium.LayerControl,
-        # floating over the map's top-right corner) was replaced by the
-        # Streamlit checkboxes above, outside the map canvas.
-        _force_leaflet_resize(fmap)
-
-        st.write(t("map.summary").format(sp=len(sp_df), other=len(other_df)))
-        map_state = st_folium(fmap, use_container_width=True, height=520, key=f"main_map_{map_tiles}")
-
-        # ---- Helicopter reacts to real zoom: turn, land, pause, take off ----
-        # st_folium returns the live zoom/center of the Leaflet map after every
-        # pan/zoom, so "zoomed into a region" below is real map state, not a
-        # simulated one. When the visible center sits close enough to one of
-        # the SP training-region markers at a close-enough zoom, the ambient
-        # helicopter (persistent overlay defined earlier in this file) plays a
-        # bank-turn > land > pause > take-off sequence and a toast names the
-        # region, then it resumes its normal patrol.
-        #
-        # The touchdown spot is viewport-relative (bottom-center), not a
-        # pixel-accurate landing on the Leaflet marker itself: the map lives
-        # inside streamlit-folium's own nested iframe with its own coordinate
-        # system, and translating a lat/lon into the parent page's pixel
-        # space would need a second round-trip through Leaflet's internal
-        # projection — too fragile to chase for a decorative flourish.
-        #
-        # This runs as its OWN components.html call (its own iframe/script
-        # scope) rather than reusing the functions defined in the main
-        # helicopter script above, because two separate components.html
-        # iframes never share JS scope even though both inject into the same
-        # parent document. The one thing they DO share is the actual DOM node
-        # (`#heli-flyby-global`) and its `dataset` attributes, which is used
-        # here the same way `heli_replay_nonce`/`heli_spin_nonce` are used
-        # above: a nonce written by Python, compared against the last nonce
-        # the DOM element remembers, so the sequence fires once per landing
-        # rather than once per rerun.
-        LAND_ZOOM_THRESHOLD = 12
-        LAND_DISTANCE_DEG = 0.08  # ~9 km at this latitude — generous on purpose
-
-        landed_region = None
-        if map_state and not sp_df.empty:
-            zoom_level = map_state.get("zoom")
-            center = map_state.get("center") or {}
-            center_lat_live, center_lon_live = center.get("lat"), center.get("lng")
-            if zoom_level is not None and zoom_level >= LAND_ZOOM_THRESHOLD \
-                    and center_lat_live is not None and center_lon_live is not None:
-                distances = ((sp_df["lat"] - center_lat_live) ** 2 + (sp_df["lon"] - center_lon_live) ** 2) ** 0.5
-                nearest_idx = distances.idxmin()
-                if distances.loc[nearest_idx] <= LAND_DISTANCE_DEG:
-                    landed_region = format_region_display(sp_df.loc[nearest_idx, "Nome do Bairro"])
-
-        if landed_region != st.session_state.get("heli_landed_region"):
-            st.session_state["heli_landed_region"] = landed_region
-            st.session_state["heli_land_nonce"] = st.session_state.get("heli_land_nonce", 0) + 1
-
-        if landed_region:
-            region_name_js = json.dumps(landed_region)
-            components.html(f"""
-            <script>
-            (function() {{
-              try {{
-                var doc = window.parent.document;
-                var heli = doc.getElementById('heli-flyby-global');
-                if (!heli) return; // main helicopter overlay hasn't mounted yet — skip this run
-
-                var landNonce = "{st.session_state['heli_land_nonce']}";
-                if (heli.dataset.lastLandNonce === landNonce) return; // already played this landing
-                heli.dataset.lastLandNonce = landNonce;
-
-                var isPt = "{st.session_state.get('lang', 'pt')}" === 'pt';
-                var isPaused = {"true" if st.session_state.get("heli_paused") else "false"};
-                if (isPaused) return; // respect the sidebar pause toggle — don't force a landing over it
-                var regionName = {region_name_js};
-
-                if (!doc.getElementById('heli-landing-style')) {{
-                  var style = doc.createElement('style');
-                  style.id = 'heli-landing-style';
-                  style.textContent = `
-                    @keyframes heli-land-sequence {{
-                      0%   {{ top: var(--heli-cur-top); left: var(--heli-cur-left); transform: rotate(0deg) scale(1); }}
-                      25%  {{ transform: rotate(-22deg) scale(0.95); }}
-                      50%  {{ top: calc(100vh - 150px); left: 48%; transform: rotate(8deg) scale(0.88); }}
-                      75%  {{ top: calc(100vh - 110px); left: 48%; transform: rotate(-4deg) scale(0.80); }}
-                      100% {{ top: calc(100vh - 92px);  left: 48%; transform: rotate(0deg)  scale(0.72); }}
-                    }}
-                    @keyframes heli-takeoff-sequence {{
-                      0%   {{ top: calc(100vh - 92px);  left: 48%; transform: rotate(0deg)   scale(0.72); }}
-                      35%  {{ top: calc(100vh - 150px); left: 48%; transform: rotate(-14deg) scale(0.85); }}
-                      100% {{ top: 64px; left: 48%; transform: rotate(-4deg) scale(1); }}
-                    }}
-                    #heli-landing-pad {{
-                      position: fixed; left: 48%; top: calc(100vh - 58px); width: 46px; height: 14px;
-                      transform: translateX(-50%); border-radius: 50%;
-                      background: radial-gradient(ellipse at center, rgba(14,117,109,0.55), rgba(14,117,109,0) 72%);
-                      z-index: 999997; opacity: 0; transition: opacity .4s ease; pointer-events: none;
-                    }}
-                    #heli-landing-pad.show {{ opacity: 1; }}
-                  `;
-                  doc.head.appendChild(style);
-                }}
-
-                var pad = doc.getElementById('heli-landing-pad');
-                if (!pad) {{
-                  pad = doc.createElement('div');
-                  pad.id = 'heli-landing-pad';
-                  doc.body.appendChild(pad);
-                }}
-
-                var toast = doc.getElementById('heli-tab-toast');
-                function announce(text, ms) {{
-                  if (!toast) return;
-                  toast.textContent = text;
-                  toast.classList.add('show');
-                  clearTimeout(toast.dataset._landTimer);
-                  toast.dataset._landTimer = setTimeout(function() {{
-                    toast.classList.remove('show');
-                  }}, ms);
-                }}
-
-                // Same 4 patrol flights the main script uses, duplicated here
-                // (small maintenance cost) since this iframe can't reach the
-                // other iframe's FLIGHTS array — see comment above.
-                var FLIGHTS = [
-                  {{ name: 'heli-fly-v0', duration: 7  }},
-                  {{ name: 'heli-fly-v1', duration: 11 }},
-                  {{ name: 'heli-fly-v2', duration: 9  }},
-                  {{ name: 'heli-fly-v3', duration: 6  }},
-                ];
-
-                // 1) Freeze current position into CSS vars, then bank-turn + descend.
-                var rect = heli.getBoundingClientRect();
-                heli.style.setProperty('--heli-cur-top', rect.top + 'px');
-                heli.style.setProperty('--heli-cur-left', ((rect.left / doc.documentElement.clientWidth) * 100) + '%');
-                heli.style.animation = 'none';
-                void heli.offsetWidth;
-                heli.style.animation = 'heli-land-sequence 2.2s cubic-bezier(.3,.6,.3,1) forwards';
-                announce((isPt ? '🚁 Pousando em ' : '🚁 Landing in ') + regionName + '...', 2200);
-
-                // 2) Touch down: glow the pad, pause on the ground.
-                setTimeout(function() {{
-                  pad.classList.add('show');
-                }}, 2100);
-
-                // 3) Take back off after a short dwell on the ground.
-                setTimeout(function() {{
-                  pad.classList.remove('show');
-                  announce((isPt ? '🚁 Decolando de ' : '🚁 Taking off from ') + regionName + '...', 2000);
-                  heli.style.animation = 'none';
-                  void heli.offsetWidth;
-                  heli.style.animation = 'heli-takeoff-sequence 1.8s cubic-bezier(.3,.1,.3,1) forwards';
-                }}, 4300);
-
-                // 4) Resume normal patrol once the take-off climb finishes.
-                setTimeout(function() {{
-                  var f = FLIGHTS[Math.floor(Math.random() * FLIGHTS.length)];
-                  heli.style.left = '0';
-                  heli.style.animation = 'none';
-                  void heli.offsetWidth;
-                  heli.style.animation = f.name + ' ' + f.duration + 's cubic-bezier(.45,.05,.55,.95) infinite alternate';
-                }}, 6150);
-              }} catch (e) {{ /* cross-origin iframe — feature unavailable in this Streamlit setup */ }}
-            }})();
-            </script>
-            """, height=0)
-
-        st.markdown(f"#### {t('map.raw_data_expander')}")
-        with st.expander(t("map.raw_data_expander"), expanded=True):
-            t1, t2 = st.tabs([t("map.raw_data.sp_tab"), t("map.raw_data.other_tab")])
-            with t1:
-                sp_df_display = sp_df.copy()
-                if "Nome do Bairro" in sp_df_display.columns:
-                    _segment_word = "Trecho" if st.session_state.get("lang") == "pt" else "Segment"
-                    sp_df_display["Nome do Bairro"] = sp_df_display["Nome do Bairro"].astype(str).str.replace(
-                        r"\btrecho\b", _segment_word, regex=True, case=False
-                    )
-                sp_df_display.index = range(1, len(sp_df_display) + 1)
-                st.dataframe(sp_df_display, use_container_width=True)
-            with t2:
-                other_df_display = other_df.copy()
-                if not other_df_display.empty:
-                    city_col = t("map.raw_data.city_hint_col")
-                    other_df_display[city_col] = other_df_display.apply(
-                        lambda r: location_hint(
-                            r["lat"], r["lon"], r.get("Coordenadas da Bounding Box", ""), state_lookup
-                        ) or "—",
-                        axis=1,
-                    )
-                    # Most human-readable/general first (which state, which
-                    # neighborhood), then the precise numbers, then the raw
-                    # source string, timestamp metadata last — a zoom-in
-                    # from "where is this, in words" to "the exact technical
-                    # record it came from".
-                    _preferred_order = [
-                        city_col, "Nome do Bairro", "lat", "lon",
-                        "Coordenadas da Bounding Box", "Carimbo de data/hora",
-                    ]
-                    other_df_display = other_df_display[
-                        [c for c in _preferred_order if c in other_df_display.columns]
-                        + [c for c in other_df_display.columns if c not in _preferred_order]
-                    ]
-                    other_df_display.index = range(1, len(other_df_display) + 1)
-                st.dataframe(other_df_display, use_container_width=True)
-
-        st.divider()
-        col_density_title, col_density_toggle = st.columns([4, 1])
-        with col_density_title:
-            st.subheader(t("map.density.subheader"))
-            st.caption(t("map.density.caption"))
-        with col_density_toggle:
-            density_dark_mode = st.toggle(t("map.dark_mode"), value=True, key="density_map_theme")
-
-        if other_df.empty:
-            st.info(t("map.density.no_coords").format(path=COORDS_CSV))
-        else:
-            dark_map = folium.Map(
-                location=[other_df["lat"].mean(), other_df["lon"].mean()],
-                zoom_start=5,
-                tiles=None,
+        legend_col1, legend_col2, legend_spacer = st.columns([2, 3, 4])
+        with legend_col1:
+            st.caption(f"**{t('map.flights_legend_title')}**")
+        with legend_col2:
+            st.markdown(
+                '<div style="display:flex; flex-direction:column; gap:4px; font-size:13px;">'
+                '<div><span style="font-size:16px;">🚁</span> ' + t("map.flights_confirmed") + '</div>'
+                '<div><span style="position:relative; display:inline-block; font-size:16px; opacity:.55;">🚁'
+                '<span style="position:absolute; top:-4px; right:-8px; background:#fbbf24; color:#000; '
+                'border-radius:50%; width:11px; height:11px; font-size:8px; line-height:11px; '
+                'text-align:center; font-weight:700;">?</span></span> ' + t("map.flights_unconfirmed") + '</div>'
+                '</div>',
+                unsafe_allow_html=True,
             )
-            add_osm_tile_layer(dark_map, density_dark_mode, control=False)
-            for _, row in other_df.iterrows():
-                hint = location_hint(row["lat"], row["lon"], row.get("Coordenadas da Bounding Box", ""), state_lookup)
-                display_name = f"{row.get('Nome do Bairro', 'Unknown')} ({hint})" if hint else row.get("Nome do Bairro", "Unknown")
-                folium.CircleMarker(
-                    location=[row["lat"], row["lon"]],
-                    radius=5,
-                    color="#00CED1",
-                    fill=True,
-                    fill_color="#00CED1",
-                    fill_opacity=0.8,
-                    tooltip=display_name,
-                ).add_to(dark_map)
-            HeatMap(
-                other_df[["lat", "lon"]].values.tolist(),
-                radius=18,
-                blur=22,
-                gradient={"0.2": "#FFF8DC", "0.5": "#FFA855", "0.8": "#FF7804", "1.0": "#FF6800"},
-            ).add_to(dark_map)
-            _force_leaflet_resize(dark_map)
-            # Rendered as a plain HTML embed (not st_folium) because this view never
-            # needs the map's returned click/data — st_folium is a bidirectional custom
-            # component that negotiates its iframe height with the browser on mount, and
-            # that handshake was unreliable as the *second* such component on this tab
-            # (it kept rendering at 0 height until some later rerun, e.g. toggling Dark
-            # mode, happened to re-trigger it). components.html() just embeds static HTML
-            # in a fixed-height iframe, no handshake needed, so it always paints on the
-            # very first render.
-            components.html(dark_map.get_root().render(), height=550, scrolling=False)
+
+        flights_top1, flights_top2, flights_top3 = st.columns([1, 1, 2])
+        with flights_top1:
+            if st.button(t("map.flights_refresh"), key="flights_refresh_btn"):
+                fetch_live_helicopter_flights.clear()
+        with flights_top2:
+            flights_dark_mode = st.toggle(t("map.dark_mode"), value=True, key="flights_map_theme")
+        with flights_top3:
+            st.caption(t("map.flights_last_update").format(time=datetime.now().strftime("%H:%M:%S")))
+
+        flights, flights_err = fetch_live_helicopter_flights()
+
+        if flights_err:
+            st.info(t("map.flights_error").format(err=flights_err))
+        else:
+            update_flight_trails(flights)
+            st.caption(t("map.flights_count").format(n=len(flights)))
+
+            flights_map = folium.Map(location=[SP_LAT, SP_LON], zoom_start=9, tiles=None)
+            # container_id="map_div": per add_osm_tile_layer's own docstring,
+            # streamlit-folium's frontend hardcodes EVERY st_folium(...) map into
+            # a div with this exact id, regardless of what we pass here — so this
+            # must match, not describe, the real DOM id (a "flights_map_div" id
+            # would silently fail to scope the dark-mode CSS filter). Known
+            # trade-off: since Streamlit keeps hidden-tab content mounted, this
+            # sub-tab's map and the main Helipad Map sub-tab's map can both carry
+            # id="map_div" at once; the dark-mode toggle is per-map in Python, but
+            # the resulting CSS filter is scoped by that shared id, so the two
+            # maps' dark-mode look isn't guaranteed independent. Low-impact here
+            # (both default to dark) — revisit if that ever needs to differ.
+            add_osm_tile_layer(
+                flights_map, flights_dark_mode,
+                name=(t("map.dark_base") if flights_dark_mode else t("map.light_base")),
+                control=False, container_id="map_div",
+            )
+
+            flights_layer = folium.FeatureGroup(name=t("map.flights_layer"), show=True)
+            trails = st.session_state.get("flight_trails", {})
+            for f in flights:
+                trail = trails.get(f["icao24"], [])
+                if len(trail) > 1:
+                    folium.PolyLine(
+                        trail, color="#FF2500", weight=2, opacity=0.6, dash_array="4 6",
+                    ).add_to(flights_layer)
+
+                alt_txt = f"{f['altitude_m']:.0f} m" if f["altitude_m"] is not None else "—"
+                speed_txt = f"{f['speed_ms'] * 3.6:.0f} km/h" if f["speed_ms"] is not None else "—"
+                is_confirmed = f["confidence"] == "confirmed"
+                confidence_txt = t("map.flights_confirmed") if is_confirmed else t("map.flights_unconfirmed")
+                if is_confirmed and f.get("type_code", "—") != "—":
+                    confidence_txt = f"{confidence_txt} ({f['type_code']})"
+                popup_html = t("map.flights_popup").format(
+                    callsign=f["callsign"], country=f["origin_country"],
+                    alt=alt_txt, speed=speed_txt, heading=int(f["heading"]),
+                    confidence=confidence_txt,
+                )
+                # Confirmed rotorcraft (real type code matched against
+                # HELICOPTER_TYPE_CODES) get a solid, full-opacity icon; heuristic/
+                # unconfirmed candidates render lower-opacity with a "?" badge —
+                # same visual language as the legend above.
+                opacity = "1" if is_confirmed else "0.55"
+                badge = "" if is_confirmed else (
+                    '<span style="position:absolute; top:-4px; right:-4px; '
+                    'background:#fbbf24; color:#000; border-radius:50%; width:12px; '
+                    'height:12px; font-size:9px; line-height:12px; text-align:center; '
+                    'font-weight:700;">?</span>'
+                )
+                icon_html = (
+                    f'<div style="position:relative; font-size:20px; line-height:1; opacity:{opacity};">'
+                    f'<div style="transform: rotate({int(f["heading"])}deg);">🚁</div>{badge}</div>'
+                )
+                folium.Marker(
+                    location=[f["lat"], f["lon"]],
+                    popup=folium.Popup(popup_html, max_width=240),
+                    tooltip=f"{f['callsign']} — {confidence_txt}",
+                    icon=folium.DivIcon(html=icon_html, icon_size=(24, 24), icon_anchor=(12, 12)),
+                ).add_to(flights_layer)
+            flights_layer.add_to(flights_map)
+            _force_leaflet_resize(flights_map)
+            st_folium(flights_map, use_container_width=True, height=480, key=f"flights_map_{flights_dark_mode}")
 
 # ====================== TAB 5: Pipeline & Governance ======================
 with tab5:
