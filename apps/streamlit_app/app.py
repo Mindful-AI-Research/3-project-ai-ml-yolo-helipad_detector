@@ -1460,6 +1460,41 @@ def _force_leaflet_resize(fmap: folium.Map) -> None:
     """))
 
 
+def _force_leaflet_fit_bounds(fmap: folium.Map, bounds: list) -> None:
+    """Folium's fit_bounds() bakes a `.fitBounds(...)` call directly into the
+    map's init-time script, which runs the instant the Leaflet map object is
+    created — before streamlit-folium's iframe has finished its own resize
+    handshake with the browser. With a near-zero-size container at that exact
+    moment, Leaflet's fitBounds computes the zoom needed to fit the bounds
+    into that (wrong) size, which for a small area comes out as an extremely
+    zoomed-OUT view (confirmed: a single São Paulo-area point rendered as a
+    whole-world map). invalidateSize() (see _force_leaflet_resize above) only
+    fixes the container's pixel size afterwards — it does not re-run
+    fitBounds, so the bad zoom level sticks. This re-issues both
+    invalidateSize() and fitBounds() together, retried at a few increasing
+    delays, so the correct zoom is recomputed once the container has a real
+    size. Use this INSTEAD of calling fmap.fit_bounds(...) in Python (which
+    would still bake the buggy immediate call) and instead of
+    _force_leaflet_resize for any map that needs to fit real bounds rather
+    than just keep its zoom_start."""
+    map_var = fmap.get_name()
+    bounds_json = json.dumps(bounds)
+    fmap.get_root().html.add_child(folium.Element(f"""
+    <script>
+    (function() {{
+        function refit() {{
+            if (typeof {map_var} !== 'undefined') {{
+                {map_var}.invalidateSize();
+                {map_var}.fitBounds({bounds_json});
+            }}
+        }}
+        [150, 400, 800, 1400, 2200].forEach(function(ms) {{ setTimeout(refit, ms); }});
+        window.addEventListener('load', refit);
+    }})();
+    </script>
+    """))
+
+
 # ========================= AUTOMATIC MODEL DISCOVERY =========================
 # Instead of hardcoding "exp1"/"exp2" in the code, the app scans the runs folder
 # and lists any experiment that has a ready best.pt. This way, running a new
