@@ -3667,28 +3667,54 @@ with tab4:
                     alt=alt_txt, speed=speed_txt, heading=int(f["heading"]),
                     confidence=confidence_txt,
                 )
-                # Confirmed rotorcraft (real type code matched against
-                # HELICOPTER_TYPE_CODES) get a solid, full-opacity icon; heuristic/
-                # unconfirmed candidates render lower-opacity with a "?" badge —
-                # same visual language as the legend above.
-                opacity = "1" if is_confirmed else "0.55"
-                badge = "" if is_confirmed else (
-                    '<span style="position:absolute; top:-4px; right:-4px; '
-                    'background:#fbbf24; color:#000; border-radius:50%; width:12px; '
-                    'height:12px; font-size:9px; line-height:12px; text-align:center; '
-                    'font-weight:700;">?</span>'
+                # A bare emoji on a Leaflet tile pane was hard to spot — it has no
+                # fixed size across browsers/OSes and blends into busy or dark
+                # terrain. Each marker now sits on a solid circular badge (teal for
+                # confirmed rotorcraft, amber-outlined for unconfirmed) with a drop
+                # shadow, so it reads as a marker at a glance instead of a stray
+                # character on the map — same color language as the legend above.
+                badge_bg = "#0E756D" if is_confirmed else "rgba(251,191,36,0.18)"
+                badge_border = "#14b8a6" if is_confirmed else "#fbbf24"
+                qmark = "" if is_confirmed else (
+                    '<span style="position:absolute; top:-5px; right:-5px; '
+                    'background:#fbbf24; color:#000; border-radius:50%; width:14px; '
+                    'height:14px; font-size:10px; line-height:14px; text-align:center; '
+                    'font-weight:700; box-shadow:0 1px 3px rgba(0,0,0,.6);">?</span>'
                 )
                 icon_html = (
-                    f'<div style="position:relative; font-size:20px; line-height:1; opacity:{opacity};">'
-                    f'<div style="transform: rotate({int(f["heading"])}deg);">🚁</div>{badge}</div>'
+                    f'<div style="position:relative; width:34px; height:34px;">'
+                    f'<div style="width:34px; height:34px; border-radius:50%; '
+                    f'background:{badge_bg}; border:2px solid {badge_border}; '
+                    f'display:flex; align-items:center; justify-content:center; '
+                    f'box-shadow:0 2px 8px rgba(0,0,0,.55);">'
+                    f'<div style="font-size:19px; line-height:1; '
+                    f'transform: rotate({int(f["heading"])}deg);">🚁</div></div>{qmark}</div>'
                 )
                 folium.Marker(
                     location=[f["lat"], f["lon"]],
                     popup=folium.Popup(popup_html, max_width=240),
                     tooltip=f"{f['callsign']} — {confidence_txt}",
-                    icon=folium.DivIcon(html=icon_html, icon_size=(24, 24), icon_anchor=(12, 12)),
+                    icon=folium.DivIcon(html=icon_html, icon_size=(34, 34), icon_anchor=(17, 17)),
                 ).add_to(flights_layer)
             flights_layer.add_to(flights_map)
+
+            # Fit the view to where the aircraft actually are instead of always
+            # showing the full ~92 km query radius (SP_DIST_NM) — with only 1-2
+            # aircraft on screen, that wide a view is why they were hard to spot.
+            # A small padding margin around a single point avoids fit_bounds()
+            # zooming in to an unusably tight, near-street-level view. With zero
+            # aircraft there's nothing to fit to, so the map keeps its zoom_start=9
+            # default centered on São Paulo instead of calling fit_bounds() on an
+            # empty list (which raises — min()/max() need at least one point).
+            if flights:
+                pad = 0.12  # degrees, ~13 km — generous enough for a lone aircraft
+                lats = [f["lat"] for f in flights]
+                lons = [f["lon"] for f in flights]
+                flights_map.fit_bounds([
+                    [min(lats) - pad, min(lons) - pad],
+                    [max(lats) + pad, max(lons) + pad],
+                ])
+
             _force_leaflet_resize(flights_map)
             st_folium(flights_map, use_container_width=True, height=480, key=f"flights_map_{flights_dark_mode}")
 
