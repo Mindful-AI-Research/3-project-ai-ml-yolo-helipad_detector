@@ -379,9 +379,25 @@ The platform implements a complete AI workflow, including public data collection
 <!-- =========================== START DEMOS JOY ====================================================== -->
 
 <!-- ========= START 🎥 DEMO · HELIPAD DETECTION ========= -->
-###### <p align="center">🎥 **DEMO:** **HELIPAD DETECTION** ✧ `YOLO11` ✧ `MODEL TRAINING`</p>
+###### <p align="center">🎥 **DEMO:** **HELIPAD DETECTION** ✧ `YOLO-08` ✧ `MODEL TRAINING`</p>
 
-https://github.com/user-attachments/assets/5b7d581c-ab5e-416e-8471-d91136b2ada0
+https://github.com/user-attachments/assets/861e142f-0ada-4154-9edf-08fba5503b7e
+
+###### <p align="center">🎶 ***Feel Good*** ✦ ***Nina Simone*** ✦ *Deep House Version* · Concept · Creative Design · ***Fab*** ⚡️ **𝄢 𝄫**</p>
+
+<br><br>
+
+#
+
+<br><br>
+<!-- ========= END 🎥 DEMO · HELIPAD DETECTION ========= -->
+
+
+
+<!-- ========= START 🎥 DEMO · HELIPAD DETECTION ========= -->
+###### <p align="center">🎥 **DEMO:** **HELIPAD DETECTION** ✧ `YOLO-11` ✧ `MODEL TRAINING`</p>
+
+!!!!!!!
 
 ###### <p align="center">🎶 ***Feel Good*** ✦ ***Nina Simone*** ✦ *Deep House Version* · Concept · Creative Design · ***Fab*** ⚡️ **𝄢 𝄫**</p>
 
