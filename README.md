@@ -379,7 +379,7 @@ The platform implements a complete AI workflow, including public data collection
 <!-- =========================== START DEMOS JOY ====================================================== -->
 
 <!-- ========= START 🎥 DEMO · HELIPAD DETECTION ========= -->
-###### <p align="center">🎥 **DEMO:** **HELIPAD DETECTION** ✧ `YOLO-08` ✧ `MODEL TRAINING`</p>
+###### <p align="center">🎥 **DEMO:** **HELIPAD DETECTION**  ✧ `Exp2` ✧ `YOLO-08` ✧ `MODEL TRAINING`</p>
 
 https://github.com/user-attachments/assets/861e142f-0ada-4154-9edf-08fba5503b7e
 
