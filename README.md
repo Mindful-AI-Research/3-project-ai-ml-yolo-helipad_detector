@@ -243,7 +243,7 @@
 ## [Table of Contents]()
 
 - [Overview](#overview)
-- [Global Helicopter Traffic Context: Why São Paulo?](#global-helicopter-traffic-context-why-sao-paulo)
+- [Global Helicopter Traffic Context - Why São Paulo?](#global-helicopter-traffic-context-why-sao-paulo)
 - [Project Definition](#project-definition)
 - [Objective](#objective)
 - [Business and Research Problem](#business-and-research-problem)
@@ -309,7 +309,8 @@ The platform implements a complete AI workflow, including public data collection
 
 
 <!-- ========= START Contexto Global  ========= -->
-## [Global Helicopter Traffic Context: Why São Paulo?]()
+
+## [Global Helicopter Traffic Context - Why São Paulo?]()
 
 <br>
 
