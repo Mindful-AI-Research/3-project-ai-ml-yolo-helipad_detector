@@ -342,45 +342,6 @@ The platform implements a complete AI workflow, including public data collection
 <!-- ========= END Contexto Global  ========= -->
 
 
-<!-- ======== START Key Features  ========= -->
-## [Key Features]()
-
-[-]() End-to-end Artificial Intelligence and Computer Vision pipeline <br>
-
-[-]() Automated satellite imagery acquisition and preprocessing <br>
-
-[-]() Geospatial intelligence and spatial data processing workflow <br>
-
-[-]() YOLOv8n / YOLO11n object detection <br>
-
-[-]() Roboflow-based image annotation and dataset preparation <br>
-
-[-]() Interactive geospatial maps with MapLibre GL JS + OpenStreetMap <br>
-
-[-]() Automated geocoding with Nominatim (OpenStreetMap) <br>
-
-[-]() Real-world validation across 7,900+ satellite tiles from 10 São Paulo neighborhoods <br>
-
-[-]() Interactive Streamlit web application and dashboard <br>
-
-[-]() Fully reproducible research repository <br>
-
-[-]() Downloadable datasets, notebooks and generated artifacts
-
-
-<br>
-
-#
-
-<br><br>
-<!-- ========= END Key Features ========= -->
-
-
-
-
-
-<br><br>
-
 ## [Project Definition]()
 
 The **Helipad Detector** project implements a full **Object Detection** pipeline to identify helipads on rooftops in the city of São Paulo, using high-resolution aerial and orbital imagery and models from the **YOLOv8/YOLOv11** family.
@@ -419,6 +380,28 @@ Helipads are a compelling educational target because they often present a distin
 In urban satellite imagery, helipads may be confused with rooftop structures, sports markings, bright reflective surfaces, or architectural patterns. This makes them ideal for discussing false positives, annotation quality, and model generalization.
 
 <br><br>
+
+
+<!-- ======== START Key Features  ========= -->
+## [Key Features]()
+
+[-]() End-to-end Artificial Intelligence and Computer Vision pipeline <br>
+[-]() Automated satellite imagery acquisition and preprocessing <br>
+[-]() Geospatial intelligence and spatial data processing workflow <br>
+[-]() YOLOv8n / YOLO11n object detection <br>
+[-]() Roboflow-based image annotation and dataset preparation <br>
+[-]() Interactive geospatial maps with MapLibre GL JS + OpenStreetMap <br>
+[-]() Automated geocoding with Nominatim (OpenStreetMap) <br>
+[-]() Real-world validation across 7,900+ satellite tiles from 10 São Paulo neighborhoods <br>
+[-]() Interactive Streamlit web application and dashboard <br>
+[-]() Fully reproducible research repository <br>
+[-]() Downloadable datasets, notebooks and generated artifacts
+
+<br><br>
+<!-- ========= END Key Features ========= -->
+
+
+
 
 ## [Data Source]()
 
