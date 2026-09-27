@@ -177,7 +177,7 @@ O repositório final representa a evolução do projeto a partir de seu protóti
 <!-- =========End REeact Presentation BADGE ========= -->
 
 <!-- ========= START Helipad Detector Relatório Completo. BADGE ========= -->
- <a href="https://github.com/Mindful-AI-Research/3-project-ai-ml-yolo-helipad_detector/blob/34e0c885443ab622df84a65a666995ee8ef118b1/reports/helipad_detector_full_report/%F0%9F%87%A7%F0%9F%87%B7Helipad_Detector_Relatorio_Completo.pdf" target="_blank" rel="noopener noreferrer">
+ <a href="https://github.com/Mindful-AI-Research/3-project-ai-ml-yolo-helipad_detector/blob/dee73dfbc370ee8c27c64da46cdcc5a2968163b6/reports/helipad_detector_full_report/%F0%9F%87%A7%F0%9F%87%B7Helipad_Detector_Relatorio_Completo.pdf" target="_blank" rel="noopener noreferrer">
     <img 
       src="https://img.shields.io/badge/Helipad%20Detector-Relat%C3%B3rio%20Completo-134e4a?style=for-the-badge&logo=github&logoColor=white&labelColor=022c22" 
       alt="Helipad Detector — Relatório Completo"
