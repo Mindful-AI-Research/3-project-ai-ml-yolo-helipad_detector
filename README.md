@@ -379,7 +379,7 @@ Methodologically, the project reinforces that model performance is directly tied
 
 Manually identifying helipads in dense urban environments is a slow, subjective and hard-to-scale task. On high-resolution imagery, rooftops with circular patterns, HVAC equipment, sport markings, shadows, reflections and urban geometry can visually resemble the characteristic helipad “H”.
 
-This project addresses that challenge with an **Object Detection** pipeline that turns raw geospatial imagery into structured visual intelligence, reducing manual effort and enabling:
+This project addresses that challenge with an [**Object Detection**]() pipeline that turns raw geospatial imagery into structured visual intelligence, reducing manual effort and enabling:
 
 <br>
 
@@ -419,13 +419,15 @@ In urban satellite imagery, helipads may be confused with rooftop structures, sp
 
 ## [Project Context]()
 
-The work was developed in the context of **Project 2 — Object Detection in Satellite Images with YOLO**, whose briefing requires each group to:
+The work was developed in the context of [**Project 2 — Object Detection in Satellite Images with YOLO**](), whose briefing requires each group to:
 
-- choose **a single target class**  
-- build an **original dataset**, without using pre-made sets  
-- use **ESRI World Imagery (XYZ tiles)** as the main image source  
-- perform programmatic collection, annotation, training, evaluation and inference on an unseen neighborhood  
-- deliver an annotated dataset, notebooks, model weights, report and presentation  
+<br>
+
+[-]() choose [**a single target class**]() <br>
+[-]() build an **original dataset**, without using pre-made sets  <br>
+[-]() use **ESRI World Imagery (XYZ tiles)** as the main image source  <br>
+[-]() perform programmatic collection, annotation, training, evaluation and inference on an unseen neighborhood  <br>
+[-]() deliver an annotated dataset, notebooks, model weights, report and presentation  <br>
 
 The central pedagogical message is that **around 80% of the effort in AI is in the data, not in the architecture**. The YOLO model is practically the same for all groups; the real differentiator comes from dataset quality, manual curation and annotation consistency.
 
@@ -433,28 +435,22 @@ The central pedagogical message is that **around 80% of the effort in AI is in t
 
 
 
-
-
-
-
-
-
-
-
 ## [Data Source]()
 
 The project dataset was built from satellite imagery collected over São Paulo, with a focus on neighborhoods relevant to the academic briefing and regions where helipads are more likely to appear.
 
-The geographical scope follows the briefing: **city of São Paulo**, focusing on neighborhoods near the PUC‑SP campus in Perdizes and regions with high helipad density, such as:
+The geographical scope follows the briefing: [**city of São Paulo**](), focusing on neighborhoods near the PUC‑SP campus in Perdizes and regions with high helipad density, such as:
 
-[-]() Perdizes, Higienópolis, Pacaembu and Sumaré  
-[-]() Paulista Avenue, Itaim Bibi and Pinheiros  
-[-]() Faria Lima, Berrini, Vila Olímpia and Brooklin  
+<br>
+
+[-]() Perdizes, Higienópolis, Pacaembu and Sumaré  <br>
+[-]() Paulista Avenue, Itaim Bibi and Pinheiros  <br>
+[-]() Faria Lima, Berrini, Vila Olímpia and Brooklin  <br>
 [-]() other relevant urban areas such as Morumbi and adjacent regions  
 
-<br><br>
+<br>
 
-## [Image sources]()
+### [Image sources]()
 
 - [**ESRI World Imagery (XYZ tiles)**]()  — main source, with sub-meter resolution and programmatic HTTP access  
 - [**Google Earth Web**]()  — complementary source, used only for punctual captures of specific targets, not for bulk collection  
@@ -465,34 +461,17 @@ Images are stored as `.jpg` or `.png`, as required by the project.
 Whenever imagery or derived mosaics are reproduced, the required attribution is:  
 [***Source: Esri, Maxar, Earthstar Geographics, and the GIS User Community***.]()
 
-<br><br>
-
-## [Project Context]()
-
-The work was developed in the context of **Project 2 — Object Detection in Satellite Images with YOLO**, whose briefing requires each group to:
-
-[-]() choose [**a single target class**]()  
-[-]() build an [**original dataset**]() , without using pre-made sets  
-[-]() use [**ESRI World Imagery (XYZ tiles)**]()  as the main image source  
-[-]() perform programmatic collection, annotation, training, evaluation and inference on an unseen neighborhood  
-[-]() deliver an annotated dataset, notebooks, model weights, report and presentation  
-
-The central pedagogical message is that **around 80% of the effort in AI is in the data, not in the architecture**. The YOLO model is practically the same for all groups; the real differentiator comes from dataset quality, manual curation and annotation consistency.
 
 <br><br>
 
-## [Business and Research Problem]()
 
-Manually identifying helipads in dense urban environments is a slow, subjective and hard-to-scale task. On high-resolution imagery, rooftops with circular patterns, HVAC equipment, sport markings, shadows, reflections and urban geometry can visually resemble the characteristic helipad “H”.
 
-This project addresses that challenge with an **Object Detection** pipeline that turns raw geospatial imagery into structured visual intelligence, reducing manual effort and enabling:
 
-[-]() faster, more systematic helipad localization  
-[-]() assessment of the model’s generalization ability across different neighborhoods  
-[-]() study of error patterns in real urban contexts  
-[-]() organized and reproducible data, image and evidence handling  
 
-<br><br>
+-------------------
+###  👩🏻‍🚀 🚧 
+-------------------
+
 
 ## [Extra Automation Contribution]()
 
