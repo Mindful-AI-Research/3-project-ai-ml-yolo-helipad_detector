@@ -299,6 +299,57 @@ The final repository represents the evolution of the project from its initial pr
 <br><br><br><br>
 <!-- =========END MAIN REPO =Projects REFERENCES ========= -->
 
+## [Table of Contents]()
+
+- [Overview](#overview)
+- [Global Helicopter Traffic Context — Why São Paulo?](#global-helicopter-traffic-context-why-são-paulo)
+- [Project Definition](#project-definition)
+- [Objective](#objective)
+- [Business and Research Problem](#business-and-research-problem)
+- [Why Helipads?](#why-helipads)
+- [Key Features](#key-features)
+- [Project Context](#project-context)
+- [Data Source](#data-source)
+- [Extra Automation Contribution](#extra-automation-contribution)
+- [Overall Flow Architecture](#overall-flow-architecture)
+- [AI/ML Ops Pipeline](#aiml-ops-pipeline)
+- [Repository Structure](#repository-structure)
+- [What is `data/raw/helipad_dataset.rar`?](#what-is-helipad-dataset)
+- [What is Roboflow in This Project?](#what-is-roboflow-in-this-project)
+- [Methodology](#methodology)
+- [Full Technical Pipeline](#full-technical-pipeline)
+- [Image Collection and Generation](#image-collection-and-generation)
+- [Annotation and Roboflow](#annotation-and-roboflow)
+- [Modeling with YOLO](#modeling-with-yolo)
+- [Evaluation](#evaluation)
+- [Inference and Generalization](#inference-and-generalization)
+- [Field Validation — Real-World Detection Across 10 São Paulo Neighborhoods](#field-validation-real-world-detection-across-10-são-paulo-neighborhoods)
+- [Results Analysis](#results-analysis)
+- [Generated Charts](#generated-charts)
+- [Qualitative Analysis Guide](#qualitative-analysis-guide)
+- [Web Application (Optional Layer)](#web-application-optional-layer)
+- [Live Helicopter Traffic (Beta)](#live-helicopter-traffic-beta)
+  - [Data Source and Provider Choice](#data-source-and-provider-choice)
+  - [Helicopter Identification and Limitations](#helicopter-identification-and-limitations)
+  - [Deployment Incident — Python Runtime](#deployment-incident-python-runtime)
+  - [Presentation Redesign (UX)](#presentation-redesign-ux)
+  - [Scope and Responsibility](#scope-and-responsibility)
+- [Gains from the Extra Resource](#gains-from-the-extra-resource)
+- [Educational Value](#educational-value)
+- [Technologies Used](#technologies-used)
+- [Strengths, Limitations and Future Improvements](#strengths-limitations-and-future-improvements)
+- [Ethics, LGPD and Governance](#ethics-lgpd-and-governance)
+- [Deliverables Covered](#deliverables-covered)
+- [How to Run](#how-to-run)
+- [Image and Text Sources](#image-and-text-sources)
+- [Image Attribution](#image-attribution)
+- [References](#references)
+- [Contribution Attribution](#contribution-attribution)
+- [Acknowledgements](#acknowledgements)
+- [Final Statement](#final-statement)
+
+<br><br>
+
 
 <!-- ========= START Overview ========= -->
 ## [Overview]()
@@ -425,50 +476,6 @@ https://github.com/user-attachments/assets/eab6e951-6b66-4c6c-a2c6-23ee2f902c5f
 <!-- =========================== END DEMOS JOY ====================================================== -->
 
 
-
-
-<!-- ========= START ToC-->
-##  Table of Contents
-
- 
-- [Global Helicopter Traffic Context — Why São Paulo?](#global-helicopter-traffic-context--why-são-paulo)
-- [Project Definition](#project-definition)
-- [Objective](#objective)
-- [Why Helipads?](#why-helipads)
-- [Data Source](#data-source)
-- [Project Context](#project-context)
-- [Business and Research Problem](#business-and-research-problem)
-- [Extra Automation Contribution](#extra-automation-contribution)
-- [Overall Flow Architecture](#overall-flow-architecture)
-- [AI/ML Ops Pipeline](#aiml-ops-pipeline)
-- [Repository Structure](#repository-structure)
-- [What is `data/raw/helipad_dataset.rar`?](#what-is-datarawhelipad_datasetrar)
-- [What is Roboflow in This Project?](#what-is-roboflow-in-this-project)
-- [Methodology](#methodology)
-- [Full Technical Pipeline](#full-technical-pipeline)
-- [Image Collection and Generation](#image-collection-and-generation)
-- [Annotation and Roboflow](#annotation-and-roboflow)
-- [Modeling with YOLO](#modeling-with-yolo)
-- [Evaluation](#evaluation)
-- [Inference and Generalization](#inference-and-generalization)
-- [Web Application (Optional Layer)](#web-application-optional-layer)
-- [Gains from the Extra Resource](#gains-from-the-extra-resource)
-- [Educational Value](#educational-value)
-- [Image and Text Sources](#image-and-text-sources)
-- [Technologies Used](#technologies-used)
-- [How to Run](#how-to-run)
-- [Deliverables Covered](#deliverables-covered)
-- [Results Analysis](#results-analysis)
-- [Field Validation — Real-World Detection Across 10 São Paulo Neighborhoods](#field-validation--real-world-detection-across-10-são-paulo-neighborhoods)
-- [Generated Charts](#generated-charts)
-- [Qualitative Analysis Guide](#qualitative-analysis-guide)
-- [Strengths, Limitations and Future Improvements](#strengths-limitations-and-future-improvements)
-- [Ethics, LGPD and Governance](#ethics-lgpd-and-governance)
-- [Image Attribution](#image-attribution)
-- [References](#references)
-- [Contribution Attribution](#contribution-attribution)
-- [Acknowledgements](#acknowledgements)
-- [Final Statement](#final-statement)
 
 <br><br>
 
