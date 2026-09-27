@@ -105,7 +105,7 @@
 <!-- ========= END Institutional INFO ========= -->
 
 
-<!-- ======================================= Start Institutional  Atribuição de Contribuições / subm tidd ======== -->
+<!-- ======================================= Start Institutional  Atribuição de Contribuições / subm tidd ======== 
 ### [Atribuição de Contribuições]()
 
 Este projeto evoluiu de uma base inicial envolvendo desenvolvimento de dataset, treinamento de modelos e um protótipo web para uma plataforma integrada de visão computacional e inteligência geoespacial. Os três colaboradores creditados participaram em diferentes etapas do projeto, com contribuições abrangendo distintas áreas técnicas e responsabilidades. <br><br>
@@ -147,7 +147,7 @@ O repositório final representa a evolução do projeto a partir de seu protóti
 
 #
 
-<br><br><br>
+<br><br><br> -->
 <!-- ======================================= END Institutional / mestr/ SUBMISSION =========================================== --> 
 
 
