@@ -376,51 +376,6 @@ The platform implements a complete AI workflow, including public data collection
 <!-- ========= END Key Features ========= -->
 
 
-<!-- =========================== START DEMOS JOY ====================================================== -->
-
-<!-- ========= START 🎥 DEMO · HELIPAD DETECTION ========= -->
-###### <p align="center">🎥 **DEMO:** **HELIPAD DETECTION**  ✧ `Exp2` ✧ `YOLO-08` ✧ `MODEL TRAINING`</p>
-
-https://github.com/user-attachments/assets/861e142f-0ada-4154-9edf-08fba5503b7e
-
-###### <p align="center">🎶 ***Feel Good*** ✦ ***Nina Simone*** ✦ *Deep House Version* · Concept · Creative Design · ***Fab*** ⚡️ **𝄢 𝄫**</p>
-
-<br><br>
-
-#
-
-<br><br>
-<!-- ========= END 🎥 DEMO · HELIPAD DETECTION ========= -->
-
-
-
-<!-- ========= START 🎥 DEMO · HELIPAD DETECTION ========= -->
-###### <p align="center">🎥 **DEMO:** **HELIPAD DETECTION** ✧ `Exp4` ✧ `YOLO-11` ✧ `MODEL TRAINING`</p>
-
-https://github.com/user-attachments/assets/0e54ba0f-90e6-47ba-aaa8-d1ae59190158
-
-###### <p align="center">🎶 ***Feel Good*** ✦ ***Nina Simone*** ✦ *Deep House Version* · Concept · Creative Design · ***Fab*** ⚡️ **𝄢 𝄫**</p>
-
-<br><br>
-
-#
-
-<br><br>
-<!-- ========= END 🎥 DEMO · HELIPAD DETECTION ========= -->
-
-
-<!-- ========= START 🎥 DEMO · AUTOMATED HELIPAD SCRAPING ========= -->
-###### <p align="center">🎥 **DEMO:** **AUTOMATED HELIPAD SCRAPING** ✦ `SELENIUM` ✦ `FLIGHTMARKET` ✦ `GEOCODING`</p>
-
-https://github.com/user-attachments/assets/eab6e951-6b66-4c6c-a2c6-23ee2f902c5f
-
-###### <p align="center">🎼 ***Interstellar*** ✧ ***Hans Zimmer*** ✧ *Deep House Version* · Code · Sound · Creative Design · ***Fab*** ⚡️ **𝄢 𝄫**</p>
-
-<br><br><br><br><br>
-<!-- ========= END 🎥 DEMO · AUTOMATED HELIPAD SCRAPING ========= -->
-
-
-<!-- =========================== END DEMOS JOY ====================================================== -->
 
 
 
@@ -1074,6 +1029,56 @@ results = model.predict(
 
 
 
+<br><br>
+<br><br>
+<br><br>
+<br><br>
+<br><br>
+<br><br>
+
+<!-- =========================== START DEMOS JOY ====================================================== -->
+
+<!-- ========= START 🎥 DEMO · HELIPAD DETECTION ========= -->
+###### <p align="center">🎥 **DEMO:** **HELIPAD DETECTION**  ✧ `Exp2` ✧ `YOLO-08` ✧ `MODEL TRAINING`</p>
+
+https://github.com/user-attachments/assets/861e142f-0ada-4154-9edf-08fba5503b7e
+
+###### <p align="center">🎶 ***Feel Good*** ✦ ***Nina Simone*** ✦ *Deep House Version* · Concept · Creative Design · ***Fab*** ⚡️ **𝄢 𝄫**</p>
+
+<br><br>
+
+#
+
+<br><br>
+<!-- ========= END 🎥 DEMO · HELIPAD DETECTION ========= -->
+
+
+
+<!-- ========= START 🎥 DEMO · HELIPAD DETECTION ========= -->
+###### <p align="center">🎥 **DEMO:** **HELIPAD DETECTION** ✧ `Exp4` ✧ `YOLO-11` ✧ `MODEL TRAINING`</p>
+
+https://github.com/user-attachments/assets/0e54ba0f-90e6-47ba-aaa8-d1ae59190158
+
+###### <p align="center">🎶 ***Feel Good*** ✦ ***Nina Simone*** ✦ *Deep House Version* · Concept · Creative Design · ***Fab*** ⚡️ **𝄢 𝄫**</p>
+
+<br><br>
+
+#
+
+<br><br>
+<!-- ========= END 🎥 DEMO · HELIPAD DETECTION ========= -->
+
+
+<!-- ========= START 🎥 DEMO · AUTOMATED HELIPAD SCRAPING ========= -->
+###### <p align="center">🎥 **DEMO:** **AUTOMATED HELIPAD SCRAPING** ✦ `SELENIUM` ✦ `FLIGHTMARKET` ✦ `GEOCODING`</p>
+
+https://github.com/user-attachments/assets/eab6e951-6b66-4c6c-a2c6-23ee2f902c5f
+
+###### <p align="center">🎼 ***Interstellar*** ✧ ***Hans Zimmer*** ✧ *Deep House Version* · Code · Sound · Creative Design · ***Fab*** ⚡️ **𝄢 𝄫**</p>
+
+<br><br><br><br><br>
+<!-- ========= END 🎥 DEMO · AUTOMATED HELIPAD SCRAPING ========= -->
+<!-- =========================== END DEMOS JOY ====================================================== -->
 
 
 
