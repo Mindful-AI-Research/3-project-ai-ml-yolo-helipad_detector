@@ -3736,21 +3736,30 @@ with tab4:
             # Fit the view to where the aircraft actually are instead of always
             # showing the full ~92 km query radius (SP_DIST_NM) — with only 1-2
             # aircraft on screen, that wide a view is why they were hard to spot.
-            # A small padding margin around a single point avoids fit_bounds()
-            # zooming in to an unusably tight, near-street-level view. With zero
-            # aircraft there's nothing to fit to, so the map keeps its zoom_start=9
-            # default centered on São Paulo instead of calling fit_bounds() on an
-            # empty list (which raises — min()/max() need at least one point).
+            # A small padding margin around a single point avoids fitBounds()
+            # zooming in to an unusably tight, near-street-level view.
+            #
+            # IMPORTANT: this calls _force_leaflet_fit_bounds(), NOT Python's
+            # own flights_map.fit_bounds(...) — that Python call bakes a
+            # `.fitBounds()` straight into the map's init script, which fires
+            # before streamlit-folium's iframe has a real size, and was
+            # confirmed to zoom the map all the way out to the whole world for
+            # a single São Paulo-area point. See that function's docstring.
+            # With zero aircraft there's nothing to fit to, so the map falls
+            # back to _force_leaflet_resize() and keeps its zoom_start=9
+            # default centered on São Paulo.
             if flights:
                 pad = 0.12  # degrees, ~13 km — generous enough for a lone aircraft
                 lats = [f["lat"] for f in flights]
                 lons = [f["lon"] for f in flights]
-                flights_map.fit_bounds([
+                fit_bounds = [
                     [min(lats) - pad, min(lons) - pad],
                     [max(lats) + pad, max(lons) + pad],
-                ])
+                ]
+                _force_leaflet_fit_bounds(flights_map, fit_bounds)
+            else:
+                _force_leaflet_resize(flights_map)
 
-            _force_leaflet_resize(flights_map)
             st_folium(flights_map, use_container_width=True, height=480, key=f"flights_map_{flights_dark_mode}")
 
 # ====================== TAB 5: Pipeline & Governance ======================
