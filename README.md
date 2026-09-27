@@ -430,6 +430,8 @@ https://github.com/user-attachments/assets/eab6e951-6b66-4c6c-a2c6-23ee2f902c5f
 <!-- ========= START ToC-->
 ##  Table of Contents
 
+-# [Table of Contents]()
+ 
 - [Global Helicopter Traffic Context — Why São Paulo?](#global-helicopter-traffic-context--why-são-paulo)
 - [Project Definition](#project-definition)
 - [Objective](#objective)
@@ -438,11 +440,10 @@ https://github.com/user-attachments/assets/eab6e951-6b66-4c6c-a2c6-23ee2f902c5f
 - [Project Context](#project-context)
 - [Business and Research Problem](#business-and-research-problem)
 - [Extra Automation Contribution](#extra-automation-contribution)
-- [Geospatial Visualization (Kepler.gl)](#geospatial-visualization-keplergl)
 - [Overall Flow Architecture](#overall-flow-architecture)
 - [AI/ML Ops Pipeline](#aiml-ops-pipeline)
 - [Repository Structure](#repository-structure)
-- [What is `data/raw/helipad_dataset.rar`?](#what-is-helipontorar)
+- [What is `data/raw/helipad_dataset.rar`?](#what-is-datarawhelipad_datasetrar)
 - [What is Roboflow in This Project?](#what-is-roboflow-in-this-project)
 - [Methodology](#methodology)
 - [Full Technical Pipeline](#full-technical-pipeline)
@@ -460,10 +461,13 @@ https://github.com/user-attachments/assets/eab6e951-6b66-4c6c-a2c6-23ee2f902c5f
 - [Deliverables Covered](#deliverables-covered)
 - [Results Analysis](#results-analysis)
 - [Field Validation — Real-World Detection Across 10 São Paulo Neighborhoods](#field-validation--real-world-detection-across-10-são-paulo-neighborhoods)
+- [Generated Charts](#generated-charts)
+- [Qualitative Analysis Guide](#qualitative-analysis-guide)
 - [Strengths, Limitations and Future Improvements](#strengths-limitations-and-future-improvements)
 - [Ethics, LGPD and Governance](#ethics-lgpd-and-governance)
 - [Image Attribution](#image-attribution)
 - [References](#references)
+- [Contribution Attribution](#contribution-attribution)
 - [Acknowledgements](#acknowledgements)
 - [Final Statement](#final-statement)
 
