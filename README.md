@@ -309,7 +309,7 @@ The platform implements a complete AI workflow, including public data collection
 
 
 <!-- ========= START Contexto Global  ========= -->
-## [Global Helicopter Traffic Context — Why São Paulo ?]()
+## [Global Helicopter Traffic Context — Why São Paulo?]()
 
 <br>
 
