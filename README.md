@@ -417,7 +417,19 @@ In urban satellite imagery, helipads may be confused with rooftop structures, sp
 <br><br>
 <!-- ========= END Key Features ========= -->
 
+## [Project Context]()
 
+The work was developed in the context of **Project 2 — Object Detection in Satellite Images with YOLO**, whose briefing requires each group to:
+
+- choose **a single target class**  
+- build an **original dataset**, without using pre-made sets  
+- use **ESRI World Imagery (XYZ tiles)** as the main image source  
+- perform programmatic collection, annotation, training, evaluation and inference on an unseen neighborhood  
+- deliver an annotated dataset, notebooks, model weights, report and presentation  
+
+The central pedagogical message is that **around 80% of the effort in AI is in the data, not in the architecture**. The YOLO model is practically the same for all groups; the real differentiator comes from dataset quality, manual curation and annotation consistency.
+
+<br><br>
 
 
 
