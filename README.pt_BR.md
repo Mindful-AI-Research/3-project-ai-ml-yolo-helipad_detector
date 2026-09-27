@@ -13,7 +13,7 @@
 
 ### <p align="center"> Plataforma de Inteligência Artificial End-to-End para Detecção Automatizada de Helipontos e Inteligência Geoespacial a partir de Imagens de Satélite
 
-<br>
+<br><br>
 
 <div align="center">
 
@@ -28,13 +28,23 @@
 <br><br>
 
 <!-- ========= START TEASER ========= -->
-###### <p align="center"> <i>Teaching YOLO to spot the city's most exclusive landing spots.</i> ✨</p> 
+###### <p align="center"> *Not every rooftop is just* ... ***A rooftop*** ... 👀
 
-###### <p align="center"> 🚁 ***Finding hidden H’s in the concrete jungle*** <br>
+###### <p align="center"> <i>Teaching AI to see what the city overlooks.</i> </p>
 
-###### <p align="center">One rooftop at a time. <br> 
+###### <p align="center"> 🚁 *Finding hidden H’s in the* ***concrete jungle.*** <br>
+
+###### <p align="center"> *One rooftop at a time.* <br>
 
 #### <p align="center"> ⚡️
+
+
+<br>
+
+#
+
+<br><br>
+<!-- ========= END TEASER ========= -->
 
 
 <br>
