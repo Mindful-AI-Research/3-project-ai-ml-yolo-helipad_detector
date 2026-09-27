@@ -2170,12 +2170,9 @@ def fetch_live_helicopter_flights(_unused_bbox=None) -> tuple[list[dict], str | 
     blips) before reporting the failure; does not retry on HTTP error status
     codes, since those won't resolve by repeating the same request immediately.
 
-    Credit where due: adsb.fi (rather than another free ADS-B provider) was
-    chosen after inspecting Osiris (https://github.com/simplifaisoul/osiris,
-    MIT), an open-source OSINT dashboard that queries this same endpoint from
-    a cloud-hosted Next.js app on Vercel — independent confirmation that
-    adsb.fi works from cloud IP ranges where OpenSky's public API does not
-    (see the executive report for the full investigation).
+    (Osiris credit for the adsb.fi choice and the type-code classification
+    approach lives in the module-level comments right above SP_LAT/SP_LON and
+    HELICOPTER_TYPE_CODES, not repeated here.)
     """
     payload = None
     last_error = None
