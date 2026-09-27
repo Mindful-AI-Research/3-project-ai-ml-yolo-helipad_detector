@@ -2169,6 +2169,13 @@ def fetch_live_helicopter_flights(_unused_bbox=None) -> tuple[list[dict], str | 
     Retries once on connection/timeout errors (covers most transient network
     blips) before reporting the failure; does not retry on HTTP error status
     codes, since those won't resolve by repeating the same request immediately.
+
+    Credit where due: adsb.fi (rather than another free ADS-B provider) was
+    chosen after inspecting Osiris (https://github.com/simplifaisoul/osiris,
+    MIT), an open-source OSINT dashboard that queries this same endpoint from
+    a cloud-hosted Next.js app on Vercel — independent confirmation that
+    adsb.fi works from cloud IP ranges where OpenSky's public API does not
+    (see the executive report for the full investigation).
     """
     payload = None
     last_error = None
