@@ -41,6 +41,6 @@ webdriver-manager>=3.8.0
 ########################
 # General Utilities
 ########################
-requests>=2.23.0
+requests>=2.34.2
 psutil
 py-cpuinfo
