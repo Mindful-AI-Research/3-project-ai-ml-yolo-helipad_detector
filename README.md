@@ -360,12 +360,12 @@ Rather than relying on a ready-made benchmark, the project emphasizes the constr
 
 The main objective is to build an **end-to-end system** capable of detecting helipads on rooftops in the city of São Paulo, following all model lifecycle stages defined in the briefing:
 
-[-]() programmatic acquisition of satellite data  
-[-]() visual curation and tile filtering  
-[-]() annotation with well-defined bounding boxes  
-[-]() preprocessing and augmentations  
-[-]() training and monitoring in Colab  
-[-]() quantitative evaluation and qualitative error analysis  
+[-]() programmatic acquisition of satellite data  <br>
+[-]() visual curation and tile filtering  <br>
+[-]() annotation with well-defined bounding boxes  <br>
+[-]() preprocessing and augmentations  <br>
+[-]() training and monitoring in Colab  <br>
+[-]() quantitative evaluation and qualitative error analysis  <br>
 [-]() inference on an entire neighborhood not used during training  
 
 From an educational perspective, the work was also designed to help students understand how a real AI pipeline is built, validated, and communicated. The project therefore integrates data collection, annotation, preprocessing, model training, evaluation, and simple deployment in one coherent workflow.
@@ -381,10 +381,12 @@ Manually identifying helipads in dense urban environments is a slow, subjective 
 
 This project addresses that challenge with an **Object Detection** pipeline that turns raw geospatial imagery into structured visual intelligence, reducing manual effort and enabling:
 
-- faster, more systematic helipad localization  
-- assessment of the model’s generalization ability across different neighborhoods  
-- study of error patterns in real urban contexts  
-- organized and reproducible data, image and evidence handling  
+<br>
+
+[-]() faster, more systematic helipad localization  <br>
+[-]() assessment of the model’s generalization ability across different neighborhoods  <br>
+[-]() study of error patterns in real urban contexts  <br>
+[-]() organized and reproducible data, image and evidence handling  <br>
 
 <br><br>
 
@@ -414,6 +416,15 @@ In urban satellite imagery, helipads may be confused with rooftop structures, sp
 
 <br><br>
 <!-- ========= END Key Features ========= -->
+
+
+
+
+
+
+
+
+
 
 
 
