@@ -372,6 +372,20 @@ From an educational perspective, the work was also designed to help students und
 
 Methodologically, the project reinforces that model performance is directly tied to **data quality**, annotation consistency and geographical diversity, rather than small tweaks to the architecture.
 
+
+<br><br>
+
+## [Business and Research Problem]()
+
+Manually identifying helipads in dense urban environments is a slow, subjective and hard-to-scale task. On high-resolution imagery, rooftops with circular patterns, HVAC equipment, sport markings, shadows, reflections and urban geometry can visually resemble the characteristic helipad “H”.
+
+This project addresses that challenge with an **Object Detection** pipeline that turns raw geospatial imagery into structured visual intelligence, reducing manual effort and enabling:
+
+- faster, more systematic helipad localization  
+- assessment of the model’s generalization ability across different neighborhoods  
+- study of error patterns in real urban contexts  
+- organized and reproducible data, image and evidence handling  
+
 <br><br>
 
 ## [Why Helipads?]()
