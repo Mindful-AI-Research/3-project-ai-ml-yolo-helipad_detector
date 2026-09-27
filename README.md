@@ -366,7 +366,13 @@ The platform implements a complete AI workflow, including public data collection
 
 <br><br>
 
+
 <!-- ========= START Contexto Global  ========= -->
+## [Global Helicopter Traffic Context — Why São Paulo ?]()
+
+<br>
+
+
 | City | Country | Helicopter Air Mobility Context | Reference Source |
 |---|---|---|---|
 | [**São Paulo**](https://www.fab.mil.br/noticias/imprime/42060/CONTROLE%20DO%20ESPA%C3%87O%20A%C3%89REO%20-%20HELICONTROL:%20Seguran%C3%A7a%20e%20fluidez%20no%20controle%20de%20helic%C3%B3pteros%20em%20S%C3%A3o%20Paulo) | 🇧🇷 Brazil | Urban helicopter operations in a high-density environment, supported by specialized HELICONTROL air traffic management within the Congonhas operational area | [**FAB** - Brazilian Air Force: HELICONTROL](https://www.fab.mil.br/noticias/imprime/42060/CONTROLE%20DO%20ESPA%C3%87O%20A%C3%89REO%20-%20HELICONTROL:%20Seguran%C3%A7a%20e%20fluidez%20no%20controle%20de%20helic%C3%B3pteros%20em%20S%C3%A3o%20Paulo) |
