@@ -26,7 +26,7 @@ opencv-python-headless>=4.6.0
 # Web, APIs & Applications
 ########################
 flask>=2.0.0
-streamlit>=1.42.0,<1.65.0
+streamlit>=1.64.0,<1.65.0
 folium>=0.16.0
 streamlit-folium>=0.23.0
 plotly>=5.20.0
