@@ -32,13 +32,15 @@
 
 <br><br>
 
-
 <!-- ========= START TEASER ========= -->
-###### <p align="center"> <i>Teaching YOLO to spot the city's most exclusive landing spots.</i> ✨</p> 
 
-###### <p align="center"> 🚁 ***Finding hidden H’s in the concrete jungle*** <br>
+###### <p align="center"> *Not every rooftop is just* ... ***A rooftop*** ... 👀
 
-###### <p align="center">One rooftop at a time. <br> 
+###### <p align="center"> <i>Teaching AI to see what the city overlooks.</i> </p>
+
+###### <p align="center"> 🚁 *Finding hidden H’s in the* ***concrete jungle.*** <br>
+
+###### <p align="center"> *One rooftop at a time.* <br>
 
 #### <p align="center"> ⚡️
 
