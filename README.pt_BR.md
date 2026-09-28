@@ -13,21 +13,28 @@
 
 ### <p align="center"> Plataforma de Inteligência Artificial End-to-End para Detecção Automatizada de Helipontos e Inteligência Geoespacial a partir de Imagens de Satélite
 
+
 <br><br>
+
 
 <div align="center">
 
-<a href="https://github.com/topics/satellite-imagery">Imagens de Satélite</a>
-  ✦   <a href="https://github.com/topics/data-visualization">Análise Urbana</a>
-  ✦   <a href="https://github.com/topics/object-detection">Detecção de Objetos</a>
-  ✦   <a href="https://github.com/topics/yolo">YOLO (v8 / v11)</a>
-  ✦   <a href="https://github.com/topics/geospatial">Inteligência Geoespacial</a>
+<a href="https://github.com/topics/satellite-imagery">Satellite Imagery</a>
+&nbsp;&nbsp;✦&nbsp;&nbsp;
+<a href="https://github.com/topics/data-visualization">Urban Analytics</a>
+&nbsp;&nbsp;✦&nbsp;&nbsp;
+<a href="https://github.com/topics/object-detection">Object Detection</a>
+&nbsp;&nbsp;✦&nbsp;&nbsp;
+<a href="https://github.com/topics/yolo">YOLO - "You Only Look Once" (v8 / v11)</a>
+&nbsp;&nbsp;✦&nbsp;&nbsp;
+<a href="https://github.com/topics/geospatial">Geospatial Intelligence</a>
 
 </div>
 
 <br><br>
 
 <!-- ========= START TEASER ========= -->
+
 ###### <p align="center"> *Not every rooftop is just* ... ***A rooftop*** ... 👀
 
 ###### <p align="center"> <i>Teaching AI to see what the city overlooks.</i> </p>
@@ -47,27 +54,16 @@
 <!-- ========= END TEASER ========= -->
 
 
-<br>
-
-#
-
-<br><br>
-<!-- ========= END TEASER ========= -->
-
-
-<!-- ========= START SPONSOR BADGE ========= -->
+<!-- ========= Start SPONSOR BADGE ========= -->
 <p align="center">
 
   <a href="https://github.com/sponsors/Mindful-AI-Research">
     <img
-      src="https://img.shields.io/badge/Sponsor-%E0%A5%90%20%E2%8B%86%20Mindful%20AI%20%E2%8B%86%20Research%20%26%20Consulting%20%F0%96%A4%90%20%E2%8B%86-3A424C?style=for-the-badge&logo=githubsponsors&logoColor=white&labelColor=07111F"
-      alt="Sponsor ॐ ⋆ Mindful AI ⋆ Research & Consulting 𖤐 ⋆"
+      src="https://img.shields.io/badge/Sponsor-%E0%A5%90%20Mindful%20AI%20%E2%8B%86%20Research%20%26%20Consulting%20%F0%96%A4%90-3A424C?style=for-the-badge&logo=githubsponsors&logoColor=white&labelColor=07111F"
+      alt="Sponsor ॐ Mindful AI ⋆ Research & Consulting 𖤐"
       height="36"
-    >
   </a>
-
-  
-<br><br>
+</p>
 <!-- ========= END SPONSOR BADGE ========= -->
 
 
@@ -78,29 +74,6 @@
 
  <br>
 <!-- ========= END PUC GIF ========= -->
-
-
-<!-- ========= START 🇧🇷 Top CommtributorsE ========= 
-<p align="center">
-  <a href="https://user-badge.committers.top/brazil/FabianaCampanari">
-    <img
-      src="https://img.shields.io/badge/%F0%9F%87%A7%F0%9F%87%B7%20TOP%20CONTRIBUTORS-07111F?style=for-the-badge&labelColor=07111F&logoColor=white"
-      alt="🇧🇷 TOP CONTRIBUTORS"
-      height="36"
-    >
-    <img
-      src="https://img.shields.io/badge/·····%20BRAZIL-3A424C?style=for-the-badge&labelColor=3A424C&logoColor=white"
-      alt="Brazil"
-      height="36"
-    >
-  </a>
-</p>
-
-</p>
-
-<br><br><br>
-========= END 🇧🇷 Top CommtributorsE  ========= -->
-
 
 <!-- ========= START Institutional INFO ========= -->
 [**Instituição:**]() Pontifícia Universidade Católica de São Paulo (PUC-SP) <br>
