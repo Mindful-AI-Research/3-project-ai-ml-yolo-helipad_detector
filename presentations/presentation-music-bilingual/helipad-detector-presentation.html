@@ -762,15 +762,15 @@
         ] },
 
       { id:'mlpipeline', type:'pipeline', label:'ML Pipeline', eyebrow:'ML / AI PIPELINE',
-        title:'Three experiments,', titleAccent:'one consistent story', cols:5,
+        title:'Four experiments,', titleAccent:'one consistent story', cols:5,
         steps:[
           ['01','Annotate','Roboflow, single class'],
           ['02','Split','70/20/10 train/valid/test'],
           ['03','Train','YOLOv8n, Colab T4'],
           ['04','Evaluate','mAP, Precision, Recall'],
-          ['05','Compare','exp1 / exp2 / exp3'],
+          ['05','Compare','exp1 / exp2 / exp3 / exp4'],
         ],
-        note:'exp1 (60 epochs) vs. exp2 (100 epochs) — same dataset, the briefing-required ablation. exp3 runs a separately augmented (\u201cfork\u201d) dataset, kept as a distinct data point.' },
+        note:'exp1 (60 epochs) vs. exp2 (100 epochs) — same dataset, the briefing-required ablation. exp3 runs a separately augmented (\u201cfork\u201d) dataset, kept as a distinct data point. exp4 swaps only the architecture (YOLO11n) on the exp2 setup.' },
 
       { id:'opspipeline1', type:'pipeline', label:'Ops Pipeline (1/2)', eyebrow:'AI/ML OPS PIPELINE · 1/2',
         title:'From a public aviation site', titleAccent:'to curated, helipad-ready imagery', cols:6,
@@ -830,15 +830,15 @@
         list:['Baixada Santista tiles verified 70–90 km outside every training bounding box (deg2tile inversion)','7,943 real satellite tiles run across 10 São Paulo neighborhoods, unfiltered','Detection rate consistent with real urban land-use patterns'] },
 
       { id:'results1', type:'table', label:'Results · Data', eyebrow:'RESULTS · DATA ANALYSIS',
-        title:'exp1, exp2 & exp3', titleAccent:'more epochs, and a different dataset',
-        headers:['','exp1 · Best (ep. 54)','exp1 · Final (ep. 60)','exp2 · Best (ep. 81)','exp3 · Best (ep. 78)*'],
+        title:'exp1, exp2, exp3 & exp4', titleAccent:'more epochs, a different dataset, a different architecture',
+        headers:['','exp1 · Best (ep. 54)','exp1 · Final (ep. 60)','exp2 · Best (ep. 81)','exp3 · Best (ep. 78)*','exp4 · Best (ep. 54)**'],
         rows:[
-          ['Precision','1.000','0.992','0.982','0.943'],
-          ['Recall','0.963','0.971','0.971','1.000'],
-          ['mAP@50','0.994','0.994','0.993','0.993'],
-          ['mAP@50-95','0.881','0.841','0.888','0.885'],
+          ['Precision','1.000','0.992','0.982','0.943','0.970'],
+          ['Recall','0.963','0.971','0.971','1.000','0.948'],
+          ['mAP@50','0.994','0.994','0.993','0.993','0.993'],
+          ['mAP@50-95','0.881','0.841','0.888','0.885','0.877'],
         ],
-        note:'exp2 slightly outperforms exp1 on mAP@50-95 (+0.0065) with 100 epochs; both are within noise of each other given the small dataset (~150 images) — more epochs did not overfit. *exp3 runs the same 100-epoch schedule on a separately augmented ("fork") dataset, so it is not a like-for-like comparison with exp1/exp2 — it is kept here as a third, independent data point.' },
+        note:'exp2 slightly outperforms exp1 on mAP@50-95 (+0.0065) with 100 epochs; both are within noise of each other given the small dataset (~150 images) — more epochs did not overfit. *exp3 runs the same 100-epoch schedule on a separately augmented ("fork") dataset, so it is not a like-for-like comparison with exp1/exp2 — it is kept here as a third, independent data point. **exp4 is YOLO11n on the same original dataset, epochs, batch, image size and seed as exp2 — the only architecture-only comparison: it did not beat YOLOv8n (mAP@50-95 0.877 vs. 0.888), within noise at this data scale. exp4 has not been field-validated yet.' },
 
       { id:'results2', type:'bars', label:'Results · Decisions', eyebrow:'RESULTS · DECISION MAKING',
         title:'Detection rate as a proxy', titleAccent:'for corporate density',
@@ -911,7 +911,7 @@
         title:'What comes', titleAccent:'after this deck',
         items:[
           ['Expand field validation','More neighborhoods, more unseen-region tests'],
-          ['YOLOv8n vs. YOLOv11n','A systematic head-to-head comparison'],
+          ['YOLOv8n vs. YOLO11n','Done on curated eval (exp2 vs. exp4); field validation of exp4 still pending'],
           ['Modularize the codebase','Move logic out of notebooks into reusable modules'],
           ['Grow the dashboard','Evolve apps/streamlit_app/app.py into a more robust application'],
           ['Active learning cycles','Re-annotate the hardest field-validation examples'],
@@ -1044,15 +1044,15 @@
         ] },
 
       { id:'mlpipeline', type:'pipeline', label:'Pipeline de ML', eyebrow:'PIPELINE DE ML / IA',
-        title:'Três experimentos,', titleAccent:'uma análise consistente', cols:5,
+        title:'Quatro experimentos,', titleAccent:'uma análise consistente', cols:5,
         steps:[
           ['01','Anotar','Roboflow, classe única'],
           ['02','Dividir','70/20/10 treino/validação/teste'],
           ['03','Treinar','YOLOv8n, Colab T4'],
           ['04','Avaliar','mAP, Precisão, Recall'],
-          ['05','Comparar','exp1 / exp2 / exp3'],
+          ['05','Comparar','exp1 / exp2 / exp3 / exp4'],
         ],
-        note:'exp1 (60 épocas) vs. exp2 (100 épocas) — mesmo dataset, na ablação exigida pelo briefing. O exp3 utiliza um dataset separado e augmentado (\u201cfork\u201d), mantido como um ponto de dados independente.' },
+        note:'exp1 (60 épocas) vs. exp2 (100 épocas) — mesmo dataset, na ablação exigida pelo briefing. O exp3 utiliza um dataset separado e augmentado (\u201cfork\u201d), mantido como um ponto de dados independente. O exp4 troca só a arquitetura (YOLO11n) sobre a configuração do exp2.' },
 
       { id:'opspipeline1', type:'pipeline', label:'Pipeline de Ops (1/2)', eyebrow:'PIPELINE DE AI/ML OPS · 1/2',
         title:'De um site público de aviação', titleAccent:'a imagens curadas, prontas para anotação', cols:6,
@@ -1112,15 +1112,15 @@
         list:['Tiles da Baixada Santista verificados a 70–90 km de todas as bounding boxes de treinamento (inversão deg2tile)','7.943 tiles reais de satélite processados em 10 bairros de São Paulo, sem filtragem','Taxa de detecção consistente com padrões reais de uso e ocupação urbana'] },
 
       { id:'results1', type:'table', label:'Resultados · Dados', eyebrow:'RESULTADOS · ANÁLISE DE DADOS',
-        title:'exp1, exp2 & exp3', titleAccent:'mais épocas e um dataset diferente',
-        headers:['','exp1 · Melhor (ép. 54)','exp1 · Final (ép. 60)','exp2 · Melhor (ép. 81)','exp3 · Melhor (ép. 78)*'],
+        title:'exp1, exp2, exp3 & exp4', titleAccent:'mais épocas, um dataset diferente e uma arquitetura diferente',
+        headers:['','exp1 · Melhor (ép. 54)','exp1 · Final (ép. 60)','exp2 · Melhor (ép. 81)','exp3 · Melhor (ép. 78)*','exp4 · Melhor (ép. 54)**'],
         rows:[
-          ['Precisão','1.000','0.992','0.982','0.943'],
-          ['Recall','0.963','0.971','0.971','1.000'],
-          ['mAP@50','0.994','0.994','0.993','0.993'],
-          ['mAP@50-95','0.881','0.841','0.888','0.885'],
+          ['Precisão','1.000','0.992','0.982','0.943','0.970'],
+          ['Recall','0.963','0.971','0.971','1.000','0.948'],
+          ['mAP@50','0.994','0.994','0.993','0.993','0.993'],
+          ['mAP@50-95','0.881','0.841','0.888','0.885','0.877'],
         ],
-        note:'O exp2 supera ligeiramente o exp1 em mAP@50-95 (+0.0065) com 100 épocas. Como o dataset é pequeno (~150 imagens), essa diferença permanece dentro da variação esperada; além disso, o aumento do número de épocas não provocou overfitting. *O exp3 utiliza a mesma configuração de 100 épocas, mas em um dataset separado e augmentado ("fork"). Por isso, não é diretamente comparável a exp1/exp2 e é apresentado como um terceiro ponto de dados independente.' },
+        note:'O exp2 supera ligeiramente o exp1 em mAP@50-95 (+0.0065) com 100 épocas. Como o dataset é pequeno (~150 imagens), essa diferença permanece dentro da variação esperada; além disso, o aumento do número de épocas não provocou overfitting. *O exp3 utiliza a mesma configuração de 100 épocas, mas em um dataset separado e augmentado ("fork"). Por isso, não é diretamente comparável a exp1/exp2 e é apresentado como um terceiro ponto de dados independente. **O exp4 é o YOLO11n no mesmo dataset original, épocas, batch, tamanho de imagem e seed do exp2 — a única comparação só de arquitetura: não superou o YOLOv8n (mAP@50-95 0.877 vs. 0.888), dentro do ruído nessa escala de dados. O exp4 ainda não passou pela validação de campo.' },
 
       { id:'results2', type:'bars', label:'Resultados · Decisões', eyebrow:'RESULTADOS · APOIO À DECISÃO',
         title:'Taxa de detecção como indicador', titleAccent:'de densidade corporativa',
@@ -1193,7 +1193,7 @@
         title:'O que vem', titleAccent:'a seguir',
         items:[
           ['Expandir a validação em campo','Ampliar os bairros avaliados e testar mais regiões não vistas'],
-          ['YOLOv8n vs. YOLOv11n','Realizar uma comparação sistemática e direta'],
+          ['YOLOv8n vs. YOLO11n','Feito na avaliação curada (exp2 vs. exp4); falta a validação de campo do exp4'],
           ['Modularizar o código','Extrair a lógica dos notebooks e transformá-la em módulos reutilizáveis'],
           ['Evoluir o dashboard','Evoluir apps/streamlit_app/app.py para uma aplicação mais robusta'],
           ['Ciclos de active learning','Reanotar os exemplos mais desafiadores encontrados na validação em campo'],
