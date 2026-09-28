@@ -25,7 +25,7 @@
 &nbsp;&nbsp;✦&nbsp;&nbsp;
 <a href="https://github.com/topics/object-detection">Object Detection</a>
 &nbsp;&nbsp;✦&nbsp;&nbsp;
-<a href="https://github.com/topics/yolo">YOLO (v8 / v11)</a>
+<a href="https://github.com/topics/yolo">YOLO - "You Only Look Once" (v8 / v11)</a>
 &nbsp;&nbsp;✦&nbsp;&nbsp;
 <a href="https://github.com/topics/geospatial">Geospatial Intelligence</a>
 
@@ -76,26 +76,6 @@
 <!-- ========= END PUC GIF ========= -->
 
 
-<!-- ========= START 🇧🇷 Top CommtributorsE ========= 
-<p align="center">
-  <a href="https://user-badge.committers.top/brazil/FabianaCampanari">
-    <img
-      src="https://img.shields.io/badge/%F0%9F%87%A7%F0%9F%87%B7%20TOP%20CONTRIBUTORS-07111F?style=for-the-badge&labelColor=07111F&logoColor=white"
-      alt="🇧🇷 TOP CONTRIBUTORS"
-      height="36"
-    >
-    <img
-      src="https://img.shields.io/badge/·····%20BRAZIL-3A424C?style=for-the-badge&labelColor=3A424C&logoColor=white"
-      alt="Brazil"
-      height="36"
-    >
-  </a>
-</p>
-
-</p>
-
-<br><br><br>
-========= END 🇧🇷 Top CommtributorsE  ========= -->
 
 
 <!-- ========= START Institutional INFO ========= -->
