@@ -1035,33 +1035,47 @@ TR = {
               "distritos corporativos vizinhos, em vez de um único bairro nomeado.",
     },
     "field.compare.title": {
-        "en": "🔬 Compare all 3 models on the same field validation",
-        "pt": "🔬 Comparar os 3 modelos na mesma validação de campo",    },
+        "en": "🔬 Compare all {n} models on the same field validation",
+        "pt": "🔬 Comparar os {n} modelos na mesma validação de campo",
+    },
     "field.compare.table_title": {
         "en": "#### Detection Rate by Region and Experiment",
         "pt": "#### Taxa de Detecção por Região e Experimento",
     },
     "field.compare.body": {
-        "en": "Same 7,943 tiles across the same 10 regions, run separately with each experiment's "
-              "weights — shows whether the model that scored best on the curated validation set "
-              "actually generalizes as well once it meets real, uncurated satellite coverage.",
-        "pt": "Os mesmos 7.943 tiles nas mesmas 10 regiões, rodados separadamente com os pesos de "
+        "en": "The same {tiles} tiles across the same 10 regions, run separately with each "
+              "experiment's weights — shows whether the model that scored best on the curated "
+              "validation set actually generalizes as well once it meets real, uncurated satellite "
+              "coverage. (exp2 here uses a re-run on this exact tile set, not its original "
+              "production run — see the Downloads tab for that number.)",
+        "pt": "Os mesmos {tiles} tiles nas mesmas 10 regiões, rodados separadamente com os pesos de "
               "cada experimento — mostra se o modelo que teve a melhor nota no conjunto de "
               "validação curado realmente generaliza bem quando enfrenta cobertura de satélite "
-              "real, sem curadoria prévia.",
+              "real, sem curadoria prévia. (o exp2 aqui usa uma nova execução sobre esse mesmo "
+              "conjunto de tiles, não a execução original de produção — veja a aba Downloads para "
+              "esse número.)",
     },
     "field.compare.reality_check": {
-        "en": "exp1 leads the curated validation set on Precision (1.000) — but across these same "
-              "7,943 field tiles, it detects roughly half as many real helipads as exp2 (9.6% vs. "
-              "21.1% overall detection rate) and exp3 (17.9%). A model that looks best on a small, "
-              "curated benchmark is not automatically the model that generalizes best in unfiltered, "
-              "real-world coverage — exactly the kind of gap field validation exists to catch.",
-        "pt": "O exp1 lidera o conjunto de validação curado em Precision (1.000) — mas, nos mesmos "
-              "7.943 tiles de campo, detecta aproximadamente metade dos helipontos reais que o exp2 "
-              "(9,6% vs. 21,1% de taxa geral de detecção) e o exp3 (17,9%). Um modelo que parece "
-              "melhor num benchmark pequeno e curado não é automaticamente o que generaliza melhor "
-              "em cobertura real, sem filtragem — exatamente o tipo de lacuna que a validação de "
+        "en": "exp1 leads the curated validation set on Precision (1.000) — but across identical "
+              "field conditions, it detects roughly half as many real helipads as exp2 (9.6% vs. "
+              "21.0%) and noticeably fewer than exp3 (17.9%). A model that looks best on a small, "
+              "curated benchmark is not automatically the model that generalizes best in "
+              "unfiltered, real-world coverage — exactly the kind of gap field validation exists "
+              "to catch.",
+        "pt": "O exp1 lidera o conjunto de validação curado em Precision (1.000) — mas, nas mesmas "
+              "condições de campo, detecta cerca de metade dos helipontos reais que o exp2 (9,6% "
+              "vs. 21,0%) e sensivelmente menos que o exp3 (17,9%). Um modelo que parece melhor num "
+              "benchmark pequeno e curado não é automaticamente o que generaliza melhor em "
+              "cobertura real, sem filtragem — exatamente o tipo de lacuna que a validação de "
               "campo existe para capturar.",
+    },
+    "field.compare.reality_check_exp4": {
+        "en": "On the curated benchmark, exp4 (YOLO11n) was roughly tied with exp3. In the field, "
+              "exp4 does slightly better than exp3 ({exp4:.1%} vs. {exp3:.1%}) — but both stay "
+              "well behind exp2 ({exp2:.1%}).",
+        "pt": "No benchmark curado, o exp4 (YOLO11n) ficou praticamente empatado com o exp3. Em "
+              "campo, o exp4 fica um pouco melhor que o exp3 ({exp4:.1%} vs. {exp3:.1%}) — mas os "
+              "dois ficam bem atrás do exp2 ({exp2:.1%}).",
     },
     "field.compare.missing": {
         "en": "Not yet run in the field for: **{missing}** — only showing the experiment(s) with a summary file present.",
@@ -2010,6 +2024,26 @@ FIELD_SUMMARY_PATHS_BY_EXP = {
     "exp2": FIELD_SUMMARY_PATH,
     "exp3": Path("reports/detection_summary_by_region_exp3.json"),
 }
+# exp4 (YOLO11n, same dataset/epochs as exp2) is registered only once its
+# field-validation JSON exists, so the "missing summaries" caption below
+# doesn't show visitors a warning about a run that hasn't been executed yet.
+_EXP4_FIELD_PATH = Path("reports/detection_summary_by_region_exp4.json")
+if _EXP4_FIELD_PATH.exists():
+    FIELD_SUMMARY_PATHS_BY_EXP["exp4"] = _EXP4_FIELD_PATH
+
+# exp1, exp3 and exp4 were all field-validated on an identical 7,767-tile set.
+# exp2's ORIGINAL production run (FIELD_SUMMARY_PATH, used by the cards/chart
+# above) covered a slightly larger 7,943-tile set instead (Faria Lima and the
+# Av. Paulista split differ by a few hundred tiles there) — mixing that run
+# into the per-region comparison table below would silently compare rows
+# computed over different tile counts for the same neighborhood. exp2 was
+# re-run on the matching 7,767-tile set specifically to fix this; once that
+# file exists, the comparison table (not the production cards above, which
+# intentionally keep showing exp2's real deployed-run numbers) uses it
+# instead, so every column in that table shares one identical tile set.
+_EXP2_RERUN_FIELD_PATH = Path("reports/detection_summary_by_region_exp2_rerun.json")
+if _EXP2_RERUN_FIELD_PATH.exists():
+    FIELD_SUMMARY_PATHS_BY_EXP["exp2"] = _EXP2_RERUN_FIELD_PATH
 
 
 @st.cache_data(show_spinner=False)
