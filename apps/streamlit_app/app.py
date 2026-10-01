@@ -4447,15 +4447,20 @@ with tab_field:
         if generated_at:
             st.caption(f"{t('field.last_updated').format(date=generated_at)}")
 
-        # ---- 3-model comparison on the same field validation ----
-        # Same 7,943 tiles / 10 regions, run separately with exp1, exp2
-        # and exp3's weights — shows whether the "best" model on the
-        # curated val set (exp1, by Precision) actually generalizes as
-        # well in the field as exp2/exp3 do.
+        # ---- N-model comparison on the same field validation ----
+        # Runs separately with each experiment's weights, all on the same
+        # tile set (see FIELD_SUMMARY_PATHS_BY_EXP above for why exp2 here
+        # is a re-run, not its original production numbers) — shows whether
+        # the "best" model on the curated val set (exp1, by Precision)
+        # actually generalizes as well in the field as the others do. Title
+        # and tile count are computed from whichever summaries are actually
+        # present, so this scales cleanly from exp1/exp2/exp3 to any future
+        # exp5+ without another code change.
         all_summaries = load_field_summaries_by_exp()
         if len(all_summaries) >= 2:
-            with st.expander(t("field.compare.title"), expanded=True):
-                st.caption(t("field.compare.body"))
+            compare_tiles_total = next(iter(all_summaries.values())).get("totals", {}).get("tiles_total", "—")
+            with st.expander(t("field.compare.title").format(n=len(all_summaries)), expanded=True):
+                st.caption(t("field.compare.body").format(tiles=f"{compare_tiles_total:,}"))
 
                 def _norm_region(name: str) -> str:
                     return str(name).strip().lower().replace("segment", "trecho")
@@ -4495,11 +4500,16 @@ with tab_field:
                         st.metric(exp_name, f"{rate*100:.1f}%")
 
                 if {"exp1", "exp2", "exp3"} <= set(all_summaries):
+                    reality_check_text = t('field.compare.reality_check')
+                    if "exp4" in comp_totals:
+                        reality_check_text += " " + t('field.compare.reality_check_exp4').format(
+                            exp4=comp_totals["exp4"], exp3=comp_totals["exp3"], exp2=comp_totals["exp2"],
+                        )
                     st.markdown(f"""
                     <div style="border-left:3px solid #14b8a6; background:rgba(14,117,109,0.08);
                                 border-radius:8px; padding:14px 18px; margin-top:14px;">
                         <p style="margin:0; color:#E2E8F0; font-size:14px; line-height:1.65;">
-                            {t('field.compare.reality_check')}
+                            {reality_check_text}
                         </p>
                     </div>
                     """, unsafe_allow_html=True)
