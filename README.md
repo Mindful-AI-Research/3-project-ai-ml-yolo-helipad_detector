@@ -784,6 +784,45 @@ Its role was to support image upload, bounding-box labeling, dataset versioning,
 <a id="methodology"></a>
 ## [Methodology]()
 
+The project follows an end-to-end methodology aligned with educational best practices in applied Computer Vision.
+
+1. **Data collection**: satellite tiles are collected programmatically from ESRI World Imagery.  
+2. **Manual curation**: irrelevant tiles are discarded to improve dataset quality.  
+3. **Annotation**: helipads are labeled with tight bounding boxes in Roboflow.  
+4. **Preprocessing**: the dataset is standardized and split into training, validation, and test subsets.  
+5. **Training**: a YOLO model is trained in a GPU-enabled environment.  
+6. **Evaluation**: performance is examined with metrics and qualitative error analysis.  
+7. **Inference**: the trained model is applied to unseen images and new geographic areas.  
+8. **Application layer**: a lightweight interface makes the model easier to demonstrate and inspect.  
+
+This methodology highlights a key lesson in AI education: the quality of results is strongly influenced by data engineering and annotation decisions, not only by the network architecture.
+
+<br><br>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
