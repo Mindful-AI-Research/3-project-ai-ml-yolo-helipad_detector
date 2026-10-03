@@ -835,13 +835,26 @@ The Helipoint Detector technical pipeline can be summarized in 12 steps:
 <br><br>]
 
 <a id="image-collection-and-generation"></a>
-## [Image Collection and Generation]()
+## [Image Collection and Generation***]()
 
-<a id="programmatic-collection-esri-world-imagery"></a>
-### [Programmatic collection (ESRI World Imagery)]()
+### ➠ [***Programmatic collection (ESRI World Imagery)***]()
 
 Programmatic collection follows the XYZ tile pattern of the **ESRI World Imagery** public service, as recommended in the briefing:
 
+[-]() define [**zoom**]() by target type
+[-]() use `z = 19` for helipads and other small targets
+[-]()define **bounding boxes** per neighborhood `(lon_min, lat_min, lon_max, lat_max)`
+[-]() convert bounding boxes to tile indices `(z, x, y)` via a `deg2tile` function
+[-]() download each tile, checking HTTP status and filtering placeholders
+[-]() organize tiles into folders by neighborhood and zoom
+
+<br><br>
+
+> [!TIP]
+>
+> The `src/geospatial/geospatial_image_collection.ipynb` notebook generalizes this flow for multiple coordinates and bounding boxes, reading `src/geospatial/helipad_coordinates.csv` and producing mosaics and crops ready for triage.
+
+<br><br>
 
 
 
@@ -885,26 +898,6 @@ Programmatic collection follows the XYZ tile pattern of the **ESRI World Imagery
 
 <br><br>
 
-## [Image Collection and Generation***]()
-
-### [***Programmatic collection (ESRI World Imagery)***]()
-
-Programmatic collection follows the XYZ tile pattern of the **ESRI World Imagery** public service, as recommended in the briefing:
-
-[-]() define [**zoom**]() by target type
-[-]() use `z = 19` for helipads and other small targets
-[-]()define **bounding boxes** per neighborhood `(lon_min, lat_min, lon_max, lat_max)`
-[-]() convert bounding boxes to tile indices `(z, x, y)` via a `deg2tile` function
-[-]() download each tile, checking HTTP status and filtering placeholders
-[-]() organize tiles into folders by neighborhood and zoom
-
-<br><br>
-
-> [!TIP]
->
-> The `Imagens.ipynb` notebook generalizes this flow for multiple coordinates and bounding boxes, reading `cordenadasheli.csv` and producing > mosaics and crops ready for triage.
-
-<br><br>
 
 ### [***Complementary manual collection (Google Earth Web***]()
 
