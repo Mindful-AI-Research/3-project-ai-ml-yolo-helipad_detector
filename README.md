@@ -451,63 +451,11 @@ Whenever imagery or derived mosaics are reproduced, the required attribution is:
 <a id="extra-automation-contribution"></a>
 ## [Extra Automation Contribution]()
 
-Beyond the minimum briefing requirements, the group developed an [**extra geospatial automation resource**]() to speed up helipad discovery before the annotation stage.
-
-<br>
-
-<a id="technical-title-of-the-contribution"></a>
-### ➠ [***Technical title of the contribution***]()
-
-[**Extra Resource**]() — Automation System to Speed Up the Search for Geographic Points and Helipads
-
-<br>
-
-<a id="core-idea"></a>
-### ➠ [***Core idea***]()
-
-Instead of relying solely on manual inspection in maps, the system:
-
-[1.]() queries a public aviation website with airport and helipad records  <br>
-[2.]() automates navigation and scraping with Selenium  <br>
-[3.]() extracts geographic coordinates and metadata for each helipad  <br>
-[4.]() converts these coordinates into geographic bounding boxes  <br>
-[5.]() uses these boxes as input to download ESRI satellite tiles  <br>
-[6.]() generates mosaics ready for triage, annotation and upload to Roboflow 
-
-This resource drastically reduces target search time and strengthens construction of a broader, traceable dataset useful for future training cycles.
-
-<br><br>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
--------------------
-###  👩🏻‍🚀 🚧 
--------------------
-
-
-## [Extra Automation Contribution]()
-
 Beyond the minimum briefing requirements, the group developed an **extra geospatial automation resource** to speed up helipad discovery before the annotation stage.
 
 <br>
 
+<a id="technical-title-of-the-contribution"></a>
 ### [Technical title of the contribution]()
 
 <br>
@@ -537,6 +485,32 @@ Instead of relying solely on manual inspection in maps, the system:
 > training cycles.
 
 <br>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-------------------
+###  👩🏻‍🚀 🚧 
+-------------------
+
+
+
 
 ### [Geospatial visualization]()
 
