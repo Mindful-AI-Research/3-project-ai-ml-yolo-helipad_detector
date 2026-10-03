@@ -507,7 +507,7 @@ The dashboard's [**🗺️ Map**]() tab (Streamlit, Folium) shows four real, sep
 
 - 🟢 [**São Paulo training neighborhoods (10 regions) :**]() region-level bounding boxes from `src/data_preparation/image_preprocessing.ipynb`, saved to `src/geospatial/sp_neighborhoods_bbox.csv`. Two of these are labeled `Av_Paulista (trecho 1)` / `(trecho 2)`: the source notebook defines two bounding boxes with the same name, and their footprints overlap ~62–68% — i.e. two slightly-offset image-collection passes over the same avenue, not two different places. `Faria_Lima` was added manually (real geocoded coordinates, Jardim Paulistano) since it was listed as a target neighborhood in this README but had no corresponding bounding box in the source notebook — its bounding box has not yet been used to actually collect/curate training tiles, unlike the other 9.
 
-<br><br>
+<br>
 
 
 - 🔵 [**Discovery dataset (129 candidates, other Brazilian states) :**]()  from `src/geospatial/helipad_scraper.py`, saved to `src/geospatial/helipad_coordinates_bbox.csv`.
