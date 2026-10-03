@@ -321,6 +321,25 @@ The platform implements a complete AI workflow, including public data collection
 <!-- ========= END Contexto Global  ========= -->
 
 
+<a id="project-context"></a>
+## [Project Context]()
+
+The work was developed in the context of [**Project 2 — Object Detection in Satellite Images with YOLO**](), whose briefing requires each group to:
+
+<br>
+
+[-]() choose [**a single target class**]() <br>
+[-]() build an **original dataset**, without using pre-made sets  <br>
+[-]() use **ESRI World Imagery (XYZ tiles)** as the main image source  <br>
+[-]() perform programmatic collection, annotation, training, evaluation and inference on an unseen neighborhood  <br>
+[-]() deliver an annotated dataset, notebooks, model weights, report and presentation  <br>
+
+The central pedagogical message is that **around 80% of the effort in AI is in the data, not in the architecture**. The YOLO model is practically the same for all groups; the real differentiator comes from dataset quality, manual curation and annotation consistency.
+
+<br><br>
+
+
+<a id="project-definition"></a>
 ## [Project Definition]()
 
 The **Helipad Detector** project implements a full **Object Detection** pipeline to identify helipads on rooftops in the city of São Paulo, using high-resolution aerial and orbital imagery and models from the **YOLOv8/YOLOv11** family.
@@ -333,7 +352,24 @@ Rather than relying on a ready-made benchmark, the project emphasizes the constr
 
 <br><br>
 
+<a id="business-and-research-problem"></a>
+## [Business and Research Problem]()
 
+Manually identifying helipads in dense urban environments is a slow, subjective and hard-to-scale task. On high-resolution imagery, rooftops with circular patterns, HVAC equipment, sport markings, shadows, reflections and urban geometry can visually resemble the characteristic helipad “H”.
+
+This project addresses that challenge with an [**Object Detection**]() pipeline that turns raw geospatial imagery into structured visual intelligence, reducing manual effort and enabling:
+
+<br>
+
+[-]() faster, more systematic helipad localization  <br>
+[-]() assessment of the model’s generalization ability across different neighborhoods  <br>
+[-]() study of error patterns in real urban contexts  <br>
+[-]() organized and reproducible data, image and evidence handling  <br>
+
+<br><br>
+
+
+<a id="objective"></a>
 ## [Objective]()
 
 The main objective is to build an **end-to-end system** capable of detecting helipads on rooftops in the city of São Paulo, following all model lifecycle stages defined in the briefing:
@@ -353,20 +389,7 @@ Methodologically, the project reinforces that model performance is directly tied
 
 <br><br>
 
-## [Business and Research Problem]()
 
-Manually identifying helipads in dense urban environments is a slow, subjective and hard-to-scale task. On high-resolution imagery, rooftops with circular patterns, HVAC equipment, sport markings, shadows, reflections and urban geometry can visually resemble the characteristic helipad “H”.
-
-This project addresses that challenge with an [**Object Detection**]() pipeline that turns raw geospatial imagery into structured visual intelligence, reducing manual effort and enabling:
-
-<br>
-
-[-]() faster, more systematic helipad localization  <br>
-[-]() assessment of the model’s generalization ability across different neighborhoods  <br>
-[-]() study of error patterns in real urban contexts  <br>
-[-]() organized and reproducible data, image and evidence handling  <br>
-
-<br><br>
 
 ## [Why Helipads?]()
 
@@ -395,21 +418,7 @@ In urban satellite imagery, helipads may be confused with rooftop structures, sp
 <br><br>
 <!-- ========= END Key Features ========= -->
 
-## [Project Context]()
 
-The work was developed in the context of [**Project 2 — Object Detection in Satellite Images with YOLO**](), whose briefing requires each group to:
-
-<br>
-
-[-]() choose [**a single target class**]() <br>
-[-]() build an **original dataset**, without using pre-made sets  <br>
-[-]() use **ESRI World Imagery (XYZ tiles)** as the main image source  <br>
-[-]() perform programmatic collection, annotation, training, evaluation and inference on an unseen neighborhood  <br>
-[-]() deliver an annotated dataset, notebooks, model weights, report and presentation  <br>
-
-The central pedagogical message is that **around 80% of the effort in AI is in the data, not in the architecture**. The YOLO model is practically the same for all groups; the real differentiator comes from dataset quality, manual curation and annotation consistency.
-
-<br><br>
 
 
 
