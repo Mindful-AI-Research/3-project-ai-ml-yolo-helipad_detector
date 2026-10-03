@@ -870,7 +870,7 @@ In some cases, [**Google Earth Web**]() may be used as a complement:
 >
 > Bulk screenshot collection from Google is not used, in line with usage restrictions and the briefing.
 
-<br><br>
+<br>
 
 
 <a id="curation-and-dataset-volume"></a>
@@ -891,10 +891,29 @@ In alignment with the project:
 
 <br><br>
 
+<a id="annotation-and-roboflow"></a>
+## [Annotation and Roboflow]()
 
 
+### ➠ [***Annotation Tool***]()
 
+[**Roboflow**]() is used as the central platform for:
 
+[-]() uploading selected images
+[-]() drawing bounding boxes
+[-]() standardizing labels (a single class: helipad)
+[-]() resizing to `640×640`
+[-]() data augmentation and version creation
+[-]() splitting into `train / valid / test`
+[-]() exporting in **YOLOv8/YOLOv11** format
+
+<br>
+
+> [!TIP]
+>
+> Other tools like CVAT.ai are compatible, but the main flow is structured around Roboflow for simplicity.
+
+<br>
 
 
 
@@ -930,31 +949,12 @@ In alignment with the project:
 
 
 
-## [Annotation and Roboflow]()
 
 Image annotation was carried out with focus on consistency and alignment with course rules.
 
 <br>
 
-### [***Annotation Tool***]()
 
-[**Roboflow**]() is used as the central platform for:
-
-[-]() uploading selected images
-[-]() drawing bounding boxes
-[-]() standardizing labels (a single class: helipad)
-[-]() resizing to `640×640`
-[-]() data augmentation and version creation
-[-]() splitting into `train / valid / test`
-[-]() exporting in **YOLOv8/YOLOv11** format
-
-<br><br>
-
-> [!TIP]
->
-> Other tools like CVAT.ai are compatible, but the main flow is structured around Roboflow for simplicity.
-
-<br>
 
 ### [***Annotation Standards***]()
 
