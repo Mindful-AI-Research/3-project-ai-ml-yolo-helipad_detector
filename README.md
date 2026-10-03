@@ -921,7 +921,7 @@ Image annotation was carried out with focus on consistency and alignment with co
 <br>
 
 <a id="annotation-standards"></a>
-### [***Annotation Standards***]()
+### ➠ [***Annotation Standards***]()
 
 [-]() single target class <br>
 [-]() [**tight**]() bounding boxes, without excessive area <br>
@@ -930,8 +930,8 @@ Image annotation was carried out with focus on consistency and alignment with co
 
 <br>
 
-
-
+<a id="preprocessing-and-splits"></a>
+### ➠ [***Preprocessing and Splits***]()
 
 
 
@@ -955,45 +955,9 @@ Image annotation was carried out with focus on consistency and alignment with co
 
 
 
-### [***Preprocessing and Splits***]()
 
-In Roboflow, the following were configured:
 
-[-]() resize to `640×640` <br>
-[-]()augmentations such as 90° rotations, horizontal/vertical flips and small brightness/contrast changes <br>
-[-]() standard splits: <br>
 
-  - [**70% train**]() <br>
-  - [**20% validation**]() <br>
-  - [**10% test**]()
- 
-<br>
-
-### [***The final export produces the structure expected by YOLO:***]()
-
-<b>
-
-```bash
-dataset/
-├── data.yaml
-├── train/
-│   ├── images/
-│   └── labels/
-├── valid/
-│   ├── images/
-│   └── labels/
-└── test/
-    ├── images/
-    └── labels/
-```
-
-<br><br>
-
-> [!TIP]
->
-> Each `.txt` in `labels/` contains, per line, normalized coordinates `(class_id, x_center, y_center, width, height)`.
-
-<br><br>
 
 ## [Modeling with YOLO]()
 
