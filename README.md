@@ -899,13 +899,13 @@ In alignment with the project:
 
 [**Roboflow**]() is used as the central platform for:
 
-[-]() uploading selected images
-[-]() drawing bounding boxes
-[-]() standardizing labels (a single class: helipad)
-[-]() resizing to `640×640`
-[-]() data augmentation and version creation
-[-]() splitting into `train / valid / test`
-[-]() exporting in **YOLOv8/YOLOv11** format
+[-]() uploading selected images <br>
+[-]() drawing bounding boxes <br>
+[-]() standardizing labels (a single class: helipad) <br>
+[-]() resizing to `640×640` <br>
+[-]() data augmentation and version creation <br>
+[-]() splitting into `train / valid / test` <br>
+[-]() exporting in **YOLOv8/YOLOv11** format 
 
 <br>
 
