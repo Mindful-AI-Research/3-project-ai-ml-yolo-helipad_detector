@@ -862,13 +862,54 @@ In some cases, [**Google Earth Web**]() may be used as a complement:
 [-]() preserving consistent zoom
 [-]() cropping approximately square areas and resizing to `640×640`
 
+
 <br>
 
 > [!TIP]
 >
 > Bulk screenshot collection from Google is not used, in line with usage restrictions and the briefing.
 
-<br>
+<br><br>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<br><br>
+<br><br>
+<br><br>
+<br><br>
+<br><br>
+<br><br>
+<br><br>
+<br><br>
+
+-------------------
+###  👩🏻‍🚀 🚧 
+-------------------
+
+
+
+
+
+
+
 
 
 <a id="curation-and-dataset-volume"></a>
