@@ -809,8 +809,6 @@ The project follows an end-to-end methodology aligned with educational best prac
 <a id="full-technical-pipeline"></a>
 ## [Full Technical Pipeline]()
 
-## [Full Technical Pipeline]()
-
 The Helipoint Detector technical pipeline can be summarized in 12 steps:
 
 [1.]() Discover helipad records on an aviation website <br>
@@ -832,7 +830,7 @@ The Helipoint Detector technical pipeline can be summarized in 12 steps:
 >
 > This turns a manual, scattered search into a more scalable, traceable and reproducible process.
 
-<br><br>]
+<br><br>
 
 <a id="image-collection-and-generation"></a>
 ## [Image Collection and Generation***]()
@@ -863,6 +861,7 @@ In some cases, [**Google Earth Web**]() may be used as a complement:
 [-]() only for specific helipad examples
 [-]() preserving consistent zoom
 [-]() cropping approximately square areas and resizing to `640×640`
+
 
 <br>
 
@@ -913,17 +912,17 @@ In some cases, [**Google Earth Web**]() may be used as a complement:
 
 
 
-
-### [***Curation and dataset volume***]()
+<a id="curation-and-dataset-volume"></a>
+### ➠ [***Curation and dataset volume***]()
 
 In alignment with the project:
 
-[-]() minimum volume of **200 images with the target object** after curation
-[-]() geographical diversity with **at least 3 different neighborhoods** in training
-[-]() holdout of at least **1 fully unseen neighborhood** for final generalization testing
+[-]() minimum volume of **200 images with the target object** after curation <br>
+[-]() geographical diversity with **at least 3 different neighborhoods** in training <br>
+[-]() holdout of at least **1 fully unseen neighborhood** for final generalization testing <br>
 [-]() manual triage of tiles, discarding crops without helipads
 
-<br><br>
+<br>
 
 > [!TIP]
 >
@@ -931,25 +930,28 @@ In alignment with the project:
 
 <br><br>
 
+<a id="annotation-and-roboflow"></a>
 ## [Annotation and Roboflow]()
+
 
 Image annotation was carried out with focus on consistency and alignment with course rules.
 
 <br>
 
-### [***Annotation Tool***]()
+
+### ➠ [***Annotation Tool***]()
 
 [**Roboflow**]() is used as the central platform for:
 
-[-]() uploading selected images
-[-]() drawing bounding boxes
-[-]() standardizing labels (a single class: helipad)
-[-]() resizing to `640×640`
-[-]() data augmentation and version creation
-[-]() splitting into `train / valid / test`
-[-]() exporting in **YOLOv8/YOLOv11** format
+[-]() uploading selected images <br>
+[-]() drawing bounding boxes <br>
+[-]() standardizing labels (a single class: helipad) <br>
+[-]() resizing to `640×640` <br>
+[-]() data augmentation and version creation <br>
+[-]() splitting into `train / valid / test` <br>
+[-]() exporting in **YOLOv8/YOLOv11** format 
 
-<br><br>
+<br>
 
 > [!TIP]
 >
@@ -957,7 +959,8 @@ Image annotation was carried out with focus on consistency and alignment with co
 
 <br>
 
-### [***Annotation Standards***]()
+<a id="annotation-standards"></a>
+### ➠ [***Annotation Standards***]()
 
 [-]() single target class <br>
 [-]() [**tight**]() bounding boxes, without excessive area <br>
@@ -966,7 +969,8 @@ Image annotation was carried out with focus on consistency and alignment with co
 
 <br>
 
-### [***Preprocessing and Splits***]()
+<a id="preprocessing-and-splits"></a>
+### ➠ [***Preprocessing and Splits***]()
 
 In Roboflow, the following were configured:
 
@@ -998,7 +1002,7 @@ dataset/
     └── labels/
 ```
 
-<br><br>
+<br>
 
 > [!TIP]
 >
@@ -1006,13 +1010,15 @@ dataset/
 
 <br><br>
 
+
+<a id="modeling-with-yolo"></a>
 ## [Modeling with YOLO]()
 
 Detector training was done with **Ultralytics YOLO** on Google Colab with a T4 GPU, following briefing recommendations.
 
 <br>
 
-### [***Training stack***]()
+### ➠ [***Training stack***]()
 
 [-]() Python 3.x <br>
 [-]() PyTorch <br>
@@ -1022,7 +1028,8 @@ Detector training was done with **Ultralytics YOLO** on Google Colab with a T4 G
 
 <br>
 
-### [***Base Configuration***]()
+<a id="base-configuration"></a>
+### ➠ [***Base Configuration***]()
 
 Example snippet used in the notebooks:
 
@@ -1047,7 +1054,47 @@ results = model.train(
 )
 ```
 
+<br>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 <br><br>
+<br><br>
+<br><br>
+<br><br>
+<br><br>
+<br><br>
+<br><br>
+<br><br>
+
+-------------------
+###  👩🏻‍🚀 🚧 
+-------------------
+
+
+
+
+
+
+
+
+
+
+<br>
 
 ### [***Experiment Strategy***]()
 
