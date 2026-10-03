@@ -574,10 +574,102 @@ The solution can be viewed as an architecture with [**seven main blocks**]():
 
 <br><br>
 
+<a id="repository-structure"></a>
+## [Repository Structure]()
+
+The repository structure was organized to reflect pipeline stages, including geographic automation, image generation, training, inference, evaluation and documentation.
 
 
 
-
+```bash
+Helipad Detector
+├── .devcontainer
+│   └── devcontainer.json
+├── .streamlit
+│   └── config.toml
+├── apps
+│   └── streamlit_app
+│       ├── app.py
+│       └── streamlit_deploy_link.md
+├── artifacts
+│   └── runs/runs/detect
+│       ├── exp1/  (weights/best.pt + last.pt, curves, confusion matrix, train/val batches)
+│       ├── exp2/  (same + best.onnx)
+│       └── exp3/  (same + best.onnx)
+├── assets
+│   ├── audio/passacaglia-deep-house-remix.mp3
+│   ├── exp_1/, exp_2/, exp_3/   (loss, precision/recall, mAP and confusion matrix charts)
+│   └── pipeline_diagram.svg
+├── briefing
+│   ├── geo_reference/            (T_ORTO_3315-264 .j2w / .jp2)
+│   ├── notebooks/                (mosaic_perdizes.ipynb, mosaic_perdizes_hires.ipynb)
+│   ├── briefing_en.pdf
+│   └── briefing_pt.pdf
+├── config
+│   └── data.yaml
+├── data
+│   ├── inference/unseen_neighborhood/   (12 tiles — neighborhood never seen during training)
+│   ├── raw/helipad_dataset.rar
+│   ├── samples/                          (64 sample tiles)
+│   ├── tiles/mosaic_centro_tiles/ + Centro mosaics (hi-res, preview, annotated)
+│   └── training/
+│       ├── exp1/   (train/valid/test YOLO + data.yaml)
+│       └── exp2/   (idem)
+├── demo
+│   ├── Helipad-Detection - YOLO11 - Model Training - Demo 🚁.mp4  (2 vídeos)
+│   └── demos_links.md
+├── docs
+│   ├── 🇧🇷Portugues/ANALYSIS_YOLO_RESULTS.md
+│   ├── 🇬🇧English/ANALYSIS_YOLO_RESULTS.md
+│   ├── governance/On the Economic and Governance Mechanisms for the Agentic Web.pdf
+│   ├── MLOps-Architecture.md
+│   └── top-10-ranked-helicopter-cities.md
+├── execution_guide
+│   ├── 🇧🇷HELIPAD DETECTOR — MANUAL COMPLETO DE EXECUÇÃO.md
+│   ├── 🇧🇷HELIPAD_DISCOVERY_COORDINATE_CONVERSION_DATASET_UPDATE.md
+│   ├── 🇬🇧HELIPAD DETECTOR — COMPLETE EXECUTION MANUAL.md
+│   └── 🇬🇧HELIPAD_DISCOVERY_COORDINATE_CONVERSION_DATASET_UPDATE.md
+├── notebooks
+│   └── model_analysis.ipynb
+├── presentations
+│   └── presentation-music-bilingual/
+│       ├── Passacaglia_Deep_House_Remix.mp3
+│       └── presentation-deployment-link.md
+├── reports
+│   ├── helipad_detector_full_report/   (full report PT/EN — .docx, .pages, .pdf)
+│   ├── model_outputs/detect/exp1_predictions/   (12 tiles)
+│   ├── detection_summary_by_region.json (+ _exp1 / _exp2 / _exp3)
+│   ├── auto_triage_regions_log.txt
+│   ├── download_all_regions_log.txt
+│   └── faria_lima_triage_log.txt
+├── src
+│   ├── data_preparation
+│   │   └── IMAGE_PREPROCESSING.ipynb
+│   ├── geospatial
+│   │   ├── brazilian-states-helipad-discovery-folium-open-street-map/
+│   │   ├── mosaic_<neighborhood>/   (10 folders, one per region — Alphaville, Av. Paulista 1/2, Brooklin,
+│   │   │                       Faria Lima, Inter-Zone, Itaim Bibi, Pinheiros, Vila Olímpia, Vila Nova Conceição)
+│   │   ├── helipad_bot.py
+│   │   ├── helipad_scraper.py
+│   │   ├── run_scraping_pipeline.py
+│   │   ├── geocode_states.py
+│   │   ├── transform_coordinates.py
+│   │   ├── download_all_regions.py
+│   │   ├── auto_triage_regions.py (+ _exp1 / _exp2 / _exp3 / _faria_lima)
+│   │   ├── geospatial_image_collection.ipynb (+ _faria_lima)
+│   │   ├── keplergl_map_config.json / keplergl_map_loaded.html
+│   │   └── helipad_coordinates_*.csv, sp_neighborhoods_bbox.csv, faria_lima_input.csv
+│   └── training
+│       ├── yolo_training_exp1.ipynb
+│       ├── yolo_training_exp2.ipynb
+│       ├── yolo_training_exp3.ipynb
+│       └── exp4.ipynb
+├── .gitignore
+├── README.md / README.pt_BR.md
+├── packages.txt
+├── pytest.ini
+└── requirements.txt
+```
 
 
 
@@ -615,102 +707,8 @@ The solution can be viewed as an architecture with [**seven main blocks**]():
 
 
 
-## [Repository Structure]()
 
-The repository structure was organized to reflect pipeline stages, including geographic automation, image generation, training, inference, evaluation and documentation.
 
-<br>
-
-```bash
-Helipad Detector
-├── .devcontainer
-│   └── devcontainer.json
-├── .streamlit
-│   └── config.toml
-├── apps
-│   └── streamlit_app
-│       ├── app.py
-│       └── streamlit_deploy_link.md
-├── artifacts
-│   └── runs/runs/detect
-│       ├── exp1/  (weights/best.pt + last.pt, curvas, matriz de confusão, batches de treino/val)
-│       ├── exp2/  (idem + best.onnx)
-│       └── exp3/  (idem + best.onnx)
-├── assets
-│   ├── audio/passacaglia-deep-house-remix.mp3
-│   ├── exp_1/, exp_2/, exp_3/   (gráficos de loss, precisão/recall, mAP, matriz de confusão)
-│   └── pipeline_diagram.svg
-├── briefing
-│   ├── geo_reference/            (T_ORTO_3315-264 .j2w / .jp2)
-│   ├── notebooks/                (mosaic_perdizes.ipynb, mosaic_perdizes_hires.ipynb)
-│   ├── briefing_en.pdf
-│   └── briefing_pt.pdf
-├── config
-│   └── data.yaml
-├── data
-│   ├── inference/unseen_neighborhood/   (12 tiles — bairro nunca visto no treino)
-│   ├── raw/helipad_dataset.rar
-│   ├── samples/                          (64 tiles de exemplo)
-│   ├── tiles/mosaic_centro_tiles/ + mosaicos Centro (hi-res, preview, anotado)
-│   └── training/
-│       ├── exp1/   (train/valid/test YOLO + data.yaml)
-│       └── exp2/   (idem)
-├── demo
-│   ├── Helipad-Detection - YOLO11 - Model Training - Demo 🚁.mp4  (2 vídeos)
-│   └── demos_links.md
-├── docs
-│   ├── 🇧🇷Portugues/ANALYSIS_YOLO_RESULTS.md
-│   ├── 🇬🇧English/ANALYSIS_YOLO_RESULTS.md
-│   ├── governance/On the Economic and Governance Mechanisms for the Agentic Web.pdf
-│   ├── MLOps-Architecture.md
-│   └── top-10-ranked-helicopter-cities.md
-├── execution_guide
-│   ├── 🇧🇷HELIPAD DETECTOR — MANUAL COMPLETO DE EXECUÇÃO.md
-│   ├── 🇧🇷HELIPAD_DISCOVERY_COORDINATE_CONVERSION_DATASET_UPDATE.md
-│   ├── 🇬🇧HELIPAD DETECTOR — COMPLETE EXECUTION MANUAL.md
-│   └── 🇬🇧HELIPAD_DISCOVERY_COORDINATE_CONVERSION_DATASET_UPDATE.md
-├── notebooks
-│   └── model_analysis.ipynb
-├── presentations
-│   └── presentation-music-bilingual/
-│       ├── Passacaglia_Deep_House_Remix.mp3
-│       └── presentation-deployment-link.md
-├── reports
-│   ├── helipad_detector_full_report/   (relatório completo PT/EN — .docx, .pages, .pdf)
-│   ├── model_outputs/detect/exp1_predictions/   (12 tiles)
-│   ├── detection_summary_by_region.json (+ _exp1 / _exp2 / _exp3)
-│   ├── auto_triage_regions_log.txt
-│   ├── download_all_regions_log.txt
-│   └── faria_lima_triage_log.txt
-├── src
-│   ├── data_preparation
-│   │   └── IMAGE_PREPROCESSING.ipynb
-│   ├── geospatial
-│   │   ├── brazilian-states-helipad-discovery-folium-open-street-map/
-│   │   ├── mosaic_<bairro>/   (10 pastas: Alphaville, Av. Paulista 1/2, Brooklin, Faria Lima,
-│   │   │                       Inter-Zonas, Itaim Bibi, Pinheiros, Vila Olímpia, Vila Nova Conceição)
-│   │   ├── helipad_bot.py, helipad_scraper.py, run_scraping_pipeline.py, geocode_states.py
-│   │   ├── transform_coordinates.py, download_all_regions.py, auto_triage_regions*.py
-│   │   ├── geospatial_image_collection*.ipynb
-│   │   ├── keplergl_map_config.json / keplergl_map_loaded.html
-│   │   └── helipad_coordinates_*.csv, sp_neighborhoods_bbox.csv, faria_lima_input.csv
-│   └── training
-│       ├── yolo_training_exp1.ipynb
-│       ├── yolo_training_exp2.ipynb
-│       ├── yolo_training_exp3.ipynb
-│       └── exp4.ipynb
-├── .gitignore
-├── README.md / README.pt_BR.md
-├── packages.txt
-├── pytest.ini
-└── requirements.txt
-```
-
-<br><br>
-
-> [!TIP]
->
-> This organization facilitates navigation, reproducibility and project evolution, clearly separating collection, preprocessing, training, > inference and application.
 
 
 <br><br>
