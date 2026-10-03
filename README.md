@@ -220,20 +220,23 @@
 <br><br><br><br>
 <!-- =========END MAIN REPO =Projects REFERENCES ========= -->
 
-## [Table of Contents]()
+<!-- ========= START Table of Contents ========= -->
+<a id="table-of-contents"></a>
+## Table of Contents
 
 - [Overview](#overview)
-- [Global Helicopter Traffic Context Why São Paulo?](#global-helicopter-traffic-context-why-sao-paulo)
+- [Global Helicopter Traffic Context — Why São Paulo?](#global-helicopter-traffic-context-why-sao-paulo)
+- [Project Context](#project-context)
 - [Project Definition](#project-definition)
-- [Objective](#objective)
 - [Business and Research Problem](#business-and-research-problem)
+- [Objective](#objective)
 - [Why Helipads?](#why-helipads)
 - [Key Features](#key-features)
-- [Project Context](#project-context)
 - [Data Source](#data-source)
 - [Extra Automation Contribution](#extra-automation-contribution)
+- [Gains from the Extra Resource](#gains-from-the-extra-resource)
 - [Overall Flow Architecture](#overall-flow-architecture)
-- [AI/ML Ops Pipeline](#aiml-ops-pipeline)
+- [AI/ML Ops Pipeline](#ai-ml-ops-pipeline)
 - [Repository Structure](#repository-structure)
 - [What is `data/raw/helipad_dataset.rar`?](#what-is-helipad-dataset)
 - [What is Roboflow in This Project?](#what-is-roboflow-in-this-project)
@@ -244,18 +247,12 @@
 - [Modeling with YOLO](#modeling-with-yolo)
 - [Evaluation](#evaluation)
 - [Inference and Generalization](#inference-and-generalization)
-- [Field Validation — Real-World Detection Across 10 São Paulo Neighborhoods](#field-validation-real-world-detection-across-10-são-paulo-neighborhoods)
+- [Field Validation — Real-World Detection Across 10 São Paulo Neighborhoods](#field-validation-real-world-detection-across-10-sao-paulo-neighborhoods)
 - [Results Analysis](#results-analysis)
 - [Generated Charts](#generated-charts)
 - [Qualitative Analysis Guide](#qualitative-analysis-guide)
 - [Web Application (Optional Layer)](#web-application-optional-layer)
 - [Live Helicopter Traffic (Beta)](#live-helicopter-traffic-beta)
-  - [Data Source and Provider Choice](#data-source-and-provider-choice)
-  - [Helicopter Identification and Limitations](#helicopter-identification-and-limitations)
-  - [Deployment Incident — Python Runtime](#deployment-incident-python-runtime)
-  - [Presentation Redesign (UX)](#presentation-redesign-ux)
-  - [Scope and Responsibility](#scope-and-responsibility)
-- [Gains from the Extra Resource](#gains-from-the-extra-resource)
 - [Educational Value](#educational-value)
 - [Technologies Used](#technologies-used)
 - [Strengths, Limitations and Future Improvements](#strengths-limitations-and-future-improvements)
