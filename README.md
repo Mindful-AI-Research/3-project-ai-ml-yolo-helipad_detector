@@ -542,9 +542,20 @@ Practically, the extra resource strengthens the most labor-intensive project sta
 
 <br><br>
 
+<a id="overall-flow-architecture"></a>
+## [Overall Flow Architecture]()
 
+The solution can be viewed as an architecture with [**seven main blocks**]():
 
+1. [**Helipad discovery**]()  — automation on an aviation website to locate records with coordinates  
+2. [**Geographic extraction**]()  — conversion and normalization of coordinates to usable decimal format  
+3. [**Geographic perimeter generation**]()  — creation of bounding boxes around each point  
+4. [**Visual acquisition**]()  — download of ESRI World Imagery satellite tiles based on these boxes  
+5. [**Visual triage**]()  — manual selection of crops with clear helipad presence  
+6. [**Annotation and versioning**]()  — use of Roboflow for labeling, preprocessing, splits and augmentations  
+7. [**Training, evaluation and inference**]()  — YOLO training in Colab, performance measurement and generalization tests on unseen neighborhoods  
 
+<br><br>
 
 
 
@@ -589,19 +600,7 @@ Practically, the extra resource strengthens the most labor-intensive project sta
 
 
 
-## [Overall Flow Architecture]()
 
-The solution can be viewed as an architecture with [**seven main blocks**]():
-
-1. [**Helipad discovery**]()  — automation on an aviation website to locate records with coordinates  
-2. [**Geographic extraction**]()  — conversion and normalization of coordinates to usable decimal format  
-3. [**Geographic perimeter generation**]()  — creation of bounding boxes around each point  
-4. [**Visual acquisition**]()  — download of ESRI World Imagery satellite tiles based on these boxes  
-5. [**Visual triage**]()  — manual selection of crops with clear helipad presence  
-6. [**Annotation and versioning**]()  — use of Roboflow for labeling, preprocessing, splits and augmentations  
-7. [**Training, evaluation and inference**]()  — YOLO training in Colab, performance measurement and generalization tests on unseen neighborhoods  
-
-<br><br>
 
 ## [AI/ML Ops Pipeline]()
 
