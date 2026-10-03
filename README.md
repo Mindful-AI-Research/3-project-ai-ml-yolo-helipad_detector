@@ -456,7 +456,7 @@ Beyond the minimum briefing requirements, the group developed an **extra geospat
 <br>
 
 <a id="technical-title-of-the-contribution"></a>
-### [Technical title of the contribution]()
+### ➠ [Technical title of the contribution]()
 
 <br>
 
