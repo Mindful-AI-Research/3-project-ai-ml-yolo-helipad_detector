@@ -547,12 +547,12 @@ Practically, the extra resource strengthens the most labor-intensive project sta
 
 The solution can be viewed as an architecture with [**seven main blocks**]():
 
-1. [**Helipad discovery**]()  — automation on an aviation website to locate records with coordinates  
-2. [**Geographic extraction**]()  — conversion and normalization of coordinates to usable decimal format  
-3. [**Geographic perimeter generation**]()  — creation of bounding boxes around each point  
-4. [**Visual acquisition**]()  — download of ESRI World Imagery satellite tiles based on these boxes  
-5. [**Visual triage**]()  — manual selection of crops with clear helipad presence  
-6. [**Annotation and versioning**]()  — use of Roboflow for labeling, preprocessing, splits and augmentations  
+1. [**Helipad discovery**]()  — automation on an aviation website to locate records with coordinates  <br>
+2. [**Geographic extraction**]()  — conversion and normalization of coordinates to usable decimal format  <br>
+3. [**Geographic perimeter generation**]()  — creation of bounding boxes around each point  <br>
+4. [**Visual acquisition**]()  — download of ESRI World Imagery satellite tiles based on these boxes  <br>
+5. [**Visual triage**]()  — manual selection of crops with clear helipad presence  <br>
+6. [**Annotation and versioning**]()  — use of Roboflow for labeling, preprocessing, splits and augmentations  <br>
 7. [**Training, evaluation and inference**]()  — YOLO training in Colab, performance measurement and generalization tests on unseen neighborhoods  
 
 <br><br>
