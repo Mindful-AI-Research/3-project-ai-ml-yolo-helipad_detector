@@ -815,7 +815,7 @@ The Helipoint Detector technical pipeline can be summarized in 12 steps:
 
 [1.]() Discover helipad records on an aviation website <br>
 [2.]() Extract coordinates and location information <br>
-3. Save and organize the data in `src/geospatial/helipad_coordinates.csv` <br>
+[3.]() Save and organize the data in `src/geospatial/helipad_coordinates.csv` <br>
 [4.]() Convert coordinates into geographic bounding boxes <br>
 [5.]() Download ESRI World Imagery satellite tiles <br>
 [6.]() Build mosaics per neighborhood or region <br>
