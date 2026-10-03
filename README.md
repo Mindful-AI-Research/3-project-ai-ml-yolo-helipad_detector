@@ -809,8 +809,6 @@ The project follows an end-to-end methodology aligned with educational best prac
 <a id="full-technical-pipeline"></a>
 ## [Full Technical Pipeline]()
 
-## [Full Technical Pipeline]()
-
 The Helipoint Detector technical pipeline can be summarized in 12 steps:
 
 [1.]() Discover helipad records on an aviation website <br>
@@ -832,7 +830,7 @@ The Helipoint Detector technical pipeline can be summarized in 12 steps:
 >
 > This turns a manual, scattered search into a more scalable, traceable and reproducible process.
 
-<br><br>]
+<br><br>
 
 <a id="image-collection-and-generation"></a>
 ## [Image Collection and Generation***]()
