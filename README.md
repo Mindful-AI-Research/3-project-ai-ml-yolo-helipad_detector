@@ -757,7 +757,7 @@ The repository structure was organized to reflect pipeline stages, including geo
 > The complete repository tree, including all source files, datasets, generated artifacts, geospatial mosaics, and auxiliary resources, is available in [repository_tree_full.txt](https://github.com/Mindful-AI-Research/3-project-ai-ml-yolo-helipad_detector/blob/628e253d8cccf2425ae2512d061f60f910dd01e9/repository_tree/repository_tree_full.txt).
 
 
-<br><br><br>
+<br><br>
 
 
 <a id="what-is-helipad-dataset"></a>
