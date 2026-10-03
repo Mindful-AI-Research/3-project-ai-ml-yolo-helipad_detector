@@ -526,6 +526,38 @@ The discovery-dataset layer is additionally rendered as an interactive [Kepler.g
 <br><br>
 
 
+<a id="gains-from-the-extra-resource"></a>
+## [Gains from the Extra Resource]()
+
+The developed automation provides direct gains in productivity, quality and scalability:
+
+- drastic reduction of **manual helipad search time**
+- increased **geographical coverage**
+- improved **traceability** of coordinates and neighborhoods
+- faster generation of annotation-ready images
+- smoother integration with Roboflow
+- a more robust base for future dataset refinement and retraining cycles
+
+Practically, the extra resource strengthens the most labor-intensive project stage: finding real targets and organizing them into a usable structure for visual collection and annotation.
+
+<br><br>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
