@@ -479,8 +479,6 @@ Instead of relying solely on manual inspection in maps, the system:
 [6.]() generates mosaics ready for triage, annotation and upload to Roboflow 
 
 
-<br>
-
 This resource drastically reduces target search time and strengthens construction of a broader, traceable dataset useful for future training cycles.
 
 <br><br>
