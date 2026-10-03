@@ -674,7 +674,217 @@ Helipad Detector
 <br><br>
 
 
-
+3-project-ai-ml-yolo-helipad_detector/
+│
+├── .devcontainer/                              # Development Container configuration
+│   └── devcontainer.json                       # Reproducible VS Code / Codespaces environment
+│
+├── .github/                                    # GitHub automation and repository settings
+│   ├── workflows/                              # CI/CD workflow definitions
+│   ├── dependabot.yml                          # Automated dependency update configuration
+│   └── ISSUE_TEMPLATE/                         # GitHub issue templates
+│
+├── .streamlit/                                 # Streamlit application configuration
+│   └── config.toml                             # Theme, server, and UI settings
+│
+├── adsbfi_hugging-face_test/                   # ADS-B / flight data integration experiments
+│   ├── notebooks/                              # Exploratory notebooks for flight-related data
+│   ├── scripts/                                # Test and integration scripts
+│   └── README.md                               # Module documentation
+│
+├── apps/                                       # User-facing applications
+│   └── streamlit_app/                          # Streamlit web application
+│       ├── app.py                              # Main Streamlit application entry point
+│       ├── pages/                              # Multi-page dashboard views
+│       ├── utils/                              # App helper functions and reusable components
+│       ├── assets/                             # UI images and local visual resources
+│       └── requirements.txt                    # App-specific Python dependencies
+│
+├── artifacts/                                  # Generated outputs from model execution
+│   └── runs/
+│       └── runs/
+│           └── detect/                         # YOLO inference and detection run outputs
+│               ├── predict/                    # Prediction images and labels
+│               ├── train/                      # Training result artifacts
+│               └── val/                        # Validation result artifacts
+│
+├── assets/                                     # Repository visual assets
+│   ├── images/                                 # README and documentation images
+│   ├── gifs/                                   # Animated demonstrations
+│   ├── videos/                                 # Video demonstrations
+│   └── diagrams/                               # Architecture and pipeline diagrams
+│
+├── briefing/                                   # Academic/project requirements and briefings
+│   ├── project_brief.md                        # Project objective and requirements
+│   └── references/                             # Supporting reference materials
+│
+├── config/                                     # Central project configuration
+│   ├── data.yaml                               # YOLO dataset configuration
+│   ├── model_config.yaml                       # Model/training parameter configuration
+│   ├── paths.yaml                              # Input/output path definitions
+│   └── settings.yaml                           # General runtime settings
+│
+├── data/                                       # Project datasets
+│   ├── raw/                                    # Original, unmodified source data
+│   │   ├── images/                             # Raw aerial or satellite images
+│   │   └── metadata/                           # Original coordinate and source metadata
+│   │
+│   ├── interim/                                # Temporary intermediate processing files
+│   │
+│   ├── processed/                              # Cleaned and transformed data
+│   │   ├── images/                             # Preprocessed images
+│   │   ├── labels/                             # Cleaned YOLO labels
+│   │   └── metadata/                           # Processed geospatial metadata
+│   │
+│   ├── external/                               # Data obtained from external sources
+│   │   ├── maps/                               # Map tiles or geospatial sources
+│   │   └── coordinates/                        # External helipad coordinate datasets
+│   │
+│   └── roboflow/                               # Roboflow-exported object detection dataset
+│       ├── train/                              # Training images and annotations
+│       ├── valid/                              # Validation images and annotations
+│       ├── test/                               # Test images and annotations
+│       └── data.yaml                           # YOLO dataset definition
+│
+├── demo/                                      # Project demonstration resources
+│   ├── demo_images/                            # Images used during demonstrations
+│   ├── demo_results/                           # Example prediction outputs
+│   └── demo_video/                             # Recorded demo materials
+│
+├── docs/                                      # Technical and project documentation
+│   ├── architecture.md                         # System architecture documentation
+│   ├── methodology.md                          # Dataset, training, and validation methodology
+│   ├── setup.md                                # Environment setup instructions
+│   ├── deployment.md                           # Deployment documentation
+│   └── images/                                # Documentation-specific images
+│
+├── execution_guide/                            # Step-by-step execution guides
+│   ├── local_execution.md                      # Local environment guide
+│   ├── colab_execution.md                      # Google Colab execution guide
+│   ├── docker_execution.md                     # Docker execution guide
+│   └── streamlit_execution.md                  # Streamlit application guide
+│
+├── misc/                                      # Auxiliary files, experiments, and miscellaneous resources
+│   ├── tests/                                 # Ad hoc tests and validation scripts
+│   ├── examples/                              # Usage examples
+│   └── archive/                               # Archived or legacy content
+│
+├── notebooks/                                 # Jupyter notebooks for reproducible experiments
+│   ├── 01_data_exploration.ipynb               # Initial data exploration
+│   ├── 02_data_preprocessing.ipynb             # Image and label preprocessing
+│   ├── 03_geospatial_collection.ipynb          # Geospatial image collection
+│   ├── 04_model_training.ipynb                 # YOLO model training
+│   ├── 05_model_evaluation.ipynb               # Metrics and model evaluation
+│   └── 06_inference.ipynb                      # Inference on unseen images
+│
+├── presentations/                              # Project presentations and slides
+│   └── presentation-music-bilingual/           # Interactive bilingual presentation
+│       ├── src/                                # React source code for the presentation
+│       ├── public/                             # Static public assets
+│       ├── package.json                        # Node.js dependencies and scripts
+│       └── README.md                           # Presentation-specific instructions
+│
+├── reports/                                    # Formal reports and academic deliverables
+│   └── helipad_detector_full_report/           # Complete project report
+│       ├── report.md                           # Main written report
+│       ├── figures/                            # Figures, charts, and screenshots
+│       ├── tables/                             # Tables and evaluation summaries
+│       └── appendices/                         # Supplementary technical materials
+│
+├── src/                                       # Main source code
+│   │
+│   ├── data_preparation/                       # Data cleaning and preprocessing pipeline
+│   │   ├── image_preprocessing.ipynb           # Image preprocessing notebook
+│   │   ├── preprocessing.py                    # Image preprocessing utilities
+│   │   ├── dataset_split.py                    # Train/validation/test split logic
+│   │   └── label_validation.py                 # Annotation quality validation
+│   │
+│   ├── geospatial/                             # Geospatial data acquisition and analysis
+│   │   ├── brazilian-states-helipad-discovery-folium-open-street-map/
+│   │   │   ├── maps/                           # Folium/OpenStreetMap output maps
+│   │   │   ├── data/                           # State-level discovery data
+│   │   │   └── notebooks/                      # Supporting notebooks
+│   │   │
+│   │   ├── mosaic_Alphaville_Industrial/       # Alphaville Industrial image mosaic
+│   │   ├── mosaic_Av_Paulista_segment_1/       # Paulista Avenue – segment 1 mosaic
+│   │   ├── mosaic_Av_Paulista_segment_2/       # Paulista Avenue – segment 2 mosaic
+│   │   ├── mosaic_Brooklin/                    # Brooklin image mosaic
+│   │   ├── mosaic_Faria_Lima/                  # Faria Lima image mosaic
+│   │   ├── mosaic_Inter_Zonas/                 # Inter-zonal image mosaic
+│   │   ├── mosaic_Itaim_Bibi/                  # Itaim Bibi image mosaic
+│   │   ├── mosaic_Pinheiros/                   # Pinheiros image mosaic
+│   │   ├── mosaic_Vila_Olimpia/                # Vila Olímpia image mosaic
+│   │   ├── mosaic_Vila_nova_Conceicao/         # Vila Nova Conceição image mosaic
+│   │   │
+│   │   ├── auto_triage_faria_lima.py           # Automated detection triage for Faria Lima
+│   │   ├── auto_triage_regions.py              # Automated triage pipeline for geographic regions
+│   │   ├── auto_triage_regions_exp1.py         # Triage experiment 1
+│   │   ├── auto_triage_regions_exp2.py         # Triage experiment 2
+│   │   ├── auto_triage_regions_exp2_rerun.py   # Re-run of triage experiment 2
+│   │   ├── auto_triage_regions_exp3.py         # Triage experiment 3
+│   │   ├── auto_triage_regions_exp4.py         # Triage experiment 4
+│   │   │
+│   │   ├── download_all_regions.py             # Batch download of images by region
+│   │   ├── geocode_states.py                   # Brazilian state geocoding utilities
+│   │   ├── helipad_bot.py                      # Automated helipad data collection bot
+│   │   ├── helipad_scraper.py                  # Helipad data web scraper
+│   │   ├── run_scraping_pipeline.py            # Full scraping pipeline runner
+│   │   ├── transform_coordinates.py            # Coordinate cleaning and transformation
+│   │   │
+│   │   ├── geospatial_image_collection.ipynb   # Geospatial image collection workflow
+│   │   ├── geospatial_image_collection_faria_lima.ipynb
+│   │   │                                        # Faria Lima-specific collection workflow
+│   │   │
+│   │   ├── helipad_coordinates_raw.csv         # Raw helipad coordinate data
+│   │   ├── helipad_coordinates_processed.csv   # Cleaned and processed coordinate data
+│   │   ├── helipad_coordinates_com_estado.csv  # Coordinates enriched with Brazilian state data
+│   │   ├── helipad_coordinates_bbox.csv        # Coordinates with bounding boxes
+│   │   ├── helipontos_convertido.csv           # Converted helipad dataset
+│   │   ├── sp_neighborhoods_bbox.csv           # São Paulo neighborhood bounding boxes
+│   │   ├── faria_lima_input.csv                # Input coordinates for Faria Lima
+│   │   ├── detection_summary_by_region.json    # Detection summary grouped by region
+│   │   │
+│   │   ├── keplergl_map_config.json            # Kepler.gl map configuration
+│   │   └── keplergl_map_loaded.html            # Interactive generated Kepler.gl map
+│   │
+│   ├── modeling/                               # YOLO model training and experimentation
+│   │   ├── yolo_training_exp1.ipynb            # YOLO training experiment 1
+│   │   ├── yolo_training_exp2.ipynb            # YOLO training experiment 2
+│   │   ├── yolo_training_exp3.ipynb            # YOLO training experiment 3
+│   │   ├── train.py                            # Main training script
+│   │   ├── tune_hyperparameters.py             # Hyperparameter tuning script
+│   │   └── export_model.py                     # Model export utility
+│   │
+│   ├── evaluation/                             # Model validation and performance analysis
+│   │   ├── evaluate.py                         # Evaluation pipeline
+│   │   ├── metrics.py                          # Precision, recall, mAP, and F1 calculations
+│   │   ├── visualizations.py                   # Confusion matrices and performance plots
+│   │   └── error_analysis.py                   # False positive/negative analysis
+│   │
+│   ├── inference/                              # Production and batch inference
+│   │   ├── predict.py                          # Single-image prediction script
+│   │   ├── batch_predict.py                    # Batch prediction script
+│   │   ├── visualize_predictions.py            # Bounding-box visualization
+│   │   └── region_inference.py                 # Region-based geospatial inference
+│   │
+│   └── utils/                                  # Shared utility modules
+│       ├── paths.py                            # Project path helpers
+│       ├── logging.py                          # Logging configuration
+│       ├── image_utils.py                      # Image processing helpers
+│       ├── geo_utils.py                        # Geographic coordinate utilities
+│       └── config_loader.py                    # YAML/JSON configuration loader
+│
+├── .gitignore                                 # Git ignored files and folders
+├── CITATION.cff                               # Citation metadata for academic reuse
+├── Dockerfile                                 # Docker image definition
+├── LICENSE.md                                 # Project license
+├── README.md                                  # Main documentation in English
+├── README.pt_BR.md                            # Main documentation in Brazilian Portuguese
+├── VNAV_MIT16.485..md                         # Additional project material/documentation
+├── packages.txt                               # System packages for deployment environments
+├── pytest.ini                                 # Pytest configuration
+├── requirements.txt                           # Project-wide Python dependencies
+└── runtime.txt                                # Runtime/version configuration
 
 
 
