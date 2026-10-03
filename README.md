@@ -848,15 +848,29 @@ Programmatic collection follows the XYZ tile pattern of the **ESRI World Imagery
 [-]() download each tile, checking HTTP status and filtering placeholders
 [-]() organize tiles into folders by neighborhood and zoom
 
-<br><br>
+<br>
 
 > [!TIP]
 >
 > The `src/geospatial/geospatial_image_collection.ipynb` notebook generalizes this flow for multiple coordinates and bounding boxes, reading `src/geospatial/helipad_coordinates.csv` and producing mosaics and crops ready for triage.
 
+<br>
+
+### ➠ [***Complementary manual collection (Google Earth Web***]()
+
+In some cases, [**Google Earth Web**]() may be used as a complement:
+
+[-]() only for specific helipad examples
+[-]() preserving consistent zoom
+[-]() cropping approximately square areas and resizing to `640×640`
+
+<br>
+
+> [!TIP]
+>
+> Bulk screenshot collection from Google is not used, in line with usage restrictions and the briefing.
+
 <br><br>
-
-
 
 
 
@@ -896,24 +910,9 @@ Programmatic collection follows the XYZ tile pattern of the **ESRI World Imagery
 
 
 
-<br><br>
 
 
-### [***Complementary manual collection (Google Earth Web***]()
 
-In some cases, **Google Earth Web** may be used as a complement:
-
-[-]() only for specific helipad examples
-[-]() preserving consistent zoom
-[-]() cropping approximately square areas and resizing to `640×640`
-
-<br><br>
-
-> [!TIP]
->
-> Bulk screenshot collection from Google is not used, in line with usage restrictions and the briefing.
-
-<br><br>
 
 ### [***Curation and dataset volume***]()
 
