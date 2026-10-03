@@ -774,7 +774,11 @@ This distinction is academically important because it makes clear that the datas
 <a id="what-is-roboflow-in-this-project"></a>
 ## [What is Roboflow in This Project?]()
 
+In this project, **Roboflow** was used as the annotation and dataset management platform rather than as the origin of the imagery.
 
+Its role was to support image upload, bounding-box labeling, dataset versioning, augmentation, train/validation/test splitting, and export in YOLOv8-compatible format. In practical terms, Roboflow bridges the gap between raw tiles and a training-ready object detection dataset.
+
+<br><br>
 
 
 
