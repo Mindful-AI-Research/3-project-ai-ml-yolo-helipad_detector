@@ -975,7 +975,19 @@ dataset/
 <a id="modeling-with-yolo"></a>
 ## [Modeling with YOLO]()
 
+Detector training was done with **Ultralytics YOLO** on Google Colab with a T4 GPU, following briefing recommendations.
 
+<br>
+
+### ➠ [***Training stack***]()
+
+[-]() Python 3.x <br>
+[-]() PyTorch <br>
+[-]() `ultralytics` library <br>
+[-]() `roboflow` library for dataset integration <br>
+[-]() Jupyter Notebook / Google Colab Free (T4 GPU)
+
+<br>
 
 
 
@@ -1007,21 +1019,6 @@ dataset/
 
 
 
-## [Modeling with YOLO]()
-
-Detector training was done with **Ultralytics YOLO** on Google Colab with a T4 GPU, following briefing recommendations.
-
-<br>
-
-### [***Training stack***]()
-
-[-]() Python 3.x <br>
-[-]() PyTorch <br>
-[-]() `ultralytics` library <br>
-[-]() `roboflow` library for dataset integration <br>
-[-]() Jupyter Notebook / Google Colab Free (T4 GPU)
-
-<br>
 
 ### [***Base Configuration***]()
 
