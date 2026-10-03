@@ -306,12 +306,12 @@ The platform implements a complete AI workflow, including public data collection
 | [Bogotá](https://www.aerocivil.gov.co/) | 🇨🇴 Colombia | Executive, emergency, and specialized air services under the regulations of the Colombian civil aviation authority | [Aerocivil Colombia](https://www.aerocivil.gov.co/) |
 | [Beijing](http://www.caac.gov.cn/English/) | 🇨🇳 China | Government, executive, and specialized air services within the context of Chinese civil aviation | [**CAAC** - Civil Aviation Administration of China](http://www.caac.gov.cn/English/) |
 
-<br><br>
+<br>
 
 > [!NOTE]
 > The cities presented in this table are qualitative references to urban environments where helicopters are used in different operational contexts. The selection does not constitute an official global ranking, a standardized statistical comparison of fleets, or an operational database directly equivalent across all locations. São Paulo is the primary study area of **Helipad Detector** and presents a specific operational context, including specialized helicopter traffic management through **HELICONTROL**.
 
-<br><br>
+<br>
 
 > [!TIP]
 > São Paulo was selected as the focus of **Helipad Detector** due to the combination of high urban density, a large concentration of buildings, a significant presence of rooftop heliport infrastructure, and intense helicopter traffic. This context demonstrates how Computer Vision and satellite data can support the automated mapping of urban infrastructure. The model's detections represent **visual candidates** and do not constitute regulatory, operational, or aeronautical confirmation of the existence of a heliport.
@@ -358,8 +358,6 @@ Rather than relying on a ready-made benchmark, the project emphasizes the constr
 Manually identifying helipads in dense urban environments is a slow, subjective and hard-to-scale task. On high-resolution imagery, rooftops with circular patterns, HVAC equipment, sport markings, shadows, reflections and urban geometry can visually resemble the characteristic helipad “H”.
 
 This project addresses that challenge with an [**Object Detection**]() pipeline that turns raw geospatial imagery into structured visual intelligence, reducing manual effort and enabling:
-
-<br>
 
 [-]() faster, more systematic helipad localization  <br>
 [-]() assessment of the model’s generalization ability across different neighborhoods  <br>
@@ -479,6 +477,10 @@ Instead of relying solely on manual inspection in maps, the system:
 This resource drastically reduces target search time and strengthens construction of a broader, traceable dataset useful for future training cycles.
 
 <br><br>
+
+
+
+
 
 
 
