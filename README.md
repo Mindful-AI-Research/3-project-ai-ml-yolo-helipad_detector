@@ -832,9 +832,15 @@ The Helipoint Detector technical pipeline can be summarized in 12 steps:
 >
 > This turns a manual, scattered search into a more scalable, traceable and reproducible process.
 
+<br><br>]
 
+<a id="image-collection-and-generation"></a>
+## [Image Collection and Generation]()
 
+<a id="programmatic-collection-esri-world-imagery"></a>
+### [Programmatic collection (ESRI World Imagery)]()
 
+Programmatic collection follows the XYZ tile pattern of the **ESRI World Imagery** public service, as recommended in the briefing:
 
 
 
