@@ -675,6 +675,8 @@ Helipad Detector
 
 
 3-project-ai-ml-yolo-helipad_detector/
+
+```bash
 │
 ├── .devcontainer/                              # Development Container configuration
 │   └── devcontainer.json                       # Reproducible VS Code / Codespaces environment
@@ -885,7 +887,7 @@ Helipad Detector
 ├── pytest.ini                                 # Pytest configuration
 ├── requirements.txt                           # Project-wide Python dependencies
 └── runtime.txt                                # Runtime/version configuration
-
+```
 
 
 
