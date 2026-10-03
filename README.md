@@ -390,7 +390,7 @@ Methodologically, the project reinforces that model performance is directly tied
 <br><br>
 
 
-
+<a id="why-helipads"></a>
 ## [Why Helipads?]()
 
 Helipads are a compelling educational target because they often present a distinctive top-down geometric pattern while still being difficult enough to create realistic detection challenges.
@@ -401,6 +401,7 @@ In urban satellite imagery, helipads may be confused with rooftop structures, sp
 
 
 <!-- ======== START Key Features  ========= -->
+<a id="key-features"></a>
 ## [Key Features]()
 
 [-]() End-to-end Artificial Intelligence and Computer Vision pipeline <br>
@@ -421,7 +422,7 @@ In urban satellite imagery, helipads may be confused with rooftop structures, sp
 
 
 
-
+a id="data-source"></a>
 ## [Data Source]()
 
 The project dataset was built from satellite imagery collected over São Paulo, with a focus on neighborhoods relevant to the academic briefing and regions where helipads are more likely to appear.
@@ -437,6 +438,8 @@ The geographical scope follows the briefing: [**city of São Paulo**](), focusin
 
 <br>
 
+
+<a id="image-sources"></a>
 ### [Image sources]()
 
 - [**ESRI World Imagery (XYZ tiles)**]()  — main source, with sub-meter resolution and programmatic HTTP access  
@@ -452,6 +455,11 @@ Whenever imagery or derived mosaics are reproduced, the required attribution is:
 <br><br>
 
 
+
+<a id="extra-automation-contribution"></a>
+## [Extra Automation Contribution]()
+
+Beyond the minimum briefing requirements, the group developed an **extra geospatial automation resource** to speed up helipad discovery before the annotation stage.
 
 
 
