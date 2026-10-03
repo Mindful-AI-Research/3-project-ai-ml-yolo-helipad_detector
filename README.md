@@ -786,16 +786,23 @@ Its role was to support image upload, bounding-box labeling, dataset versioning,
 
 The project follows an end-to-end methodology aligned with educational best practices in applied Computer Vision.
 
-1. **Data collection**: satellite tiles are collected programmatically from ESRI World Imagery.  
-2. **Manual curation**: irrelevant tiles are discarded to improve dataset quality.  
-3. **Annotation**: helipads are labeled with tight bounding boxes in Roboflow.  
-4. **Preprocessing**: the dataset is standardized and split into training, validation, and test subsets.  
-5. **Training**: a YOLO model is trained in a GPU-enabled environment.  
-6. **Evaluation**: performance is examined with metrics and qualitative error analysis.  
-7. **Inference**: the trained model is applied to unseen images and new geographic areas.  
-8. **Application layer**: a lightweight interface makes the model easier to demonstrate and inspect.  
+1. [**Data collection**:]() satellite tiles are collected programmatically from ESRI World Imagery.  <br>
+2. [**Manual curation**:]() irrelevant tiles are discarded to improve dataset quality.  
+3. [**Annotation**:]() helipads are labeled with tight bounding boxes in Roboflow.  
+4. [**Preprocessing**:]() the dataset is standardized and split into training, validation, and test subsets.  
+5. [**Training**:]() a YOLO model is trained in a GPU-enabled environment.  
+6. [**Evaluation**:]() performance is examined with metrics and qualitative error analysis.  
+7. [**Inference**:]() the trained model is applied to unseen images and new geographic areas.  
+8. [**Application layer**:]() a lightweight interface makes the model easier to demonstrate and inspect.
 
-This methodology highlights a key lesson in AI education: the quality of results is strongly influenced by data engineering and annotation decisions, not only by the network architecture.
+
+<br><br>
+
+> [!IMPORTANT]
+>
+>   This methodology highlights a key lesson in AI education: the quality of results is strongly influenced by data engineering and
+>   annotation decisions, not only by the network architecture.
+
 
 <br><br>
 
@@ -843,37 +850,6 @@ This methodology highlights a key lesson in AI education: the quality of results
 -------------------
 
 
-## [What is Roboflow in This Project?]()
-
-In this project, [**Roboflow**]() was used as the annotation and dataset management platform rather than as the origin of the imagery.
-
-Its role was to support image upload, bounding-box labeling, dataset versioning, augmentation, train/validation/test splitting, and export in YOLOv8-compatible format. In practical terms, Roboflow bridges the gap between raw tiles and a training-ready object detection dataset.
-
-<br><br>
-
-## [Methodology]()
-
-The project follows an end-to-end methodology aligned with educational best practices in applied Computer Vision.
-
-1. [**Data collection**:]() satellite tiles are collected programmatically from ESRI World Imagery.  <br>
-2. [**Manual curation**:]() irrelevant tiles are discarded to improve dataset quality.  
-3. [**Annotation**:]() helipads are labeled with tight bounding boxes in Roboflow.  
-4. [**Preprocessing**:]() the dataset is standardized and split into training, validation, and test subsets.  
-5. [**Training**:]() a YOLO model is trained in a GPU-enabled environment.  
-6. [**Evaluation**:]() performance is examined with metrics and qualitative error analysis.  
-7. [**Inference**:]() the trained model is applied to unseen images and new geographic areas.  
-8. [**Application layer**:]() a lightweight interface makes the model easier to demonstrate and inspect.
-
-
-<br><br>
-
-> [!IMPORTANT]
->
->   This methodology highlights a key lesson in AI education: the quality of results is strongly influenced by data engineering and
->   annotation decisions, not only by the network architecture.
-
-
-<br><br>
 
 
 ## [Full Technical Pipeline]()
