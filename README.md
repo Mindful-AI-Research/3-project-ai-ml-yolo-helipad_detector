@@ -427,8 +427,6 @@ The project dataset was built from satellite imagery collected over São Paulo, 
 
 The geographical scope follows the briefing: [**city of São Paulo**](), focusing on neighborhoods near the PUC‑SP campus in Perdizes and regions with high helipad density, such as:
 
-<br>
-
 [-]() Perdizes, Higienópolis, Pacaembu and Sumaré  <br>
 [-]() Paulista Avenue, Itaim Bibi and Pinheiros  <br>
 [-]() Faria Lima, Berrini, Vila Olímpia and Brooklin  <br>
@@ -477,7 +475,6 @@ Instead of relying solely on manual inspection in maps, the system:
 [4.]() converts these coordinates into geographic bounding boxes  <br>
 [5.]() uses these boxes as input to download ESRI satellite tiles  <br>
 [6.]() generates mosaics ready for triage, annotation and upload to Roboflow 
-
 
 This resource drastically reduces target search time and strengthens construction of a broader, traceable dataset useful for future training cycles.
 
