@@ -484,7 +484,7 @@ Instead of relying solely on manual inspection in maps, the system:
 > This resource drastically reduces target search time and strengthens construction of a broader, traceable dataset useful for future
 > training cycles.
 
-<br><br>
+<br><br><br>
 
 <!-- ========= START 🎥 **DEMO** `AUTOMATED HELIPAD SCRAPING` ========= -->
 ###### <p align="center"> 🎥 **DEMO:** **AUTOMATED HELIPAD SCRAPING** ✧ `SELENIUM` ✧ `FLIGHTMARKET` ✧ `GEOCODING` ✧ *Creation by Fabi* ⚡️
