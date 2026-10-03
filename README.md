@@ -749,7 +749,7 @@ The repository structure was organized to reflect pipeline stages, including geo
 │       └── yolo_training_exp4.ipynb
 ```
 
-<br><br>
+<br>
 
 
 > [!TIP]
@@ -796,7 +796,7 @@ The project follows an end-to-end methodology aligned with educational best prac
 8. [**Application layer**:]() a lightweight interface makes the model easier to demonstrate and inspect.
 
 
-<br><br>
+<br>
 
 > [!IMPORTANT]
 >
@@ -806,7 +806,8 @@ The project follows an end-to-end methodology aligned with educational best prac
 
 <br><br>
 
-
+<a id="full-technical-pipeline"></a>
+## [Full Technical Pipeline]()
 
 
 
