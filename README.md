@@ -436,9 +436,9 @@ The geographical scope follows the briefing: [**city of São Paulo**](), focusin
 <a id="image-sources"></a>
 ### ➠ [***Image sources***]()
 
-- [**ESRI World Imagery (XYZ tiles)**]()  — main source, with sub-meter resolution and programmatic HTTP access  <br>
-- [**Google Earth Web**]()  — complementary source, used only for punctual captures of specific targets, not for bulk collection  <br>
-- [**GeoSampa**]()  — mentioned as an alternative high-resolution source, possible extra beyond the base scope  <br>
+- [**ESRI World Imagery (XYZ tiles) :**]()   main source, with sub-meter resolution and programmatic HTTP access  <br>
+- [**Google Earth Web :**]()   complementary source, used only for punctual captures of specific targets, not for bulk collection  <br>
+- [**GeoSampa :**]()   mentioned as an alternative high-resolution source, possible extra beyond the base scope  <br>
 
 Images are stored as `.jpg` or `.png`, as required by the project.
 
@@ -503,7 +503,7 @@ https://github.com/user-attachments/assets/eab6e951-6b66-4c6c-a2c6-23ee2f902c5f
 
 The dashboard's [**🗺️ Map**]() tab (Streamlit, Folium) shows four real, separately-toggleable layers — the two static, geospatial-discovery layers described here, plus a field detection-rate layer (see [Field Validation](#field-validation--real-world-detection-across-10-são-paulo-neighborhoods)) and a live helicopter-traffic layer sourced from adsb.fi (see [Web Application](#web-application-optional-layer) and [Scope of the Live Flight-Traffic Layer](#scope-and-responsibility)):
 
-- 🟢 [**São Paulo training neighborhoods**]() (10 regions) — region-level bounding boxes from `src/data_preparation/image_preprocessing.ipynb`, saved to `src/geospatial/sp_neighborhoods_bbox.csv`. Two of these are labeled `Av_Paulista (trecho 1)` / `(trecho 2)`: the source notebook defines two bounding boxes with the same name, and their footprints overlap ~62–68% — i.e. two slightly-offset image-collection passes over the same avenue, not two different places. `Faria_Lima` was added manually (real geocoded coordinates, Jardim Paulistano) since it was listed as a target neighborhood in this README but had no corresponding bounding box in the source notebook — its bounding box has not yet been used to actually collect/curate training tiles, unlike the other 9.
+- 🟢 [**São Paulo training neighborhoods (10 regions) :**]() region-level bounding boxes from `src/data_preparation/image_preprocessing.ipynb`, saved to `src/geospatial/sp_neighborhoods_bbox.csv`. Two of these are labeled `Av_Paulista (trecho 1)` / `(trecho 2)`: the source notebook defines two bounding boxes with the same name, and their footprints overlap ~62–68% — i.e. two slightly-offset image-collection passes over the same avenue, not two different places. `Faria_Lima` was added manually (real geocoded coordinates, Jardim Paulistano) since it was listed as a target neighborhood in this README but had no corresponding bounding box in the source notebook — its bounding box has not yet been used to actually collect/curate training tiles, unlike the other 9.
 
 
 
