@@ -763,75 +763,6 @@ The repository structure was organized to reflect pipeline stages, including geo
 <a id="what-is-helipad-dataset"></a>
 ## [What is `data/raw/helipad_dataset.rar`?]()
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
--------------------
-###  👩🏻‍🚀 🚧 
--------------------
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<br><br>
-<br><br>
-<br><br>
-<br><br>
-<br><br>
-<br><br>
-<br><br>
-<br><br>
-
-## [What is `Heliponto.rar`?]()
-
 `data/raw/helipad_dataset.rar` is the compressed annotated dataset used in the project workflow.
 
 It is not a prebuilt third-party benchmark. Instead, it represents the packaged output of the group’s own dataset-building process: programmatic tile acquisition, manual curation, annotation, export in YOLO-compatible format, and organization for training reuse.
@@ -839,6 +770,33 @@ It is not a prebuilt third-party benchmark. Instead, it represents the packaged 
 This distinction is academically important because it makes clear that the dataset itself is part of the project deliverable, not an external shortcut.
 
 <br><br>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<br><br>
+<br><br>
+<br><br>
+<br><br>
+<br><br>
+<br><br>
+<br><br>
+<br><br>
+
+-------------------
+###  👩🏻‍🚀 🚧 
+-------------------
+
 
 ## [What is Roboflow in This Project?]()
 
