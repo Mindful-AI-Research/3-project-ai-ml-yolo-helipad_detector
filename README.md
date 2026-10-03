@@ -477,9 +477,9 @@ Instead of relying solely on manual inspection in maps, the system:
 
 [1.]() queries a public aviation website with airport and helipad records  <br>
 [2.]() automates navigation and scraping with Selenium  <br>
-[3.]() extracts geographic coordinates and metadata for each helipad  
-[4.]() converts these coordinates into geographic bounding boxes  
-[5.]() uses these boxes as input to download ESRI satellite tiles  
+[3.]() extracts geographic coordinates and metadata for each helipad  <br>
+[4.]() converts these coordinates into geographic bounding boxes  <br>
+[5.]() uses these boxes as input to download ESRI satellite tiles  <br>
 [6.]() generates mosaics ready for triage, annotation and upload to Roboflow 
 
 
