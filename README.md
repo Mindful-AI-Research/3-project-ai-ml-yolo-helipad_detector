@@ -531,9 +531,9 @@ The discovery-dataset layer is additionally rendered as an interactive [Kepler.g
 
 The developed automation provides direct gains in productivity, quality and scalability:
 
-[-]() drastic reduction of **manual helipad search time**   <br>
-[-]() increased **geographical coverage**   <br>
-[-]() improved **traceability** of coordinates and neighborhoods   <br>
+[-]() drastic reduction of [**manual helipad search time**]()    <br>
+[-]() increased [**geographical coverage**]()    <br>
+[-]() improved [**traceability**]()  of coordinates and neighborhoods   <br>
 [-]() faster generation of annotation-ready images   <br>
 [-]() smoother integration with Roboflow   <br>
 [-]() a more robust base for future dataset refinement and retraining cycles   <br>
