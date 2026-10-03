@@ -989,6 +989,41 @@ Detector training was done with **Ultralytics YOLO** on Google Colab with a T4 G
 
 <br>
 
+<a id="base-configuration"></a>
+### ➠ [***Base Configuration***]()
+
+Example snippet used in the notebooks:
+
+<br>
+
+```python
+!pip install -q ultralytics roboflow
+
+from ultralytics import YOLO
+
+model = YOLO('yolov8n.pt')  # or 'yolo11n.pt'
+
+results = model.train(
+    data='data.yaml',
+    epochs=30,
+    imgsz=640,
+    batch=16,
+    device=0,
+    seed=42,
+    project='runs',
+    name='exp1'
+)
+```
+
+<br>
+
+
+
+
+
+
+
+
 
 
 
@@ -1020,32 +1055,7 @@ Detector training was done with **Ultralytics YOLO** on Google Colab with a T4 G
 
 
 
-### [***Base Configuration***]()
-
-Example snippet used in the notebooks:
-
 <br>
-
-```python
-!pip install -q ultralytics roboflow
-
-from ultralytics import YOLO
-
-model = YOLO('yolov8n.pt')  # or 'yolo11n.pt'
-
-results = model.train(
-    data='data.yaml',
-    epochs=30,
-    imgsz=640,
-    batch=16,
-    device=0,
-    seed=42,
-    project='runs',
-    name='exp1'
-)
-```
-
-<br><br>
 
 ### [***Experiment Strategy***]()
 
