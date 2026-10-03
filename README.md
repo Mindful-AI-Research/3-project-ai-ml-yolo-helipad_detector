@@ -878,9 +878,9 @@ In some cases, [**Google Earth Web**]() may be used as a complement:
 
 In alignment with the project:
 
-[-]() minimum volume of **200 images with the target object** after curation
-[-]() geographical diversity with **at least 3 different neighborhoods** in training
-[-]() holdout of at least **1 fully unseen neighborhood** for final generalization testing
+[-]() minimum volume of **200 images with the target object** after curation <br>
+[-]() geographical diversity with **at least 3 different neighborhoods** in training <br>
+[-]() holdout of at least **1 fully unseen neighborhood** for final generalization testing <br>
 [-]() manual triage of tiles, discarding crops without helipads
 
 <br>
