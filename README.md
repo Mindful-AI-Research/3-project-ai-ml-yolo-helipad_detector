@@ -558,14 +558,21 @@ The solution can be viewed as an architecture with [**seven main blocks**]():
 <br><br>
 
 
+<a id="ai-ml-ops-pipeline"></a>
+## [AI/ML Ops Pipeline]()
+
+<br>
+
+<img width="1220" height="2083" alt="Image" src="https://github.com/user-attachments/assets/1e2432d1-aef2-4d5f-857b-1a41e5adfad2" />
 
 
+<br><br>
 
+> [!TIP]
+>
+> The pipeline should be understood as a learning architecture as much as a software architecture. It shows how raw geospatial imagery is gradually transformed into a validated and demonstrable AI artifact.
 
-
-
-
-
+<br><br>
 
 
 
@@ -602,20 +609,11 @@ The solution can be viewed as an architecture with [**seven main blocks**]():
 
 
 
-## [AI/ML Ops Pipeline]()
-
-
-<img width="1220" height="2083" alt="Image" src="https://github.com/user-attachments/assets/1e2432d1-aef2-4d5f-857b-1a41e5adfad2" />
 
 
 
-<br><br>
 
-> [!TIP]
->
-> The pipeline should be understood as a learning architecture as much as a software architecture. It shows how raw geospatial imagery is gradually transformed into a validated and demonstrable AI artifact.
 
-<br><br>
 
 ## [Repository Structure]()
 
