@@ -873,9 +873,23 @@ In some cases, [**Google Earth Web**]() may be used as a complement:
 <br><br>
 
 
+<a id="curation-and-dataset-volume"></a>
+### ➠ [***Curation and dataset volume***]()
 
+In alignment with the project:
 
+[-]() minimum volume of **200 images with the target object** after curation
+[-]() geographical diversity with **at least 3 different neighborhoods** in training
+[-]() holdout of at least **1 fully unseen neighborhood** for final generalization testing
+[-]() manual triage of tiles, discarding crops without helipads
 
+<br>
+
+> [!TIP]
+>
+> Curation is not only an operational step; it is also part of the academic evaluation.
+
+<br><br>
 
 
 
@@ -914,22 +928,7 @@ In some cases, [**Google Earth Web**]() may be used as a complement:
 
 
 
-### [***Curation and dataset volume***]()
 
-In alignment with the project:
-
-[-]() minimum volume of **200 images with the target object** after curation
-[-]() geographical diversity with **at least 3 different neighborhoods** in training
-[-]() holdout of at least **1 fully unseen neighborhood** for final generalization testing
-[-]() manual triage of tiles, discarding crops without helipads
-
-<br><br>
-
-> [!TIP]
->
-> Curation is not only an operational step; it is also part of the academic evaluation.
-
-<br><br>
 
 ## [Annotation and Roboflow]()
 
