@@ -751,8 +751,7 @@ The repository structure was organized to reflect pipeline stages, including geo
 
 
 
-> [!Note
-]
+> [!NOTE]
 >  This section presents a simplified view of the project structure for readability.  
 > The complete repository tree, including all source files, datasets, generated artifacts, geospatial mosaics, and auxiliary resources, is available in [repository_tree_full.txt](./repository_tree_full.txt).
 
