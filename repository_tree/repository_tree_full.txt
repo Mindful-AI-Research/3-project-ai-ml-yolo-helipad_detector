@@ -1,0 +1,450 @@
+.
+├── .devcontainer
+│   └── devcontainer.json
+├── .DS_Store
+├── .git
+│   ├── .DS_Store
+│   ├── config
+│   ├── description
+│   ├── HEAD
+│   ├── hooks
+│   │   ├── applypatch-msg.sample
+│   │   ├── commit-msg.sample
+│   │   ├── fsmonitor-watchman.sample
+│   │   ├── post-update.sample
+│   │   ├── pre-applypatch.sample
+│   │   ├── pre-commit.sample
+│   │   ├── pre-merge-commit.sample
+│   │   ├── pre-push.sample
+│   │   ├── pre-rebase.sample
+│   │   ├── pre-receive.sample
+│   │   ├── prepare-commit-msg.sample
+│   │   ├── push-to-checkout.sample
+│   │   ├── sendemail-validate.sample
+│   │   └── update.sample
+│   ├── index
+│   ├── info
+│   │   └── exclude
+│   ├── logs
+│   │   ├── HEAD
+│   │   └── refs
+│   │       ├── heads
+│   │       └── remotes
+│   ├── objects
+│   │   ├── info
+│   │   └── pack
+│   │       ├── pack-c83d8e9448d9185469e747ccd810e7763235c0f5.idx
+│   │       ├── pack-c83d8e9448d9185469e747ccd810e7763235c0f5.pack
+│   │       └── pack-c83d8e9448d9185469e747ccd810e7763235c0f5.rev
+│   ├── packed-refs
+│   └── refs
+│       ├── heads
+│       │   └── main
+│       ├── remotes
+│       │   └── origin
+│       └── tags
+├── .github
+│   ├── CODEOWNERS
+│   ├── dependabot.yml
+│   └── workflows
+│       ├── publish-python-package.yml
+│       ├── python-app.yml
+│       └── python-package-macOS.yml
+├── .gitignore
+├── .streamlit
+│   └── config.toml
+├── adsbfi_hugging-face_test
+│   ├── app.py
+│   ├── README.md
+│   └── requirements.txt
+├── apps
+│   └── streamlit_app
+│       ├── app.py
+│       └── streamlit_deploy_link.md
+├── artifacts
+│   └── runs
+│       └── runs
+│           └── detect
+├── assets
+│   ├── .DS_Store
+│   ├── audio
+│   │   └── passacaglia-deep-house-remix.mp3
+│   ├── exp_1
+│   │   ├── img1-confusion_matrix.png
+│   │   ├── Img1-loss_curves.png
+│   │   ├── Img2-precision_recall.png
+│   │   ├── Img3-map_curves.png
+│   │   └── img5_training_validation_metrics_epochs.png
+│   ├── exp_2
+│   │   └── img1-confusion_matrix.png
+│   ├── exp_3
+│   │   ├── img1-confusion_matrix.png
+│   │   ├── img2_validation_box_class_dfl_losses_epochs.png
+│   │   ├── Img3_mAP_metrics_epochs.png
+│   │   ├── img4-box-loss_epochs.png
+│   │   ├── img5-losses_epochs.png
+│   │   ├── img6_training_validation_metrics_epochs.png
+│   │   └── mg6-training_validation_correlation_heatmap.png
+│   ├── Helipad Detector — Globe Concept V1.html
+│   ├── pipeline_diagram_pt_BR.svg
+│   ├── pipeline_diagram.svg
+│   └── real_tree_full.txt
+├── briefing
+│   ├── .DS_Store
+│   ├── briefing_en.pdf
+│   ├── briefing_pt.pdf
+│   ├── geo_reference
+│   │   ├── T_ORTO_3315-264_IRGB_1000.j2w
+│   │   └── T_ORTO_3315-264_IRGB_1000.jp2
+│   └── notebooks
+│       ├── mosaic_perdizes_hires.ipynb
+│       └── mosaic_perdizes.ipynb
+├── CITATION.cff
+├── config
+│   └── data.yaml
+├── data
+│   ├── .DS_Store
+│   ├── inference
+│   │   └── unseen_neighborhood
+│   │       ├── tile_z19_x194543_y298181.jpg
+│   │       ├── tile_z19_x194545_y298183.jpg
+│   │       ├── tile_z19_x194545_y298184.jpg
+│   │       ├── tile_z19_x194546_y298177.jpg
+│   │       ├── tile_z19_x194546_y298178.jpg
+│   │       ├── tile_z19_x194546_y298179.jpg
+│   │       ├── tile_z19_x194546_y298180.jpg
+│   │       ├── tile_z19_x194547_y298176.jpg
+│   │       ├── tile_z19_x194548_y298180.jpg
+│   │       ├── tile_z19_x194548_y298181.jpg
+│   │       ├── tile_z19_x194548_y298183.jpg
+│   │       └── tile_z19_x194549_y298187.jpg
+│   ├── raw
+│   │   └── helipad_dataset.rar
+│   ├── samples
+│   │   ├── tile_z19_x193904_y297375.jpg
+│   │   ├── tile_z19_x193912_y297377.jpg
+│   │   ├── tile_z19_x193914_y297375.jpg
+│   │   ├── tile_z19_x193916_y297358.jpg
+│   │   ├── tile_z19_x193921_y297376.jpg
+│   │   ├── tile_z19_x193921_y297378.jpg
+│   │   ├── tile_z19_x194126_y297483.jpg
+│   │   ├── tile_z19_x194126_y297485.jpg
+│   │   ├── tile_z19_x194127_y297474.jpg
+│   │   ├── tile_z19_x194129_y297480.jpg
+│   │   ├── tile_z19_x194133_y297561.jpg
+│   │   ├── tile_z19_x194134_y297486.jpg
+│   │   ├── tile_z19_x194134_y297487.jpg
+│   │   ├── tile_z19_x194136_y297538.jpg
+│   │   ├── tile_z19_x194136_y297542.jpg
+│   │   ├── tile_z19_x194137_y297489.jpg
+│   │   ├── tile_z19_x194137_y297490.jpg
+│   │   ├── tile_z19_x194139_y297465.jpg
+│   │   ├── tile_z19_x194139_y297467.jpg
+│   │   ├── tile_z19_x194140_y297475.jpg
+│   │   ├── tile_z19_x194140_y297536.jpg
+│   │   ├── tile_z19_x194141_y297481.jpg
+│   │   ├── tile_z19_x194142_y297479.jpg
+│   │   ├── tile_z19_x194142_y297532.jpg
+│   │   ├── tile_z19_x194143_y297481.jpg
+│   │   ├── tile_z19_x194143_y297531.jpg
+│   │   ├── tile_z19_x194144_y297480.jpg
+│   │   ├── tile_z19_x194147_y297488.jpg
+│   │   ├── tile_z19_x194149_y297489.jpg
+│   │   ├── tile_z19_x194151_y297482.jpg
+│   │   ├── tile_z19_x194151_y297514.jpg
+│   │   ├── tile_z19_x194152_y297521.jpg
+│   │   ├── tile_z19_x194156_y297499.jpg
+│   │   ├── tile_z19_x194156_y297505.jpg
+│   │   ├── tile_z19_x194156_y297510.jpg
+│   │   ├── tile_z19_x194156_y297512.jpg
+│   │   ├── tile_z19_x194157_y297513.jpg
+│   │   ├── tile_z19_x194159_y297509.jpg
+│   │   ├── tile_z19_x194159_y297515.jpg
+│   │   ├── tile_z19_x194160_y297506.jpg
+│   │   ├── tile_z19_x194160_y297516.jpg
+│   │   ├── tile_z19_x194161_y297499.jpg
+│   │   ├── tile_z19_x194170_y297514.jpg
+│   │   ├── tile_z19_x194173_y297505.jpg
+│   │   ├── tile_z19_x194191_y297465.jpg
+│   │   ├── tile_z19_x194196_y297476.jpg
+│   │   ├── tile_z19_x194198_y297471.jpg
+│   │   ├── tile_z19_x194208_y297478.jpg
+│   │   ├── tile_z19_x194210_y297477.jpg
+│   │   ├── tile_z19_x194211_y297479.jpg
+│   │   ├── tile_z19_x194214_y297486.jpg
+│   │   ├── tile_z19_x194215_y297475.jpg
+│   │   ├── tile_z19_x194543_y298181.jpg
+│   │   ├── tile_z19_x194545_y298183.jpg
+│   │   ├── tile_z19_x194545_y298184.jpg
+│   │   ├── tile_z19_x194546_y298177.jpg
+│   │   ├── tile_z19_x194546_y298178.jpg
+│   │   ├── tile_z19_x194546_y298179.jpg
+│   │   ├── tile_z19_x194546_y298180.jpg
+│   │   ├── tile_z19_x194547_y298176.jpg
+│   │   ├── tile_z19_x194548_y298180.jpg
+│   │   ├── tile_z19_x194548_y298181.jpg
+│   │   ├── tile_z19_x194548_y298183.jpg
+│   │   └── tile_z19_x194549_y298187.jpg
+│   ├── tiles
+│   │   ├── mosaic_Centro_hires_annotated.png
+│   │   ├── mosaic_Centro_hires_full.jpg
+│   │   ├── mosaic_Centro_hires_preview.jpg
+│   │   ├── mosaic_centro_tiles
+│   │   │   ├── tile_z19_x194543_y298181.jpg
+│   │   │   ├── tile_z19_x194545_y298183.jpg
+│   │   │   ├── tile_z19_x194545_y298184.jpg
+│   │   │   ├── tile_z19_x194546_y298177.jpg
+│   │   │   ├── tile_z19_x194546_y298178.jpg
+│   │   │   ├── tile_z19_x194546_y298179.jpg
+│   │   │   ├── tile_z19_x194546_y298180.jpg
+│   │   │   ├── tile_z19_x194547_y298176.jpg
+│   │   │   ├── tile_z19_x194548_y298180.jpg
+│   │   │   ├── tile_z19_x194548_y298181.jpg
+│   │   │   ├── tile_z19_x194548_y298183.jpg
+│   │   │   └── tile_z19_x194549_y298187.jpg
+│   │   └── tile_sample_hires_Centro.png
+│   └── training
+│       ├── exp1
+│       │   ├── data.yaml
+│       │   ├── README.dataset.txt
+│       │   ├── README.roboflow.txt
+│       │   ├── test
+│       │   ├── train
+│       │   └── valid
+│       └── exp2
+│           ├── data.yaml
+│           ├── README.dataset.txt
+│           ├── README.roboflow.txt
+│           ├── test
+│           ├── train.zip
+│           └── valid
+├── demo
+│   ├── demos_links.md
+│   ├── Helipad-Detection -YOLO11 - Model Training - Demo 🚁 - Low Resolution.mp4
+│   └── Helipad-Detection -YOLO11 - Model Training - Demo 2 🚁.mp4
+├── Dockerfile
+├── docs
+│   ├──  🇧🇷Portugues
+│   │   └── ANALYSIS_YOLO_RESULTS.md
+│   ├── .DS_Store
+│   ├── 🇬🇧English
+│   │   └── ANALYSIS_YOLO_RESULTS.md
+│   ├── governance
+│   │   └── On the Economic and Governance Mechanisms forthe Agentic Web -  A Global South Perspective.pdf
+│   ├── MLOps-Architecture.md
+│   └── top-10-ranked-helicopter-cities.md
+├── execution_guide
+│   ├── 🇬🇧 HELIPAD DETECTOR — COMPLETE EXECUTION MANUAL.md
+│   ├── 🇧🇷HELIPAD DETECTOR — MANUAL COMPLETO DE EXECUÇÃO.md
+│   ├── 🇬🇧🇧🇷HELIPAD_DISCOVERY_COORDINATE_CONVERSION_DATASET_UPDATE.md
+│   └── 🇧🇷HELIPAD_DISCOVERY_COORDINATE_CONVERSION_DATASET_UPDATE.md
+├── LICENSE.md
+├── misc
+│   ├── Acknowledgments _ VNAV.mhtml
+│   ├── Handouts _ VNAV.mhtml
+│   ├── Handouts 2023 (ROS 1) _ VNAV.mhtml
+│   ├── Home _ VNAV.mhtml
+│   ├── Lectures _ VNAV.mhtml
+│   ├── License _ VNAV.mhtml
+│   ├── setup-workspace.md
+│   └── Visual Navigation for Autonomous Vehicles (VNAV) Syllabus.pdf
+├── notebooks
+│   └── model_analysis.ipynb
+├── packages.txt
+├── presentations
+│   └── presentation-music-bilingual
+│       ├── helipad-detector-presentation.html
+│       ├── index.html
+│       ├── Passacaglia_Deep_House_Remix.mp3
+│       ├── pres.html
+│       └── presentation-deployment-link.md
+├── pytest.ini
+├── README.md
+├── README.pt_BR.md
+├── reports
+│   ├── .DS_Store
+│   ├── auto_triage_regions_log.txt
+│   ├── detection_summary_by_region_exp1.json
+│   ├── detection_summary_by_region_exp2_rerun.json
+│   ├── detection_summary_by_region_exp2.json
+│   ├── detection_summary_by_region_exp3.json
+│   ├── detection_summary_by_region_exp4.json
+│   ├── detection_summary_by_region.json
+│   ├── download_all_regions_log.txt
+│   ├── faria_lima_triage_log.txt
+│   ├── field_samples_exp2_rerun
+│   │   ├── tile_z19_x193904_y297375.jpg
+│   │   ├── tile_z19_x193912_y297377.jpg
+│   │   ├── tile_z19_x193914_y297375.jpg
+│   │   ├── tile_z19_x193916_y297358.jpg
+│   │   ├── tile_z19_x193921_y297376.jpg
+│   │   ├── tile_z19_x193921_y297378.jpg
+│   │   ├── tile_z19_x194126_y297483.jpg
+│   │   ├── tile_z19_x194126_y297485.jpg
+│   │   ├── tile_z19_x194133_y297561.jpg
+│   │   ├── tile_z19_x194136_y297538.jpg
+│   │   ├── tile_z19_x194136_y297542.jpg
+│   │   ├── tile_z19_x194137_y297489.jpg
+│   │   ├── tile_z19_x194137_y297490.jpg
+│   │   ├── tile_z19_x194139_y297467.jpg
+│   │   ├── tile_z19_x194140_y297475.jpg
+│   │   ├── tile_z19_x194140_y297536.jpg
+│   │   ├── tile_z19_x194142_y297532.jpg
+│   │   ├── tile_z19_x194143_y297481.jpg
+│   │   ├── tile_z19_x194143_y297531.jpg
+│   │   ├── tile_z19_x194149_y297489.jpg
+│   │   ├── tile_z19_x194151_y297482.jpg
+│   │   ├── tile_z19_x194151_y297514.jpg
+│   │   ├── tile_z19_x194152_y297521.jpg
+│   │   ├── tile_z19_x194156_y297499.jpg
+│   │   ├── tile_z19_x194156_y297505.jpg
+│   │   ├── tile_z19_x194156_y297510.jpg
+│   │   ├── tile_z19_x194156_y297512.jpg
+│   │   ├── tile_z19_x194157_y297513.jpg
+│   │   ├── tile_z19_x194159_y297509.jpg
+│   │   ├── tile_z19_x194159_y297515.jpg
+│   │   ├── tile_z19_x194160_y297506.jpg
+│   │   ├── tile_z19_x194160_y297516.jpg
+│   │   ├── tile_z19_x194161_y297499.jpg
+│   │   ├── tile_z19_x194170_y297514.jpg
+│   │   ├── tile_z19_x194173_y297505.jpg
+│   │   ├── tile_z19_x194191_y297465.jpg
+│   │   ├── tile_z19_x194196_y297476.jpg
+│   │   ├── tile_z19_x194198_y297471.jpg
+│   │   ├── tile_z19_x194208_y297478.jpg
+│   │   ├── tile_z19_x194210_y297477.jpg
+│   │   ├── tile_z19_x194211_y297479.jpg
+│   │   ├── tile_z19_x194214_y297486.jpg
+│   │   └── tile_z19_x194215_y297475.jpg
+│   ├── field_samples_exp4
+│   │   ├── tile_z19_x193912_y297372.jpg
+│   │   ├── tile_z19_x193914_y297358.jpg
+│   │   ├── tile_z19_x193915_y297370.jpg
+│   │   ├── tile_z19_x193915_y297375.jpg
+│   │   ├── tile_z19_x193916_y297358.jpg
+│   │   ├── tile_z19_x193921_y297376.jpg
+│   │   ├── tile_z19_x194126_y297483.jpg
+│   │   ├── tile_z19_x194135_y297545.jpg
+│   │   ├── tile_z19_x194136_y297538.jpg
+│   │   ├── tile_z19_x194136_y297542.jpg
+│   │   ├── tile_z19_x194137_y297489.jpg
+│   │   ├── tile_z19_x194137_y297490.jpg
+│   │   ├── tile_z19_x194139_y297467.jpg
+│   │   ├── tile_z19_x194140_y297475.jpg
+│   │   ├── tile_z19_x194142_y297531.jpg
+│   │   ├── tile_z19_x194142_y297532.jpg
+│   │   ├── tile_z19_x194143_y297481.jpg
+│   │   ├── tile_z19_x194144_y297480.jpg
+│   │   ├── tile_z19_x194144_y297519.jpg
+│   │   ├── tile_z19_x194144_y297526.jpg
+│   │   ├── tile_z19_x194146_y297520.jpg
+│   │   ├── tile_z19_x194148_y297476.jpg
+│   │   ├── tile_z19_x194149_y297489.jpg
+│   │   ├── tile_z19_x194152_y297521.jpg
+│   │   ├── tile_z19_x194154_y297471.jpg
+│   │   ├── tile_z19_x194154_y297498.jpg
+│   │   ├── tile_z19_x194154_y297502.jpg
+│   │   ├── tile_z19_x194155_y297506.jpg
+│   │   ├── tile_z19_x194156_y297510.jpg
+│   │   ├── tile_z19_x194156_y297511.jpg
+│   │   ├── tile_z19_x194157_y297513.jpg
+│   │   ├── tile_z19_x194159_y297509.jpg
+│   │   ├── tile_z19_x194159_y297515.jpg
+│   │   ├── tile_z19_x194160_y297516.jpg
+│   │   ├── tile_z19_x194166_y297503.jpg
+│   │   ├── tile_z19_x194167_y297508.jpg
+│   │   ├── tile_z19_x194170_y297514.jpg
+│   │   ├── tile_z19_x194173_y297508.jpg
+│   │   ├── tile_z19_x194191_y297465.jpg
+│   │   ├── tile_z19_x194196_y297471.jpg
+│   │   ├── tile_z19_x194198_y297471.jpg
+│   │   ├── tile_z19_x194201_y297472.jpg
+│   │   ├── tile_z19_x194202_y297475.jpg
+│   │   ├── tile_z19_x194203_y297467.jpg
+│   │   ├── tile_z19_x194203_y297477.jpg
+│   │   └── tile_z19_x194209_y297480.jpg
+│   ├── helipad_detector_full_report
+│   │   ├── 🇬🇧Helipad_Detector_Full_Report.docx
+│   │   ├── 🇬🇧Helipad_Detector_Full_Report.pages
+│   │   ├── 🇬🇧Helipad_Detector_Full_Report.pdf
+│   │   ├── 🇧🇷Helipad_Detector_Relatorio_Completo.docx
+│   │   ├── 🇧🇷Helipad_Detector_Relatorio_Completo.pages
+│   │   └── 🇧🇷Helipad_Detector_Relatorio_Completo.pdf
+│   └── model_outputs
+│       └── detect
+│           └── exp1_predictions
+├── repository_tree_full.txt
+├── repository_tree.txt
+├── requirements.txt
+├── runtime.txt
+├── src
+│   ├── .DS_Store
+│   ├── data_preparation
+│   │   └── IMAGE_PREPROCESSING.ipynb
+│   ├── geospatial
+│   │   ├── auto_triage_faria_lima.py
+│   │   ├── auto_triage_regions_exp1.py
+│   │   ├── auto_triage_regions_exp2_rerun.py
+│   │   ├── auto_triage_regions_exp2.py
+│   │   ├── auto_triage_regions_exp3.py
+│   │   ├── auto_triage_regions_exp4.py
+│   │   ├── auto_triage_regions.py
+│   │   ├── brazilian-states-helipad-discovery-folium-open-street-map
+│   │   │   ├── helipad_coordinates_bbox.csv
+│   │   │   ├── helipontos_resultado_.csv
+│   │   │   ├── helipontos_resultado_2.csv
+│   │   │   ├── helipontos_resultado_3.csv
+│   │   │   ├── helipontos_resultado_4.csv
+│   │   │   ├── helipontos_resultado.csv
+│   │   │   └── Manual da Autotransformação – Manual da Autotransformação.pdf
+│   │   ├── detection_summary_by_region.json
+│   │   ├── download_all_regions.py
+│   │   ├── faria_lima_input.csv
+│   │   ├── geocode_states.py
+│   │   ├── geospatial_image_collection_faria_lima.ipynb
+│   │   ├── geospatial_image_collection.ipynb
+│   │   ├── helipad_bot.py
+│   │   ├── helipad_coordinates_bbox.csv
+│   │   ├── helipad_coordinates_com_estado.csv
+│   │   ├── helipad_coordinates_processed.csv
+│   │   ├── helipad_coordinates_raw.csv
+│   │   ├── helipad_scraper.py
+│   │   ├── helipontos_convertido.csv
+│   │   ├── keplergl_map_config.json
+│   │   ├── keplergl_map_loaded .html
+│   │   ├── keplergl_map_loaded.html
+│   │   ├── mosaic_Alphaville_Industrial
+│   │   │   └── mosaic_Alphaville_Industrial.zip
+│   │   ├── mosaic_Av_Paulista_segment_1
+│   │   │   └── mosaic_Av_Paulista_segment_1.zip
+│   │   ├── mosaic_Av_Paulista_segment_2
+│   │   │   └── mosaic_Av_Paulista_segment_2_Tiles.zip
+│   │   ├── mosaic_Brooklin
+│   │   │   └── mosaic_Brooklin_tiles.zip
+│   │   ├── mosaic_Faria_Lima
+│   │   │   ├── mosaic_Faria_Lima_1.zip
+│   │   │   ├── mosaic_Faria_Lima_2.zip
+│   │   │   ├── mosaic_Faria_Lima_3.zip
+│   │   │   ├── mosaic_Faria_Lima_4.zip
+│   │   │   └── mosaic_Faria_Lima_5.zip
+│   │   ├── mosaic_Inter_Zonas
+│   │   │   └── mosaic_Inter_Zonas.zip
+│   │   ├── mosaic_Itaim_Bibi
+│   │   │   └── mosaic_Itaim_Bibi.zip
+│   │   ├── mosaic_Pinheiros
+│   │   │   └── mosaic_Pinheiros.zip
+│   │   ├── mosaic_Vila_nova_Conceicao
+│   │   │   └── mosaic_Vila_nova_Conceicao.zip
+│   │   ├── mosaic_Vila_Olimpia
+│   │   │   └── mosaic_Vila_Olimpia.zip
+│   │   ├── run_scraping_pipeline.py
+│   │   ├── sp_neighborhoods_bbox.csv
+│   │   └── transform_coordinates.py
+│   └── training
+│       ├── yolo_training_exp1.ipynb
+│       ├── yolo_training_exp2.ipynb
+│       ├── yolo_training_exp3.ipynb
+│       └── yolo_training_exp4.ipynb
+└── VNAV_MIT16.485..md
+
+83 directories, 365 files
