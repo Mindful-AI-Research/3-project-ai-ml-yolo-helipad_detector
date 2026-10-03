@@ -781,7 +781,8 @@ Its role was to support image upload, bounding-box labeling, dataset versioning,
 <br><br>
 
 
-
+<a id="methodology"></a>
+## [Methodology]()
 
 
 
