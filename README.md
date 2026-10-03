@@ -440,7 +440,7 @@ The geographical scope follows the briefing: [**city of São Paulo**](), focusin
 
 
 <a id="image-sources"></a>
-### [Image sources]()
+### [***Image sources***]()
 
 - [**ESRI World Imagery (XYZ tiles)**]()  — main source, with sub-meter resolution and programmatic HTTP access  
 - [**Google Earth Web**]()  — complementary source, used only for punctual captures of specific targets, not for bulk collection  
@@ -454,8 +454,6 @@ Whenever imagery or derived mosaics are reproduced, the required attribution is:
 
 <br><br>
 
-
-
 <a id="extra-automation-contribution"></a>
 ## [Extra Automation Contribution]()
 
@@ -464,14 +462,14 @@ Beyond the minimum briefing requirements, the group developed an [**extra geospa
 <br>
 
 <a id="technical-title-of-the-contribution"></a>
-### [Technical title of the contribution]()
+### [***Technical title of the contribution***]()
 
 [**Extra Resource**]() — Automation System to Speed Up the Search for Geographic Points and Helipads
 
 <br>
 
 <a id="core-idea"></a>
-### [Core idea]()
+### [***Core idea***]()
 
 Instead of relying solely on manual inspection in maps, the system:
 
