@@ -760,6 +760,25 @@ The repository structure was organized to reflect pipeline stages, including geo
 <br><br><br>
 
 
+<a id="what-is-helipad-dataset"></a>
+## [What is `data/raw/helipad_dataset.rar`?]()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 -------------------
 ###  👩🏻‍🚀 🚧 
 -------------------
