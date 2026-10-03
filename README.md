@@ -895,6 +895,11 @@ In alignment with the project:
 ## [Annotation and Roboflow]()
 
 
+Image annotation was carried out with focus on consistency and alignment with course rules.
+
+<br>
+
+
 ### ➠ [***Annotation Tool***]()
 
 [**Roboflow**]() is used as the central platform for:
@@ -915,7 +920,15 @@ In alignment with the project:
 
 <br>
 
+<a id="annotation-standards"></a>
+### [***Annotation Standards***]()
 
+[-]() single target class <br>
+[-]() [**tight**]() bounding boxes, without excessive area <br>
+[-]() written criteria for partially visible objects, shadows, reflections and ambiguous cases <br>
+[-]() annotation work shared across team members, not concentrated in a single person
+
+<br>
 
 
 
@@ -941,29 +954,6 @@ In alignment with the project:
 
 
 
-
-
-
-
-
-
-
-
-
-Image annotation was carried out with focus on consistency and alignment with course rules.
-
-<br>
-
-
-
-### [***Annotation Standards***]()
-
-[-]() single target class <br>
-[-]() [**tight**]() bounding boxes, without excessive area <br>
-[-]() written criteria for partially visible objects, shadows, reflections and ambiguous cases <br>
-[-]() annotation work shared across team members, not concentrated in a single person
-
-<br>
 
 ### [***Preprocessing and Splits***]()
 
