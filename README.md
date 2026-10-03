@@ -270,6 +270,7 @@
 
 
 <!-- ========= START Overview ========= -->
+<a id="overview"></a>
 ## [Overview]()
 
 [**Helipad Detector**]() is an end-to-end Artificial Intelligence and Computer Vision platform designed to automatically detect and map **potential rooftop helipads** from satellite imagery. The project transforms geospatial imagery into structured information, enabling the identification of visual patterns compatible with helicopter landing areas and their representation on an interactive map.
@@ -278,15 +279,15 @@ The project focuses on [**São Paulo, Brazil**](https://www.prefeitura.sp.gov.br
 
 To manage this highly complex airspace environment, the city relies on [**HELICONTROL**](https://www.fab.mil.br/noticias/imprime/42060/CONTROLE%20DO%20ESPA%C3%87O%20A%C3%89REO%20-%20HELICONTROL:%20Seguran%C3%A7a%20e%20fluidez%20no%20controle%20de%20helic%C3%B3pteros%20em%20S%C3%A3o%20Paulo), a service developed by the [**Brazilian Air Force (FAB)**](https://www.fab.mil.br/) through the [**Department of Airspace Control (DECEA)**](https://www.decea.mil.br/). Operating within the context of the Congonhas Control Tower, the system coordinates helicopter traffic and contributes to the safe coexistence of helicopter operations with regular aircraft traffic. [DECEA operates helicopter air traffic control — FAB](https://www.fab.mil.br/noticias/imprime/42044/SEGURAN%C3%87A%20DE%20VOO%20-%20DECEA%20atua%20no%20Controle%20de%20Tr%C3%A1fego%20A%C3%A9reo%20de%20Helic%C3%B3pteros%20do%20Brasil) · [CRCEA-SE — DECEA](https://www.decea.mil.br/?i=unidades&p=crcea-se)
 
-These conditions make São Paulo a challenging real-world setting for AI-based geospatial intelligence applications. **Helipad Detector does not perform air traffic control** and does not replace operational systems such as HELICONTROL. Its purpose is to support infrastructure mapping by identifying, from satellite imagery, locations with visual characteristics compatible with helipads and organizing this information as geospatial data for urban analysis, academic research, and future Smart City applications.
+These conditions make São Paulo a challenging real-world setting for AI-based geospatial intelligence applications. [**Helipad Detector does not perform air traffic control**]() and does not replace operational systems such as HELICONTROL. Its purpose is to support infrastructure mapping by identifying, from satellite imagery, locations with visual characteristics compatible with helipads and organizing this information as geospatial data for urban analysis, academic research, and future Smart City applications.
 
-The platform implements a complete AI workflow, including public data collection, geocoding, satellite imagery acquisition, manual annotation with [**Roboflow**](https://roboflow.com/), training with [**Ultralytics YOLOv8**](https://docs.ultralytics.com/models/yolov8/) and [**Ultralytics YOLO11**](https://docs.ultralytics.com/models/yolo11/), as well as real-world validation across more than **7,900 satellite tiles**. Its interactive dashboard provides access to the pipeline, datasets, performance results, and identified limitations, reinforcing principles of reproducibility, explainability, and Responsible AI.
+The platform implements a complete AI workflow, including public data collection, geocoding, satellite imagery acquisition, manual annotation with [**Roboflow**](https://roboflow.com/), training with [**Ultralytics YOLOv8**](https://docs.ultralytics.com/models/yolov8/) and [**Ultralytics YOLO11**](https://docs.ultralytics.com/models/yolo11/), as well as real-world validation across more than [**7,900 satellite tiles**](). Its interactive dashboard provides access to the pipeline, datasets, performance results, and identified limitations, reinforcing principles of reproducibility, explainability, and Responsible AI.
 
 <br><br>
 
 
 <!-- ========= START Contexto Global  ========= -->
-
+<a id="global-helicopter-traffic-context-why-sao-paulo"></a>
 ## [Global Helicopter Traffic Context Why São Paulo?]()
 
 <br>
