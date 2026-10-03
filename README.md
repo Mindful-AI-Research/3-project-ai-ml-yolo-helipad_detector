@@ -378,7 +378,7 @@ The main objective is to build an **end-to-end system** capable of detecting hel
 [-]() preprocessing and augmentations  <br>
 [-]() training and monitoring in Colab  <br>
 [-]() quantitative evaluation and qualitative error analysis  <br>
-[-]() inference on an entire neighborhood not used during training  
+[-]() inference on an entire neighborhood not used during training  <br>
 
 From an educational perspective, the work was also designed to help students understand how a real AI pipeline is built, validated, and communicated. The project therefore integrates data collection, annotation, preprocessing, model training, evaluation, and simple deployment in one coherent workflow.
 
@@ -412,7 +412,7 @@ In urban satellite imagery, helipads may be confused with rooftop structures, sp
 [-]() Real-world validation across 7,900+ satellite tiles from 10 São Paulo neighborhoods <br>
 [-]() Interactive Streamlit web application and dashboard <br>
 [-]() Fully reproducible research repository <br>
-[-]() Downloadable datasets, notebooks and generated artifacts
+[-]() Downloadable datasets, notebooks and generated artifacts <br>
 
 <br><br>
 <!-- ========= END Key Features ========= -->
@@ -428,7 +428,7 @@ The geographical scope follows the briefing: [**city of São Paulo**](), focusin
 [-]() Perdizes, Higienópolis, Pacaembu and Sumaré  <br>
 [-]() Paulista Avenue, Itaim Bibi and Pinheiros  <br>
 [-]() Faria Lima, Berrini, Vila Olímpia and Brooklin  <br>
-[-]() other relevant urban areas such as Morumbi and adjacent regions  
+[-]() other relevant urban areas such as Morumbi and adjacent regions  <br>
 
 <br>
 
@@ -436,9 +436,9 @@ The geographical scope follows the briefing: [**city of São Paulo**](), focusin
 <a id="image-sources"></a>
 ### ➠ [***Image sources***]()
 
-- [**ESRI World Imagery (XYZ tiles)**]()  — main source, with sub-meter resolution and programmatic HTTP access  
-- [**Google Earth Web**]()  — complementary source, used only for punctual captures of specific targets, not for bulk collection  
-- [**GeoSampa**]()  — mentioned as an alternative high-resolution source, possible extra beyond the base scope  
+- [**ESRI World Imagery (XYZ tiles)**]()  — main source, with sub-meter resolution and programmatic HTTP access  <br>
+- [**Google Earth Web**]()  — complementary source, used only for punctual captures of specific targets, not for bulk collection  <br>
+- [**GeoSampa**]()  — mentioned as an alternative high-resolution source, possible extra beyond the base scope  <br>
 
 Images are stored as `.jpg` or `.png`, as required by the project.
 
@@ -470,11 +470,11 @@ Beyond the minimum briefing requirements, the group developed an **extra geospat
 
 Instead of relying solely on manual inspection in maps, the system:
 
-[1.]() queries a public aviation website with airport and helipad records  
-[2.]()  automates navigation and scraping with Selenium  
-[3.]()  extracts geographic coordinates and metadata for each helipad  
-[4.]()  converts these coordinates into geographic bounding boxes  
-[5.]()  uses these boxes as input to download ESRI satellite tiles  
+[1.]() queries a public aviation website with airport and helipad records  <br>
+[2.]()  automates navigation and scraping with Selenium  <br>
+[3.]()  extracts geographic coordinates and metadata for each helipad  <br>
+[4.]()  converts these coordinates into geographic bounding boxes  <br>
+[5.]()  uses these boxes as input to download ESRI satellite tiles  <br>
 [6.]()  generates mosaics ready for triage, annotation and upload to Roboflow  
 
 <br>
