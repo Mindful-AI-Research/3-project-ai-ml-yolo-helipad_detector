@@ -16,7 +16,7 @@ Este manual gera, pra cada um dos 4 experimentos, um vídeo mostrando o modelo d
 
 <br>
 
-- Terminal aberto na raiz do repositório (`3-MAINproject-ai-ml-yolo-helipad_detector`)
+- Terminal aberto na raiz do repositório (`3-project-ai-ml-yolo-helipad_detector`)
 - `ffmpeg` instalado (`brew install ffmpeg` no Mac, se ainda não tiver)
 - Os 4 pesos já treinados em `artifacts/runs/runs/detect/exp{1,2,3,4}/weights/best.pt`
 - Os tiles das 10 regiões já baixados em `src/geospatial/mosaic_*/`
@@ -30,7 +30,7 @@ Este manual gera, pra cada um dos 4 experimentos, um vídeo mostrando o modelo d
 Esse bloco pega `N_PER_REGION` tiles de cada uma das 10 pastas `mosaic_*`, numera o nome do arquivo pela ordem da região (pra o vídeo final passear pelos bairros em sequência, não misturado), e junta tudo numa única pasta de origem.
 
 ```bash
-cd ~/Desktop/3-MAINproject-ai-ml-yolo-helipad_detector
+cd ~/Desktop/3-project-ai-ml-yolo-helipad_detector
 
 N_PER_REGION=8   # tiles por bairro — 10 bairros x 8 = 80 frames no vídeo final
 SRC=reports/demo_src
@@ -185,7 +185,7 @@ This manual generates, for each of the 4 experiments, a video showing the model 
 
 <br>
 
-- Terminal open at the repository root (`3-MAINproject-ai-ml-yolo-helipad_detector`)
+- Terminal open at the repository root (`3-project-ai-ml-yolo-helipad_detector`)
 - `ffmpeg` installed (`brew install ffmpeg` on Mac, if you don't have it yet)
 - All 4 trained weights at `artifacts/runs/runs/detect/exp{1,2,3,4}/weights/best.pt`
 - Tiles for all 10 regions already downloaded at `src/geospatial/mosaic_*/`
@@ -199,7 +199,7 @@ This manual generates, for each of the 4 experiments, a video showing the model 
 This block grabs `N_PER_REGION` tiles from each of the 10 `mosaic_*` folders, numbers the filename by region order (so the final video tours the neighborhoods in sequence, not shuffled), and collects everything into one source folder.
 
 ```bash
-cd ~/Desktop/3-MAINproject-ai-ml-yolo-helipad_detector
+cd ~/Desktop/3-project-ai-ml-yolo-helipad_detector
 
 N_PER_REGION=8   # tiles per neighborhood — 10 neighborhoods x 8 = 80 frames in the final video
 SRC=reports/demo_src
