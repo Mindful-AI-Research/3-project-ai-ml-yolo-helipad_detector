@@ -12,7 +12,7 @@ This manual generates, for each of the 4 experiments, a video showing the model 
 
 <br>
 
-### [***Prerequisites***]
+### [***Prerequisites***]()
 
 <br>
 
@@ -138,7 +138,7 @@ ls -la demo/*.mp4
 
 <br>
 
-### [***Optional — clean up intermediate files***]
+### [***Optional — clean up intermediate files***]()
 
 <br>
 
@@ -150,7 +150,7 @@ rm -rf reports/demo_frames reports/demo_src reports/demo_videos/*_silent.mp4
 
 <br><br>
 
-## [Suggested Captions (one line per video)]()
+## [Captions (one line per video)]()
 
 <br>
 
@@ -170,7 +170,7 @@ rm -rf reports/demo_frames reports/demo_src reports/demo_videos/*_silent.mp4
 This video is about coordinate scraping (Selenium / `helipad_bot.py`), not model inference — it doesn't go through Steps 1-5 above. It just needs the soundtrack added.
 
 ```bash
-cd ~/Desktop/3-MAINproject-ai-ml-yolo-helipad_detector
+cd ~/Desktop/3-project-ai-ml-yolo-helipad_detector
 
 SCRAPING_VIDEO="demo/🚁Automated Helipad Scraping Demo.mp4"   # adjust the path if the file is in a different folder
 SCRAPING_AUDIO="assets/audio/feel-good_nina-simone_house remix.mp3"   # check the exact filename in your assets/audio/ folder
@@ -182,6 +182,3 @@ ffmpeg -y -i "$SCRAPING_VIDEO" -i "$SCRAPING_AUDIO" \
 
 This creates a new copy of the video with audio, without overwriting the original silent file. Check the result before deleting the old one.
 
-<br>
-
-> If the original video already has some audio (narration, etc.), the command above replaces the entire audio track with the soundtrack. If you want to **mix** the track underneath existing audio instead, let me know — the command changes (needs `amix` instead of a plain `-shortest`).
