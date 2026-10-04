@@ -16,7 +16,7 @@ Este manual gera, pra cada um dos 4 experimentos, um vídeo mostrando o modelo d
 
 <br>
 
-- Terminal aberto na raiz do repositório (`3-project-ai-ml-yolo-helipad_detector`)
+- Terminal aberto na raiz do repositório (`3-MAINproject-ai-ml-yolo-helipad_detector`)
 - `ffmpeg` instalado (`brew install ffmpeg` no Mac, se ainda não tiver)
 - Os 4 pesos já treinados em `artifacts/runs/runs/detect/exp{1,2,3,4}/weights/best.pt`
 - Os tiles das 10 regiões já baixados em `src/geospatial/mosaic_*/`
@@ -30,7 +30,7 @@ Este manual gera, pra cada um dos 4 experimentos, um vídeo mostrando o modelo d
 Esse bloco pega `N_PER_REGION` tiles de cada uma das 10 pastas `mosaic_*`, numera o nome do arquivo pela ordem da região (pra o vídeo final passear pelos bairros em sequência, não misturado), e junta tudo numa única pasta de origem.
 
 ```bash
-cd ~/Desktop/3-project-ai-ml-yolo-helipad_detector
+cd ~/Desktop/3-MAINproject-ai-ml-yolo-helipad_detector
 
 N_PER_REGION=8   # tiles por bairro — 10 bairros x 8 = 80 frames no vídeo final
 SRC=reports/demo_src
@@ -163,6 +163,31 @@ rm -rf reports/demo_frames reports/demo_src reports/demo_videos/*_silent.mp4
 
 <br><br>
 
+<br><br>
+
+## [Passo 6 — Trilha no Vídeo de Scraping (Automated Helipad Scraping Demo)]()
+
+<br>
+
+Esse vídeo é sobre a raspagem de coordenadas (Selenium / `helipad_bot.py`), não é inferência de modelo — não passa pelos passos 1 a 5 acima. É só adicionar a trilha.
+
+```bash
+cd ~/Desktop/3-MAINproject-ai-ml-yolo-helipad_detector
+
+SCRAPING_VIDEO="demo/🚁Automated Helipad Scraping Demo.mp4"   # ajuste o caminho se o arquivo estiver em outra pasta
+SCRAPING_AUDIO="assets/audio/feel-good_nina-simone_house remix.mp3"   # confira o nome exato na sua pasta assets/audio/
+
+ffmpeg -y -i "$SCRAPING_VIDEO" -i "$SCRAPING_AUDIO" \
+  -c:v copy -c:a aac -shortest \
+  "demo/🚁Automated-Helipad-Scraping-Demo-com-trilha.mp4"
+```
+
+Isso gera uma cópia nova do vídeo, já com áudio, sem sobrescrever o arquivo mudo original. Confere o resultado antes de apagar o antigo.
+
+<br>
+
+> Se o vídeo original já tiver algum áudio (narração, etc.), o comando acima substitui o áudio inteiro pela trilha. Se quiser **misturar** a trilha por baixo de um áudio já existente, avisa que o comando muda (precisa de `amix` em vez de `-shortest` direto).
+
 ---
 
 <br><br>
@@ -185,7 +210,7 @@ This manual generates, for each of the 4 experiments, a video showing the model 
 
 <br>
 
-- Terminal open at the repository root (`3-project-ai-ml-yolo-helipad_detector`)
+- Terminal open at the repository root (`3-MAINproject-ai-ml-yolo-helipad_detector`)
 - `ffmpeg` installed (`brew install ffmpeg` on Mac, if you don't have it yet)
 - All 4 trained weights at `artifacts/runs/runs/detect/exp{1,2,3,4}/weights/best.pt`
 - Tiles for all 10 regions already downloaded at `src/geospatial/mosaic_*/`
@@ -199,7 +224,7 @@ This manual generates, for each of the 4 experiments, a video showing the model 
 This block grabs `N_PER_REGION` tiles from each of the 10 `mosaic_*` folders, numbers the filename by region order (so the final video tours the neighborhoods in sequence, not shuffled), and collects everything into one source folder.
 
 ```bash
-cd ~/Desktop/3-project-ai-ml-yolo-helipad_detector
+cd ~/Desktop/3-MAINproject-ai-ml-yolo-helipad_detector
 
 N_PER_REGION=8   # tiles per neighborhood — 10 neighborhoods x 8 = 80 frames in the final video
 SRC=reports/demo_src
@@ -329,3 +354,28 @@ rm -rf reports/demo_frames reports/demo_src reports/demo_videos/*_silent.mp4
 | exp2 | exp2 (100 epochs, YOLOv8n) — the production model, best field generalization |
 | exp3 | exp3 (100 epochs, YOLOv8n, augmented dataset) — higher recall, mid-pack field result |
 | exp4 | exp4 (100 epochs, YOLO11n) — same base as exp2, newer architecture; did not outperform exp2 in the field |
+
+<br><br>
+
+## [Step 6 — Soundtrack for the Scraping Video (Automated Helipad Scraping Demo)]()
+
+<br>
+
+This video is about coordinate scraping (Selenium / `helipad_bot.py`), not model inference — it doesn't go through Steps 1-5 above. It just needs the soundtrack added.
+
+```bash
+cd ~/Desktop/3-MAINproject-ai-ml-yolo-helipad_detector
+
+SCRAPING_VIDEO="demo/🚁Automated Helipad Scraping Demo.mp4"   # adjust the path if the file is in a different folder
+SCRAPING_AUDIO="assets/audio/feel-good_nina-simone_house remix.mp3"   # check the exact filename in your assets/audio/ folder
+
+ffmpeg -y -i "$SCRAPING_VIDEO" -i "$SCRAPING_AUDIO" \
+  -c:v copy -c:a aac -shortest \
+  "demo/🚁Automated-Helipad-Scraping-Demo-com-trilha.mp4"
+```
+
+This creates a new copy of the video with audio, without overwriting the original silent file. Check the result before deleting the old one.
+
+<br>
+
+> If the original video already has some audio (narration, etc.), the command above replaces the entire audio track with the soundtrack. If you want to **mix** the track underneath existing audio instead, let me know — the command changes (needs `amix` instead of a plain `-shortest`).
