@@ -1,135 +1,109 @@
-# 🇧🇷 [Manual — Geração de Vídeos de Demonstração](#-manual--geração-de-vídeos-de-demonstração)
+# 🇧🇷 Manual — Geração dos Vídeos de Demonstração
 
-<br>
+**Detecção de Helipads · YOLOv8n / YOLO11n · São Paulo**
 
+\<br>
 
-**Detecção de Helipontos · YOLOv8n / YOLO11n · São Paulo**
+## Índice
 
-<br>
+\<br>
 
-##  [Sumário](#-sumário)
+- [1. Objective](https://chatgpt.com/c/6ac2eb7f-1ef0-83e8-ba59-beda6da05236#1-objective)
+- [2. Experimental Methodology](https://chatgpt.com/c/6ac2eb7f-1ef0-83e8-ba59-beda6da05236#2-experimental-methodology)
+  - [2.1 Controlled Sampling](https://chatgpt.com/c/6ac2eb7f-1ef0-83e8-ba59-beda6da05236#21-controlled-sampling)
+  - [2.2 Comparability](https://chatgpt.com/c/6ac2eb7f-1ef0-83e8-ba59-beda6da05236#22-comparability)
+- [3. Prerequisites](https://chatgpt.com/c/6ac2eb7f-1ef0-83e8-ba59-beda6da05236#3-prerequisites)
+  - [FFmpeg — macOS](https://chatgpt.com/c/6ac2eb7f-1ef0-83e8-ba59-beda6da05236#ffmpeg--macos)
+- [4. Generation Pipeline](https://chatgpt.com/c/6ac2eb7f-1ef0-83e8-ba59-beda6da05236#4-generation-pipeline)
+- [5. Step 1 — Build the Tile Sample](https://chatgpt.com/c/6ac2eb7f-1ef0-83e8-ba59-beda6da05236#5-step-1--build-the-tile-sample)
+- [6. Step 2 — Run Inference for the Four Experiments](https://chatgpt.com/c/6ac2eb7f-1ef0-83e8-ba59-beda6da05236#6-step-2--run-inference-for-the-four-experiments)
+  - [Consistency Check](https://chatgpt.com/c/6ac2eb7f-1ef0-83e8-ba59-beda6da05236#consistency-check)
+- [7. Step 3 — Convert Frames to Video](https://chatgpt.com/c/6ac2eb7f-1ef0-83e8-ba59-beda6da05236#7-step-3--convert-frames-to-video)
+- [8. Step 4 — Add the Soundtrack](https://chatgpt.com/c/6ac2eb7f-1ef0-83e8-ba59-beda6da05236#8-step-4--add-the-soundtrack)
+- [9. Step 5 — Create the Final Demo Videos](https://chatgpt.com/c/6ac2eb7f-1ef0-83e8-ba59-beda6da05236#9-step-5--create-the-final-demo-videos)
+- [10. Experiment Captions](https://chatgpt.com/c/6ac2eb7f-1ef0-83e8-ba59-beda6da05236#10-experiment-captions)
+- [11. Demo 5 — Automated Helipad Scraping](https://chatgpt.com/c/6ac2eb7f-1ef0-83e8-ba59-beda6da05236#11-demo-5--automated-helipad-scraping)
+- [12. Clean Up Intermediate Files](https://chatgpt.com/c/6ac2eb7f-1ef0-83e8-ba59-beda6da05236#12-clean-up-intermediate-files)
+- [13. Final Output](https://chatgpt.com/c/6ac2eb7f-1ef0-83e8-ba59-beda6da05236#13-final-output)
+  - [Comparability Criterion](https://chatgpt.com/c/6ac2eb7f-1ef0-83e8-ba59-beda6da05236#comparability-criterion)
 
-<br>
+\<br>\<br>
 
-- [1. Objetivo](#1-objetivo)
-- [2. Metodologia Experimental](#2-metodologia-experimental)
-  - [2.1 Amostragem Controlada](#21-amostragem-controlada)
-  - [2.2 Comparabilidade](#22-comparabilidade)
-- [3. Pré-requisitos](#3-pré-requisitos)
-  - [FFmpeg — macOS](#ffmpeg--macos)
-- [4. Pipeline de Geração](#4-pipeline-de-geração)
-- [5. Etapa 1 — Construir a Amostra de Tiles](#5-etapa-1--construir-a-amostra-de-tiles)
-- [6. Etapa 2 — Executar a Inferência para os Quatro Experimentos](#6-etapa-2--executar-a-inferência-para-os-quatro-experimentos)
-  - [Verificação de Consistência](#verificação-de-consistência)
-- [7. Etapa 3 — Converter Frames em Vídeo](#7-etapa-3--converter-frames-em-vídeo)
-- [8. Etapa 4 — Adicionar a Trilha Sonora](#8-etapa-4--adicionar-a-trilha-sonora)
-- [9. Etapa 5 — Criar os Arquivos Finais](#9-etapa-5--criar-os-arquivos-finais)
-- [10. Legendas dos Experimentos](#10-legendas-dos-experimentos)
-- [11. Demonstração Adicional — Scraping Automatizado de Helipontos](#11-demonstração-adicional--scraping-automatizado-de-helipontos)
-- [12. Limpeza dos Arquivos Intermediários](#12-limpeza-dos-arquivos-intermediários)
-- [13. Resultado Final](#13-resultado-final)
-  - [Critério de Comparabilidade](#critério-de-comparabilidade)
+## 1. Objetivo
 
-<br><br>
-
-## [1. Objetivo](#1-objetivo)
-
-<br>
-
-Este manual documenta o procedimento usado para gerar vídeos de demonstração dos quatro experimentos de detecção de helipontos:
-
-<br>
+Este manual documenta o procedimento utilizado para gerar os vídeos de demonstração dos quatro experimentos de detecção de helipads:
 
 - `exp1` — YOLOv8n
 - `exp2` — YOLOv8n
-- `exp3` — YOLOv8n + conjunto de dados aumentado
+- `exp3` — YOLOv8n + augmented dataset
 - `exp4` — YOLO11n
 
-<br>
+Os vídeos apresentam a **inferência dos modelos sobre tiles reais de imagens de satélite**, permitindo inspecionar visualmente o comportamento de cada modelo treinado em imagens que não foram utilizadas durante o treinamento.
 
-Os vídeos apresentam a **inferência do modelo em tiles reais de imagens de satélite**, permitindo que o comportamento de cada modelo seja inspecionado visualmente em imagens que não foram utilizadas durante o treinamento.
+> **Importante:** estes vídeos representam **inferência**, e não treinamento.
 
-<br>
+Os quatro vídeos de detecção são apresentados como:
 
-> **Importante:** estes vídeos representam a **inferência**, e não o treinamento.
+- **🎥 Demo 1** — `exp1`
+- **🎥 Demo 2** — `exp2`
+- **🎥 Demo 3** — `exp3`
+- **🎥 Demo 4** — `exp4`
 
-<br><br>
+Uma quinta demonstração apresenta o processo automatizado de coleta de dados geoespaciais:
 
-## [2. Metodologia Experimental](#2-metodologia-experimental)
+- **🎥 Demo 5** — Automated Helipad Scraping
 
-<br>
+\<br>
 
-### [2.1 Amostragem Controlada](#21-amostragem-controlada)
+---
 
-<br>
+## 2. Metodologia Experimental
 
-O conjunto de dados geoespaciais contém aproximadamente **7.767–7.943 tiles**, dependendo da versão do conjunto de dados. Executar a inferência em todos os tiles e converter o conjunto completo em vídeo produziria demonstrações excessivamente longas e aumentaria significativamente o custo computacional.
+### 2.1 Amostragem Controlada
 
-<br>
+O conjunto de dados geoespaciais contém aproximadamente **7.767–7.943 tiles**, dependendo da versão do dataset. Executar a inferência em todos os tiles e converter o conjunto completo em vídeo produziria demonstrações excessivamente longas e aumentaria significativamente o tempo de processamento.
 
-Para a demonstração, é utilizada uma **amostra fixa de tiles por região**.
+Para as demonstrações, um **número fixo de tiles é amostrado de cada uma das 10 regiões**.
 
-<br>
+With the default configuration:
 
-Com a configuração padrão:
-
-<br>
-
-```text
-10 regiões × 8 tiles por região = 80 tiles
+```
+10 regions × 8 tiles per region = 80 tiles
 ```
 
-<br>
+A amostra é criada **uma única vez** e reutilizada nos quatro experimentos de detecção.
 
-A amostra é criada **uma única vez** e reutilizada nos quatro experimentos.
+### 2.2 Comparabilidade
 
-<br>
+Usar a mesma amostra garante que:
 
-### [2.2 Comparabilidade](#22-comparabilidade)
-
-<br>
-
-O uso da mesma amostra garante que:
-
-<br>
-
-- os quatro modelos recebam as mesmas imagens;
-- as regiões analisadas sejam idênticas;
-- a ordem de apresentação permaneça consistente;
-- a trilha sonora seja a mesma;
-- as diferenças observadas possam ser atribuídas ao comportamento do modelo.
-
-<br>
+- all four models receive the same images;
+- the analyzed regions are identical;
+- the presentation order remains consistent;
+- the soundtrack is identical;
+- observed differences can be attributed to model behavior.
 
 Em outras palavras:
 
-<br>
+> **Mesma cena. Modelo diferente.**
 
-> **Mesma cena, modelo diferente.**
+Isso impede que a seleção das imagens se torne uma variável adicional na comparação visual.
 
-<br>
+\<br>
 
-Esse procedimento impede que a seleção das imagens se torne uma variável adicional na comparação visual dos experimentos.
+---
 
-<br><br>
-
-## [3. Pré-requisitos](#3-pré-requisitos)
-
-<br>
+## 3. Pré-requisitos
 
 Antes de começar, confirme que:
 
-<br>
+- the repository is located at `3-MAINproject-ai-ml-yolo-helipad_detector`;
+- `ffmpeg` is installed;
+- the Python environment is configured;
+- the `ultralytics` package is available;
+- the four trained weights are available at:
 
-- o repositório está localizado em `3-project-ai-ml-yolo-helipad_detector`;
-- o `ffmpeg` está instalado;
-- o ambiente Python está configurado;
-- o pacote `ultralytics` está disponível;
-- os pesos treinados estão disponíveis em:
-
-<br>
-
-```text
+```
 artifacts/runs/runs/detect/
 ├── exp1/weights/best.pt
 ├── exp2/weights/best.pt
@@ -137,91 +111,103 @@ artifacts/runs/runs/detect/
 └── exp4/weights/best.pt
 ```
 
-<br>
+- the regional satellite tiles are available under:
 
-- os tiles regionais estão disponíveis em:
-
-<br>
-
-```text
+```
 src/geospatial/mosaic_*/
 ```
 
-<br>
+- the required audio files are available under:
 
-### [FFmpeg — macOS](#ffmpeg--macos)
+```
+assets/audio/
+```
 
-<br>
+### FFmpeg — macOS
 
 Se necessário:
 
-<br>
-
-```bash
+```
 brew install ffmpeg
 ```
 
-<br><br>
+\<br>
 
-## [4. Pipeline de Geração](#4-pipeline-de-geração)
+---
 
-<br>
+## 4. Pipeline de Geração
 
-O processo completo segue quatro etapas principais:
+O fluxo de trabalho completo é:
 
-<br>
-
-```text
-Tiles Reais de Satélite
+```
+Real Satellite Tiles
         │
         ▼
-Amostra Controlada
-10 Regiões
+Controlled Sample
+10 Regions
         │
         ▼
-Inferência
+Inference
 exp1 · exp2 · exp3 · exp4
         │
         ▼
-Frames Anotados
+Annotated Frames
         │
         ▼
-Vídeos MP4
+Silent MP4 Videos
         │
         ▼
-Trilha Sonora Comum
+Common Soundtrack
         │
         ▼
-Demonstrações Finais
+Demo 1 · Demo 2 · Demo 3 · Demo 4
 ```
 
-<br><br>
+A demonstração de scraping segue um fluxo separado:
 
-## [5. Etapa 1 — Construir a Amostra de Tiles](#5-etapa-1--construir-a-amostra-de-tiles)
+```
+Automated Data Collection
+        │
+        ▼
+Selenium / helipad_bot.py
+        │
+        ▼
+Helipad Coordinates
+        │
+        ▼
+Demo 5
+        │
+        ▼
+Soundtrack
+```
 
-<br>
+> **Demo 1–4** demonstram a inferência dos modelos.
+> **Demo 5** demonstra a coleta automatizada de dados de helipads.
+
+\<br>
+
+---
+
+## 5. Etapa 1 — Criar a Amostra de Tiles
 
 Defina o número de tiles selecionados de cada região:
 
-<br>
-
-```bash
-cd ~/Desktop/3-project-ai-ml-yolo-helipad_detector
+```
+cd ~/Desktop/3-MAINproject-ai-ml-yolo-helipad_detector
 
 N_PER_REGION=8
 SRC=reports/demo_src
 
 rm -rf "$SRC"
+rm -rf reports/demo_frames
 mkdir -p "$SRC" reports/demo_frames reports/demo_videos
 ```
 
-<br>
+> A remoção de `reports/demo_frames` antes da inferência é intencional. Isso impede que frames de uma execução anterior sejam misturados à amostra atual.
 
-Em seguida, construa a amostra:
+Build the controlled sample:
 
-<br>
-
-```bash
+```
 i=0
 
 for REGION in $(ls -d src/geospatial/mosaic_*/ | sort); do
@@ -231,7 +217,7 @@ for REGION in $(ls -d src/geospatial/mosaic_*/ | sort); do
 
   echo "[$PREFIX] $REGION_NAME"
 
-  # Extrai os tiles caso a região ainda contenha arquivos ZIP.
+  # Extract tiles if the region still contains ZIP archives.
   unzip -n "$REGION"*.zip -d "$REGION" 2>/dev/null || true
 
   ls "$REGION"*.jpg | sort | head -$N_PER_REGION | while read -r TILE; do
@@ -239,45 +225,33 @@ for REGION in $(ls -d src/geospatial/mosaic_*/ | sort); do
   done
 done
 
-echo "Total de tiles:"
+echo "Total tiles:"
 ls "$SRC"/*.jpg | wc -l
 ```
 
-<br>
+Com `N_PER_REGION=8`, o tamanho esperado da amostra é:
 
-Com `N_PER_REGION=8`, o resultado esperado é aproximadamente:
-
-<br>
-
-```text
+```
 80 tiles
 ```
 
-<br>
+Para criar uma demonstração mais longa, aumente o valor:
 
-Aumente `N_PER_REGION` caso seja necessária uma demonstração mais longa:
-
-<br>
-
-```bash
+```
 N_PER_REGION=12
 ```
 
-<br>
+> **Não altere a amostra entre os experimentos.** O mesmo diretório `reports/demo_src/` deve ser utilizado para `exp1`, `exp2`, `exp3` e `exp4`.
 
-> **Não altere a amostra entre os experimentos.** O mesmo diretório `reports/demo_src/` deve ser usado por `exp1`, `exp2`, `exp3` e `exp4`.
+\<br>
 
-<br><br>
+---
 
-## [6. Etapa 2 — Executar a Inferência para os Quatro Experimentos](#6-etapa-2--executar-a-inferência-para-os-quatro-experimentos)
+## 6. Etapa 2 — Executar a Inferência para os Quatro Experimentos
 
-<br>
+Execute a inferência sobre a mesma amostra:
 
-Execute a inferência na mesma amostra:
-
-<br>
-
-```bash
+```
 for EXP in exp1 exp2 exp3 exp4; do
   echo "=== Running $EXP ==="
 
@@ -302,13 +276,9 @@ model.predict(
 done
 ```
 
-<br>
-
 A estrutura resultante será:
 
-<br>
-
-```text
+```
 reports/demo_frames/
 ├── exp1/
 ├── exp2/
@@ -316,50 +286,34 @@ reports/demo_frames/
 └── exp4/
 ```
 
-<br>
+Cada diretório contém os frames anotados gerados pelo respectivo modelo.
 
-Cada diretório contém os frames anotados gerados pelo modelo correspondente.
+### Verificação de Consistência
 
-<br>
-
-### [Verificação de Consistência](#verificação-de-consistência)
-
-<br>
-
-Os quatro experimentos devem gerar a mesma quantidade de frames.
-
-<br>
+Os quatro experimentos devem gerar o mesmo número de frames.
 
 Para uma amostra de 80 tiles:
 
-<br>
-
-```text
+```
 exp1 → 80 frames
 exp2 → 80 frames
 exp3 → 80 frames
 exp4 → 80 frames
 ```
 
-<br>
+Se as quantidades de frames forem diferentes, pare e investigue antes de prosseguir para a geração dos vídeos.
 
-Uma diferença na quantidade de frames indica que a execução deve ser verificada antes de gerar os vídeos.
+\<br>
 
-<br><br>
+---
 
-## [7. Etapa 3 — Converter Frames em Vídeo](#7-etapa-3--converter-frames-em-vídeo)
+## 7. Etapa 3 — Converter Frames em Vídeo
 
-<br>
+Converta os frames anotados em vídeos MP4 usando `ffmpeg`.
 
-Use o `ffmpeg` para converter os frames anotados em vídeos MP4.
+Recomenda-se uma taxa de **2 FPS** para que as detecções permaneçam visíveis por tempo suficiente para inspeção visual.
 
-<br>
-
-Uma taxa de **2 FPS** é recomendada para que as detecções permaneçam claramente visíveis.
-
-<br>
-
-```bash
+```
 FPS=2
 
 for EXP in exp1 exp2 exp3 exp4; do
@@ -376,13 +330,9 @@ for EXP in exp1 exp2 exp3 exp4; do
 done
 ```
 
-<br>
-
 Os vídeos intermediários serão criados em:
 
-<br>
-
-```text
+```
 reports/demo_videos/
 ├── exp1_silent.mp4
 ├── exp2_silent.mp4
@@ -390,21 +340,17 @@ reports/demo_videos/
 └── exp4_silent.mp4
 ```
 
-<br><br>
+\<br>
 
-## [8. Etapa 4 — Adicionar a Trilha Sonora](#8-etapa-4--adicionar-a-trilha-sonora)
+---
 
-<br>
+## 8. Etapa 4 — Adicionar a Trilha Sonora
 
-Todos os quatro vídeos utilizam a **mesma trilha sonora**.
+Os quatro vídeos de inferência utilizam a **mesma trilha sonora**.
 
-<br>
+Isso é intencional: como os vídeos são utilizados para comparar visualmente os quatro modelos, a trilha sonora deve permanecer constante e não deve introduzir uma variável experimental adicional.
 
-Essa padronização é intencional: como o objetivo é comparar visualmente o comportamento dos modelos, a trilha sonora não deve introduzir uma variável adicional entre os experimentos.
-
-<br>
-
-```bash
+```
 AUDIO="assets/audio/Interstellar - Deep House Remix.m4a"
 
 for EXP in exp1 exp2 exp3 exp4; do
@@ -418,96 +364,98 @@ for EXP in exp1 exp2 exp3 exp4; do
 done
 ```
 
-<br>
-
 > Confirme o nome exato do arquivo em `assets/audio/` antes de executar o comando.
 
-<br><br>
+Os arquivos resultantes são:
 
-<br>
+```
+reports/demo_videos/
+├── exp1_with_audio.mp4
+├── exp2_with_audio.mp4
+├── exp3_with_audio.mp4
+└── exp4_with_audio.mp4
+```
 
-## [9. Etapa 5 — Criar os Arquivos Finais](#9-etapa-5--criar-os-arquivos-finais)
+\<br>
 
-<br>
+---
 
-Crie o diretório de demonstração:
+## 9. Etapa 5 — Criar os Vídeos Finais de Demonstração
 
-<br>
+Crie o diretório `demo/`:
 
-```bash
+```
 mkdir -p demo
 ```
 
-<br>
+Copie os vídeos finais utilizando nomes de arquivo descritivos.
 
-Copie os vídeos finais:
+Os nomes dos arquivos incluem intencionalmente o **número da Demo**, a **finalidade da inferência**, o **experimento**, o **modelo** e a configuração relevante. Como o GitHub exibe o nome do arquivo do vídeo acima do player incorporado, essa convenção de nomenclatura também funciona como o título visual de cada demonstração.
 
-<br>
-
-```bash
+```
 cp reports/demo_videos/exp1_with_audio.mp4 \
-  "demo/Helipad-Detection-exp1-YOLOv8n-Deteccao-em-Tiles-Reais.mp4"
+  "demo/🎥 Demo 1 — Inference — Helipad Detection · exp1 · YOLOv8n · 60 epochs.mp4"
 
 cp reports/demo_videos/exp2_with_audio.mp4 \
-  "demo/Helipad-Detection-exp2-YOLOv8n-Deteccao-em-Tiles-Reais.mp4"
+  "demo/🎥 Demo 2 — Inference — Helipad Detection · exp2 · YOLOv8n · 100 epochs.mp4"
 
 cp reports/demo_videos/exp3_with_audio.mp4 \
-  "demo/Helipad-Detection-exp3-YOLOv8n-Deteccao-em-Tiles-Reais.mp4"
+  "demo/🎥 Demo 3 — Inference — Helipad Detection · exp3 · YOLOv8n · 100 epochs · Augmented Dataset.mp4"
 
 cp reports/demo_videos/exp4_with_audio.mp4 \
-  "demo/Helipad-Detection-exp4-YOLO11n-Deteccao-em-Tiles-Reais.mp4"
+  "demo/🎥 Demo 4 — Inference — Helipad Detection · exp4 · YOLO11n · 100 epochs.mp4"
 ```
 
-<br>
+Verifique os arquivos finais:
 
-Verifique os arquivos:
-
-<br>
-
-```bash
+```
 ls -lh demo/*.mp4
 ```
 
-<br><br>
+Os quatro arquivos agora devem ser:
 
-## [10. Legendas dos Experimentos](#10-legendas-dos-experimentos)
-
-<br>
-
-| Experimento | Descrição |
-|---|---|
-| **exp1** | **60 épocas · YOLOv8n** — alta precisão no benchmark curado, mas menor cobertura de helipontos observada em condições de campo. |
-| **exp2** | **100 épocas · YOLOv8n** — modelo de referência, com a melhor generalização observada em condições de campo. |
-| **exp3** | **100 épocas · YOLOv8n + conjunto de dados aumentado** — maior recall, com desempenho intermediário em campo. |
-| **exp4** | **100 épocas · YOLO11n** — mesma base experimental do `exp2`, utilizando uma arquitetura mais recente, mas sem superar o `exp2` na avaliação de campo. |
-
-<br>
-
-> As descrições devem permanecer consistentes com os resultados relatados na análise experimental final do projeto.
+```
+demo/
+├── 🎥 Demo 1 — Inference — Helipad Detection · exp1 · YOLOv8n · 60 epochs.mp4
+├── 🎥 Demo 2 — Inference — Helipad Detection · exp2 · YOLOv8n · 100 epochs.mp4
+├── 🎥 Demo 3 — Inference — Helipad Detection · exp3 · YOLOv8n · 100 epochs · Augmented Dataset.mp4
+└── 🎥 Demo 4 — Inference — Helipad Detection · exp4 · YOLO11n · 100 epochs.mp4
+```
 
 <br><br>
 
-## [11. Demonstração Adicional — Scraping Automatizado de Helipontos](#11-demonstração-adicional--scraping-automatizado-de-helipontos)
+
+
+## 10. Legendas dos Experimentos
+
+| Demo       | Experimento | Descrição                                                                                                                                             |
+| ---------- | ---------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Demo 1** | `exp1`     | **YOLOv8n · 60 epochs** — alta precisão no benchmark curado, mas menor cobertura dos helipads observados em condições de campo.                       |
+| **Demo 2** | `exp2`     | **YOLOv8n · 100 epochs** — modelo de referência, com a melhor generalização observada em condições de campo.                                         |
+| **Demo 3** | `exp3`     | **YOLOv8n · 100 epochs · Augmented Dataset** — maior recall, com desempenho intermediário em campo.                                                  |
+| **Demo 4** | `exp4`     | **YOLO11n · 100 epochs** — mesma base experimental de `exp2`, utilizando uma arquitetura mais recente, mas sem superar `exp2` na avaliação de campo. |
+
 
 <br>
 
-A **Demonstração de Scraping Automatizado de Helipontos** possui um propósito diferente dos quatro vídeos de detecção.
 
-<br>
+> Mantenha estas descrições consistentes com os resultados apresentados na análise experimental final do projeto.
 
-Ela demonstra a **coleta automatizada de coordenadas de helipontos**, realizada usando Selenium e `helipad_bot.py`.
+<br><br>
 
-<br>
+## 11. Demo 5 — Scraping Automatizado de Helipads
 
-Portanto, ela **não utiliza o pipeline de inferência descrito nas Etapas 5–9**.
+A **Demo 5** é independente das quatro demonstrações de inferência dos modelos.
 
-<br>
+Ela apresenta a **coleta automatizada de coordenadas de helipads** utilizando Selenium e `helipad_bot.py`.
 
-Para adicionar a trilha sonora:
+Portanto, ela **não** utiliza o pipeline de inferência descrito nas Etapas 5–9.
 
-<br>
+O objetivo da Demo 5 é documentar a etapa de aquisição de dados geoespaciais do projeto.
 
-```bash
+### Adicionar a Trilha Sonora
+
+```
 cd ~/Desktop/3-MAINproject-ai-ml-yolo-helipad_detector
 
 SCRAPING_VIDEO="demo/🚁Automated Helipad Scraping Demo.mp4"
@@ -519,74 +467,67 @@ ffmpeg -y \
   -c:v copy \
   -c:a aac \
   -shortest \
-  "demo/Demo 5 — Automated Helipad Scraping · Selenium · Coordinate Collection.mp4"
+  "demo/🎥 Demo 5 — Automated Helipad Scraping · Selenium · Coordinate Collection.mp4"
 ```
 
-<br>
+Isso cria uma nova versão do vídeo, preservando a demonstração original de scraping.
 
-Este procedimento cria uma nova versão do vídeo enquanto preserva o arquivo original.
+O diretório final, portanto, conterá:
 
-<br>
+```
+demo/
+├── 🎥 Demo 1 — Inference — Helipad Detection · exp1 · YOLOv8n · 60 epochs.mp4
+├── 🎥 Demo 2 — Inference — Helipad Detection · exp2 · YOLOv8n · 100 epochs.mp4
+├── 🎥 Demo 3 — Inference — Helipad Detection · exp3 · YOLOv8n · 100 epochs · Augmented Dataset.mp4
+├── 🎥 Demo 4 — Inference — Helipad Detection · exp4 · YOLO11n · 100 epochs.mp4
+└── 🎥 Demo 5 — Automated Helipad Scraping · Selenium · Coordinate Collection.mp4
+```
 
 > [!TIP]
-> Se o vídeo original já contiver narração ou outra faixa de áudio, o comando acima irá substituí-la. Para preservar e combinar as duas fontes de áudio, use `amix`.
-
-<br><br>
-
-## [12. Limpeza dos Arquivos Intermediários](#12-limpeza-dos-arquivos-intermediários)
+> Se o vídeo original de scraping já contiver narração ou outra faixa de áudio, o comando acima substituirá o áudio existente. Para preservar e mixar ambas as fontes de áudio, use `amix`.
 
 <br>
 
-Após validar os vídeos finais, os arquivos intermediários podem ser removidos:
 
-<br>
 
-```bash
+## 12. Limpar Arquivos Intermediários
+
+Após verificar os cinco vídeos finais, os arquivos intermediários podem ser removidos:
+
+```
 rm -rf reports/demo_frames
 rm -rf reports/demo_src
 rm -f reports/demo_videos/*_silent.mp4
 ```
 
-<br>
+Os vídeos finais em `demo/` são preservados.
 
-Os arquivos finais em `demo/` permanecem preservados.
-
-<br><br>
-
-## [13. Resultado Final](#13-resultado-final)
+> **Não execute esta limpeza antes de verificar os vídeos finais.**
 
 <br>
 
-Ao final do processo, o diretório `demo/` deve conter os quatro vídeos dos experimentos:
 
-<br>
+## 13. Saída Final
 
-```text
+Após concluir todo o fluxo de trabalho, o diretório `demo/` deverá conter exatamente cinco demonstrações finais:
+
+```
 demo/
-├── Helipad-Detection-exp1-YOLOv8n-Deteccao-em-Tiles-Reais.mp4
-├── Helipad-Detection-exp2-YOLOv8n-Deteccao-em-Tiles-Reais.mp4
-├── Helipad-Detection-exp3-YOLOv8n-Deteccao-em-Tiles-Reais.mp4
-├── Helipad-Detection-exp4-YOLO11n-Deteccao-em-Tiles-Reais.mp4
-└── 🚁Automated-Helipad-Scraping-Demo-com-trilha.mp4
+├── 🎥 Demo 1 — Inference — Helipad Detection · exp1 · YOLOv8n · 60 epochs.mp4
+├── 🎥 Demo 2 — Inference — Helipad Detection · exp2 · YOLOv8n · 100 epochs.mp4
+├── 🎥 Demo 3 — Inference — Helipad Detection · exp3 · YOLOv8n · 100 epochs · Augmented Dataset.mp4
+├── 🎥 Demo 4 — Inference — Helipad Detection · exp4 · YOLO11n · 100 epochs.mp4
+└── 🎥 Demo 5 — Automated Helipad Scraping · Selenium · Coordinate Collection.mp4
 ```
 
-<br>
+### Critério de Comparabilidade
 
-### [Critério de Comparabilidade](#critério-de-comparabilidade)
-
-<br>
-
-A validade da demonstração visual depende de três elementos permanecerem constantes:
-
-<br>
+Para as **Demo 1–4**, a validade da comparação visual depende da manutenção de três elementos constantes:
 
 **mesmas imagens de entrada · mesma ordem · mesma trilha sonora**
 
-<br>
+A variável experimental que muda entre as quatro demonstrações de inferência é o **modelo utilizado para a inferência**.
 
-A única variável experimental alterada entre os quatro vídeos de detecção é o **modelo usado para a inferência**.
-
-<br>
-
->  [!TIP]
 > **Mesma cena. Modelo diferente.**
+
+**Demo 5 is intentionally excluded from this model comparison**, because it documents automated data collection rather than model inference.
