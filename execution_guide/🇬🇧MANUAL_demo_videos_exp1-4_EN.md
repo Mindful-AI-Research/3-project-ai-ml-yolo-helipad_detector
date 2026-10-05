@@ -180,5 +180,13 @@ ffmpeg -y -i "$SCRAPING_VIDEO" -i "$SCRAPING_AUDIO" \
   "demo/🚁Automated-Helipad-Scraping-Demo-com-trilha.mp4"
 ```
 
+<br>
+
 This creates a new copy of the video with audio, without overwriting the original silent file. Check the result before deleting the old one.
+
+
+<br>
+
+>[!TIP]
+>
 
