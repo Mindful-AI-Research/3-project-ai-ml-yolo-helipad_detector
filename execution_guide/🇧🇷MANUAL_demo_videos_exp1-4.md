@@ -181,10 +181,12 @@ ffmpeg -y -i "$SCRAPING_VIDEO" -i "$SCRAPING_AUDIO" \
   "demo/🚁Automated-Helipad-Scraping-Demo-com-trilha.mp4"
 ```
 
+<br>
+
 Isso gera uma cópia nova do vídeo, já com áudio, sem sobrescrever o arquivo mudo original. Confere o resultado antes de apagar o antigo.
 
 <br>
 
->
+> [!TIP]
 > Se o vídeo original já tiver algum áudio (narração, etc.), o comando acima substituirá o áudio inteiro pela trilha. Se quiser **misturar** a trilha por baixo de um áudio já existente, o comando muda (precisa de `amix` em vez de `-shortest` direto).
 
