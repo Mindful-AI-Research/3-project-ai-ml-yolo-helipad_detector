@@ -1,225 +1,52 @@
-# 🇺🇸 Manual — Demo Video Generation
 
-**Helipad Detection · YOLOv8n / YOLO11n · São Paulo**
 
-<br>
-
-## 📑 Table of Contents
-
-<br>
-
-- [1. Objective](#1-objective)
-- [2. Experimental Methodology](#2-experimental-methodology)
-  - [2.1 Controlled Sampling](#21-controlled-sampling)
-  - [2.2 Comparability](#22-comparability)
-- [3. Prerequisites](#3-prerequisites)
-  - [FFmpeg — macOS](#ffmpeg--macos)
-- [4. Generation Pipeline](#4-generation-pipeline)
-- [5. Step 1 — Build the Tile Sample](#5-step-1--build-the-tile-sample)
-- [6. Step 2 — Run Inference for the Four Experiments](#6-step-2--run-inference-for-the-four-experiments)
-  - [Consistency Check](#consistency-check)
-- [7. Step 3 — Convert Frames to Video](#7-step-3--convert-frames-to-video)
-- [8. Step 4 — Add the Soundtrack](#8-step-4--add-the-soundtrack)
-- [9. Step 5 — Create the Final Demo Videos](#9-step-5--create-the-final-demo-videos)
-- [10. Experiment Captions](#10-experiment-captions)
-- [11. Demo 5 — Automated Helipad Scraping](#11-demo-5--automated-helipad-scraping)
-- [12. Clean Up Intermediate Files](#12-clean-up-intermediate-files)
-- [13. Final Output](#13-final-output)
-  - [Comparability Criterion](#comparability-criterion)
+# 🇬🇧 Manual — Generate the Demo Videos (exp1 to exp4, all 10 regions)
 
 <br><br>
 
-## 1. Objective
-
-This manual documents the procedure used to generate the demonstration videos for the four helipad detection experiments:
-
-- `exp1` — YOLOv8n
-- `exp2` — YOLOv8n
-- `exp3` — YOLOv8n + augmented dataset
-- `exp4` — YOLO11n
-
-The videos present **model inference on real satellite imagery tiles**, allowing the behavior of each trained model to be visually inspected on images that were not used during training.
-
-> **Important:** these videos represent **inference**, not training.
-
-The four detection videos are presented as:
-
-- **🎥 Demo 1** — `exp1`
-- **🎥 Demo 2** — `exp2`
-- **🎥 Demo 3** — `exp3`
-- **🎥 Demo 4** — `exp4`
-
-A fifth demonstration covers the automated geospatial data collection process:
-
-- **🎥 Demo 5** — Automated Helipad Scraping
+## [Before You Start]()
 
 <br>
 
----
+This manual generates, for each of the 4 experiments, a video showing the model detecting helipads on real satellite tiles — this is not a training video, it's inference (the already-trained model running on images it never saw during training).
 
-## 2. Experimental Methodology
+**About covering all 10 regions:** running literally every ~7,767–7,943 tiles into video would be far too long (at 4 fps, over 30 minutes per experiment) and slow to process 4 times without a GPU. Instead, this manual **samples a fixed number of tiles from each of the 10 regions** — so the video tours every neighborhood without becoming a marathon. The **exact same tiles** are used across all 4 experiments, keeping the comparison fair: same scene, different model.
 
-### 2.1 Controlled Sampling
+<br>
 
-The geospatial dataset contains approximately **7,767–7,943 tiles**, depending on the dataset version. Running inference on every tile and converting the complete set into video would produce excessively long demonstrations and significantly increase processing time.
+### [***Prerequisites***]()
 
-For the demonstrations, a **fixed number of tiles is sampled from each of the 10 regions**.
+<br>
 
-With the default configuration:
-
-```text
-10 regions × 8 tiles per region = 80 tiles
-```
-
-The sample is created **once** and reused across all four detection experiments.
-
-### 2.2 Comparability
-
-Using the same sample ensures that:
-
-- all four models receive the same images;
-- the analyzed regions are identical;
-- the presentation order remains consistent;
-- the soundtrack is identical;
-- observed differences can be attributed to model behavior.
-
-In other words:
-
-> **Same scene. Different model.**
-
-This prevents image selection from becoming an additional variable in the visual comparison.
+- Terminal open at the repository root (`3-Mainproject-ai-ml-yolo-helipad_detector`)
+- `ffmpeg` installed (`brew install ffmpeg` on Mac, if you don't have it yet)
+- All 4 trained weights at `artifacts/runs/runs/detect/exp{1,2,3,4}/weights/best.pt`
+- Tiles for all 10 regions already downloaded at `src/geospatial/mosaic_*/`
 
 <br><br>
 
-## 3. Prerequisites
+## [Step 1 — Build the Sample (same tiles for all 4 experiments)]()
 
-Before starting, confirm that:
+<br>
 
-- the repository is located at `3-MAINproject-ai-ml-yolo-helipad_detector`;
-- `ffmpeg` is installed;
-- the Python environment is configured;
-- the `ultralytics` package is available;
-- the four trained weights are available at:
-
-```text
-artifacts/runs/runs/detect/
-├── exp1/weights/best.pt
-├── exp2/weights/best.pt
-├── exp3/weights/best.pt
-└── exp4/weights/best.pt
-```
-
-- the regional satellite tiles are available under:
-
-```text
-src/geospatial/mosaic_*/
-```
-
-- the required audio files are available under:
-
-```text
-assets/audio/
-```
-
-### FFmpeg — macOS
-
-If necessary:
+This block grabs `N_PER_REGION` tiles from each of the 10 `mosaic_*` folders, numbers the filename by region order (so the final video tours the neighborhoods in sequence, not shuffled), and collects everything into one source folder.
 
 ```bash
-brew install ffmpeg
-```
+cd ~/Desktop/3-Mainproject-ai-ml-yolo-helipad_detector
 
-<br><br>
-
-## 4. Generation Pipeline
-
-The complete workflow is:
-
-```text
-Real Satellite Tiles
-        │
-        ▼
-Controlled Sample
-10 Regions
-        │
-        ▼
-Inference
-exp1 · exp2 · exp3 · exp4
-        │
-        ▼
-Annotated Frames
-        │
-        ▼
-Silent MP4 Videos
-        │
-        ▼
-Common Soundtrack
-        │
-        ▼
-Demo 1 · Demo 2 · Demo 3 · Demo 4
-```
-
-The scraping demonstration follows a separate workflow:
-
-```text
-Automated Data Collection
-        │
-        ▼
-Selenium / helipad_bot.py
-        │
-        ▼
-Helipad Coordinates
-        │
-        ▼
-Demo 5
-        │
-        ▼
-Soundtrack
-```
-
-> **Demo 1–4** demonstrate model inference.  
-> **Demo 5** demonstrates automated helipad data collection.
-
-<br><br>
-
-## 5. Step 1 — Build the Tile Sample
-
-Define the number of tiles selected from each region:
-
-```bash
-cd ~/Desktop/3-MAINproject-ai-ml-yolo-helipad_detector
-
-N_PER_REGION=8
+N_PER_REGION=8   # tiles per neighborhood — 10 neighborhoods x 8 = 80 frames in the final video
 SRC=reports/demo_src
 
-rm -rf "$SRC"
-rm -rf reports/demo_frames
-mkdir -p "$SRC" reports/demo_frames reports/demo_videos
-```
+rm -rf "$SRC" && mkdir -p "$SRC" reports/demo_frames reports/demo_videos
 
-<br>
-
-> Removing `reports/demo_frames` before inference is intentional. It prevents frames from a previous execution from being mixed with the current sample.
-
-
-<br>
-
-Build the controlled sample:
-
-
-<br>
-
-```bash
 i=0
-
 for REGION in $(ls -d src/geospatial/mosaic_*/ | sort); do
   i=$((i+1))
   PREFIX=$(printf "%02d" $i)
   REGION_NAME=$(basename "$REGION")
-
   echo "[$PREFIX] $REGION_NAME"
 
-  # Extract tiles if the region still contains ZIP archives.
+  # if the folder only has the .zip, unpack it first
   unzip -n "$REGION"*.zip -d "$REGION" 2>/dev/null || true
 
   ls "$REGION"*.jpg | sort | head -$N_PER_REGION | while read -r TILE; do
@@ -227,202 +54,83 @@ for REGION in $(ls -d src/geospatial/mosaic_*/ | sort); do
   done
 done
 
-echo "Total tiles:"
-ls "$SRC"/*.jpg | wc -l
+echo "Total tiles in the sample:"
+ls "$SRC"/*.jpg | wc -l   # should be ~80 (or N_PER_REGION x number of regions found)
 ```
 
 <br>
 
-With `N_PER_REGION=8`, the expected sample size is:
-
-<br>
-
-```text
-80 tiles
-```
-
-<br>
-
-
-To create a longer demonstration, increase the value:
-
-<br>
-
-```bash
-N_PER_REGION=12
-```
-
-<br>
-
-> **Do not change the sample between experiments.** The same `reports/demo_src/` directory must be used for `exp1`, `exp2`, `exp3`, and `exp4`.
+> Want more coverage per neighborhood? Just increase `N_PER_REGION` — the video gets longer, but inference still runs only once per experiment.
 
 <br><br>
 
-## 6. Step 2 — Run Inference for the Four Experiments
-
-Run inference on the same sample:
+## [Step 2 — Run Inference on All 4 Experiments (over the same sample)]()
 
 <br>
+
+Since the sample is already built and small (~80 tiles), this runs fast even without a GPU.
 
 ```bash
 for EXP in exp1 exp2 exp3 exp4; do
   echo "=== Running $EXP ==="
-
   python -c "
 from ultralytics import YOLO
-
-model = YOLO(
-    'artifacts/runs/runs/detect/$EXP/weights/best.pt'
-)
-
-model.predict(
-    source='reports/demo_src',
-    conf=0.25,
-    save=True,
-    project='reports/demo_frames',
-    name='$EXP',
-    exist_ok=True
-)
+model = YOLO('artifacts/runs/runs/detect/$EXP/weights/best.pt')
+model.predict(source='reports/demo_src', conf=0.25, save=True,
+               project='reports/demo_frames', name='$EXP', exist_ok=True)
 "
-
-  echo "$EXP: $(ls reports/demo_frames/$EXP/*.jpg | wc -l) frames"
+  echo "$EXP: $(ls reports/demo_frames/$EXP/*.jpg | wc -l) frames generated"
 done
 ```
 
-<br>
-
-The resulting structure will be:
-
-```text
-reports/demo_frames/
-├── exp1/
-├── exp2/
-├── exp3/
-└── exp4/
-```
-
-<br>
-
-Each directory contains the annotated frames generated by the corresponding model.
-
-### Consistency Check
-
-All four experiments should generate the same number of frames.
-
-For an 80-tile sample:
-
-<br>
-
-```text
-exp1 → 80 frames
-exp2 → 80 frames
-exp3 → 80 frames
-exp4 → 80 frames
-```
-<br>
-
-
-If the frame counts differ, stop and investigate before proceeding to video generation.
+Confirm all 4 generated the same frame count (matching Step 1's sample) — if one comes out different, one of the weight files may have failed to load.
 
 <br><br>
 
-## 7. Step 3 — Convert Frames to Video
-
-Convert the annotated frames into MP4 videos using `ffmpeg`.
-
-A frame rate of **2 FPS** is recommended so that the detections remain visible long enough for visual inspection.
+## [Step 3 — Turn Into Video (ffmpeg)]()
 
 <br>
 
-
 ```bash
-FPS=2
+FPS=2   # tiles per second — with tiles from 10 different neighborhoods, slower helps viewers follow along
 
 for EXP in exp1 exp2 exp3 exp4; do
   cd reports/demo_frames/$EXP
-
-  ffmpeg -y \
-    -framerate $FPS \
-    -pattern_type glob \
-    -i '*.jpg' \
-    -pix_fmt yuv420p \
+  ffmpeg -y -framerate $FPS -pattern_type glob -i '*.jpg' -pix_fmt yuv420p \
     ../../demo_videos/${EXP}_silent.mp4
-
   cd -
 done
 ```
 
-<br>
-
-
-The intermediate videos will be created under:
-
-<br>
-
-```text
-reports/demo_videos/
-├── exp1_silent.mp4
-├── exp2_silent.mp4
-├── exp3_silent.mp4
-└── exp4_silent.mp4
-```
+At this point you have 4 silent videos in `reports/demo_videos/`, each touring all 10 regions.
 
 <br><br>
 
-## 8. Step 4 — Add the Soundtrack
-
-All four inference videos use the **same soundtrack**.
-
-This is intentional: because the videos are used to visually compare the four models, the soundtrack should remain constant and should not introduce an additional experimental variable.
+## [Step 4 — Add the Soundtrack (Interstellar)]()
 
 <br>
 
+All 4 detection videos deliberately share the same track — since they're compared side by side, changing the music along with the experiment would introduce a variable that confounds the comparison.
 
 ```bash
-AUDIO="assets/audio/Interstellar - Deep House Remix.m4a"
+AUDIO="assets/audio/Interstellar - Deep House Remix.m4a"   # check the exact filename in your assets/audio/ folder
 
 for EXP in exp1 exp2 exp3 exp4; do
-  ffmpeg -y \
-    -i reports/demo_videos/${EXP}_silent.mp4 \
-    -i "$AUDIO" \
-    -c:v copy \
-    -c:a aac \
-    -shortest \
+  ffmpeg -y -i reports/demo_videos/${EXP}_silent.mp4 -i "$AUDIO" \
+    -c:v copy -c:a aac -shortest \
     reports/demo_videos/${EXP}_with_audio.mp4
 done
 ```
 
-<br>
-
-> Confirm the exact filename under `assets/audio/` before running the command.
-
-<br>
-
-The resulting files are:
-
-```text
-reports/demo_videos/
-├── exp1_with_audio.mp4
-├── exp2_with_audio.mp4
-├── exp3_with_audio.mp4
-└── exp4_with_audio.mp4
-```
-
 <br><br>
 
-## 9. Step 5 — Create the Final Demo Videos
+## [Step 5 — Rename to Final Filenames]()
 
-Create the `demo/` directory:
+<br>
 
 ```bash
 mkdir -p demo
-```
 
-Copy the final videos using descriptive filenames.
-
-The filenames intentionally include the **Demo number**, **inference purpose**, **experiment**, **model**, and relevant configuration. Since GitHub displays the video filename above the embedded player, this naming convention also serves as the visual title of each demo.
-
-```bash
 cp reports/demo_videos/exp1_with_audio.mp4 \
   "demo/🎥 Demo 1 — Inference — Helipad Detection · exp1 · YOLOv8n · 60 epochs.mp4"
 
@@ -434,129 +142,59 @@ cp reports/demo_videos/exp3_with_audio.mp4 \
 
 cp reports/demo_videos/exp4_with_audio.mp4 \
   "demo/🎥 Demo 4 — Inference — Helipad Detection · exp4 · YOLO11n · 100 epochs.mp4"
-```
 
-Verify the final files:
-
-```bash
-ls -lh demo/*.mp4
-```
-
-The four files should now be:
-
-```text
-demo/
-├── 🎥 Demo 1 — Inference — Helipad Detection · exp1 · YOLOv8n · 60 epochs.mp4
-├── 🎥 Demo 2 — Inference — Helipad Detection · exp2 · YOLOv8n · 100 epochs.mp4
-├── 🎥 Demo 3 — Inference — Helipad Detection · exp3 · YOLOv8n · 100 epochs · Augmented Dataset.mp4
-└── 🎥 Demo 4 — Inference — Helipad Detection · exp4 · YOLO11n · 100 epochs.mp4
+ls -la demo/*.mp4
 ```
 
 <br>
 
----
-
-## 10. Experiment Captions
-
-| Demo | Experiment | Description |
-|---|---|---|
-| **Demo 1** | `exp1` | **YOLOv8n · 60 epochs** — high precision on the curated benchmark, but lower coverage of helipads observed under field conditions. |
-| **Demo 2** | `exp2` | **YOLOv8n · 100 epochs** — reference model, with the best observed generalization under field conditions. |
-| **Demo 3** | `exp3` | **YOLOv8n · 100 epochs · Augmented Dataset** — higher recall, with intermediate field performance. |
-| **Demo 4** | `exp4` | **YOLO11n · 100 epochs** — same experimental base as `exp2`, using a newer architecture, but without outperforming `exp2` in the field evaluation. |
-
-> Keep these descriptions consistent with the results reported in the project's final experimental analysis.
+### [***Optional — clean up intermediate files***]()
 
 <br>
 
----
-
-## 11. Demo 5 — Automated Helipad Scraping
-
-**Demo 5** is independent from the four model inference demonstrations.
-
-It presents the **automated collection of helipad coordinates** using Selenium and `helipad_bot.py`.
-
-Therefore, it does **not** use the inference pipeline described in Steps 5–9.
-
-The purpose of Demo 5 is to document the geospatial data acquisition stage of the project.
-
-### Add the Soundtrack
+The frames (`reports/demo_frames/`) and source sample (`reports/demo_src/`) take up disk space and don't need to be version-controlled. Once you've checked the final videos:
 
 ```bash
-cd ~/Desktop/3-MAINproject-ai-ml-yolo-helipad_detector
+rm -rf reports/demo_frames reports/demo_src reports/demo_videos/*_silent.mp4
+```
 
-SCRAPING_VIDEO="demo/🚁Automated Helipad Scraping Demo.mp4"
-SCRAPING_AUDIO="assets/audio/feel-good_nina-simone_house remix.mp3"
+<br><br>
 
-ffmpeg -y \
-  -i "$SCRAPING_VIDEO" \
-  -i "$SCRAPING_AUDIO" \
-  -c:v copy \
-  -c:a aac \
-  -shortest \
+## [Suggested Captions (one line per video)]()
+
+<br>
+
+| Video | Caption |
+|---|---|
+| exp1 | exp1 (60 epochs, YOLOv8n) — high Precision on the curated benchmark, but detects only ~half the real helipads in the field |
+| exp2 | exp2 (100 epochs, YOLOv8n) — the production model, best field generalization |
+| exp3 | exp3 (100 epochs, YOLOv8n, augmented dataset) — higher recall, mid-pack field result |
+| exp4 | exp4 (100 epochs, YOLO11n) — same base as exp2, newer architecture; did not outperform exp2 in the field |
+
+<br><br>
+
+## [Step 6 — Soundtrack for the Scraping Video (Automated Helipad Scraping Demo)]()
+
+<br>
+
+This video is about coordinate scraping (Selenium / `helipad_bot.py`), not model inference — it doesn't go through Steps 1-5 above. It just needs the soundtrack added.
+
+```bash
+cd ~/Desktop/3-Mainproject-ai-ml-yolo-helipad_detector
+
+SCRAPING_VIDEO="demo/🚁Automated Helipad Scraping Demo.mp4"   # adjust the path if the file is in a different folder
+SCRAPING_AUDIO="assets/audio/feel-good_nina-simone_house remix.mp3"   # check the exact filename in your assets/audio/ folder
+
+ffmpeg -y -i "$SCRAPING_VIDEO" -i "$SCRAPING_AUDIO" \
+  -c:v copy -c:a aac -shortest \
   "demo/🎥 Demo 5 — Automated Helipad Scraping · Selenium · Coordinate Collection.mp4"
 ```
 
-This creates a new version of the video while preserving the original scraping demo.
+<br>
 
-The final directory will therefore contain:
-
-```text
-demo/
-├── 🎥 Demo 1 — Inference — Helipad Detection · exp1 · YOLOv8n · 60 epochs.mp4
-├── 🎥 Demo 2 — Inference — Helipad Detection · exp2 · YOLOv8n · 100 epochs.mp4
-├── 🎥 Demo 3 — Inference — Helipad Detection · exp3 · YOLOv8n · 100 epochs · Augmented Dataset.mp4
-├── 🎥 Demo 4 — Inference — Helipad Detection · exp4 · YOLO11n · 100 epochs.mp4
-└── 🎥 Demo 5 — Automated Helipad Scraping · Selenium · Coordinate Collection.mp4
-```
-
-> [!TIP]
-> If the original scraping video already contains narration or another audio track, the command above replaces the existing audio. To preserve and mix both audio sources, use `amix`.
+This creates a new copy of the video with audio, without overwriting the original silent file. Check the result before deleting the old one.
 
 <br>
 
----
-
-## 12. Clean Up Intermediate Files
-
-After verifying all five final videos, the intermediate files can be removed:
-
-```bash
-rm -rf reports/demo_frames
-rm -rf reports/demo_src
-rm -f reports/demo_videos/*_silent.mp4
-```
-
-The final videos under `demo/` are preserved.
-
-> **Do not run this cleanup before verifying the final videos.**
-
-<br>
-
----
-
-## 13. Final Output
-
-After completing the complete workflow, the `demo/` directory should contain exactly five final demonstrations:
-
-```text
-demo/
-├── 🎥 Demo 1 — Inference — Helipad Detection · exp1 · YOLOv8n · 60 epochs.mp4
-├── 🎥 Demo 2 — Inference — Helipad Detection · exp2 · YOLOv8n · 100 epochs.mp4
-├── 🎥 Demo 3 — Inference — Helipad Detection · exp3 · YOLOv8n · 100 epochs · Augmented Dataset.mp4
-├── 🎥 Demo 4 — Inference — Helipad Detection · exp4 · YOLO11n · 100 epochs.mp4
-└── 🎥 Demo 5 — Automated Helipad Scraping · Selenium · Coordinate Collection.mp4
-```
-
-### Comparability Criterion
-
-For **Demo 1–4**, the validity of the visual comparison depends on keeping three elements constant:
-
-**same input images · same order · same soundtrack**
-
-The experimental variable that changes across the four inference demonstrations is the **model used for inference**.
-
-> **Same scene. Different model.**
-
-**Demo 5 is intentionally excluded from this model comparison**, because it documents automated data collection rather than model inference.
+>[!TIP]
+> If the original video already has some audio (narration, etc.), the command above replaces the entire audio track with the soundtrack. If you want to **mix** the track underneath existing audio instead, the command changes (needs `amix` instead of a plain `-shortest`).
