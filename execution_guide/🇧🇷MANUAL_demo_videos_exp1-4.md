@@ -1,6 +1,9 @@
 # 🇧🇷 [Manual — Geração de Vídeos de Demonstração](#-manual--geração-de-vídeos-de-demonstração)
 
-**[Detecção de Helipontos · YOLOv8n / YOLO11n · São Paulo](#1-objetivo)**
+<br>
+
+
+**Detecção de Helipontos · YOLOv8n / YOLO11n · São Paulo**
 
 <br>
 
