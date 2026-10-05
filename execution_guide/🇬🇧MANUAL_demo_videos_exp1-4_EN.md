@@ -4,7 +4,7 @@
 
 <br>
 
-## 📑 [Table of Contents](#-table-of-contents)
+##  [Table of Contents](#-table-of-contents)
 
 <br>
 
@@ -27,11 +27,7 @@
 - [13. Final Output](#13-final-output)
   - [Comparability Criterion](#comparability-criterion)
 
-<br>
-
----
-
-<br>
+<br><br>
 
 ## [1. Objective](#1-objective)
 
@@ -54,11 +50,7 @@ The videos present **model inference on real satellite imagery tiles**, allowing
 
 > **Important:** these videos represent **inference**, not training.
 
-<br>
-
----
-
-<br>
+<br><br>
 
 ## [2. Experimental Methodology](#2-experimental-methodology)
 
@@ -116,11 +108,7 @@ In other words:
 
 This procedure prevents image selection from becoming an additional variable in the visual comparison of the experiments.
 
-<br>
-
----
-
-<br>
+<br><br>
 
 ## [3. Prerequisites](#3-prerequisites)
 
@@ -170,11 +158,7 @@ If necessary:
 brew install ffmpeg
 ```
 
-<br>
-
----
-
-<br>
+<br><br>
 
 ## [4. Generation Pipeline](#4-generation-pipeline)
 
@@ -208,11 +192,7 @@ Common Soundtrack
 Final Demos
 ```
 
-<br>
-
----
-
-<br>
+<br><br>
 
 ## [5. Step 1 — Build the Tile Sample](#5-step-1--build-the-tile-sample)
 
@@ -284,11 +264,7 @@ N_PER_REGION=12
 
 > **Do not change the sample between experiments.** The same `reports/demo_src/` directory must be used by `exp1`, `exp2`, `exp3`, and `exp4`.
 
-<br>
-
----
-
-<br>
+<br><br>
 
 ## [6. Step 2 — Run Inference for the Four Experiments](#6-step-2--run-inference-for-the-four-experiments)
 
@@ -366,11 +342,7 @@ exp4 → 80 frames
 
 A difference in frame count indicates that the execution should be checked before generating the videos.
 
-<br>
-
----
-
-<br>
+<br><br>
 
 ## [7. Step 3 — Convert Frames to Video](#7-step-3--convert-frames-to-video)
 
@@ -415,11 +387,7 @@ reports/demo_videos/
 └── exp4_silent.mp4
 ```
 
-<br>
-
----
-
-<br>
+<br><br>
 
 ## [8. Step 4 — Add the Soundtrack](#8-step-4--add-the-soundtrack)
 
@@ -451,9 +419,7 @@ done
 
 > Confirm the exact filename under `assets/audio/` before running the command.
 
-<br>
-
----
+<br><br>
 
 <br>
 
@@ -499,11 +465,7 @@ Verify the files:
 ls -lh demo/*.mp4
 ```
 
-<br>
-
----
-
-<br>
+<br><br>
 
 ## [10. Experiment Captions](#10-experiment-captions)
 
@@ -520,11 +482,7 @@ ls -lh demo/*.mp4
 
 > The descriptions should remain consistent with the results reported in the project's final experimental analysis.
 
-<br>
-
----
-
-<br>
+<br><br>
 
 ## [11. Additional Demo — Automated Helipad Scraping](#11-additional-demo--automated-helipad-scraping)
 
@@ -570,11 +528,7 @@ This procedure creates a new version of the video while preserving the original 
 > [!TIP]
 > If the original video already contains narration or another audio track, the command above will replace it. To preserve and combine both audio sources, use `amix`.
 
-<br>
-
----
-
-<br>
+<br><br>
 
 ## [12. Cleaning Intermediate Files](#12-cleaning-intermediate-files)
 
@@ -594,11 +548,7 @@ rm -f reports/demo_videos/*_silent.mp4
 
 The final files in `demo/` remain preserved.
 
-<br>
-
----
-
-<br>
+<br><br>
 
 ## [13. Final Output](#13-final-output)
 
@@ -635,4 +585,5 @@ The only experimental variable changed across the four detection videos is the *
 
 <br>
 
+>  [!TIP]
 > **Same scene. Different model.**
