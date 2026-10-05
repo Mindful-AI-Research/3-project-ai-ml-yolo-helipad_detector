@@ -442,18 +442,21 @@ Copy the final videos:
 <br>
 
 ```bash
+mkdir -p demo
+
 cp reports/demo_videos/exp1_with_audio.mp4 \
-  "demo/Helipad-Detection-exp1-YOLOv8n-Deteccao-em-Tiles-Reais.mp4"
+  "demo/Demo 1 — Helipad Detection Inference · exp1 · YOLOv8n · 60 epochs.mp4"
 
 cp reports/demo_videos/exp2_with_audio.mp4 \
-  "demo/Helipad-Detection-exp2-YOLOv8n-Deteccao-em-Tiles-Reais.mp4"
+  "demo/Demo 2 — Helipad Detection Inference · exp2 · YOLOv8n · 100 epochs.mp4"
 
 cp reports/demo_videos/exp3_with_audio.mp4 \
-  "demo/Helipad-Detection-exp3-YOLOv8n-Deteccao-em-Tiles-Reais.mp4"
+  "demo/Demo 3 — Helipad Detection Inference · exp3 · YOLOv8n · 100 epochs · Augmented Dataset.mp4"
 
 cp reports/demo_videos/exp4_with_audio.mp4 \
-  "demo/Helipad-Detection-exp4-YOLO11n-Deteccao-em-Tiles-Reais.mp4"
+  "demo/Demo 4 — Helipad Detection Inference · exp4 · YOLO11n · 100 epochs.mp4""
 ```
+
 
 <br>
 
@@ -464,6 +467,24 @@ Verify the files:
 ```bash
 ls -lh demo/*.mp4
 ```
+
+Tituo No README
+
+```bash
+🎥 Demo 1 — Helipad Detection Inference · exp1 · YOLOv8n · 60 epochs
+
+🎥 Demo 2 — Helipad Detection Inference · exp2 · YOLOv8n · 100 epochs
+
+🎥 Demo 3 — Helipad Detection Inference · exp3 · YOLOv8n · 100 epochs · Augmented Dataset
+
+🎥 Demo 4 — Helipad Detection Inference · exp4 · YOLO11n · 100 epochs
+```
+
+<br>
+
+
+
+
 
 <br><br>
 
