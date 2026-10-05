@@ -505,7 +505,7 @@ Para adicionar a trilha sonora:
 <br>
 
 ```bash
-cd ~/Desktop/3-project-ai-ml-yolo-helipad_detector
+cd ~/Desktop/3-MAINproject-ai-ml-yolo-helipad_detector
 
 SCRAPING_VIDEO="demo/🚁Automated Helipad Scraping Demo.mp4"
 SCRAPING_AUDIO="assets/audio/feel-good_nina-simone_house remix.mp3"
@@ -516,7 +516,7 @@ ffmpeg -y \
   -c:v copy \
   -c:a aac \
   -shortest \
-  "demo/🚁Automated-Helipad-Scraping-Demo-com-trilha.mp4"
+  "demo/Demo 5 — Automated Helipad Scraping · Selenium · Coordinate Collection.mp4"
 ```
 
 <br>
