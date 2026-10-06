@@ -412,11 +412,6 @@ São Paulo, however, stands out for combining a large urban fleet, high building
 
 <!-- ========= END Key Features ========= -->
 
--------------------
-### 2- 👩🏻‍🚀 🚧 
--------------------
-
-
 
 <a id="project-context"></a>
 ## [Project Context]()
@@ -431,7 +426,9 @@ The work was developed in the context of [**Project 2 — Object Detection in Sa
 [-]() perform programmatic collection, annotation, training, evaluation and inference on an unseen neighborhood  <br>
 [-]() deliver an annotated dataset, notebooks, model weights, report and presentation  <br>
 
-The central pedagogical message is that **around 80% of the effort in AI is in the data, not in the architecture**. The YOLO model is practically the same for all groups; the real differentiator comes from dataset quality, manual curation and annotation consistency.
+<br>
+
+The central pedagogical message is that [**around 80% of the effort in AI is in the data, not in the architecture**](). The YOLO model is practically the same for all groups; the real differentiator comes from dataset quality, manual curation and annotation consistency.
 
 <br><br>
 
@@ -449,12 +446,15 @@ Rather than relying on a ready-made benchmark, the project emphasizes the constr
 
 <br><br>
 
+
 <a id="business-and-research-problem"></a>
 ## [Business and Research Problem]()
 
 Manually identifying helipads in dense urban environments is a slow, subjective and hard-to-scale task. On high-resolution imagery, rooftops with circular patterns, HVAC equipment, sport markings, shadows, reflections and urban geometry can visually resemble the characteristic helipad “H”.
 
 This project addresses that challenge with an [**Object Detection**]() pipeline that turns raw geospatial imagery into structured visual intelligence, reducing manual effort and enabling:
+
+<br>
 
 [-]() faster, more systematic helipad localization  <br>
 [-]() assessment of the model’s generalization ability across different neighborhoods  <br>
@@ -467,7 +467,9 @@ This project addresses that challenge with an [**Object Detection**]() pipeline 
 <a id="objective"></a>
 ## [Objective]()
 
-The main objective is to build an **end-to-end system** capable of detecting helipads on rooftops in the city of São Paulo, following all model lifecycle stages defined in the briefing:
+The main objective is to build an [**end-to-end system**]() capable of detecting helipads on rooftops in the city of São Paulo, following all model lifecycle stages defined in the briefing:
+
+<br>
 
 [-]() programmatic acquisition of satellite data  <br>
 [-]() visual curation and tile filtering  <br>
@@ -477,12 +479,21 @@ The main objective is to build an **end-to-end system** capable of detecting hel
 [-]() quantitative evaluation and qualitative error analysis  <br>
 [-]() inference on an entire neighborhood not used during training  <br>
 
+<br>
+
 From an educational perspective, the work was also designed to help students understand how a real AI pipeline is built, validated, and communicated. The project therefore integrates data collection, annotation, preprocessing, model training, evaluation, and simple deployment in one coherent workflow.
 
 Methodologically, the project reinforces that model performance is directly tied to **data quality**, annotation consistency and geographical diversity, rather than small tweaks to the architecture.
 
 
 <br><br>
+
+-------------------
+### 2- 👩🏻‍🚀 🚧 
+-------------------
+
+
+
 
 
 <a id="why-helipads"></a>
