@@ -488,12 +488,6 @@ Methodologically, the project reinforces that model performance is directly tied
 
 <br><br>
 
--------------------
-### 2- 👩🏻‍🚀 🚧 
--------------------
-
-
-
 
 
 <a id="why-helipads"></a>
@@ -503,7 +497,17 @@ Helipads are a compelling educational target because they often present a distin
 
 In urban satellite imagery, helipads may be confused with rooftop structures, sports markings, bright reflective surfaces, or architectural patterns. This makes them ideal for discussing false positives, annotation quality, and model generalization.
 
+
+
 <br><br>
+
+<a id="educational-value"></a>
+## [Educational Value]()
+
+This repository is particularly useful for teaching because it makes the logic of an end-to-end object detection project visible and inspectable.
+
+For professors, it supports methodological evaluation, reproducibility checks, and documentation review. For beginners, it offers a concrete example of how data collection, annotation, training, inference, and interface design fit together in one coherent AI project.
+
 
 
 <a id="data-source"></a>
@@ -535,6 +539,11 @@ Whenever imagery or derived mosaics are reproduced, the required attribution is:
 
 
 <br><br>
+
+
+-------------------
+### 1- 👩🏻‍🚀 🚧 
+-------------------
 
 <a id="extra-automation-contribution"></a>
 ## [Extra Automation Contribution]()
