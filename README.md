@@ -235,6 +235,8 @@
 - [Objective](#objective)
 - [Why Helipads?](#why-helipads)
 - [Educational Value](#educational-value)
+
+
 **II · Data and Geospatial Automation**
  
 - [Data Source](#data-source)
@@ -245,6 +247,8 @@
   - [🎥 Demo 5 — Automated Helipad Scraping · Selenium · Coordinate Collection](#demo-5)
   - [Geospatial visualization](#geospatial-visualization)
 - [Gains from the Extra Resource](#gains-from-the-extra-resource)
+
+
 **III · Architecture and Methodology**
  
 - [Methodology](#methodology)
@@ -258,6 +262,8 @@
  
 - [Image Collection and Generation](#image-collection-and-generation)
 - [Annotation and Roboflow](#annotation-and-roboflow)
+
+
 **V · Modeling, Evaluation and Validation**
  
 - [Modeling with YOLO](#modeling-with-yolo)
@@ -275,20 +281,28 @@
   - [🎥 Demo 4 — Inference · exp4 · YOLO11n · 100 epochs](#demo-4)
 - [Field Validation — Real-World Detection Across 10 São Paulo Neighborhoods](#field-validation)
   - [Comparing exp1, exp2, exp3 and exp4 on the Same Field Validation](#comparing-experiments-field)
+
+
 **VI · Application**
  
 - [Web Application (Optional Layer)](#web-application-optional-layer)
 - [Live Helicopter Traffic (Beta)](#live-helicopter-traffic-beta)
+
+
 **VII · Usage and Deliverables**
  
 - [Technologies Used](#technologies-used)
 - [How to Run](#how-to-run)
 - [Deliverables Covered](#deliverables-covered)
+
+
 **VIII · Responsible AI and Governance**
  
 - [Strengths, Limitations and Future Improvements](#strengths-limitations-and-future-improvements)
 - [Ethics, LGPD and Governance](#ethics-lgpd-and-governance)
   - [Scope of a Detection — Mandatory Disclaimer](#scope-of-a-detection-mandatory-disclaimer)
+
+
 **IX · Credits and Closing**
  
 - [Image and Text Sources](#image-and-text-sources)
