@@ -508,6 +508,7 @@ This repository is particularly useful for teaching because it makes the logic o
 
 For professors, it supports methodological evaluation, reproducibility checks, and documentation review. For beginners, it offers a concrete example of how data collection, annotation, training, inference, and interface design fit together in one coherent AI project.
 
+<br><br>
 
 
 <a id="data-source"></a>
