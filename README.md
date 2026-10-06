@@ -327,17 +327,12 @@
  
 <br><br>
  
-<!-- ========= START Overview ========= -->
-<a id="overview"></a>
-
-<br><br>
-
 
 <!-- ========= START Overview ========= -->
 <a id="overview"></a>
 ## [Overview]()
 
-[**Helipad Detector**]() is an end-to-end Artificial Intelligence and Computer Vision platform designed to automatically detect and map **potential rooftop helipads** from satellite imagery. The project transforms geospatial imagery into structured information, enabling the identification of visual patterns compatible with helicopter landing areas and their representation on an interactive map.
+[**Helipad Detector**]() is an end-to-end Artificial Intelligence and Computer Vision platform designed to automatically detect and map [**potential rooftop helipads**]() from satellite imagery. The project transforms geospatial imagery into structured information, enabling the identification of visual patterns compatible with helicopter landing areas and their representation on an interactive map.
 
 The project focuses on [**São Paulo, Brazil**](https://www.prefeitura.sp.gov.br/), an urban environment particularly relevant to this type of application. The city is widely recognized for having one of the world's largest urban helicopter fleets. Industry sources report more than **400 registered helicopters**, alongside a network of more than **260 helipads**; operational estimates vary depending on the period and geographic scope, reaching approximately **2,200 takeoffs and landings per day** across the metropolitan area. [São Paulo: the city of helicopters — Folha de S.Paulo](https://www1.folha.uol.com.br/tv/2026/04/sao-paulo-a-cidade-dos-helicopteros.shtml) · [São Paulo has the world's largest helicopter fleet — Exame](https://exame.com/casual/sao-paulo-tem-a-maior-frota-de-helicopteros-do-mundo-e-a-segunda-em-jatos/) · [Helicopter fleet data in São Paulo — Avantto](https://www.avantto.com.br/blog/business/parabens-sao-paulo/)
 
@@ -349,10 +344,13 @@ The platform implements a complete AI workflow, including public data collection
 
 <br><br>
 
-
-<!-- ========= START Contexto Global  ========= -->
+<!-- ========= START Global Context ========= -->
 <a id="global-helicopter-traffic-context-why-sao-paulo"></a>
-## [Global Helicopter Traffic Context Why São Paulo?]()
+## [Global Helicopter Traffic Context — Why São Paulo?]()
+
+The choice of São Paulo is not incidental. Major metropolises such as New York, Tokyo, Rio de Janeiro, London, Mexico City, and Bogotá use helicopters in different combinations of executive transport, tourism, medical emergencies, public safety, government services, and specialized operations.
+
+São Paulo, however, stands out for combining a large urban fleet, high building density, a significant presence of rooftop helipads, and a daily volume of operations that requires specialized management. The existence of **HELICONTROL** highlights the practical complexity of this air mobility and reinforces the relevance of using the city as a case study for the automated detection of potential helipads.
 
 <br>
 
