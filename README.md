@@ -579,8 +579,7 @@ The solution can be viewed as an architecture with [**seven main blocks**]():
 
 The repository structure was organized to reflect pipeline stages, including geographic automation, image generation, training, inference, evaluation and documentation.
 
-<br><br>
-
+<br>
 
 ```bash
 Helipad Detector
