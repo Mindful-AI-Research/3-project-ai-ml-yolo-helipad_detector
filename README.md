@@ -235,7 +235,8 @@
 - [Objective](#objective)
 - [Why Helipads?](#why-helipads)
 - [Educational Value](#educational-value)
-
+  
+<br>
 
 **II · Data and Geospatial Automation**
  
@@ -248,6 +249,8 @@
   - [Geospatial visualization](#geospatial-visualization)
 - [Gains from the Extra Resource](#gains-from-the-extra-resource)
 
+
+<br>
 
 **III · Architecture and Methodology**
  
@@ -263,6 +266,7 @@
 - [Image Collection and Generation](#image-collection-and-generation)
 - [Annotation and Roboflow](#annotation-and-roboflow)
 
+<br>
 
 **V · Modeling, Evaluation and Validation**
  
@@ -282,12 +286,14 @@
 - [Field Validation — Real-World Detection Across 10 São Paulo Neighborhoods](#field-validation)
   - [Comparing exp1, exp2, exp3 and exp4 on the Same Field Validation](#comparing-experiments-field)
 
+<br>
 
 **VI · Application**
  
 - [Web Application (Optional Layer)](#web-application-optional-layer)
 - [Live Helicopter Traffic (Beta)](#live-helicopter-traffic-beta)
 
+<br>
 
 **VII · Usage and Deliverables**
  
@@ -295,6 +301,7 @@
 - [How to Run](#how-to-run)
 - [Deliverables Covered](#deliverables-covered)
 
+<br>
 
 **VIII · Responsible AI and Governance**
  
@@ -302,6 +309,7 @@
 - [Ethics, LGPD and Governance](#ethics-lgpd-and-governance)
   - [Scope of a Detection — Mandatory Disclaimer](#scope-of-a-detection-mandatory-disclaimer)
 
+<br>
 
 **IX · Credits and Closing**
  
