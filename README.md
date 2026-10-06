@@ -368,19 +368,54 @@ São Paulo, however, stands out for combining a large urban fleet, high building
 | [Bogotá](https://www.aerocivil.gov.co/) | 🇨🇴 Colombia | Executive, emergency, and specialized air services under the regulations of the Colombian civil aviation authority | [Aerocivil Colombia](https://www.aerocivil.gov.co/) |
 | [Beijing](http://www.caac.gov.cn/English/) | 🇨🇳 China | Government, executive, and specialized air services within the context of Chinese civil aviation | [**CAAC** - Civil Aviation Administration of China](http://www.caac.gov.cn/English/) |
 
-<br>
+<br><br>
+
 
 > [!NOTE]
 > The cities presented in this table are qualitative references to urban environments where helicopters are used in different operational contexts. The selection does not constitute an official global ranking, a standardized statistical comparison of fleets, or an operational database directly equivalent across all locations. São Paulo is the primary study area of **Helipad Detector** and presents a specific operational context, including specialized helicopter traffic management through **HELICONTROL**.
 
-<br>
+<br><br>
+
 
 > [!TIP]
 > São Paulo was selected as the focus of **Helipad Detector** due to the combination of high urban density, a large concentration of buildings, a significant presence of rooftop heliport infrastructure, and intense helicopter traffic. This context demonstrates how Computer Vision and satellite data can support the automated mapping of urban infrastructure. The model's detections represent **visual candidates** and do not constitute regulatory, operational, or aeronautical confirmation of the existence of a heliport.
 
-
-<br><br><br>
 <!-- ========= END Contexto Global  ========= -->
+
+<br><br>
+
+<!-- ======== START Key Features ========= -->
+<a id="key-features"></a>
+## [Key Features]()
+
+[-]() End-to-end Artificial Intelligence and Computer Vision pipeline <br>
+
+[-]() Automated satellite imagery acquisition and preprocessing <br>
+
+[-]() Geospatial intelligence and spatial data processing workflow <br>
+
+[-]() YOLOv8n / YOLO11n object detection <br>
+
+[-]() Roboflow-based image annotation and dataset preparation <br>
+
+[-]() Interactive geospatial maps with MapLibre GL JS + OpenStreetMap <br>
+
+[-]() Automated geocoding with Nominatim (OpenStreetMap) <br>
+
+[-]() Real-world validation across 7,900+ satellite tiles from 10 São Paulo neighborhoods <br>
+
+[-]() Interactive Streamlit web application and dashboard <br>
+
+[-]() Fully reproducible research repository <br>
+
+[-]() Downloadable datasets, notebooks and generated artifacts
+
+<!-- ========= END Key Features ========= -->
+
+-------------------
+### 2- 👩🏻‍🚀 🚧 
+-------------------
+
 
 
 <a id="project-context"></a>
@@ -458,26 +493,6 @@ Helipads are a compelling educational target because they often present a distin
 In urban satellite imagery, helipads may be confused with rooftop structures, sports markings, bright reflective surfaces, or architectural patterns. This makes them ideal for discussing false positives, annotation quality, and model generalization.
 
 <br><br>
-
-
-<!-- ======== START Key Features  ========= -->
-<a id="key-features"></a>
-## [Key Features]()
-
-[-]() End-to-end Artificial Intelligence and Computer Vision pipeline <br>
-[-]() Automated satellite imagery acquisition and preprocessing <br>
-[-]() Geospatial intelligence and spatial data processing workflow <br>
-[-]() YOLOv8n / YOLO11n object detection <br>
-[-]() Roboflow-based image annotation and dataset preparation <br>
-[-]() Interactive geospatial maps with MapLibre GL JS + OpenStreetMap <br>
-[-]() Automated geocoding with Nominatim (OpenStreetMap) <br>
-[-]() Real-world validation across 7,900+ satellite tiles from 10 São Paulo neighborhoods <br>
-[-]() Interactive Streamlit web application and dashboard <br>
-[-]() Fully reproducible research repository <br>
-[-]() Downloadable datasets, notebooks and generated artifacts <br>
-
-<br><br>
-<!-- ========= END Key Features ========= -->
 
 
 <a id="data-source"></a>
@@ -909,7 +924,7 @@ In some cases, [**Google Earth Web**]() may be used as a complement:
 <br><br>
 
 -------------------
-###  👩🏻‍🚀 🚧 
+### 2- 👩🏻‍🚀 🚧 
 -------------------
 
 
