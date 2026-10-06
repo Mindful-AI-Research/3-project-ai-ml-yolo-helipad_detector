@@ -222,49 +222,88 @@
 
 <!-- ========= START Table of Contents ========= -->
 <a id="table-of-contents"></a>
-## Table of Contents
-
+## [Table of Contents]()
+ 
+**I · Context**
+ 
 - [Overview](#overview)
 - [Global Helicopter Traffic Context — Why São Paulo?](#global-helicopter-traffic-context-why-sao-paulo)
+- [Key Features](#key-features)
 - [Project Context](#project-context)
 - [Project Definition](#project-definition)
 - [Business and Research Problem](#business-and-research-problem)
 - [Objective](#objective)
 - [Why Helipads?](#why-helipads)
-- [Key Features](#key-features)
+- [Educational Value](#educational-value)
+**II · Data and Geospatial Automation**
+ 
 - [Data Source](#data-source)
+  - [Image sources](#image-sources)
 - [Extra Automation Contribution](#extra-automation-contribution)
+  - [Technical title of the contribution](#technical-title-of-the-contribution)
+  - [Core idea](#core-idea)
+  - [🎥 Demo 5 — Automated Helipad Scraping · Selenium · Coordinate Collection](#demo-5)
+  - [Geospatial visualization](#geospatial-visualization)
 - [Gains from the Extra Resource](#gains-from-the-extra-resource)
+**III · Architecture and Methodology**
+ 
+- [Methodology](#methodology)
 - [Overall Flow Architecture](#overall-flow-architecture)
 - [AI/ML Ops Pipeline](#ai-ml-ops-pipeline)
+- [Full Technical Pipeline](#full-technical-pipeline)
 - [Repository Structure](#repository-structure)
 - [What is `data/raw/helipad_dataset.rar`?](#what-is-helipad-dataset)
 - [What is Roboflow in This Project?](#what-is-roboflow-in-this-project)
-- [Methodology](#methodology)
-- [Full Technical Pipeline](#full-technical-pipeline)
+**IV · Data Engineering**
+ 
 - [Image Collection and Generation](#image-collection-and-generation)
 - [Annotation and Roboflow](#annotation-and-roboflow)
+**V · Modeling, Evaluation and Validation**
+ 
 - [Modeling with YOLO](#modeling-with-yolo)
 - [Evaluation](#evaluation)
-- [Inference and Generalization](#inference-and-generalization)
-- [Field Validation — Real-World Detection Across 10 São Paulo Neighborhoods](#field-validation-real-world-detection-across-10-sao-paulo-neighborhoods)
 - [Results Analysis](#results-analysis)
+  - [exp1 vs. exp2](#exp1-vs-exp2)
+  - [exp3 — fork dataset](#exp3-fork-dataset)
+  - [exp4 — YOLO11n](#exp4-yolo11n)
 - [Generated Charts](#generated-charts)
 - [Qualitative Analysis Guide](#qualitative-analysis-guide)
+- [Inference and Generalization](#inference-and-generalization)
+  - [🎥 Demo 1 — Inference · exp1 · YOLOv8n · 60 epochs](#demo-1)
+  - [🎥 Demo 2 — Inference · exp2 · YOLOv8n · 100 epochs](#demo-2)
+  - [🎥 Demo 3 — Inference · exp3 · YOLOv8n · 100 epochs · Augmented Dataset](#demo-3)
+  - [🎥 Demo 4 — Inference · exp4 · YOLO11n · 100 epochs](#demo-4)
+- [Field Validation — Real-World Detection Across 10 São Paulo Neighborhoods](#field-validation)
+  - [Comparing exp1, exp2, exp3 and exp4 on the Same Field Validation](#comparing-experiments-field)
+**VI · Application**
+ 
 - [Web Application (Optional Layer)](#web-application-optional-layer)
 - [Live Helicopter Traffic (Beta)](#live-helicopter-traffic-beta)
-- [Educational Value](#educational-value)
+**VII · Usage and Deliverables**
+ 
 - [Technologies Used](#technologies-used)
+- [How to Run](#how-to-run)
+- [Deliverables Covered](#deliverables-covered)
+**VIII · Responsible AI and Governance**
+ 
 - [Strengths, Limitations and Future Improvements](#strengths-limitations-and-future-improvements)
 - [Ethics, LGPD and Governance](#ethics-lgpd-and-governance)
-- [Deliverables Covered](#deliverables-covered)
-- [How to Run](#how-to-run)
+  - [Scope of a Detection — Mandatory Disclaimer](#scope-of-a-detection-mandatory-disclaimer)
+**IX · Credits and Closing**
+ 
 - [Image and Text Sources](#image-and-text-sources)
 - [Image Attribution](#image-attribution)
 - [References](#references)
 - [Contribution Attribution](#contribution-attribution)
 - [Acknowledgements](#acknowledgements)
 - [Final Statement](#final-statement)
+<!-- ========= END Table of Contents ========= -->
+ 
+ 
+<br><br>
+ 
+<!-- ========= START Overview ========= -->
+<a id="overview"></a>
 
 <br><br>
 
