@@ -254,7 +254,7 @@ TR = {
     # ---- Tab labels ----
     "tabs.metrics": {"en": "📊 Experiment Metrics", "pt": "📊 Métricas dos Experimentos"},
     "tabs.field": {"en": "🌍 Field Detections by Region", "pt": "🌍 Detecções de Campo por Região"},
-    "tabs.map": {"en": "🗺️ Map", "pt": "🗺️ Mapa"},
+    "tabs.map": {"en": "🗺️ Maps", "pt": "🗺️ Mapas"},
     # Promoted from a sub-tab nested inside "Map" to its own top-level tab so it
     # doesn't take an extra click to reach and so "Beta" is visible in the main
     # tab bar, not one level down.
@@ -579,6 +579,26 @@ TR = {
 "demos.inf.caption.exp4": {
     "en": "exp4 (100 epochs, YOLO11n) — same base as exp2, newer architecture; did not outperform exp2 in the field",
     "pt": "exp4 (100 épocas, YOLO11n) — mesma base do exp2, arquitetura mais nova; não superou o exp2 em campo",
+},
+
+"dl.presentations": {
+    "en": "**🎞️ Presentations**",
+    "pt": "**🎞️ Apresentações**",
+},
+
+"dl.pptx_en_button": {
+    "en": "⬇️ Presentation (PPTX, English)",
+    "pt": "⬇️ Apresentação (PPTX, inglês)",
+},
+
+"dl.pptx_pt_button": {
+    "en": "⬇️ Presentation (PPTX, Portuguese)",
+    "pt": "⬇️ Apresentação (PPTX, português)",
+},
+
+"dl.html_presentation_button": {
+    "en": "🌐 Open the interactive HTML presentation",
+    "pt": "🌐 Abrir a apresentação interativa em HTML",
 },
 
 "globe.entering": {
@@ -1586,7 +1606,12 @@ def _force_leaflet_fit_bounds(fmap: folium.Map, bounds: list) -> None:
 # WebGL / three.js failing to load, and has a "Skip" button.
 # Set the env var HD_GLOBE_INTRO=0 to disable it everywhere.
 GLOBE_INTRO_ENABLED = __import__("os").environ.get("HD_GLOBE_INTRO", "1") != "0"
-GLOBE_INTRO_JS_PATH = Path("assets/globe_intro.js")
+# Resolve from the repo root (…/apps/streamlit_app/app.py -> parents[2]) so the intro works
+# no matter which folder `streamlit run` is launched from; fall back to the CWD-relative path.
+GLOBE_INTRO_JS_PATH = next(
+    (c for c in (Path(__file__).resolve().parents[2] / "assets" / "globe_intro.js", Path("assets/globe_intro.js")) if c.exists()),
+    Path("assets/globe_intro.js"),
+)
 GLOBE_TARGET = (-23.5505, -46.6333)  # São Paulo
 
 
@@ -1623,6 +1648,7 @@ def add_globe_intro(fmap: "folium.Map", map_id: str, *, points=None, caption: st
             return
         js = _load_globe_intro_js()
         if not js:
+            print(f"[globe intro] assets/globe_intro.js not found (looked at {GLOBE_INTRO_JS_PATH.resolve()}) — intro disabled")
             return
         cfg = {
             "id": map_id,
@@ -1682,11 +1708,11 @@ def _demo_video_source(exp: str, n: int):
     return DEMO_VIDEO_URLS.get(exp) or None
 
 
-def render_inference_demos() -> None:
-    with st.expander(t("demos.inf.expander_label"), expanded=False):
+def render_inference_demos(expanded: bool = False, default: str = "exp1") -> None:
+    with st.expander(t("demos.inf.expander_label"), expanded=expanded):
         labels = {exp: f"Demo {n} · {exp}" for exp, n in DEMO_VIDEOS}
         exp = st.radio(t("demos.inf.select_label"), [e for e, _ in DEMO_VIDEOS],
-                       format_func=lambda e: labels[e], horizontal=True, key="inference_demo_pick")
+                       format_func=lambda e: labels[e], horizontal=True, index=[e for e, _ in DEMO_VIDEOS].index(default), key="inference_demo_pick")
         n = dict(DEMO_VIDEOS)[exp]
         st.markdown(f"<p style='text-align:center;'>{t('demos.inf.caption.' + exp)}</p>", unsafe_allow_html=True)
         src = _demo_video_source(exp, n)
@@ -1694,6 +1720,11 @@ def render_inference_demos() -> None:
             st.video(src, muted=True)
         else:
             st.info(t("demos.inf.missing"))
+
+
+PRESENTATION_PPTX_EN = Path("presentations/Helipad_Detector_Presentation_EN.pptx")
+PRESENTATION_PPTX_PT = Path("presentations/Helipad_Detector_Apresentacao_PT-BR.pptx")
+PRESENTATION_HTML_URL = "https://harmonious-creponne-f11320.netlify.app/"
 
 
 # ========================= AUTOMATIC MODEL DISCOVERY =========================
@@ -4226,7 +4257,6 @@ with tab_about:
         st.markdown(f"<p style='text-align:center;'>{t('about.demos.scraping.credit_line')}</p>", unsafe_allow_html=True)
 
     st.markdown("<div style='margin-top:28px;'></div>", unsafe_allow_html=True)
-    render_inference_demos()
 
     st.markdown("<div style='margin-top:28px;'></div>", unsafe_allow_html=True)
 
@@ -4298,6 +4328,26 @@ with tab7:
                                     mime="application/json", use_container_width=True)
         else:
             st.caption(t("dl.not_found").format(path=FIELD_SUMMARY_PATH))
+
+    # ---- Presentations: 2 PPTX files (EN / PT) + the deployed interactive HTML deck ----
+    st.markdown("---")
+    st.markdown(t("dl.presentations"))
+    pres_c1, pres_c2, pres_c3 = st.columns(3)
+    for _col, _path, _label in (
+        (pres_c1, PRESENTATION_PPTX_EN, "dl.pptx_en_button"),
+        (pres_c2, PRESENTATION_PPTX_PT, "dl.pptx_pt_button"),
+    ):
+        with _col:
+            if _path.exists():
+                with open(_path, "rb") as f:
+                    st.download_button(t(_label), f, file_name=_path.name,
+                                       mime="application/vnd.openxmlformats-officedocument.presentationml.presentation",
+                                       use_container_width=True)
+            else:
+                st.caption(t("dl.not_found").format(path=_path))
+    with pres_c3:
+        st.link_button(t("dl.html_presentation_button"), PRESENTATION_HTML_URL, use_container_width=True)
+
 
         TRIAGE_LOG_PATH = Path("reports/auto_triage_regions_log.txt")
         if TRIAGE_LOG_PATH.exists():
@@ -4484,14 +4534,10 @@ with tab_metrics:
                     else:
                         st.info(t("metrics.cm_norm_not_found").format(path=cm_norm_path.resolve()))
 
-        # ---- Training-run demo video, right below the Confusion Matrix ----
-        with st.expander(t("about.demos.training.expander_label"), expanded=True):
-            st.markdown(f"<p style='text-align:center;'>{t('about.demos.training.title_line')}</p>", unsafe_allow_html=True)
-            st.markdown(f"<p style='text-align:center; color:#94A3B8; font-size:12.5px;'>{t('about.demos.muted_notice')}</p>", unsafe_allow_html=True)
-            # Muted by default — see the matching comment on the scraping
-            # demo in the About tab for why.
-            st.video("https://github.com/user-attachments/assets/5b7d581c-ab5e-416e-8471-d91136b2ada0", muted=True)
-            st.markdown(f"<p style='text-align:center;'>{t('about.demos.training.credit_line')}</p>", unsafe_allow_html=True)
+        # ---- Inference demos (exp1-exp4) right below the Confusion Matrix ----
+        # Replaces the old single "Model Training" demo. One experiment is shown
+        # open; the others stay visible in the selector right above the player.
+        render_inference_demos(expanded=True, default="exp2")
 
 # ========================= FIELD DETECTIONS BY REGION =========================
 with tab_field:
