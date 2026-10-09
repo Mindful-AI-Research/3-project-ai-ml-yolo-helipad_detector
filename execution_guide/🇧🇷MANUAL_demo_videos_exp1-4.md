@@ -16,7 +16,7 @@ Este manual gera, pra cada um dos 4 experimentos, um vídeo mostrando o modelo d
 
 <br>
 
-- Terminal aberto na raiz do repositório (`3-Mainproject-ai-ml-yolo-helipad_detector`)
+- Terminal aberto na raiz do repositório (`3-project-ai-ml-yolo-helipad_detector`)
 - `ffmpeg` instalado (`brew install ffmpeg` no Mac, se ainda não tiver)
 - Os 4 pesos já treinados em `artifacts/runs/runs/detect/exp{1,2,3,4}/weights/best.pt`
 - Os tiles das 10 regiões já baixados em `src/geospatial/mosaic_*/`
@@ -30,7 +30,7 @@ Este manual gera, pra cada um dos 4 experimentos, um vídeo mostrando o modelo d
 Esse bloco pega `N_PER_REGION` tiles de cada uma das 10 pastas `mosaic_*`, numera o nome do arquivo pela ordem da região (pra o vídeo final passear pelos bairros em sequência, não misturado), e junta tudo numa única pasta de origem.
 
 ```bash
-cd ~/Desktop/3-Mainproject-ai-ml-yolo-helipad_detector
+cd ~/Desktop/3-project-ai-ml-yolo-helipad_detector
 
 N_PER_REGION=8   # tiles por bairro — 10 bairros x 8 = 80 frames no vídeo final
 SRC=reports/demo_src
@@ -179,7 +179,7 @@ rm -rf reports/demo_frames reports/demo_src reports/demo_videos/*_silent.mp4
 Esse vídeo é sobre a raspagem de coordenadas (Selenium / `helipad_bot.py`), não é inferência de modelo — não passa pelos passos 1 a 5 acima. É só adicionar a trilha.
 
 ```bash
-cd ~/Desktop/3-Mainproject-ai-ml-yolo-helipad_detector
+cd ~/Desktop/3-roject-ai-ml-yolo-helipad_detector
 
 SCRAPING_VIDEO="demo/🚁Automated Helipad Scraping Demo.mp4"   # ajuste o caminho se o arquivo estiver em outra pasta
 SCRAPING_AUDIO="assets/audio/feel-good_nina-simone_house remix.mp3"   # confira o nome exato na sua pasta assets/audio/
