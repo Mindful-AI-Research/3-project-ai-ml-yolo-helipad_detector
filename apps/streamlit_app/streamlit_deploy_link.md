@@ -1,6 +1,6 @@
 
 ###### Fabi⚡️
-https://helipad-detector.streamlit.app/
+https://helipad-detector-sp.streamlit.app/
 
 <br>
 
