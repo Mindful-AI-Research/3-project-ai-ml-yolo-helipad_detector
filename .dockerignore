@@ -1,0 +1,46 @@
+# NOTE: .dockerignore does not support trailing comments — comments must be on their own line.
+
+# ---- VCS / editor / local envs ----
+.git
+.gitignore
+.github
+.devcontainer
+.vscode
+.idea
+.venv*/
+venv/
+__pycache__/
+*.pyc
+.env
+.DS_Store
+
+# ---- Not read by apps/streamlit_app/app.py at runtime (checked by grepping the paths it opens) ----
+# demo videos: re-include demo/ if the video selector ends up playing local files
+demo/
+presentations/
+misc/
+VNAV_MIT16.485..md
+repository_tree/
+briefing/
+execution_guide/
+adsbfi_hugging-face_test/
+docs/
+notebooks/
+tools/
+src/training/
+src/data_preparation/
+src/geospatial/mosaic_*/
+src/geospatial/brazilian-states-helipad-discovery-folium-open-street-map/
+data/training/
+data/tiles/
+data/inference/
+reports/field_samples_*/
+reports/model_outputs/
+
+# ---- What the app DOES read — keep (do not ignore) ----
+# artifacts/runs/**            model weights, results.csv, args.yaml, curves
+# assets/**                    globe_intro.js, audio, pipeline_diagram*.svg
+# data/samples/, data/raw/helipad_dataset.rar
+# reports/*.json, reports/*log.txt, reports/helipad_detector_full_report/*.pdf
+# src/geospatial/*.csv, src/geospatial/keplergl_map_loaded.html
+# .streamlit/config.toml
