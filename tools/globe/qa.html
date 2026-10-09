@@ -1,0 +1,10 @@
+<!doctype html><html><head><meta charset="utf-8"><style>html,body{margin:0;height:100%;background:#2a2a2a}#map{position:fixed;inset:0;background:#6e6ee8}</style></head>
+<body><div id="map"></div>
+<script src="../../assets/globe_intro.js"></script>
+<script>
+const q=new URLSearchParams(location.search);
+const pts=[];for(let i=0;i<60;i++)pts.push([-23.55+(Math.random()-.5)*.6,-46.63+(Math.random()-.5)*.6]);
+for(let i=0;i<70;i++)pts.push([-30+Math.random()*25,-55+Math.random()*17]);
+HDGlobeIntro({id:'qa'+Math.random(),label:'São Paulo',caption:'Mapa de helipontos',entering:'Entrando no mapa…',skip:'Pular ▸',points:pts,
+  debugT:q.has('t')?parseFloat(q.get('t')):undefined, durationMs: q.has('d')?+q.get('d'):5200});
+</script></body></html>
