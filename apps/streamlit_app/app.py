@@ -1757,7 +1757,7 @@ def add_globe_intro(fmap: "folium.Map", map_id: str, *, points=None, caption: st
         # (exactly how the map itself is built) and components.html() renders it in the page body,
         # so one mechanism covers all 3 maps and needs no inline handlers.
         boot_code = (
-            "try{" + js + "\n;window.HDGlobeIntro(" + cfg_json + ");}"
+            "try{var _m=document.getElementById('hd-globe-dbg-static');if(_m){_m.textContent+=' | script ran';}" + js + "\n;window.HDGlobeIntro(" + cfg_json + ");}"
             "catch(e){try{console.warn('HDGlobeIntro boot failed',e);"
             "if(" + ("true" if cfg["debug"] else "false") + "){var d=document.createElement('div');"
             "d.style.cssText='position:fixed;left:6px;top:6px;z-index:2147483647;background:#300;color:#fbb;"
@@ -1772,7 +1772,7 @@ def add_globe_intro(fmap: "folium.Map", map_id: str, *, points=None, caption: st
                 "{% raw %}"
                 '<div id="hd-globe-dbg-static" style="position:fixed;right:6px;top:6px;z-index:2147483647;'
                 'background:rgba(0,0,0,.82);color:#9cf;font:11px monospace;padding:4px 8px;border-radius:6px">'
-                f"HDGlobe debug: map HTML injected ({map_id})</div>"
+                f"HDGlobe debug v3 (script-macro): map HTML injected ({map_id})</div>"
                 "{% endraw %}"
             ))
     except Exception as exc:  # the intro is decoration: never take the map down with it
