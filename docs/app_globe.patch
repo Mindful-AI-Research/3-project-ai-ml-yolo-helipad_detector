@@ -1,0 +1,245 @@
+--- a/apps/streamlit_app/app.py
++++ b/apps/streamlit_app/app.py
+@@ -546,6 +546,66 @@
+           "aeronave (isso exigiria um feed histórico pago, fora do escopo aqui).",
+ },
+ 
++"demos.inf.expander_label": {
++    "en": "🎥 Inference demos (exp1 – exp4)",
++    "pt": "🎥 Demos de inferência (exp1 – exp4)",
++},
++
++"demos.inf.select_label": {
++    "en": "Choose an experiment demo",
++    "pt": "Escolha a demo do experimento",
++},
++
++"demos.inf.missing": {
++    "en": "This demo video is not published yet. Drop the .mp4 in demo/ or add its URL to DEMO_VIDEO_URLS in app.py.",
++    "pt": "O vídeo desta demo ainda não foi publicado. Coloque o .mp4 em demo/ ou adicione a URL em DEMO_VIDEO_URLS no app.py.",
++},
++
++"demos.inf.caption.exp1": {
++    "en": "exp1 (60 epochs, YOLOv8n) — high Precision on the curated benchmark, but detects only ~half the real helipads in the field",
++    "pt": "exp1 (60 épocas, YOLOv8n) — alta Precision no benchmark curado, mas detecta só ~metade dos helipontos reais em campo",
++},
++
++"demos.inf.caption.exp2": {
++    "en": "exp2 (100 epochs, YOLOv8n) — the production model, best field generalization",
++    "pt": "exp2 (100 épocas, YOLOv8n) — modelo em produção, melhor generalização em campo",
++},
++
++"demos.inf.caption.exp3": {
++    "en": "exp3 (100 epochs, YOLOv8n, augmented dataset) — higher recall, mid-pack field result",
++    "pt": "exp3 (100 épocas, YOLOv8n, dataset aumentado) — recall mais alto, resultado intermediário em campo",
++},
++
++"demos.inf.caption.exp4": {
++    "en": "exp4 (100 epochs, YOLO11n) — same base as exp2, newer architecture; did not outperform exp2 in the field",
++    "pt": "exp4 (100 épocas, YOLO11n) — mesma base do exp2, arquitetura mais nova; não superou o exp2 em campo",
++},
++
++"globe.entering": {
++    "en": "Entering the map…",
++    "pt": "Entrando no mapa…",
++},
++
++"globe.skip": {
++    "en": "Skip ▸",
++    "pt": "Pular ▸",
++},
++
++"globe.caption.main": {
++    "en": "Helipad map",
++    "pt": "Mapa de helipontos",
++},
++
++"globe.caption.density": {
++    "en": "Density view",
++    "pt": "Mapa de densidade",
++},
++
++"globe.caption.flights": {
++    "en": "Live helicopter traffic (beta)",
++    "pt": "Tráfego de helicópteros ao vivo (beta)",
++},
++
+ "map.flights_refresh": {
+     "en": "🔄 Refresh live positions",
+     "pt": "🔄 Atualizar posições ao vivo",
+@@ -1513,6 +1573,129 @@
+     """))
+ 
+ 
++# ========================= GLOBE → ZOOM → MAP INTRO =========================
++# Each of the 3 Folium maps (helipad map, density map, live traffic) can open
++# with a 3D globe that spins to São Paulo and dives in, then is REPLACED by the
++# real Folium map (timed fade). Globe (WebGL/three.js) and Folium (Leaflet) are
++# two unrelated renderers, so there is no pixel-continuous transition — the
++# overlay is a cover that fades out over a map that is already loaded
++# underneath. The overlay lives INSIDE the map's own HTML, so it works the same
++# for st_folium(...) and components.html(...). It plays once per browser
++# session per map, starts only when the map is actually visible (Streamlit
++# keeps hidden tabs mounted), skips itself on prefers-reduced-motion / no
++# WebGL / three.js failing to load, and has a "Skip" button.
++# Set the env var HD_GLOBE_INTRO=0 to disable it everywhere.
++GLOBE_INTRO_ENABLED = __import__("os").environ.get("HD_GLOBE_INTRO", "1") != "0"
++GLOBE_INTRO_JS_PATH = Path("assets/globe_intro.js")
++GLOBE_TARGET = (-23.5505, -46.6333)  # São Paulo
++
++
++@st.cache_data(show_spinner=False)
++def _load_globe_intro_js() -> str:
++    try:
++        return GLOBE_INTRO_JS_PATH.read_text(encoding="utf-8")
++    except OSError:
++        return ""
++
++
++def _clean_globe_points(rows, limit: int = 600) -> list:
++    out = []
++    for row in rows:
++        try:
++            lat, lon = float(row[0]), float(row[1])
++        except (TypeError, ValueError, IndexError):
++            continue
++        if lat != lat or lon != lon:  # NaN
++            continue
++        out.append([round(lat, 3), round(lon, 3)])
++        if len(out) >= limit:
++            break
++    return out
++
++
++def add_globe_intro(fmap: "folium.Map", map_id: str, *, points=None, caption: str = "") -> None:
++    """Embeds the globe intro overlay into `fmap`'s HTML. Call it right before
++    st_folium(fmap, ...) / components.html(fmap.get_root().render(), ...).
++    `map_id` keys the once-per-session flag, so keep it unique per map.
++    Silently does nothing if assets/globe_intro.js is missing."""
++    try:
++        if not GLOBE_INTRO_ENABLED:
++            return
++        js = _load_globe_intro_js()
++        if not js:
++            return
++        cfg = {
++            "id": map_id,
++            "target": list(GLOBE_TARGET),
++            "label": "São Paulo",
++            "caption": caption,
++            "entering": t("globe.entering"),
++            "skip": t("globe.skip"),
++            "points": _clean_globe_points(points or []),
++        }
++        cfg_json = json.dumps(cfg, ensure_ascii=False).replace("</", "<\\/")
++        # Why an <img onload> bootstrap and not a plain <script>: st_folium hands this
++        # HTML to its frontend, which inserts it as markup — <script> tags inserted
++        # that way never execute (verified in a headless-browser test), while inline
++        # event handlers do. The JS itself rides along as inert text/plain scripts
++        # and the onload handler turns it into a real script. components.html()
++        # frames run it the same way, so one mechanism covers all 3 maps.
++        # {% raw %}: folium.Element renders its string as a Jinja template.
++        boot = (
++            "(function(){try{var s=document.createElement('script');"
++            "s.textContent=document.getElementById('hd-globe-src').textContent;"
++            "document.head.appendChild(s);"
++            "window.HDGlobeIntro(JSON.parse(document.getElementById('hd-globe-cfg').textContent));"
++            "}catch(e){console.warn('HDGlobeIntro boot failed',e);}})()"
++        )
++        fmap.get_root().html.add_child(folium.Element(
++            "{% raw %}"
++            '<script type="text/plain" id="hd-globe-src">' + js + "</script>"
++            '<script type="text/plain" id="hd-globe-cfg">' + cfg_json + "</script>"
++            '<img alt="" width="1" height="1" '
++            'style="position:absolute;width:1px;height:1px;opacity:0;pointer-events:none" '
++            'src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" '
++            f'onload="{boot}">'
++            "{% endraw %}"
++        ))
++    except Exception as exc:  # the intro is decoration: never take the map down with it
++        print(f"[globe intro] skipped for {map_id!r}: {exc}")
++
++
++# ========================= INFERENCE DEMO VIDEOS (selector) =========================
++# ONE player + a selector, instead of 4 stacked players. Source order per demo:
++# local file demo/🎥 Demo N — …mp4 (matched by prefix, so the long title can change)
++# -> URL in DEMO_VIDEO_URLS (GitHub user-attachments) -> friendly "not published" note.
++DEMO_VIDEO_DIR = Path("demo")
++DEMO_VIDEO_URLS: dict = {  # paste the URL after uploading, e.g. "exp1": "https://github.com/user-attachments/assets/…"
++    "exp1": "", "exp2": "", "exp3": "", "exp4": "",
++}
++DEMO_VIDEOS = [("exp1", 1), ("exp2", 2), ("exp3", 3), ("exp4", 4)]
++
++
++def _demo_video_source(exp: str, n: int):
++    try:
++        for f in sorted(DEMO_VIDEO_DIR.glob(f"🎥 Demo {n} —*.mp4")):
++            return str(f)
++    except OSError:
++        pass
++    return DEMO_VIDEO_URLS.get(exp) or None
++
++
++def render_inference_demos() -> None:
++    with st.expander(t("demos.inf.expander_label"), expanded=False):
++        labels = {exp: f"Demo {n} · {exp}" for exp, n in DEMO_VIDEOS}
++        exp = st.radio(t("demos.inf.select_label"), [e for e, _ in DEMO_VIDEOS],
++                       format_func=lambda e: labels[e], horizontal=True, key="inference_demo_pick")
++        n = dict(DEMO_VIDEOS)[exp]
++        st.markdown(f"<p style='text-align:center;'>{t('demos.inf.caption.' + exp)}</p>", unsafe_allow_html=True)
++        src = _demo_video_source(exp, n)
++        if src:
++            st.video(src, muted=True)
++        else:
++            st.info(t("demos.inf.missing"))
++
++
+ # ========================= AUTOMATIC MODEL DISCOVERY =========================
+ # Instead of hardcoding "exp1"/"exp2" in the code, the app scans the runs folder
+ # and lists any experiment that has a ready best.pt. This way, running a new
+@@ -3416,6 +3599,11 @@
+         _force_leaflet_resize(fmap)
+ 
+         st.write(t("map.summary").format(sp=len(sp_df), other=len(other_df)))
++        add_globe_intro(
++            fmap, "main",
++            points=pd.concat([d.reindex(columns=["lat", "lon"]) for d in (sp_df, other_df)]).values.tolist(),
++            caption=t("globe.caption.main"),
++        )
+         map_state = st_folium(fmap, use_container_width=True, height=520, key=f"main_map_{map_tiles}")
+ 
+         # ---- Helicopter reacts to real zoom: turn, land, pause, take off ----
+@@ -3655,6 +3843,11 @@
+             # mode, happened to re-trigger it). components.html() just embeds static HTML
+             # in a fixed-height iframe, no handshake needed, so it always paints on the
+             # very first render.
++            add_globe_intro(
++                dark_map, "density",
++                points=other_df.reindex(columns=["lat", "lon"]).values.tolist(),
++                caption=t("globe.caption.density"),
++            )
+             components.html(dark_map.get_root().render(), height=550, scrolling=False)
+ 
+ # ====================== TAB: Live Traffic (Beta) ======================
+@@ -3800,6 +3993,11 @@
+         else:
+             _force_leaflet_resize(flights_map)
+ 
++        add_globe_intro(
++            flights_map, "flights",
++            points=[[f["lat"], f["lon"]] for f in flights],
++            caption=t("globe.caption.flights"),
++        )
+         st_folium(flights_map, use_container_width=True, height=480, key=f"flights_map_{flights_dark_mode}")
+ 
+ # ====================== TAB 5: Pipeline & Governance ======================
+@@ -4028,6 +4226,9 @@
+         st.markdown(f"<p style='text-align:center;'>{t('about.demos.scraping.credit_line')}</p>", unsafe_allow_html=True)
+ 
+     st.markdown("<div style='margin-top:28px;'></div>", unsafe_allow_html=True)
++    render_inference_demos()
++
++    st.markdown("<div style='margin-top:28px;'></div>", unsafe_allow_html=True)
+ 
+     with st.expander(t("about.credits.expander_label"), expanded=True):
+         st.markdown(f"""
