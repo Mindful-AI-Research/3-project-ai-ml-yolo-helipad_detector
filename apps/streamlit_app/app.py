@@ -1658,6 +1658,9 @@ def add_globe_intro(fmap: "folium.Map", map_id: str, *, points=None, caption: st
             "entering": t("globe.entering"),
             "skip": t("globe.skip"),
             "points": _clean_globe_points(points or []),
+            # ?globe=force in the URL replays the intro every time and ignores the OS
+            # "reduce motion" setting (debug aid: the intro otherwise plays once per session).
+            "force": str(st.query_params.get("globe", "")).lower() in ("force", "1", "always"),
         }
         cfg_json = json.dumps(cfg, ensure_ascii=False).replace("</", "<\\/")
         # Why an <img onload> bootstrap and not a plain <script>: st_folium hands this
