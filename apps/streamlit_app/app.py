@@ -1730,6 +1730,8 @@ def add_globe_intro(fmap: "folium.Map", map_id: str, *, points=None, caption: st
             # ?globe=force in the URL replays the intro every time and ignores the OS
             # "reduce motion" setting (debug aid: the intro otherwise plays once per session).
             "force": str(st.query_params.get("globe", "")).lower() in ("force", "1", "always"),
+            # ?globe=debug shows an on-screen log inside each map explaining what the intro did / why it did not play.
+            "debug": str(st.query_params.get("globe", "")).lower() == "debug",
         }
         cfg_json = json.dumps(cfg, ensure_ascii=False).replace("</", "<\\/")
         # Why an <img onload> bootstrap and not a plain <script>: st_folium hands this
@@ -1744,8 +1746,21 @@ def add_globe_intro(fmap: "folium.Map", map_id: str, *, points=None, caption: st
             "s.textContent=document.getElementById('hd-globe-src').textContent;"
             "document.head.appendChild(s);"
             "window.HDGlobeIntro(JSON.parse(document.getElementById('hd-globe-cfg').textContent));"
-            "}catch(e){console.warn('HDGlobeIntro boot failed',e);}})()"
+            "}catch(e){console.warn('HDGlobeIntro boot failed',e);"
+            "try{if(JSON.parse(document.getElementById('hd-globe-cfg').textContent).debug){"
+            "var d=document.createElement('div');d.style.cssText='position:fixed;left:6px;top:6px;z-index:2147483647;"
+            "background:#300;color:#fbb;font:11px monospace;padding:5px 8px;border-radius:6px';"
+            "d.textContent='HDGlobe boot FAILED: '+e;document.body.appendChild(d);}}catch(_){}}})()"
         )
+        debug_marker = ""
+        if cfg["debug"]:
+            # Static marker: if this text is visible but no "[id] engine started" line follows,
+            # the browser blocked the inline onload handler (e.g. a strict CSP).
+            debug_marker = (
+                '<div id="hd-globe-dbg-static" style="position:fixed;right:6px;top:6px;z-index:2147483647;'
+                'background:rgba(0,0,0,.82);color:#9cf;font:11px monospace;padding:4px 8px;border-radius:6px">'
+                f'HDGlobe debug: map HTML injected ({map_id})</div>'
+            )
         fmap.get_root().html.add_child(folium.Element(
             "{% raw %}"
             '<script type="text/plain" id="hd-globe-src">' + js + "</script>"
@@ -1754,6 +1769,7 @@ def add_globe_intro(fmap: "folium.Map", map_id: str, *, points=None, caption: st
             'style="position:absolute;width:1px;height:1px;opacity:0;pointer-events:none" '
             'src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" '
             f'onload="{boot}">'
+            + debug_marker +
             "{% endraw %}"
         ))
     except Exception as exc:  # the intro is decoration: never take the map down with it
