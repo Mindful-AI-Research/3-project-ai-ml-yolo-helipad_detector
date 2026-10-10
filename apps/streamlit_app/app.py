@@ -1707,6 +1707,21 @@ def _clean_globe_points(rows, limit: int = 600) -> list:
     return out
 
 
+from branca.element import MacroElement as _MacroElement
+from jinja2 import Template as _JinjaTemplate
+
+
+class _GlobeIntroScript(_MacroElement):
+    """Carries a block of JS into the map's <script> section (see add_globe_intro).
+    The code must not contain Jinja delimiters ({{ {% {#) — globe_intro.js and the JSON config don't."""
+    _template = _JinjaTemplate("{% macro script(this, kwargs) %}{{ this.code }}{% endmacro %}")
+
+    def __init__(self, code: str):
+        super().__init__()
+        self._name = "GlobeIntroScript"
+        self.code = code
+
+
 def add_globe_intro(fmap: "folium.Map", map_id: str, *, points=None, caption: str = "") -> None:
     """Embeds the globe intro overlay into `fmap`'s HTML. Call it right before
     st_folium(fmap, ...) / components.html(fmap.get_root().render(), ...).
@@ -1734,44 +1749,32 @@ def add_globe_intro(fmap: "folium.Map", map_id: str, *, points=None, caption: st
             "debug": str(st.query_params.get("globe", "")).lower() == "debug",
         }
         cfg_json = json.dumps(cfg, ensure_ascii=False).replace("</", "<\\/")
-        # Why an <img onload> bootstrap and not a plain <script>: st_folium hands this
-        # HTML to its frontend, which inserts it as markup — <script> tags inserted
-        # that way never execute (verified in a headless-browser test), while inline
-        # event handlers do. The JS itself rides along as inert text/plain scripts
-        # and the onload handler turns it into a real script. components.html()
-        # frames run it the same way, so one mechanism covers all 3 maps.
-        # {% raw %}: folium.Element renders its string as a Jinja template.
-        boot = (
-            "(function(){try{var s=document.createElement('script');"
-            "s.textContent=document.getElementById('hd-globe-src').textContent;"
-            "document.head.appendChild(s);"
-            "window.HDGlobeIntro(JSON.parse(document.getElementById('hd-globe-cfg').textContent));"
-            "}catch(e){console.warn('HDGlobeIntro boot failed',e);"
-            "try{if(JSON.parse(document.getElementById('hd-globe-cfg').textContent).debug){"
-            "var d=document.createElement('div');d.style.cssText='position:fixed;left:6px;top:6px;z-index:2147483647;"
-            "background:#300;color:#fbb;font:11px monospace;padding:5px 8px;border-radius:6px';"
-            "d.textContent='HDGlobe boot FAILED: '+e;document.body.appendChild(d);}}catch(_){}}})()"
+        # HOW THE JS RUNS (lesson learned in production): the first version bootstrapped through an
+        # inline <img onload="..."> handler. It worked locally but on Streamlit Community Cloud the
+        # handler never ran (inline event-handler attributes can be blocked), so the intro silently
+        # never started. Now the engine is delivered as a real map <script> through a folium
+        # MacroElement: st_folium injects every child's script() output as an inline script block
+        # (exactly how the map itself is built) and components.html() renders it in the page body,
+        # so one mechanism covers all 3 maps and needs no inline handlers.
+        boot_code = (
+            "try{" + js + "\n;window.HDGlobeIntro(" + cfg_json + ");}"
+            "catch(e){try{console.warn('HDGlobeIntro boot failed',e);"
+            "if(" + ("true" if cfg["debug"] else "false") + "){var d=document.createElement('div');"
+            "d.style.cssText='position:fixed;left:6px;top:6px;z-index:2147483647;background:#300;color:#fbb;"
+            "font:11px monospace;padding:5px 8px;border-radius:6px';d.textContent='HDGlobe boot FAILED: '+e;"
+            "document.body.appendChild(d);}}catch(_){}}"
         )
-        debug_marker = ""
+        fmap.add_child(_GlobeIntroScript(boot_code))
         if cfg["debug"]:
-            # Static marker: if this text is visible but no "[id] engine started" line follows,
-            # the browser blocked the inline onload handler (e.g. a strict CSP).
-            debug_marker = (
+            # Static marker (plain markup, no JS): proves the map HTML reached the browser. If it is
+            # visible but no "[id] engine started" line appears, the script itself was not executed.
+            fmap.get_root().html.add_child(folium.Element(
+                "{% raw %}"
                 '<div id="hd-globe-dbg-static" style="position:fixed;right:6px;top:6px;z-index:2147483647;'
                 'background:rgba(0,0,0,.82);color:#9cf;font:11px monospace;padding:4px 8px;border-radius:6px">'
-                f'HDGlobe debug: map HTML injected ({map_id})</div>'
-            )
-        fmap.get_root().html.add_child(folium.Element(
-            "{% raw %}"
-            '<script type="text/plain" id="hd-globe-src">' + js + "</script>"
-            '<script type="text/plain" id="hd-globe-cfg">' + cfg_json + "</script>"
-            '<img alt="" width="1" height="1" '
-            'style="position:absolute;width:1px;height:1px;opacity:0;pointer-events:none" '
-            'src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" '
-            f'onload="{boot}">'
-            + debug_marker +
-            "{% endraw %}"
-        ))
+                f"HDGlobe debug: map HTML injected ({map_id})</div>"
+                "{% endraw %}"
+            ))
     except Exception as exc:  # the intro is decoration: never take the map down with it
         print(f"[globe intro] skipped for {map_id!r}: {exc}")
 
