@@ -64,10 +64,26 @@
     (document.head || document.documentElement).appendChild(s);
   }
 
+  // Debug HUD (cfg.debug, URL ?globe=debug): writes each decision/step into a small on-screen box,
+  // so a "the intro does not show" report carries the reason in a screenshot.
+  function makeDbg(on, id) {
+    if (!on) return function () {};
+    var box = document.getElementById('hd-globe-dbg');
+    if (!box) {
+      box = el('div', 'position:fixed;left:6px;top:6px;z-index:2147483647;max-width:92%;background:rgba(0,0,0,.82);' +
+        'color:#7CFC9A;font:11px/1.35 ui-monospace,Menlo,monospace;padding:5px 8px;border-radius:6px;pointer-events:none;white-space:pre-wrap');
+      box.id = 'hd-globe-dbg';
+      (document.body || document.documentElement).appendChild(box);
+    }
+    return function (m) { box.textContent += '\n[' + id + '] ' + m; };
+  }
+
   global.HDGlobeIntro = function (cfg) {
     cfg = cfg || {};
     var id = cfg.id || 'map';
     var storeKey = 'hd_globe_seen:' + id;
+    var dbg = makeDbg(!!cfg.debug, id);
+    dbg('engine started (force=' + !!cfg.force + ')');
     var target = cfg.target || [-23.5505, -46.6333];
     var duration = cfg.durationMs || 5200;
     var tealCss = cfg.pointColor || '#14b8a6';
@@ -75,14 +91,14 @@
 
     global.__hdGlobeRunning = global.__hdGlobeRunning || {};
     global.__hdGlobeDone = global.__hdGlobeDone || {};
-    if (global.__hdGlobeRunning[id] || global.__hdGlobeDone[id]) return;   // re-render in same frame
+    if (global.__hdGlobeRunning[id] || global.__hdGlobeDone[id]) { dbg('skip: already ran in this frame'); return; }   // re-render in same frame
     // cfg.force (URL ?globe=force) ignores the once-per-session flag and prefers-reduced-motion — handy to debug why the intro does not show.
-    try { if (!cfg.force && cfg.debugT == null && global.sessionStorage.getItem(storeKey) === '1') return; } catch (e) {}
+    try { if (!cfg.force && cfg.debugT == null && global.sessionStorage.getItem(storeKey) === '1') { dbg('skip: already seen in this browser tab session (open a NEW tab / private window, or add ?globe=force)'); return; } } catch (e) { dbg('sessionStorage unavailable: ' + e); }
     // prefers-reduced-motion: instead of skipping, play a calm variant — a STILL globe already facing
     // the target (no spin, no zoom, no flash) that just fades into the map (~1.6 s). cfg.force plays the full animation.
     var reduced = false;
     try { reduced = !cfg.force && !!(global.matchMedia && global.matchMedia('(prefers-reduced-motion: reduce)').matches); } catch (e) {}
-    if (reduced) duration = Math.min(duration, 1600);
+    if (reduced) { duration = Math.min(duration, 1600); dbg('prefers-reduced-motion is ON -> calm still version'); }
     global.__hdGlobeRunning[id] = true;
 
     // ---------- overlay (opaque from the very first frame: no map flash) ----------
@@ -154,9 +170,12 @@
     skip.addEventListener('click', function () { finish(true, true); });
 
     // ---------- wait for three.js, then for the frame to be actually visible ----------
+    dbg('loading three.js from ' + THREE_URL);
     loadThree(function () {
-      try { begin(global.THREE); } catch (err) { try { console.error('HDGlobeIntro:', err); } catch (e) {} finish(true, false); }
+      dbg('three.js loaded');
+      try { begin(global.THREE); } catch (err) { dbg('ERROR in begin(): ' + err); try { console.error('HDGlobeIntro:', err); } catch (e) {} finish(true, false); }
     }, function (why) {
+      dbg('three.js FAILED: ' + why + ' (blocked by browser/extension/network?)');
       try { console.warn('HDGlobeIntro skipped:', why); } catch (e) {}
       finish(true, false);
     }, cfg.loadTimeoutMs || 5000);
@@ -165,6 +184,7 @@
       var R = 2.6, D2R = Math.PI / 180;
       var W = Math.max(overlay.clientWidth, 2), H = Math.max(overlay.clientHeight, 2);
 
+      dbg('creating WebGL renderer');
       renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
       renderer.setPixelRatio(Math.min(global.devicePixelRatio || 1, 2));
       renderer.setSize(W, H);
@@ -288,12 +308,12 @@
           disposeList.push({ dispose: function () { io.disconnect(); } });
         }
       } catch (e) { inView = true; }
-      var elapsed = 0, last = null;
+      var elapsed = 0, last = null, waitLogged = false;
       function hasSize() { return overlay.clientWidth > 60 && overlay.clientHeight > 60; }
       function frame(now) {
         raf = requestAnimationFrame(frame);
         if (finished) return;
-        if (!hasSize() || !inView) { last = null; return; }        // hidden / off-screen: pause
+        if (!hasSize() || !inView) { if (!waitLogged) { waitLogged = true; dbg('waiting: frame hidden/off-screen (size ok=' + hasSize() + ', in view=' + inView + ')'); } last = null; return; }        // hidden / off-screen: pause
         if (last === null) {
           last = now;
           if (W !== overlay.clientWidth || H !== overlay.clientHeight) {
@@ -301,6 +321,7 @@
             camera.aspect = W / H; camera.updateProjectionMatrix(); renderer.setSize(W, H);
           }
         }
+        if (elapsed === 0) dbg('playing (frame visible)');
         elapsed += now - last; last = now;
         var t = (cfg.debugT != null) ? cfg.debugT : elapsed / duration, p1 = easeInOutCubic(clamp01(t / 0.62));
         var p2 = easeInOutQuart(clamp01((t - 0.14) / 0.74));
