@@ -76,8 +76,13 @@
     global.__hdGlobeRunning = global.__hdGlobeRunning || {};
     global.__hdGlobeDone = global.__hdGlobeDone || {};
     if (global.__hdGlobeRunning[id] || global.__hdGlobeDone[id]) return;   // re-render in same frame
-    try { if (cfg.debugT == null && global.sessionStorage.getItem(storeKey) === '1') return; } catch (e) {}
-    try { if (global.matchMedia && global.matchMedia('(prefers-reduced-motion: reduce)').matches) return; } catch (e) {}
+    // cfg.force (URL ?globe=force) ignores the once-per-session flag and prefers-reduced-motion — handy to debug why the intro does not show.
+    try { if (!cfg.force && cfg.debugT == null && global.sessionStorage.getItem(storeKey) === '1') return; } catch (e) {}
+    // prefers-reduced-motion: instead of skipping, play a calm variant — a STILL globe already facing
+    // the target (no spin, no zoom, no flash) that just fades into the map (~1.6 s). cfg.force plays the full animation.
+    var reduced = false;
+    try { reduced = !cfg.force && !!(global.matchMedia && global.matchMedia('(prefers-reduced-motion: reduce)').matches); } catch (e) {}
+    if (reduced) duration = Math.min(duration, 1600);
     global.__hdGlobeRunning[id] = true;
 
     // ---------- overlay (opaque from the very first frame: no map flash) ----------
@@ -299,6 +304,7 @@
         elapsed += now - last; last = now;
         var t = (cfg.debugT != null) ? cfg.debugT : elapsed / duration, p1 = easeInOutCubic(clamp01(t / 0.62));
         var p2 = easeInOutQuart(clamp01((t - 0.14) / 0.74));
+        if (reduced) { p1 = 1; p2 = 0.55; }      // static camera: no rotation, no zoom
         var dist = place(p1, p2);
 
         // sizes track the zoom so the dots never turn into blobs
@@ -309,15 +315,15 @@
         halo.material.opacity = 1 - 0.7 * p2;
 
         // HUD choreography
-        enter.style.opacity = String(smooth(0.66, 0.78, t) * (1 - smooth(0.93, 1.0, t)));
-        reticle.style.opacity = String(smooth(0.70, 0.84, t));
+        enter.style.opacity = reduced ? '0' : String(smooth(0.66, 0.78, t) * (1 - smooth(0.93, 1.0, t)));
+        reticle.style.opacity = reduced ? '0' : String(smooth(0.70, 0.84, t));
         var rs = lerp(1.9, 1, smooth(0.70, 0.88, t)); reticle.style.transform = 'scale(' + rs.toFixed(3) + ')';
         bar.style.width = (clamp01(t) * 100).toFixed(2) + '%';
 
         // swap: flash up, then overlay fades -> the real Folium map is revealed
-        var fl = smooth(0.80, 0.88, t) * (1 - smooth(0.88, 0.98, t));
+        var fl = reduced ? 0 : smooth(0.80, 0.88, t) * (1 - smooth(0.88, 0.98, t));
         flash.style.opacity = String(fl);
-        overlay.style.opacity = String(1 - smooth(0.86, 1.0, t));
+        overlay.style.opacity = String(1 - (reduced ? smooth(0.55, 1.0, t) : smooth(0.86, 1.0, t)));
         renderer.render(scene, camera);
         if (t >= 1 && cfg.debugT == null) finish(false, true);
       }
