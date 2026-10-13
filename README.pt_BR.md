@@ -82,7 +82,7 @@
 [**Disciplina:**]() Machine Learning / Visão Computacional — YOLO <br>
 [**Projeto:**]() Detecção de Objetos em Imagens de Satélite com YOLO <br>
 **Autora:** [Fabiana ⚡️ Campanari](https://linktr.ee/fabianacampanari) <br>
-**Colaboradores:** [Carlos Antonio dos Santos Roth Gorham]() · [Pedro Vyctor Almeida](https://github.com/ppvyctor/Helipoint-Detector) 
+**Colaboradores:** [Pedro Vyctor Almeida](https://github.com/ppvyctor/Helipoint-Detector) 
 
 # <br>
 <!-- ========= END Institutional INFO ========= -->
