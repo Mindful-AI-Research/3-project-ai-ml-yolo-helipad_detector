@@ -1,0 +1,109 @@
+{
+  "criterios": {
+    "id_do_nome": "tile_id extraído do nome (tile_z19_x<X>_y<Y>), sem sufixos de exportação do Roboflow (_jpg.rf.<hash>, itaim_bibi-NN-). Não confiável quando o mesmo id é compartilhado por várias imagens.",
+    "pixel": "MAE (0–255) entre a imagem anotada e o tile de campo mais parecido (pré-filtro 32×32 nos 3 melhores, MAE em 256×256). Coincidência = MAE ≤ 5 (todas as coincidências ficam ≤ 1,56; nenhuma outra fica abaixo de 16,9).",
+    "resolvido": "tile usado na análise: o tile por pixel quando há coincidência; senão o id do nome quando único e interpretável; senão não resolvido.",
+    "vizinhanca": "Distância de Chebyshev em tiles z19 (max(|dx|,|dy|)) até o tile de campo mais próximo; k=1,2,3,5. Um tile z19 tem ≈70 m em São Paulo (aproximação). Vizinho ≠ vazamento confirmado.",
+    "limites_do_metodo": "Cópias recortadas, giradas, espelhadas, reescaladas ou de outra data não seriam detectadas pelo critério de pixel (comparação só de cópia direta). Pré-filtro top-3 em 32×32."
+  },
+  "campo": {
+    "entradas_regiao_x_tile": 7767,
+    "ids_unicos": 5540
+  },
+  "splits": {
+    "train": {
+      "imagens": 177,
+      "sem_id_interpretavel": 0,
+      "id_do_nome_exato_no_campo": 87,
+      "id_do_nome_compartilhado_por_varias": 17,
+      "coincidencia_por_pixel": 87,
+      "pct_pixel": 49.2,
+      "sem_coincidencia_por_pixel": 90,
+      "sem_pixel_mas_id_no_campo": 0,
+      "sem_pixel_vizinho_k1": 0,
+      "sem_pixel_vizinho_k2": 2,
+      "sem_pixel_vizinho_k3": 3,
+      "sem_pixel_vizinho_k5": 8,
+      "rotulos_ge1": 176
+    },
+    "valid": {
+      "imagens": 34,
+      "sem_id_interpretavel": 0,
+      "id_do_nome_exato_no_campo": 25,
+      "id_do_nome_compartilhado_por_varias": 4,
+      "coincidencia_por_pixel": 25,
+      "pct_pixel": 73.5,
+      "sem_coincidencia_por_pixel": 9,
+      "sem_pixel_mas_id_no_campo": 0,
+      "sem_pixel_vizinho_k1": 0,
+      "sem_pixel_vizinho_k2": 1,
+      "sem_pixel_vizinho_k3": 2,
+      "sem_pixel_vizinho_k5": 2,
+      "rotulos_ge1": 34
+    },
+    "test": {
+      "imagens": 14,
+      "sem_id_interpretavel": 0,
+      "id_do_nome_exato_no_campo": 13,
+      "id_do_nome_compartilhado_por_varias": 2,
+      "coincidencia_por_pixel": 13,
+      "pct_pixel": 92.9,
+      "sem_coincidencia_por_pixel": 1,
+      "sem_pixel_mas_id_no_campo": 0,
+      "sem_pixel_vizinho_k1": 0,
+      "sem_pixel_vizinho_k2": 0,
+      "sem_pixel_vizinho_k3": 0,
+      "sem_pixel_vizinho_k5": 0,
+      "rotulos_ge1": 14
+    }
+  },
+  "total": {
+    "imagens": 225,
+    "coincidencia_por_pixel": 125,
+    "tiles_de_campo_distintos_coincidentes": 125,
+    "entradas_regiao_x_tile_coincidentes": 212,
+    "pct_dos_7767_entradas": 2.73,
+    "pct_dos_5540_ids_unicos": 2.26,
+    "mae_coincidentes_max": 1.553,
+    "mae_nao_coincidentes_min": 16.972
+  },
+  "regioes_dos_tiles_coincidentes": {
+    "Alphaville_Industrial": 15,
+    "Faria_Lima;Pinheiros": 8,
+    "Brooklin": 20,
+    "Inter_Zonas;Vila_Olimpia": 18,
+    "Brooklin;Inter_Zonas;Vila_Olimpia": 1,
+    "Inter_Zonas;Itaim_Bibi;Vila_Olimpia": 10,
+    "Av_Paulista_segment_1": 8,
+    "Av_Paulista_segment_1;Av_Paulista_segment_2": 22,
+    "Pinheiros": 5,
+    "Vila_Olimpia;Vila_nova_Conceicao": 1,
+    "Inter_Zonas;Vila_Olimpia;Vila_nova_Conceicao": 2,
+    "Itaim_Bibi": 5,
+    "Inter_Zonas;Itaim_Bibi": 2,
+    "Itaim_Bibi;Vila_Olimpia;Vila_nova_Conceicao": 3,
+    "Av_Paulista_segment_2": 3,
+    "Brooklin;Vila_Olimpia": 1,
+    "Inter_Zonas;Itaim_Bibi;Vila_Olimpia;Vila_nova_Conceicao": 1
+  },
+  "interno_valid_test_vs_train": {
+    "valid": {
+      "imagens": 34,
+      "copia_direta_por_pixel_le5": 0,
+      "min_mae": 31.6,
+      "mesmo_tile_resolvido": 0,
+      "vizinho_k1_do_treino": 15,
+      "vizinho_k2": 20
+    },
+    "test": {
+      "imagens": 14,
+      "copia_direta_por_pixel_le5": 0,
+      "min_mae": 42.7,
+      "mesmo_tile_resolvido": 0,
+      "vizinho_k1_do_treino": 3,
+      "vizinho_k2": 11
+    }
+  },
+  "interno_treino_treino_copias_diretas": 0,
+  "observacao_imagem_sem_tile": "A imagem de treino mosaico_Taquara_hires_preview (512x512) não tem id de tile no nome e não coincide por pixel com nenhum tile de campo; não entra nas contagens 177/34/14 de imagens com id interpretável (total de treino 178)."
+}
