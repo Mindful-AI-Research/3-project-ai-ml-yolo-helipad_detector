@@ -11,7 +11,7 @@ scipy>=1.4.1
 ########################
 # Scientific Computing / Data Analysis
 ########################
-numpy>=2.5.3
+numpy>=2.5.4
 pandas>=1.1.4
 matplotlib>=3.11.2
 seaborn>=0.13.2
@@ -26,7 +26,7 @@ opencv-python-headless>=4.6.0
 # Web, APIs & Applications
 ########################
 flask>=3.1.3
-streamlit>=1.64.0,<1.65.0
+streamlit>=1.66.0,<1.67.0
 folium>=0.20.0
 streamlit-folium>=0.27.4
 plotly>=5.20.0
@@ -35,8 +35,9 @@ reportlab>=5.0.1
 ########################
 # Selenium / Browser Automation
 ########################
-selenium>=4.50.0
-webdriver-manager>=4.1.2
+selenium>=4.51.0
+webdriver-manager>=3.8.0
+
 
 ########################
 # General Utilities
