@@ -1,6 +1,3 @@
-Segue o **requirements.txt** completo, com as três versões atualizadas e o restante preservado. [ppl-ai-file-upload.s3.amazonaws](https://ppl-ai-file-upload.s3.amazonaws.com/web/direct-files/attachments/13635533/ba915734-4539-44ff-91d5-6feb85eeeb20/requirements.txt?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Checksum-Mode=ENABLED&X-Amz-Credential=ASIA2F3EMEYEZ6QNUZRN%2F20261019%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20261019T031143Z&X-Amz-Expires=2201&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEFsaCXVzLWVhc3QtMSJIMEYCIQD8%2ByNxtkZGOmbs1GKDciWJ0gjR572Yr0xPbr9JqOAxmQIhALB2sL4wu%2B%2F4zvpTg1%2FmexqzlUmAvgs%2BwjpGUPmCc9XsKoAFCCQQARoMNjk5NzUzMzA5NzA1IgzdmMe1SXugatwNjdkq3QTLVmkUKON9y4aIywpT6xGKmi9hN4DNx05WI2Wq0JfsqjZ%2B%2BFDTpUgAsSOX9ds7UGrwR2MSkulBmYG2mc1d4H1mApZApxoWvi%2F79OJ4fLOGsF1YOExqKbr4NO1JtoLjxXCN9aEEWYGx4Uuu81Pdfx%2FT4y5GTFVl6c6edgIGcNzDn0pscqz0N%2F3nrqbJYGXOr1H9KzFKJNCtJtKsI0BGVF2Bbdcjf2wHzm02OoyBHYGy97UmJfSs%2FFrU0ChW8%2FszC7Sm%2FuykGltzSangv8pG3bv5ie9%2BNUgT7hXERT5uaKp7d8GIFYnqL49JtTbM%2FZuvG1HUNQYJZhcGVnHYyR6J8qNDzoGGzksq1kJsx7CuOKjTZqvOHybdFV9RptubDgVwrv60nXTalm6jJBVLahnaXaMNiFEy6v7tTo7Am6vbRsdUVWpqKIHbwQhz45dWu8JIxyPWZ2y2%2FcmZj1yimsalSpcU%2BIKnzRVIjx4DrSRrun6%2F9%2BEmfbibdxtJLcLloyryVxqVmiIMVHc%2FCp58Iu6BpoTQMMIad23v3CPGDfJ9UieTVU4x4%2FujgzuDypyiI9Gf%2BWacF1%2FRvSBV2gTItW%2FjsO%2BAeKq%2FMp8znT4gM5iRr5qkPA%2BDl42vfXkQm3mcdXY%2Fg6TdFvwMhUwGVQ2ndW4U334iloapnOTLF%2FNTQmO0ExxeZLlDvd7PeA74ChN0kPUu%2BH0SaxGI%2Bs8VQtmQrWUwUpMin%2B%2F5jxHFaG04MlFGw%2Bu8bujD54RRftZnOB1WWSvQd3n2cdnaKt99aHHkU4tjJbgZYyMv9MQeZah8dTVRvDC1itbWBjqXAQW4ohenbq63jHChT1jUZHGvo%2FnUgkgy1bDDw6pFzUMl0idJdJHpe3q%2BoOZOR2AEG3UES56EqLVK6NomDLmQL26Ny1eXRwmZ5aSag0b1Q40MtZ2JJq5TuMZWqNJTF%2B5maQ2kvqfS%2BmTsl3ZPZjFbdrqTwwW8zzhamByOapNbUclHbWMHrTMmF2wRPBhzooaIvuBTMdRE6Ps%3D&X-Amz-SignedHeaders=host&x-id=GetObject&X-Amz-Signature=a261da5da1be7f3e4f915d687cbb8b4e1823f397214d8e4f6899b7da1694d7de)
-
-```txt
 ########################
 # AI / YOLO Core
 ########################
@@ -47,4 +44,3 @@ webdriver-manager>=3.8.0
 requests>=2.23.0
 psutil
 py-cpuinfo
-```
