@@ -119,7 +119,7 @@
 <!-- =========End REeact Presentation BADGE ========= -->
 
 <!-- ========= START Helipad Detector Full Report BADGE ========= -->
-  <a href="https://github.com/Mindful-AI-Research/3-project-ai-ml-yolo-helipad_detector/blob/db052a43d2b02254237735716dc841a3611d9e98/reports/helipad_detector_full_report/%F0%9F%87%AC%F0%9F%87%A7Helipad_Detector_Full_Report.pdf" target="_blank" rel="noopener noreferrer">
+  <a href="https://github.com/Mindful-AI-Research/3-project-ai-ml-yolo-helipad_detector/blob/d9b2800b270184a21d6905e3ef96952b1cbe3558/reports/helipad_detector_full_report/%F0%9F%87%AC%F0%9F%87%A7Helipad_Detector_Full_Report.pdf" target="_blank" rel="noopener noreferrer">
     <img 
       src="https://img.shields.io/badge/Helipad%20Detector-Full%20Report-134e4a?style=for-the-badge&logo=github&logoColor=white&labelColor=022c22" 
       alt="Helipad Detector Full Report"
