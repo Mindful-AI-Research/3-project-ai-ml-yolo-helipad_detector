@@ -244,7 +244,7 @@ TR = {
     },
 
     # ---- Main header ----
-    "main.title": {"en": "🚁 Helipad Detection", "pt": "🚁 Detecção de Helipontos"},
+    "main.title": {"en": "🚁 Helipad Detector", "pt": "🚁 Helipad Detector"},
     "main.subtitle": {"en": "AI + Satellite Imagery • São Paulo", "pt": "IA + Imagens de Satélite • São Paulo"},
     "main.active_model": {"en": "Active model:", "pt": "Modelo ativo:"},
     "main.active_model.none": {"en": "_none yet — detection tabs disabled_", "pt": "_nenhum ainda — abas de detecção desabilitadas_"},
@@ -3293,7 +3293,13 @@ st.markdown(f"""
 </div>
 """, unsafe_allow_html=True)
 
-st.markdown(f'<h1 class="main-title">{t("main.title")}</h1>', unsafe_allow_html=True)
+_main_title = t("main.title").replace(
+    "Detector",
+    '<span style="color:#DC2626;background:linear-gradient(135deg,#991B1B 0%,#EF4444 100%);'
+    '-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;">Detector</span>',
+    1,
+)
+st.markdown(f'<h1 class="main-title">{_main_title}</h1>', unsafe_allow_html=True)
 st.markdown(f'<p class="subtitle">{t("main.subtitle")}</p>', unsafe_allow_html=True)
 if MODEL_OPTIONS:
     st.caption(f"{t('main.active_model')} **{st.session_state.get('model_choice') or list(MODEL_OPTIONS)[0]}**")
