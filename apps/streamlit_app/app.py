@@ -1706,9 +1706,18 @@ GLOBE_TARGET = (-23.5505, -46.6333)  # São Paulo
 
 
 @st.cache_data(show_spinner=False)
+def _read_globe_intro_js(path_str: str, mtime: float) -> str:
+    # `mtime` is part of the cache key, so replacing assets/globe_intro.js is picked up
+    # without having to clear Streamlit's cache by hand.
+    try:
+        return Path(path_str).read_text(encoding="utf-8")
+    except OSError:
+        return ""
+
+
 def _load_globe_intro_js() -> str:
     try:
-        return GLOBE_INTRO_JS_PATH.read_text(encoding="utf-8")
+        return _read_globe_intro_js(str(GLOBE_INTRO_JS_PATH), GLOBE_INTRO_JS_PATH.stat().st_mtime)
     except OSError:
         return ""
 
@@ -1768,7 +1777,15 @@ def add_globe_intro(fmap: "folium.Map", map_id: str, *, points=None, caption: st
             "force": str(st.query_params.get("globe", "")).lower() in ("force", "1", "always"),
             # ?globe=debug shows an on-screen log inside each map explaining what the intro did / why it did not play.
             "debug": str(st.query_params.get("globe", "")).lower() == "debug",
+            "lang": st.session_state.get("lang", "en"),   # a language switch always replays the intro
         }
+        # ?globe_ms=14000 sets the intro length in milliseconds (default lives in globe_intro.js).
+        try:
+            _ms = int(str(st.query_params.get("globe_ms", "")) or 0)
+            if 3000 <= _ms <= 60000:
+                cfg["durationMs"] = _ms
+        except (TypeError, ValueError):
+            pass
         cfg_json = json.dumps(cfg, ensure_ascii=False).replace("</", "<\\/")
         # HOW THE JS RUNS (lesson learned in production): the first version bootstrapped through an
         # inline <img onload="..."> handler. It worked locally but on Streamlit Community Cloud the
