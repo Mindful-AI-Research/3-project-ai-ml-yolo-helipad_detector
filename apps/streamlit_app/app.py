@@ -279,7 +279,7 @@ TR = {
     },
     "upload.original_caption": {"en": "Original", "pt": "Original"},
     "upload.detection_caption": {"en": "Detection", "pt": "Detecção"},
-    "upload.success": {"en": "✅ Helipad detected!", "pt": "✅ Heliponto detectado!"},
+    "upload.success": {"en": "✅ Possible helipad detected (visual detection only; human review required).", "pt": "✅ Possível heliponto detectado (apenas detecção visual; exige revisão humana)."},
     "upload.warning_none": {"en": "No helipad found.", "pt": "Nenhum heliponto encontrado."},
 
     # ---- Shared: mandatory scope-of-detection disclaimer (shown under any detection result) ----
@@ -338,14 +338,14 @@ TR = {
         "pt": "tile(s) vazio(s)/corrompido(s) ignorados (falha parcial no download do ESRI).",
     },
     "search.download_all_zip": {"en": "⬇️ Download all as .zip", "pt": "⬇️ Baixar todos em .zip"},
-    "search.found": {"en": "helipad(s) found", "pt": "heliponto(s) encontrado(s)"},
+    "search.found": {"en": "possible helipad detection(s) found", "pt": "possível(is) detecção(ões) de heliponto encontrada(s)"},
     "search.in_region": {"en": "in the region!", "pt": "na região!"},
     "search.download": {"en": "⬇️ Download", "pt": "⬇️ Baixar"},
     "search.download_individually": {
         "en": "Use the buttons above to download individually.",
         "pt": "Use os botões acima para baixar individualmente.",
     },
-    "search.none_found": {"en": "No helipad was found in this region.", "pt": "Nenhum heliponto foi encontrado nesta região."},
+    "search.none_found": {"en": "No possible helipad detection in this region.", "pt": "Nenhuma possível detecção de heliponto nesta região."},
 
     
     # ---- Tab 3: Sample Images ----
@@ -1129,16 +1129,39 @@ TR = {
     "metrics.netron_expander": {"en": "🧠 Preview architecture inline", "pt": "🧠 Prévia da arquitetura aqui"},
     "metrics.netron_load_button": {"en": "▶ Load preview (fetches from netron.app)", "pt": "▶ Carregar prévia (busca do netron.app)"},
     "metrics.outperformed": {
-        "en": "**{exp}** outperformed exp1 on mAP@50-95 ({delta}).",
-        "pt": "**{exp}** superou o exp1 em mAP@50-95 ({delta}).",
+        "en": "**{exp}** scored higher than exp1 on mAP@50-95 ({delta}); not a controlled comparison.",
+        "pt": "**{exp}** teve resultado superior ao exp1 em mAP@50-95 ({delta}); comparação não controlada.",
     },
     "metrics.underperformed": {
-        "en": "**{exp}** scored lower than exp1 on mAP@50-95 ({delta}) — possible overfitting.",
-        "pt": "**{exp}** teve resultado inferior ao exp1 em mAP@50-95 ({delta}) — possível overfitting.",
+        "en": "**{exp}** scored lower than exp1 on mAP@50-95 ({delta}); not a controlled comparison.",
+        "pt": "**{exp}** teve resultado inferior ao exp1 em mAP@50-95 ({delta}); comparação não controlada.",
     },
     "metrics.tied": {
         "en": "**{exp}** is essentially tied with exp1 (Δ {delta}).",
         "pt": "**{exp}** está essencialmente empatado com o exp1 (Δ {delta}).",
+    },
+    "metrics.not_controlled": {
+        "en": "These experiments are not a controlled comparison: author, environment, Ultralytics version "
+              "(exp1 8.4.75, exp2 8.4.98, exp3 8.4.98, exp4 8.4.163) and dataset version differ between runs. "
+              "Small differences on a 226-image dataset are within expected noise and should not be attributed "
+              "to a single factor such as the number of epochs.",
+        "pt": "Estes experimentos não formam uma comparação controlada: autor, ambiente, versão do Ultralytics "
+              "(exp1 8.4.75, exp2 8.4.98, exp3 8.4.98, exp4 8.4.163) e versão do dataset diferem entre as execuções. "
+              "Diferenças pequenas em um dataset de 226 imagens estão dentro do ruído esperado e não devem ser "
+              "atribuídas a um único fator, como o número de épocas.",
+    },
+    "lineage.expander": {"en": "🧬 Data lineage & limitations", "pt": "🧬 Linhagem dos dados e limitações"},
+    "lineage.body": {
+        "en": "- **Annotated dataset (version 2):** 226 images — 178 train / 34 validation / 14 test. Version 2 has no data augmentation; only the exp3 fork does.\n"
+              "- **Labels:** mostly polygons (170 of 178 training label files and all validation/test files), converted to boxes for detection training. Three training label files mix polygons and boxes and are flagged by Ultralytics 8.4.163.\n"
+              "- **Field run:** 7,943 tiles in the production run (10 neighborhoods); the comparison set has 7,767 region × tile pairs and 5,540 distinct tiles.\n"
+              "- **Overlap:** 125 of the 225 annotated images with coordinates are copies of field tiles (2.3% of the 5,540 distinct tiles), so the field run is not fully independent of the annotated set. See `reports/lineage_audit/`.\n"
+              "- **Detection rate is not precision or recall:** field detection rates have no ground-truth labels behind them.",
+        "pt": "- **Dataset anotado (versão 2):** 226 imagens — 178 treino / 34 validação / 14 teste. A versão 2 não tem aumento de dados; só o fork do exp3 tem.\n"
+              "- **Rótulos:** majoritariamente polígonos (170 dos 178 arquivos de treino e todos os de validação e teste), convertidos em caixas no treino de detecção. Três arquivos de rótulo do treino misturam polígono e caixa e são sinalizados pelo Ultralytics 8.4.163.\n"
+              "- **Execução de campo:** 7.943 tiles na execução de produção (10 bairros); o conjunto de comparação tem 7.767 pares região × tile e 5.540 tiles distintos.\n"
+              "- **Sobreposição:** 125 das 225 imagens anotadas com coordenadas são cópias de tiles de campo (2,3% dos 5.540 tiles distintos); portanto, a execução de campo não é totalmente independente do conjunto anotado. Ver `reports/lineage_audit/`.\n"
+              "- **Taxa de detecção não é precisão nem recall:** as taxas de campo não têm rótulos de referência por trás.",
     },
     "metrics.evolution": {"en": "#### 📈 Metric evolution per epoch", "pt": "#### 📈 Evolução da métrica por época"},
     "metrics.metric_label": {"en": "Metric", "pt": "Métrica"},
@@ -4579,6 +4602,11 @@ with tab_metrics:
                     st.warning(t("metrics.underperformed").format(exp=row['Experiment'], delta=f"{delta:+.4f}"))
                 else:
                     st.info(t("metrics.tied").format(exp=row['Experiment'], delta=f"{delta:+.4f}"))
+
+        st.warning(t("metrics.not_controlled"))
+        with st.expander(t("lineage.expander"), expanded=False):
+            st.markdown(t("lineage.body"))
+            st.caption(t("detection.disclaimer"))
 
         # ---- Per-epoch metric evolution (real data from results.csv) ----
         curves = load_experiment_curves()
