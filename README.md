@@ -19,6 +19,8 @@
 
 <h1 align="center">🚁 $$\Huge{\textbf{\color{#FFFFFF}{Helipad}}\space\textbf{\color{#B71C1C}{Detector}}}$$</h1>
 
+<h1 align="center">🚁 $$\Huge{\textbf{\color{#8B0000}{Heli}}\textbf{\color{#A31319}{pad}}\space\textbf{\color{#B71C1C}{Detec}}\textbf{\color{#C62828}{tor}}}$$</h1>
+
 
 
 <h2 align="center"> 🚁 $$\Huge{\textbf{\color{#FFFFFF}{Helipad}}\space\textbf{\color{#FF0000}{Detector}}}$$ </h2>
@@ -31,7 +33,7 @@
 
 <h2 align="center">🚁 $$\Huge{\textbf{\color{#FFFFFF}{Helipad}}\space\textbf{\color{#B71C1C}{Detector}}}$$</h2>
 
-
+<h2 align="center">🚁 $$\Huge{\textbf{\color{#8B0000}{Heli}}\textbf{\color{#A31319}{pad}}\space\textbf{\color{#B71C1C}{Detec}}\textbf{\color{#C62828}{tor}}}$$</h2>
 
 
 
