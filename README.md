@@ -8,27 +8,10 @@
 <br><br>
 
 
-
-
-
-
+<!-- ========= START HEADRE ========= -->
 <h1 align="center">🚁 $$\Huge{\textbf{\color{#FFFFFF}{Helipad}}\space\textbf{\color{#8B0000}{D}}\textbf{\color{#991414}{e}}\textbf{\color{#A61B1B}{t}}\textbf{\color{#B32222}{e}}\textbf{\color{#C62828}{c}}\textbf{\color{#D32F2F}{t}}\textbf{\color{#C62828}{o}}\textbf{\color{#B71C1C}{r}}}$$</h1>
 
-<h1 align="center">🚁 $$\Huge{\textbf{\color{#FFFFFF}{Helipad}}\space\textbf{\color{#8B0000}{D}}\textbf{\color{#940909}{e}}\textbf{\color{#9D1212}{t}}\textbf{\color{#A61B1B}{e}}\textbf{\color{#AF2424}{c}}\textbf{\color{#B82D2D}{t}}\textbf{\color{#C13636}{o}}\textbf{\color{#A92323}{r}}}$$</h1>
 
-
-
-<h2 align="center">🚁 $$\Huge{\textbf{\color{#FFFFFF}{Helipad}}\space\textbf{\color{#8B0000}{D}}\textbf{\color{#991414}{e}}\textbf{\color{#A61B1B}{t}}\textbf{\color{#B32222}{e}}\textbf{\color{#C62828}{c}}\textbf{\color{#D32F2F}{t}}\textbf{\color{#C62828}{o}}\textbf{\color{#B71C1C}{r}}}$$</h2>
-
-<h2 align="center">🚁 $$\Huge{\textbf{\color{#FFFFFF}{Helipad}}\space\textbf{\color{#8B0000}{D}}\textbf{\color{#940909}{e}}\textbf{\color{#9D1212}{t}}\textbf{\color{#A61B1B}{e}}\textbf{\color{#AF2424}{c}}\textbf{\color{#B82D2D}{t}}\textbf{\color{#C13636}{o}}\textbf{\color{#A92323}{r}}}$$</h2>
-
-
-
-
-
-
-<!-- ========= START HEADRE ========= -->
-# <p align="center"> 🚁  [Helipad Detector]()
 
 ### <p align="center"> End-to-End Artificial Intelligence Platform for Automated Helipad Detection and Geospatial Intelligence from Satellite Imagery
 
