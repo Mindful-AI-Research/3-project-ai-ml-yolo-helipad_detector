@@ -83,9 +83,9 @@
     var id = cfg.id || 'map';
     var storeKey = 'hd_globe_seen:' + id;
     var dbg = makeDbg(!!cfg.debug, id);
-    dbg('engine started (force=' + !!cfg.force + ')');
+    dbg('engine v2 started (replay on re-entry, ' + (cfg.durationMs || 11000) + ' ms, force=' + !!cfg.force + ')');
     var target = cfg.target || [-23.5505, -46.6333];
-    var duration = cfg.durationMs || 9000;   // slower dive (was 5.2 s)
+    var duration = cfg.durationMs || 11000;   // slower dive (was 5.2 s); override with ?globe_ms=14000
     var tealCss = cfg.pointColor || '#14b8a6';
     var markerCss = cfg.markerColor || '#ff2500';
 
