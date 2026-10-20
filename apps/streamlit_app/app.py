@@ -830,12 +830,10 @@ TR = {
     "en": (
         "This project evolved from an initial foundation (dataset, first training run and a web "
         "prototype) into an end-to-end computer vision and geospatial intelligence platform. "
-        "The three contributors took part at different stages and in different technical areas.\n\n"
+        "The two contributors took part at different stages and in different technical areas.\n\n"
         "**Pedro Vyctor Almeida** — established the initial foundation: the original annotated "
         "dataset, the initial web prototype (`Site.py`, a compact Streamlit app with image upload "
         "and regional satellite search) and the first training experiment, `exp1`.\n\n"
-        "**Carlos Antonio dos Santos Roth Gorham** — proposed the geospatial-automation concept "
-        "for helipad discovery and contributed to starting that implementation direction.\n\n"
         "**Fabiana ⚡️ Campanari** — subsequent development, expansion, integration, evaluation and "
         "consolidation of the final platform:\n\n"
         "*Data & geospatial automation*\n"
@@ -870,18 +868,16 @@ TR = {
         "- visual storytelling, interactive elements and soundtrack integration;\n"
         "- market research on helicopter presence and activity, including the international "
         "comparative ranking used to contextualize the project's practical relevance.\n\n"
-        "All three contributors remain credited for their respective work. See the "
+        "Both contributors remain credited for their respective work. See the "
         "**Contribution Attribution** section of `README.md` for the same breakdown."
     ),
     "pt": (
         "Este projeto evoluiu de uma base inicial (dataset, primeiro treinamento e um protótipo "
         "web) para uma plataforma completa de visão computacional e inteligência geoespacial. "
-        "Os três colaboradores participaram em etapas e áreas técnicas diferentes.\n\n"
+        "Os dois colaboradores participaram em etapas e áreas técnicas diferentes.\n\n"
         "**Pedro Vyctor Almeida** — estabeleceu a base inicial: o dataset original anotado, o "
         "protótipo web inicial (`Site.py`, um app Streamlit compacto com upload de imagem e busca "
         "regional de imagens de satélite) e o primeiro experimento de treinamento, `exp1`.\n\n"
-        "**Carlos Antonio dos Santos Roth Gorham** — propôs o conceito de automação geoespacial "
-        "para a descoberta de helipontos e contribuiu para o início dessa direção de implementação.\n\n"
         "**Fabiana ⚡️ Campanari** — desenvolvimento subsequente, expansão, integração, avaliação e "
         "consolidação da plataforma final:\n\n"
         "*Dados e automação geoespacial*\n"
@@ -916,7 +912,7 @@ TR = {
         "- storytelling visual, elementos interativos e integração da trilha sonora;\n"
         "- pesquisa de mercado sobre presença e atividade de helicópteros, incluindo o ranking "
         "comparativo internacional usado para contextualizar a relevância prática do projeto.\n\n"
-        "Os três colaboradores continuam creditados por suas respectivas contribuições. Veja a "
+        "Os dois colaboradores continuam creditados por suas respectivas contribuições. Veja a "
         "seção **Contribution Attribution** do `README.md` para o mesmo detalhamento."
     ),
 },
@@ -997,7 +993,7 @@ TR = {
 "about.course": {"en": "Course", "pt": "Disciplina"},
 "about.professor": {"en": "Professor", "pt": "Professor"},
 "about.authors": {"en": "Author", "pt": "Autor"},
-"about.collaborators": {"en": "Collaborators", "pt": "Colaboradores"},
+"about.collaborators": {"en": "Collaborator", "pt": "Colaborador"},
 
 # Demo videos. Split across two locations, each next to its relevant
 # content: the scraping-bot demo sits in About (right below the credits),
@@ -1129,12 +1125,12 @@ TR = {
     "metrics.netron_expander": {"en": "🧠 Preview architecture inline", "pt": "🧠 Prévia da arquitetura aqui"},
     "metrics.netron_load_button": {"en": "▶ Load preview (fetches from netron.app)", "pt": "▶ Carregar prévia (busca do netron.app)"},
     "metrics.outperformed": {
-        "en": "**{exp}** scored higher than exp1 on mAP@50-95 ({delta}); not a controlled comparison.",
-        "pt": "**{exp}** teve resultado superior ao exp1 em mAP@50-95 ({delta}); comparação não controlada.",
+        "en": "**{exp}** scored higher than exp1 on mAP@50-95 ({delta}).",
+        "pt": "**{exp}** teve resultado superior ao exp1 em mAP@50-95 ({delta}).",
     },
     "metrics.underperformed": {
-        "en": "**{exp}** scored lower than exp1 on mAP@50-95 ({delta}); not a controlled comparison.",
-        "pt": "**{exp}** teve resultado inferior ao exp1 em mAP@50-95 ({delta}); comparação não controlada.",
+        "en": "**{exp}** scored lower than exp1 on mAP@50-95 ({delta}).",
+        "pt": "**{exp}** teve resultado inferior ao exp1 em mAP@50-95 ({delta}).",
     },
     "metrics.tied": {
         "en": "**{exp}** is essentially tied with exp1 (Δ {delta}).",
@@ -1150,17 +1146,19 @@ TR = {
               "Diferenças pequenas em um dataset de 226 imagens estão dentro do ruído esperado e não devem ser "
               "atribuídas a um único fator, como o número de épocas.",
     },
-    "lineage.expander": {"en": "🧬 Data lineage & limitations", "pt": "🧬 Linhagem dos dados e limitações"},
+    "lineage.expander": {"en": "Data lineage & limitations", "pt": "Linhagem dos dados e limitações"},
+    "metrics.band.vs_exp1": {"en": "{exp} vs. exp1", "pt": "{exp} vs. exp1"},
+    "metrics.band.caution": {"en": "Read with caution", "pt": "Leia com cautela"},
     "lineage.body": {
         "en": "- **Annotated dataset (version 2):** 226 images — 178 train / 34 validation / 14 test. Version 2 has no data augmentation; only the exp3 fork does.\n"
               "- **Labels:** mostly polygons (170 of 178 training label files and all validation/test files), converted to boxes for detection training. Three training label files mix polygons and boxes and are flagged by Ultralytics 8.4.163.\n"
               "- **Field run:** 7,943 tiles in the production run (10 neighborhoods); the comparison set has 7,767 region × tile pairs and 5,540 distinct tiles.\n"
-              "- **Overlap:** 125 of the 225 annotated images with coordinates are copies of field tiles (2.3% of the 5,540 distinct tiles), so the field run is not fully independent of the annotated set. See `reports/lineage_audit/`.\n"
+              "- **Overlap:** 125 of the 225 annotated images with coordinates are copies of field tiles (2.3% of the 5,540 distinct tiles), so the field run is not fully independent of the annotated set. See [reports/lineage_audit/](https://github.com/Mindful-AI-Research/3-project-ai-ml-yolo-helipad_detector/blob/main/reports/lineage_audit/README.md).\n"
               "- **Detection rate is not precision or recall:** field detection rates have no ground-truth labels behind them.",
         "pt": "- **Dataset anotado (versão 2):** 226 imagens — 178 treino / 34 validação / 14 teste. A versão 2 não tem aumento de dados; só o fork do exp3 tem.\n"
               "- **Rótulos:** majoritariamente polígonos (170 dos 178 arquivos de treino e todos os de validação e teste), convertidos em caixas no treino de detecção. Três arquivos de rótulo do treino misturam polígono e caixa e são sinalizados pelo Ultralytics 8.4.163.\n"
               "- **Execução de campo:** 7.943 tiles na execução de produção (10 bairros); o conjunto de comparação tem 7.767 pares região × tile e 5.540 tiles distintos.\n"
-              "- **Sobreposição:** 125 das 225 imagens anotadas com coordenadas são cópias de tiles de campo (2,3% dos 5.540 tiles distintos); portanto, a execução de campo não é totalmente independente do conjunto anotado. Ver `reports/lineage_audit/`.\n"
+              "- **Sobreposição:** 125 das 225 imagens anotadas com coordenadas são cópias de tiles de campo (2,3% dos 5.540 tiles distintos); portanto, a execução de campo não é totalmente independente do conjunto anotado. Ver [reports/lineage_audit/](https://github.com/Mindful-AI-Research/3-project-ai-ml-yolo-helipad_detector/blob/main/reports/lineage_audit/README.md).\n"
               "- **Taxa de detecção não é precisão nem recall:** as taxas de campo não têm rótulos de referência por trás.",
     },
     "metrics.evolution": {"en": "#### 📈 Metric evolution per epoch", "pt": "#### 📈 Evolução da métrica por época"},
@@ -3292,6 +3290,39 @@ model = get_selected_model()
 # panel at the bottom) — only the visual display moved, not the data load.
 metrics_df = load_experiment_metrics()
 
+# ========================= COMPARISON BANDS (metrics tab) =========================
+# Palette tied to the project's visual identity (blue/teal on dark): green marks the
+# production model (exp2), blue the other experiments, mustard the methodological caution.
+import re as _re
+
+_BAND_STYLES = {
+    "green":   ("#22C55E", "rgba(34,197,94,0.13)",  "#86EFAC"),
+    "blue":    ("#3B82F6", "rgba(59,130,246,0.13)", "#93C5FD"),
+    "mustard": ("#D9A21B", "rgba(217,162,27,0.15)", "#F2CF75"),
+}
+
+
+def render_band(kind: str, label: str, message: str) -> None:
+    """Renders one tinted comparison band: accent bar, small caps label, body text."""
+    accent, tint, label_color = _BAND_STYLES[kind]
+    body = _re.sub(r"\*\*(.+?)\*\*", r"<b>\1</b>", message)
+    st.markdown(
+        f'''
+        <div style="display:flex; align-items:stretch; margin:10px 0; border-radius:12px; overflow:hidden;
+                    border:1px solid {tint}; background:linear-gradient(90deg,{tint},rgba(255,255,255,0.025));
+                    box-shadow:0 2px 10px rgba(0,0,0,0.18);">
+            <div style="width:5px; background:{accent}; flex:none;"></div>
+            <div style="padding:12px 18px;">
+                <div style="font-size:11px; letter-spacing:.16em; text-transform:uppercase; font-weight:700;
+                            color:{label_color}; margin-bottom:3px;">{label}</div>
+                <div style="font-size:14.5px; line-height:1.55; color:#E2E8F0;">{body}</div>
+            </div>
+        </div>
+        ''',
+        unsafe_allow_html=True,
+    )
+
+
 tab_about, tab_metrics, tab_field, tab4, tab_flights, tab2, tab3, tab1, tab5, tab6, tab7 = st.tabs([
     t("tabs.about"), t("tabs.metrics"), t("tabs.field"), t("tabs.map"), t("tabs.flights"),
     t("tabs.search"), t("tabs.samples"), t("tabs.upload"),
@@ -4390,7 +4421,7 @@ with tab_about:
                     </td></tr>
                 <tr><td style="padding:6px 0; color:#93C5FD; vertical-align:top;">{t("about.collaborators")}</td>
                     <td style="padding:6px 0;">
-                        Carlos Antonio dos Santos Roth Gorham · <a href="https://github.com/ppvyctor/Helipoint-Detector" target="_blank" style="color:#5EEAD4;">Pedro Vyctor Almeida</a>
+                        <a href="https://github.com/ppvyctor/Helipoint-Detector" target="_blank" style="color:#5EEAD4;">Pedro Vyctor Almeida</a>
                     </td></tr>
             </table>
         </div>
@@ -4596,14 +4627,16 @@ with tab_metrics:
                 if row["Experiment"] == "exp1":
                     continue
                 delta = row["mAP@50-95"] - exp1_row["mAP@50-95"]
-                if delta > 0.005:
-                    st.success(t("metrics.outperformed").format(exp=row['Experiment'], delta=f"{delta:+.4f}"))
-                elif delta < -0.005:
-                    st.warning(t("metrics.underperformed").format(exp=row['Experiment'], delta=f"{delta:+.4f}"))
-                else:
-                    st.info(t("metrics.tied").format(exp=row['Experiment'], delta=f"{delta:+.4f}"))
+                _msg_key = ("metrics.outperformed" if delta > 0.005
+                            else "metrics.underperformed" if delta < -0.005
+                            else "metrics.tied")
+                render_band(
+                    "green" if row["Experiment"] == "exp2" else "blue",
+                    t("metrics.band.vs_exp1").format(exp=str(row["Experiment"]).upper()),
+                    t(_msg_key).format(exp=row["Experiment"], delta=f"{delta:+.4f}"),
+                )
 
-        st.warning(t("metrics.not_controlled"))
+        render_band("mustard", t("metrics.band.caution"), t("metrics.not_controlled"))
         with st.expander(t("lineage.expander"), expanded=False):
             st.markdown(t("lineage.body"))
             st.caption(t("detection.disclaimer"))
