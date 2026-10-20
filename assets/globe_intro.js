@@ -83,15 +83,29 @@
     var id = cfg.id || 'map';
     var storeKey = 'hd_globe_seen:' + id;
     var dbg = makeDbg(!!cfg.debug, id);
-    dbg('engine v2 started (replay on re-entry, ' + (cfg.durationMs || 11000) + ' ms, force=' + !!cfg.force + ')');
+    dbg('engine v2 started (replay on re-entry, ' + (cfg.durationMs || 15000) + ' ms, force=' + !!cfg.force + ')');
     var target = cfg.target || [-23.5505, -46.6333];
-    var duration = cfg.durationMs || 11000;   // slower dive (was 5.2 s); override with ?globe_ms=14000
+    var duration = cfg.durationMs || 15000;   // slow dive (was 5.2 s); override with ?globe_ms=20000
     var tealCss = cfg.pointColor || '#14b8a6';
     var markerCss = cfg.markerColor || '#ff2500';
 
     global.__hdGlobeRunning = global.__hdGlobeRunning || {};
     global.__hdGlobeDone = global.__hdGlobeDone || {};
-    if (global.__hdGlobeRunning[id] || global.__hdGlobeDone[id]) { dbg('skip: already ran in this frame'); return; }   // re-render in same frame
+    global.__hdGlobeStop = global.__hdGlobeStop || {};
+    global.__hdGlobeDisarm = global.__hdGlobeDisarm || {};
+    global.__hdGlobeLast = global.__hdGlobeLast || {};
+    // This script can be executed again inside the SAME window (Streamlit re-injects the map HTML on a
+    // rerun, e.g. when the PT/EN language is switched). Always play again, except: (a) it is running right
+    // now with the same language, or (b) it finished a moment ago with the same language (double execution).
+    try { if (global.__hdGlobeDisarm[id]) { global.__hdGlobeDisarm[id](); global.__hdGlobeDisarm[id] = null; } } catch (e) {}
+    var prev = global.__hdGlobeLast[id] || {};
+    if (global.__hdGlobeRunning[id]) {
+      if (prev.lang !== cfg.lang && global.__hdGlobeStop[id]) { dbg('language changed while playing: restarting'); global.__hdGlobeStop[id](); }
+      else { dbg('skip: already playing in this frame'); return; }
+    } else if (cfg.replay === false && global.__hdGlobeDone[id]) { dbg('skip: replay disabled'); return; }
+    else if (prev.lang === cfg.lang && (Date.now() - (prev.t || 0)) < (cfg.minGapMs != null ? cfg.minGapMs : 2500)) { dbg('skip: just played'); return; }
+    global.__hdGlobeDone[id] = false;
+    global.__hdGlobeLast[id] = { lang: cfg.lang, t: 0 };
     // cfg.force (URL ?globe=force) ignores the once-per-session flag and prefers-reduced-motion — handy to debug why the intro does not show.
     try { if (cfg.once && !cfg.force && cfg.debugT == null && global.sessionStorage.getItem(storeKey) === '1') { dbg('skip: already seen in this browser tab session (open a NEW tab / private window, or add ?globe=force)'); return; } } catch (e) { dbg('sessionStorage unavailable: ' + e); }
     // prefers-reduced-motion: instead of skipping, play a calm variant — a STILL globe already facing
@@ -145,6 +159,7 @@
     (document.body || document.documentElement).appendChild(overlay);
 
     var finished = false, raf = 0, renderer = null, scene = null, disposeList = [];
+    global.__hdGlobeStop[id] = function () { finish(false, false); };
 
     function cleanup() {
       try { cancelAnimationFrame(raf); } catch (e) {}
@@ -167,6 +182,7 @@
         try { if (io) io.disconnect(); } catch (e) {}
         try { document.removeEventListener('visibilitychange', onVis); } catch (e) {}
         global.__hdGlobeDone[id] = false;
+        global.__hdGlobeLast[id] = { lang: cfg.lang, t: 0 };   // a deliberate re-entry is never treated as a double execution
         dbg('replay: map entered again');
         setTimeout(function () { global.HDGlobeIntro(cfg); }, 250);
       }
@@ -181,10 +197,15 @@
         }
       } catch (e) {}
       document.addEventListener('visibilitychange', onVis);
+      global.__hdGlobeDisarm[id] = function () {
+        fired = true;
+        try { if (io) io.disconnect(); } catch (e) {}
+        try { document.removeEventListener('visibilitychange', onVis); } catch (e) {}
+      };
     }
     function finish(quick, markSeen) {
       if (finished) return; finished = true;
-      if (markSeen) { global.__hdGlobeDone[id] = true; if (cfg.once) { try { global.sessionStorage.setItem(storeKey, '1'); } catch (e) {} } if (cfg.replay !== false) armReplay(); }
+      if (markSeen) { global.__hdGlobeDone[id] = true; global.__hdGlobeLast[id] = { lang: cfg.lang, t: Date.now() }; if (cfg.once) { try { global.sessionStorage.setItem(storeKey, '1'); } catch (e) {} } if (cfg.replay !== false) armReplay(); }
       if (quick) {
         overlay.style.transition = 'opacity 240ms ease';
         overlay.style.opacity = '0';
