@@ -22,6 +22,11 @@
 <h1 align="center">🚁 $$\Huge{\textbf{\color{#8B0000}{Heli}}\textbf{\color{#A31319}{pad}}\space\textbf{\color{#B71C1C}{Detec}}\textbf{\color{#C62828}{tor}}}$$</h1>
 
 
+<h1 align="center">🚁 $$\Huge{\textbf{\color{#FFFFFF}{Helipad}}\space\textbf{\color{#8B0000}{D}}\textbf{\color{#991414}{e}}\textbf{\color{#A61B1B}{t}}\textbf{\color{#B32222}{e}}\textbf{\color{#C62828}{c}}\textbf{\color{#D32F2F}{t}}\textbf{\color{#C62828}{o}}\textbf{\color{#B71C1C}{r}}}$$</h1>
+
+<h align="center">🚁 $$\Huge{\textbf{\color{#FFFFFF}{Helipad}}\space\textbf{\color{#B22222}{D}}\textbf{\color{#A61B1B}{e}}\textbf{\color{#9A1515}{t}}\textbf{\color{#8E1010}{e}}\textbf{\color{#820B0B}{c}}\textbf{\color{#760606}{t}}\textbf{\color{#6A0000}{o}}\textbf{\color{#7A0808}{r}}}$$</h1>
+
+
 
 <h2 align="center"> 🚁 $$\Huge{\textbf{\color{#FFFFFF}{Helipad}}\space\textbf{\color{#FF0000}{Detector}}}$$ </h2>
 
@@ -35,7 +40,9 @@
 
 <h2 align="center">🚁 $$\Huge{\textbf{\color{#8B0000}{Heli}}\textbf{\color{#A31319}{pad}}\space\textbf{\color{#B71C1C}{Detec}}\textbf{\color{#C62828}{tor}}}$$</h2>
 
+<h2 align="center">🚁 $$\Huge{\textbf{\color{#FFFFFF}{Helipad}}\space\textbf{\color{#8B0000}{D}}\textbf{\color{#991414}{e}}\textbf{\color{#A61B1B}{t}}\textbf{\color{#B32222}{e}}\textbf{\color{#C62828}{c}}\textbf{\color{#D32F2F}{t}}\textbf{\color{#C62828}{o}}\textbf{\color{#B71C1C}{r}}}$$</h2>
 
+<h2 align="center">🚁 $$\Huge{\textbf{\color{#FFFFFF}{Helipad}}\space\textbf{\color{#B22222}{D}}\textbf{\color{#A61B1B}{e}}\textbf{\color{#9A1515}{t}}\textbf{\color{#8E1010}{e}}\textbf{\color{#820B0B}{c}}\textbf{\color{#760606}{t}}\textbf{\color{#6A0000}{o}}\textbf{\color{#7A0808}{r}}}$$</h2>
 
 
 
