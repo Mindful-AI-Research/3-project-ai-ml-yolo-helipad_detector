@@ -9,7 +9,6 @@ import plotly.graph_objects as go
 import folium
 from folium.plugins import HeatMap
 from streamlit_folium import st_folium
-import streamlit.components.v1 as components
 import base64
 import io
 import json
@@ -1690,7 +1689,7 @@ def _force_leaflet_fit_bounds(fmap: folium.Map, bounds: list) -> None:
 # two unrelated renderers, so there is no pixel-continuous transition — the
 # overlay is a cover that fades out over a map that is already loaded
 # underneath. The overlay lives INSIDE the map's own HTML, so it works the same
-# for st_folium(...) and components.html(...). It plays once per browser
+# for st_folium(...) and st.iframe(...). It plays once per browser
 # session per map, starts only when the map is actually visible (Streamlit
 # keeps hidden tabs mounted), skips itself on prefers-reduced-motion / no
 # WebGL / three.js failing to load, and has a "Skip" button.
@@ -1792,7 +1791,7 @@ def add_globe_intro(fmap: "folium.Map", map_id: str, *, points=None, caption: st
         # handler never ran (inline event-handler attributes can be blocked), so the intro silently
         # never started. Now the engine is delivered as a real map <script> through a folium
         # MacroElement: st_folium injects every child's script() output as an inline script block
-        # (exactly how the map itself is built) and components.html() renders it in the page body,
+        # (exactly how the map itself is built) and st.iframe() renders it in the page body,
         # so one mechanism covers all 3 maps and needs no inline handlers.
         boot_code = (
             "try{var _m=document.getElementById('hd-globe-dbg-static');if(_m){_m.textContent+=' | script ran';}" + js + "\n;window.HDGlobeIntro(" + cfg_json + ");}"
@@ -2646,7 +2645,7 @@ def render_music_toggle():
     label_play = t("sidebar.music.play")
     label_pause = t("sidebar.music.pause")
 
-    components.html(f"""
+    st.iframe(f"""
     <button id="music-toggle-btn" title="{label_play}" style="
       width:100%; display:flex; align-items:center; justify-content:center; gap:10px;
       background:#0E756D; color:#fff; border:1.5px solid #14b8a6; border-radius:12px;
@@ -2737,7 +2736,7 @@ def render_music_toggle():
                 data=f,
                 file_name="passacaglia-deep-house-remix.mp3",
                 mime="audio/mpeg",
-                use_container_width=True,
+                width="stretch",
             )
 
 
@@ -2761,18 +2760,18 @@ with st.sidebar:
     with st.expander(t("sidebar.extras"), expanded=False):
         heli_col1, heli_col2 = st.columns(2)
         with heli_col1:
-            if st.button("🚁 " + t("sidebar.replay_heli"), use_container_width=True):
+            if st.button("🚁 " + t("sidebar.replay_heli"), width="stretch"):
                 st.session_state["heli_replay_nonce"] += 1
                 st.session_state["heli_paused"] = False
                 st.rerun()
         with heli_col2:
-            if st.button("🌀 " + t("sidebar.spin_heli"), use_container_width=True):
+            if st.button("🌀 " + t("sidebar.spin_heli"), width="stretch"):
                 st.session_state["heli_spin_nonce"] += 1
                 st.rerun()
 
         pause_label = t("sidebar.resume_heli") if st.session_state["heli_paused"] else t("sidebar.pause_heli")
         pause_icon = "▶️" if st.session_state["heli_paused"] else "⏸️"
-        if st.button(f"{pause_icon} {pause_label}", use_container_width=True):
+        if st.button(f"{pause_icon} {pause_label}", width="stretch"):
             st.session_state["heli_paused"] = not st.session_state["heli_paused"]
             st.rerun()
 
@@ -2865,7 +2864,7 @@ if "heli_replay_nonce" not in st.session_state:
 if "heli_spin_nonce" not in st.session_state:
     st.session_state["heli_spin_nonce"] = 0
 
-components.html(f"""
+st.iframe(f"""
 <script>
 (function() {{
   try {{
@@ -3063,7 +3062,7 @@ components.html(f"""
   }} catch (e) {{ /* cross-origin iframe — feature unavailable in this Streamlit setup */ }}
 }})();
 </script>
-""", height=0)
+""", height=1)
 
 
 # ---- Ambient starfield background, behind every tab (parent-document
@@ -3081,7 +3080,7 @@ components.html(f"""
 # mouse-reactive camera drifting slowly through a silver starfield — using
 # only CSS 3D transforms (perspective + rotateX/rotateY) driven by
 # requestAnimationFrame, with zero external dependencies.
-components.html("""
+st.iframe("""
 <script>
 (function() {
   try {
@@ -3218,7 +3217,7 @@ components.html("""
   } catch (e) { /* cross-origin iframe — feature unavailable in this Streamlit setup */ }
 })();
 </script>
-""", height=0)
+""", height=1)
 
 # ---- Animated count-up for headline numbers (parent-document injection,
 # same technique as everything else above) ----
@@ -3230,7 +3229,7 @@ components.html("""
 # periodically so it also catches cards that appear later — e.g. after
 # switching to a tab that wasn't rendered yet, or the field-summary cards
 # once their async data loads.
-components.html("""
+st.iframe("""
 <script>
 (function() {
   try {
@@ -3274,7 +3273,7 @@ components.html("""
   } catch (e) { /* cross-origin iframe — feature unavailable in this Streamlit setup */ }
 })();
 </script>
-""", height=0)
+""", height=1)
 
 # ---- Opening epigraph — condensed Passacaglia manifesto, shown before the
 # title so the visitor reads the conceptual frame ("we don't erase what
@@ -3361,11 +3360,11 @@ with tab1:
                 original = Image.open(image_file)
 
                 with col1:
-                    st.image(original, caption=t("upload.original_caption"), use_container_width=True)
+                    st.image(original, caption=t("upload.original_caption"), width="stretch")
 
                 with col2:
                     result_img, has_helipad = detect_helipad(original, model, conf_threshold)
-                    st.image(result_img, caption=t("upload.detection_caption"), use_container_width=True)
+                    st.image(result_img, caption=t("upload.detection_caption"), width="stretch")
                     if has_helipad:
                         st.success(t("upload.success"))
                     else:
@@ -3422,7 +3421,7 @@ with tab2:
             lat_max = st.number_input(t("search.lat_max"), value=-23.5536, format="%.6f", key="search_lat_max")
 
     zoom = st.slider(t("search.zoom"), 16, 20, 19)
-    search_btn = st.button(t("search.button"), type="primary", use_container_width=True)
+    search_btn = st.button(t("search.button"), type="primary", width="stretch")
 
     if search_btn:
         if model is None:
@@ -3506,13 +3505,13 @@ with tab2:
                             data=zip_buffer,
                             file_name="helipad_search_results.zip",
                             mime="application/zip",
-                            use_container_width=True,
+                            width="stretch",
                         )
 
                     cols = st.columns(3)
                     for idx, (img_array, filename) in enumerate(detected_tiles):
                         with cols[idx % 3]:
-                            st.image(img_array, caption=filename, use_container_width=True)
+                            st.image(img_array, caption=filename, width="stretch")
 
                             buf = io.BytesIO()
                             Image.fromarray(img_array).save(buf, format="PNG")
@@ -3553,7 +3552,7 @@ with tab3:
         preview_cols = st.columns(min(len(sample_files), 6))
         for i, path in enumerate(sample_files[:6]):
             with preview_cols[i % len(preview_cols)]:
-                st.image(str(path), use_container_width=True, caption=path.name)
+                st.image(str(path), width="stretch", caption=path.name)
         if len(sample_files) > 6:
             st.caption(t("samples.more").format(n=len(sample_files) - 6))
 
@@ -3563,7 +3562,7 @@ with tab3:
             st.markdown('<div class="sample-btn">', unsafe_allow_html=True)
             run_samples = st.button(
                 t("samples.run_button"),
-                use_container_width=True,
+                width="stretch",
             )
             st.markdown('</div>', unsafe_allow_html=True)
 
@@ -3581,7 +3580,7 @@ with tab3:
                 data=zip_buffer,
                 file_name="helipad_sample_images.zip",
                 mime="application/zip",
-                use_container_width=True,
+                width="stretch",
             )
 
         if run_samples:
@@ -3600,7 +3599,7 @@ with tab3:
                     if has_detection:
                         hits += 1
                     with result_cols[i % 3]:
-                        st.image(result_img, caption=path.name, use_container_width=True)
+                        st.image(result_img, caption=path.name, width="stretch")
                         if has_detection:
                             st.success(t("samples.detected"))
                         else:
@@ -3846,7 +3845,7 @@ with tab4:
 
         if landed_region:
             region_name_js = json.dumps(landed_region)
-            components.html(f"""
+            st.iframe(f"""
             <script>
             (function() {{
               try {{
@@ -3952,7 +3951,7 @@ with tab4:
               }} catch (e) {{ /* cross-origin iframe — feature unavailable in this Streamlit setup */ }}
             }})();
             </script>
-            """, height=0)
+            """, height=1)
 
         st.markdown(f"#### {t('map.raw_data_expander')}")
         with st.expander(t("map.raw_data_expander"), expanded=True):
@@ -3965,7 +3964,7 @@ with tab4:
                         r"\btrecho\b", _segment_word, regex=True, case=False
                     )
                 sp_df_display.index = range(1, len(sp_df_display) + 1)
-                st.dataframe(sp_df_display, use_container_width=True)
+                st.dataframe(sp_df_display, width="stretch")
             with t2:
                 other_df_display = other_df.copy()
                 if not other_df_display.empty:
@@ -3990,7 +3989,7 @@ with tab4:
                         + [c for c in other_df_display.columns if c not in _preferred_order]
                     ]
                     other_df_display.index = range(1, len(other_df_display) + 1)
-                st.dataframe(other_df_display, use_container_width=True)
+                st.dataframe(other_df_display, width="stretch")
 
         st.divider()
         col_density_title, col_density_toggle = st.columns([4, 1])
@@ -4033,7 +4032,7 @@ with tab4:
             # component that negotiates its iframe height with the browser on mount, and
             # that handshake was unreliable as the *second* such component on this tab
             # (it kept rendering at 0 height until some later rerun, e.g. toggling Dark
-            # mode, happened to re-trigger it). components.html() just embeds static HTML
+            # mode, happened to re-trigger it). st.iframe() just embeds static HTML
             # in a fixed-height iframe, no handshake needed, so it always paints on the
             # very first render.
             add_globe_intro(
@@ -4041,7 +4040,7 @@ with tab4:
                 points=other_df.reindex(columns=["lat", "lon"]).values.tolist(),
                 caption=t("globe.caption.density"),
             )
-            components.html(dark_map.get_root().render(), height=550, scrolling=False)
+            st.iframe(dark_map.get_root().render(), height=550)
 
 # ====================== TAB: Live Traffic (Beta) ======================
 with tab_flights:
@@ -4216,7 +4215,7 @@ with tab5:
     st.markdown(f"### {t('pipeline.flowchart_header')}")
     _pipeline_svg_path = Path("assets/pipeline_diagram.svg")
     if _pipeline_svg_path.exists():
-        st.image(str(_pipeline_svg_path), use_container_width=True)
+        st.image(str(_pipeline_svg_path), width="stretch")
     else:
         st.info(t("pipeline.diagram_missing_asset"))
 
@@ -4290,7 +4289,15 @@ with tab6:
 # ====================== TAB: About ======================
 with tab_about:
     st.header(t("about.header"))
-    st.markdown(t("about.body_intro"))
+    _about_intro = t("about.body_intro").replace(
+        "**Helipad Detector**",
+        '<span style="font-family:Georgia,\'Times New Roman\',serif;font-weight:700;font-size:1.25em;">'
+        '<span style="color:#FFFFFF;">Helipad</span> '
+        '<span style="background:linear-gradient(135deg,#7F1D1D 0%,#DC2626 55%,#EF4444 100%);'
+        '-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:#DC2626;">Detector</span></span>',
+        1,
+    )
+    st.markdown(_about_intro, unsafe_allow_html=True)
 
     # ---- Global Context — helicopter air mobility worldwide ----
     # Not a ranking (see the [!NOTE] below), so this deliberately does NOT
@@ -4394,7 +4401,7 @@ with tab_about:
                 })
                 st.dataframe(
                     style_rows_by_cycle(_display_df, cycle=10),
-                    use_container_width=True, hide_index=True, height=420,
+                    width="stretch", hide_index=True, height=420,
                 )
             else:
                 st.caption(t("about.discovery.pending"))
@@ -4456,14 +4463,14 @@ with tab7:
         if EXEC_REPORT_EN.exists():
             with open(EXEC_REPORT_EN, "rb") as f:
                 st.download_button(t("dl.exec_en_button"), f, file_name=EXEC_REPORT_EN.name,
-                                    mime="application/pdf", use_container_width=True)
+                                    mime="application/pdf", width="stretch")
         else:
             st.caption(t("dl.not_found").format(path=EXEC_REPORT_EN))
 
         if EXEC_REPORT_PT.exists():
             with open(EXEC_REPORT_PT, "rb") as f:
                 st.download_button(t("dl.exec_pt_button"), f, file_name=EXEC_REPORT_PT.name,
-                                    mime="application/pdf", use_container_width=True)
+                                    mime="application/pdf", width="stretch")
         else:
             st.caption(t("dl.not_found").format(path=EXEC_REPORT_PT))
 
@@ -4472,14 +4479,14 @@ with tab7:
         if DATASET_RAR.exists():
             with open(DATASET_RAR, "rb") as f:
                 st.download_button(t("dl.dataset_button"), f, file_name=DATASET_RAR.name,
-                                    mime="application/octet-stream", use_container_width=True)
+                                    mime="application/octet-stream", width="stretch")
         else:
             st.caption(t("dl.not_found").format(path=DATASET_RAR))
 
         if not metrics_df.empty:
             csv_bytes = metrics_df.drop(columns=["_dir"], errors="ignore").to_csv(index=False).encode("utf-8")
             st.download_button(t("dl.metrics_button"), csv_bytes, file_name="experiment_metrics.csv",
-                                mime="text/csv", use_container_width=True)
+                                mime="text/csv", width="stretch")
         else:
             st.caption(t("dl.no_metrics"))
 
@@ -4487,7 +4494,7 @@ with tab7:
         if FIELD_SUMMARY_PATH.exists():
             with open(FIELD_SUMMARY_PATH, "rb") as f:
                 st.download_button(t("dl.field_json_button"), f, file_name=FIELD_SUMMARY_PATH.name,
-                                    mime="application/json", use_container_width=True)
+                                    mime="application/json", width="stretch")
         else:
             st.caption(t("dl.not_found").format(path=FIELD_SUMMARY_PATH))
 
@@ -4504,18 +4511,18 @@ with tab7:
                 with open(_path, "rb") as f:
                     st.download_button(t(_label), f, file_name=_path.name,
                                        mime="application/vnd.openxmlformats-officedocument.presentationml.presentation",
-                                       use_container_width=True)
+                                       width="stretch")
             else:
                 st.caption(t("dl.not_found").format(path=_path))
     with pres_c3:
-        st.link_button(t("dl.html_presentation_button"), PRESENTATION_HTML_URL, use_container_width=True)
+        st.link_button(t("dl.html_presentation_button"), PRESENTATION_HTML_URL, width="stretch")
 
 
         TRIAGE_LOG_PATH = Path("reports/auto_triage_regions_log.txt")
         if TRIAGE_LOG_PATH.exists():
             with open(TRIAGE_LOG_PATH, "rb") as f:
                 st.download_button(t("dl.field_log_button"), f, file_name=TRIAGE_LOG_PATH.name,
-                                    mime="text/plain", use_container_width=True)
+                                    mime="text/plain", width="stretch")
         else:
             st.caption(t("dl.not_found").format(path=TRIAGE_LOG_PATH))
 
@@ -4535,7 +4542,7 @@ with tab7:
             data=st.session_state["session_pdf_bytes"],
             file_name=f"helipad_detector_session_{datetime.now().strftime('%Y%m%d_%H%M')}.pdf",
             mime="application/pdf",
-            use_container_width=True,
+            width="stretch",
         )
 
     st.markdown("---")
@@ -4615,7 +4622,7 @@ with tab_metrics:
             with st.expander(f"{t('metrics.netron_expander')} — {row['Experiment']}", expanded=True):
                 load_key = f"netron_loaded_{row['Experiment']}"
                 if st.session_state.get(load_key):
-                    components.iframe(netron_link, height=560, scrolling=True)
+                    st.iframe(netron_link, height=560)
                 else:
                     if st.button(t("metrics.netron_load_button"), key=f"netron_btn_{row['Experiment']}"):
                         st.session_state[load_key] = True
@@ -4635,7 +4642,7 @@ with tab_metrics:
         })
         st.dataframe(
             style_rows_by_value(_metrics_table_styler, "mAP@50-95"),
-            use_container_width=True,
+            width="stretch",
         )
 
         if n_exp >= 2 and "exp1" in metrics_df["Experiment"].values:
@@ -4680,7 +4687,7 @@ with tab_metrics:
                     height=320, margin=dict(l=10, r=10, t=10, b=10),
                     legend=dict(orientation="h", yanchor="bottom", y=1.02),
                 )
-                st.plotly_chart(fig, use_container_width=True)
+                st.plotly_chart(fig, width="stretch")
 
         # ---- Confusion matrix per experiment (real image already generated by YOLO) ----
         if not metrics_df.empty and "_dir" in metrics_df.columns:
@@ -4694,12 +4701,12 @@ with tab_metrics:
                 cm_col1, cm_col2 = st.columns(2)
                 with cm_col1:
                     if cm_path.exists():
-                        st.image(str(cm_path), caption=f"{cm_exp} — {t('metrics.cm_caption')}", use_container_width=True)
+                        st.image(str(cm_path), caption=f"{cm_exp} — {t('metrics.cm_caption')}", width="stretch")
                     else:
                         st.info(t("metrics.cm_not_found").format(path=cm_path.resolve()))
                 with cm_col2:
                     if cm_norm_path.exists():
-                        st.image(str(cm_norm_path), caption=f"{cm_exp} — {t('metrics.cm_norm_caption')}", use_container_width=True)
+                        st.image(str(cm_norm_path), caption=f"{cm_exp} — {t('metrics.cm_norm_caption')}", width="stretch")
                     else:
                         st.info(t("metrics.cm_norm_not_found").format(path=cm_norm_path.resolve()))
 
@@ -4817,7 +4824,7 @@ with tab_field:
                 yaxis_title=t("field.detection_rate_pct"), xaxis_title="",
                 height=340, margin=dict(l=10, r=10, t=10, b=10),
             )
-            st.plotly_chart(fig_regions, use_container_width=True)
+            st.plotly_chart(fig_regions, width="stretch")
 
             # Table is ranked by absolute helipads found (tiles_detected),
             # not by rate — rate and raw count don't always agree (e.g. a
@@ -4853,7 +4860,7 @@ with tab_field:
             _ranking_styler = regions_df_display.set_index(t("field.rank_col")).style.format({
                 t("field.rate_col"): "{:.1%}", t("field.top_confidence_col"): "{:.2f}",
             })
-            st.dataframe(style_rows_by_rank(_ranking_styler), use_container_width=True)
+            st.dataframe(style_rows_by_rank(_ranking_styler), width="stretch")
             st.caption(t("field.rate_definition"))
 
             if "Inter-Zone Corridor" in regions_df["region"].values:
@@ -4904,7 +4911,7 @@ with tab_field:
                 _comp_styler = comp_df.set_index("Region").style.format(
                     {e: "{:.1%}" for e in exp_names_sorted}, na_rep="—"
                 )
-                st.dataframe(style_rows_by_rank(_comp_styler), use_container_width=True)
+                st.dataframe(style_rows_by_rank(_comp_styler), width="stretch")
 
                 comp_totals = {
                     exp_name: summary.get("totals", {}).get("detection_rate", 0.0)
@@ -4937,7 +4944,7 @@ with tab_field:
 # Footer
 st.markdown("---")
 
-components.html("""
+st.iframe("""
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&display=swap" rel="stylesheet">
 <style>
   html, body { margin:0; padding:0; overflow:visible; background:transparent; }
