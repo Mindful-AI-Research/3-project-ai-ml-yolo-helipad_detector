@@ -23,10 +23,10 @@ text{font-family:Inter,"Segoe UI",Arial,sans-serif}
 <rect width="915" height="1618" fill="url(#gBg)"/>
 <g transform="translate(4 1558)">
 
-<rect x="257.0" y="-1546.0" width="282.0" height="465.0" rx="14" fill="#06090c" fill-opacity=".72" stroke="url(#gClus)" stroke-width=".6" stroke-dasharray="2 5"/>
-<rect x="231.0" y="-1073.0" width="334.0" height="311.0" rx="14" fill="#06090c" fill-opacity=".72" stroke="url(#gClus)" stroke-width=".6" stroke-dasharray="2 5"/>
-<rect x="282.0" y="-754.0" width="232.0" height="403.0" rx="14" fill="#06090c" fill-opacity=".72" stroke="url(#gClus)" stroke-width=".6" stroke-dasharray="2 5"/>
-<rect x="8.0" y="-343.0" width="891.0" height="335.0" rx="14" fill="#06090c" fill-opacity=".72" stroke="url(#gClus)" stroke-width=".6" stroke-dasharray="2 5"/>
+<rect x="257.0" y="-1546.0" width="282.0" height="465.0" rx="14" fill="#06090c" fill-opacity=".72"/>
+<rect x="231.0" y="-1073.0" width="334.0" height="311.0" rx="14" fill="#06090c" fill-opacity=".72"/>
+<rect x="282.0" y="-754.0" width="232.0" height="403.0" rx="14" fill="#06090c" fill-opacity=".72"/>
+<rect x="8.0" y="-343.0" width="891.0" height="335.0" rx="14" fill="#06090c" fill-opacity=".72"/>
 <path class="under" d="M398,-1478.98C398,-1470.76 398,-1460.64 398,-1451.17" stroke="url(#ge0)"/><path class="flow" d="M398,-1478.98C398,-1470.76 398,-1460.64 398,-1451.17" stroke="url(#ge0)"/><polygon class="head" points="400.8,-1451.08 398,-1443.08 395.2,-1451.08 400.8,-1451.08"/>
 <path class="under" d="M398,-1396.9C398,-1388.26 398,-1378.29 398,-1369.36" stroke="url(#ge1)"/><path class="flow" d="M398,-1396.9C398,-1388.26 398,-1378.29 398,-1369.36" stroke="url(#ge1)"/><polygon class="head" points="400.8,-1369.18 398,-1361.18 395.2,-1369.18 400.8,-1369.18"/>
 <path class="under" d="M398,-1324.98C398,-1316.76 398,-1306.64 398,-1297.17" stroke="url(#ge2)"/><path class="flow" d="M398,-1324.98C398,-1316.76 398,-1306.64 398,-1297.17" stroke="url(#ge2)"/><polygon class="head" points="400.8,-1297.08 398,-1289.08 395.2,-1297.08 400.8,-1297.08"/>
