@@ -1850,9 +1850,9 @@ def render_inference_demos(expanded: bool = False, default: str = "exp1") -> Non
             st.info(t("demos.inf.missing"))
 
 
-PRESENTATION_PPTX_EN = Path("presentations/Helipad_Detector_Presentation_EN.pptx")
-PRESENTATION_PPTX_PT = Path("presentations/Helipad_Detector_Apresentacao_PT-BR.pptx")
-PRESENTATION_HTML_URL = "https://harmonious-creponne-f11320.netlify.app/"
+PRESENTATION_PPTX_EN_URL = "https://github.com/Mindful-AI-Research/3-project-ai-ml-yolo-helipad_detector/blob/6a6429169e3be15936c10a98de749955a5c96c72/presentations/Helipad_Detector_Presentation_EN.pptx"
+PRESENTATION_PPTX_PT_URL = "https://github.com/Mindful-AI-Research/3-project-ai-ml-yolo-helipad_detector/blob/dcd6cd1f6497d949d01f6f35c403213a8e5f9365/presentations/Helipad_Detector_Apresentacao_PT-BR.pptx"
+PRESENTATION_HTML_URL = "https://timely-brioche-b6c92f.netlify.app/"
 
 
 # ========================= AUTOMATIC MODEL DISCOVERY =========================
@@ -4219,7 +4219,13 @@ with tab5:
     # dashed-line animation on the edges is embedded as CSS directly inside
     # the SVG file itself, so it still animates as a plain static image.
     st.markdown(f"### {t('pipeline.flowchart_header')}")
-    _pipeline_svg_path = Path("assets/pipeline_diagram.svg")
+    # Language-specific diagram (PT-BR / EN); falls back to the other one if missing.
+    _pipeline_svg_candidates = (
+        [Path("assets/pipeline_diagram_pt_BR.svg"), Path("assets/pipeline_diagram.svg")]
+        if st.session_state.get("lang", "en") == "pt"
+        else [Path("assets/pipeline_diagram.svg"), Path("assets/pipeline_diagram_pt_BR.svg")]
+    )
+    _pipeline_svg_path = next((p for p in _pipeline_svg_candidates if p.exists()), _pipeline_svg_candidates[0])
     if _pipeline_svg_path.exists():
         st.image(str(_pipeline_svg_path), width="stretch")
     else:
@@ -4508,18 +4514,11 @@ with tab7:
     st.markdown("---")
     st.markdown(t("dl.presentations"))
     pres_c1, pres_c2, pres_c3 = st.columns(3)
-    for _col, _path, _label in (
-        (pres_c1, PRESENTATION_PPTX_EN, "dl.pptx_en_button"),
-        (pres_c2, PRESENTATION_PPTX_PT, "dl.pptx_pt_button"),
-    ):
-        with _col:
-            if _path.exists():
-                with open(_path, "rb") as f:
-                    st.download_button(t(_label), f, file_name=_path.name,
-                                       mime="application/vnd.openxmlformats-officedocument.presentationml.presentation",
-                                       width="stretch")
-            else:
-                st.caption(t("dl.not_found").format(path=_path))
+    # PPTX files are linked at pinned GitHub commits (not bundled with the app).
+    with pres_c1:
+        st.link_button(t("dl.pptx_en_button"), PRESENTATION_PPTX_EN_URL, width="stretch")
+    with pres_c2:
+        st.link_button(t("dl.pptx_pt_button"), PRESENTATION_PPTX_PT_URL, width="stretch")
     with pres_c3:
         st.link_button(t("dl.html_presentation_button"), PRESENTATION_HTML_URL, width="stretch")
 
