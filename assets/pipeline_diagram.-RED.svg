@@ -1,0 +1,119 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 915 1618" width="915" height="1618" role="img" aria-labelledby="t d" lang="en">
+<title id="t">Helipad Detector pipeline</title>
+<desc id="d">End-to-end flow: geospatial discovery, visual acquisition, dataset engineering, modeling and validation.</desc>
+<defs>
+<linearGradient id="gStroke" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#0E8F84"/><stop offset=".45" stop-color="#6B5B4E"/><stop offset=".75" stop-color="#D32612"/><stop offset="1" stop-color="#FF1A1A"/></linearGradient>
+<linearGradient id="gClus" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#0E8F84" stop-opacity=".55"/><stop offset="1" stop-color="#FF1A1A" stop-opacity=".45"/></linearGradient>
+<linearGradient id="gFill" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0d141b"/><stop offset="1" stop-color="#080c11"/></linearGradient>
+<radialGradient id="gBg" cx=".5" cy=".3" r=".9"><stop offset="0" stop-color="#0a1115"/><stop offset="1" stop-color="#040608"/></radialGradient>
+<filter id="glow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="2.4"/></filter>
+<filter id="shadow" x="-20%" y="-30%" width="140%" height="170%"><feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#000" flood-opacity=".6"/></filter>
+</defs>
+<style>
+text{font-family:Inter,"Segoe UI",Arial,sans-serif}
+.cl{font-size:11.5px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;fill:#5EEAD4}
+.t1{font-size:12.5px;font-weight:600;fill:#F1F5F9}
+.t2{font-size:10.5px;fill:#94A3B8}
+.ft{font-size:10.5px;fill:#7C8A99;font-style:italic}
+.flow{stroke:#FF2D2D;stroke-width:2.2;fill:none;stroke-linecap:round;stroke-dasharray:6 6;animation:flow .9s linear infinite}
+.under{stroke:#FF1A1A;stroke-width:6;fill:none;opacity:.28;filter:url(#glow)}
+.head{fill:#FF2D2D}
+@keyframes flow{to{stroke-dashoffset:-12}}
+@media (prefers-reduced-motion:reduce){.flow{animation:none}}
+</style>
+<rect width="915" height="1618" fill="url(#gBg)"/>
+<g transform="translate(4 1558)">
+<rect x="257.0" y="-1546.0" width="282.0" height="465.0" rx="14" fill="#06090c" fill-opacity=".72" stroke="url(#gClus)" stroke-width="1.2" stroke-dasharray="2 5"/>
+<rect x="231.0" y="-1073.0" width="334.0" height="311.0" rx="14" fill="#06090c" fill-opacity=".72" stroke="url(#gClus)" stroke-width="1.2" stroke-dasharray="2 5"/>
+<rect x="282.0" y="-754.0" width="232.0" height="403.0" rx="14" fill="#06090c" fill-opacity=".72" stroke="url(#gClus)" stroke-width="1.2" stroke-dasharray="2 5"/>
+<rect x="8.0" y="-343.0" width="891.0" height="335.0" rx="14" fill="#06090c" fill-opacity=".72" stroke="url(#gClus)" stroke-width="1.2" stroke-dasharray="2 5"/>
+<path class="under" d="M398,-1478.98C398,-1470.76 398,-1460.64 398,-1451.17"/><path class="flow" d="M398,-1478.98C398,-1470.76 398,-1460.64 398,-1451.17"/><polygon class="head" points="400.8,-1451.08 398,-1443.08 395.2,-1451.08 400.8,-1451.08"/>
+<path class="under" d="M398,-1396.9C398,-1388.26 398,-1378.29 398,-1369.36"/><path class="flow" d="M398,-1396.9C398,-1388.26 398,-1378.29 398,-1369.36"/><polygon class="head" points="400.8,-1369.18 398,-1361.18 395.2,-1369.18 400.8,-1369.18"/>
+<path class="under" d="M398,-1324.98C398,-1316.76 398,-1306.64 398,-1297.17"/><path class="flow" d="M398,-1324.98C398,-1316.76 398,-1306.64 398,-1297.17"/><polygon class="head" points="400.8,-1297.08 398,-1289.08 395.2,-1297.08 400.8,-1297.08"/>
+<path class="under" d="M398,-1242.72C398,-1234.22 398,-1224.39 398,-1215.27"/><path class="flow" d="M398,-1242.72C398,-1234.22 398,-1224.39 398,-1215.27"/><polygon class="head" points="400.8,-1215.16 398,-1207.16 395.2,-1215.16 400.8,-1215.16"/>
+<path class="under" d="M398,-1160.9C398,-1152.26 398,-1142.29 398,-1133.36"/><path class="flow" d="M398,-1160.9C398,-1152.26 398,-1142.29 398,-1133.36"/><polygon class="head" points="400.8,-1133.18 398,-1125.18 395.2,-1133.18 400.8,-1133.18"/>
+<path class="under" d="M398,-1088.6C398,-1077.65 398,-1063.21 398,-1050.41"/><path class="flow" d="M398,-1088.6C398,-1077.65 398,-1063.21 398,-1050.41"/><polygon class="head" points="400.8,-1050.29 398,-1042.29 395.2,-1050.29 400.8,-1050.29"/>
+<path class="under" d="M398,-995.72C398,-987.22 398,-977.39 398,-968.27"/><path class="flow" d="M398,-995.72C398,-987.22 398,-977.39 398,-968.27"/><polygon class="head" points="400.8,-968.16 398,-960.16 395.2,-968.16 400.8,-968.16"/>
+<path class="under" d="M398,-913.9C398,-905.26 398,-895.29 398,-886.36"/><path class="flow" d="M398,-913.9C398,-905.26 398,-895.29 398,-886.36"/><polygon class="head" points="400.8,-886.18 398,-878.18 395.2,-886.18 400.8,-886.18"/>
+<path class="under" d="M398,-841.7C398,-833.39 398,-823.28 398,-814.14"/><path class="flow" d="M398,-841.7C398,-833.39 398,-823.28 398,-814.14"/><polygon class="head" points="400.8,-814.1 398,-806.1 395.2,-814.1 400.8,-814.1"/>
+<path class="under" d="M398,-769.82C398,-758.65 398,-743.9 398,-731.38"/><path class="flow" d="M398,-769.82C398,-758.65 398,-743.9 398,-731.38"/><polygon class="head" points="400.8,-731.15 398,-723.15 395.2,-731.15 400.8,-731.15"/>
+<path class="under" d="M398,-686.98C398,-678.76 398,-668.64 398,-659.17"/><path class="flow" d="M398,-686.98C398,-678.76 398,-668.64 398,-659.17"/><polygon class="head" points="400.8,-659.08 398,-651.08 395.2,-659.08 400.8,-659.08"/>
+<path class="under" d="M398,-604.72C398,-596.22 398,-586.39 398,-577.27"/><path class="flow" d="M398,-604.72C398,-596.22 398,-586.39 398,-577.27"/><polygon class="head" points="400.8,-577.16 398,-569.16 395.2,-577.16 400.8,-577.16"/>
+<path class="under" d="M398,-522.72C398,-514.22 398,-504.39 398,-495.27"/><path class="flow" d="M398,-522.72C398,-514.22 398,-504.39 398,-495.27"/><polygon class="head" points="400.8,-495.16 398,-487.16 395.2,-495.16 400.8,-495.16"/>
+<path class="under" d="M398,-440.72C398,-432.22 398,-422.39 398,-413.27"/><path class="flow" d="M398,-440.72C398,-432.22 398,-422.39 398,-413.27"/><polygon class="head" points="400.8,-413.16 398,-405.16 395.2,-413.16 400.8,-413.16"/>
+<path class="under" d="M398,-358.97C398,-347.32 398,-332.84 398,-320.17"/><path class="flow" d="M398,-358.97C398,-347.32 398,-332.84 398,-320.17"/><polygon class="head" points="400.8,-320.14 398,-312.14 395.2,-320.14 400.8,-320.14"/>
+<path class="under" d="M398,-265.72C398,-257.22 398,-247.39 398,-238.27"/><path class="flow" d="M398,-265.72C398,-257.22 398,-247.39 398,-238.27"/><polygon class="head" points="400.8,-238.16 398,-230.16 395.2,-238.16 400.8,-238.16"/>
+<path class="under" d="M316.72,-183.88C278.49,-173.3 232.32,-160.3 191,-148 190.52,-147.86 190.05,-147.72 189.57,-147.57"/><path class="flow" d="M316.72,-183.88C278.49,-173.3 232.32,-160.3 191,-148 190.52,-147.86 190.05,-147.72 189.57,-147.57"/><polygon class="head" points="190.18,-144.83 181.71,-145.21 188.57,-150.2 190.18,-144.83"/>
+<path class="under" d="M365.88,-183.82C352.22,-174.39 335.99,-163.19 320.9,-152.76"/><path class="flow" d="M365.88,-183.82C352.22,-174.39 335.99,-163.19 320.9,-152.76"/><polygon class="head" points="322.23,-150.28 314.06,-148.04 319.05,-154.89 322.23,-150.28"/>
+<path class="under" d="M430.38,-183.82C444.14,-174.39 460.5,-163.19 475.71,-152.76"/><path class="flow" d="M430.38,-183.82C444.14,-174.39 460.5,-163.19 475.71,-152.76"/><polygon class="head" points="477.59,-154.87 482.61,-148.04 474.42,-150.25 477.59,-154.87"/>
+<path class="under" d="M490.03,-190.39C549.62,-179.74 628.75,-164.6 698,-148 704.17,-146.52 710.54,-144.91 716.92,-143.22"/><path class="flow" d="M490.03,-190.39C549.62,-179.74 628.75,-164.6 698,-148 704.17,-146.52 710.54,-144.91 716.92,-143.22"/><polygon class="head" points="718.01,-145.83 725.01,-141.06 716.56,-140.42 718.01,-145.83"/>
+<path class="under" d="M525,-87.86C525,-78.88 525,-69.08 525,-60.37"/><path class="flow" d="M525,-87.86C525,-78.88 525,-69.08 525,-60.37"/><polygon class="head" points="527.8,-60.11 525,-52.11 522.2,-60.11 527.8,-60.11"/>
+<rect x="269.0" y="-1540.0" width="192" height="22" rx="11" fill="#06090c" stroke="url(#gClus)" stroke-width="1"/><text class="cl" x="279.0" y="-1525.0" text-anchor="start">Geospatial Discovery</text>
+<rect x="243.0" y="-1067.0" width="175" height="22" rx="11" fill="#06090c" stroke="url(#gClus)" stroke-width="1"/><text class="cl" x="253.0" y="-1052.0" text-anchor="start">Visual Acquisition</text>
+<rect x="294.0" y="-748.0" width="183" height="22" rx="11" fill="#06090c" stroke="url(#gClus)" stroke-width="1"/><text class="cl" x="304.0" y="-733.0" text-anchor="start">Dataset Engineering</text>
+<rect x="20.0" y="-337.0" width="218" height="22" rx="11" fill="#06090c" stroke="url(#gClus)" stroke-width="1"/><text class="cl" x="30.0" y="-322.0" text-anchor="start">Modeling and Validation</text>
+<g filter="url(#shadow)"><rect x="280.7" y="-1515.0" width="234.59999999999997" height="36.0" rx="9" fill="url(#gFill)" stroke="url(#gStroke)" stroke-width="1.6"/></g>
+<text class="t1" x="398.0" y="-1492.8" text-anchor="middle">FlightMarket / aviation website</text>
+<g filter="url(#shadow)"><rect x="297.5" y="-1443.0" width="201.0" height="46.0" rx="9" fill="url(#gFill)" stroke="url(#gStroke)" stroke-width="1.6"/></g>
+<text class="t1" x="398.0" y="-1423.0" text-anchor="middle">Selenium automation</text>
+<text class="t2" x="398.0" y="-1408.5" text-anchor="middle">src/geospatial/helipad_bot.py</text>
+<g filter="url(#shadow)"><rect x="297.2" y="-1361.0" width="201.60000000000002" height="36.0" rx="9" fill="url(#gFill)" stroke="url(#gStroke)" stroke-width="1.6"/></g>
+<text class="t1" x="398.0" y="-1338.8" text-anchor="middle">Helipad records + metadata</text>
+<g filter="url(#shadow)"><rect x="269.0" y="-1289.0" width="258.0" height="46.0" rx="9" fill="url(#gFill)" stroke="url(#gStroke)" stroke-width="1.6"/></g>
+<text class="t1" x="398.0" y="-1269.0" text-anchor="middle">Coordinates CSV</text>
+<text class="t2" x="398.0" y="-1254.5" text-anchor="middle">src/geospatial/helipad_coordinates.csv</text>
+<g filter="url(#shadow)"><rect x="265.5" y="-1207.0" width="265.0" height="46.0" rx="9" fill="url(#gFill)" stroke="url(#gStroke)" stroke-width="1.6"/></g>
+<text class="t1" x="398.0" y="-1187.0" text-anchor="middle">Coordinate conversion</text>
+<text class="t2" x="398.0" y="-1172.5" text-anchor="middle">src/geospatial/transform_coordinates.py</text>
+<g filter="url(#shadow)"><rect x="300.5" y="-1125.0" width="195.0" height="36.0" rx="9" fill="url(#gFill)" stroke="url(#gStroke)" stroke-width="1.6"/></g>
+<text class="t1" x="398.0" y="-1102.8" text-anchor="middle">Geographic bounding boxes</text>
+<g filter="url(#shadow)"><rect x="323.6" y="-1042.0" width="148.79999999999995" height="46.0" rx="9" fill="url(#gFill)" stroke="url(#gStroke)" stroke-width="1.6"/></g>
+<text class="t1" x="398.0" y="-1022.0" text-anchor="middle">ESRI World Imagery</text>
+<text class="t2" x="398.0" y="-1007.5" text-anchor="middle">XYZ tile download</text>
+<g filter="url(#shadow)"><rect x="239.0" y="-960.0" width="318.0" height="46.0" rx="9" fill="url(#gFill)" stroke="url(#gStroke)" stroke-width="1.6"/></g>
+<text class="t1" x="398.0" y="-940.0" text-anchor="middle">Image mosaics by region</text>
+<text class="t2" x="398.0" y="-925.5" text-anchor="middle">src/geospatial/geospatial_image_collection.ipynb</text>
+<g filter="url(#shadow)"><rect x="317.0" y="-878.0" width="162.0" height="36.0" rx="9" fill="url(#gFill)" stroke="url(#gStroke)" stroke-width="1.6"/></g>
+<text class="t1" x="398.0" y="-855.8" text-anchor="middle">Manual visual triage</text>
+<g filter="url(#shadow)"><rect x="287.3" y="-806.0" width="221.39999999999998" height="36.0" rx="9" fill="url(#gFill)" stroke="url(#gStroke)" stroke-width="1.6"/></g>
+<text class="t1" x="398.0" y="-783.8" text-anchor="middle">Selected images with helipads</text>
+<g filter="url(#shadow)"><rect x="333.5" y="-723.0" width="129.0" height="36.0" rx="9" fill="url(#gFill)" stroke="url(#gStroke)" stroke-width="1.6"/></g>
+<text class="t1" x="398.0" y="-700.8" text-anchor="middle">Roboflow upload</text>
+<g filter="url(#shadow)"><rect x="307.1" y="-651.0" width="181.79999999999995" height="46.0" rx="9" fill="url(#gFill)" stroke="url(#gStroke)" stroke-width="1.6"/></g>
+<text class="t1" x="398.0" y="-631.0" text-anchor="middle">Bounding box annotation</text>
+<text class="t2" x="398.0" y="-616.5" text-anchor="middle">single class: helipad</text>
+<g filter="url(#shadow)"><rect x="287.3" y="-569.0" width="221.39999999999998" height="46.0" rx="9" fill="url(#gFill)" stroke="url(#gStroke)" stroke-width="1.6"/></g>
+<text class="t1" x="398.0" y="-549.0" text-anchor="middle">Preprocessing: resize 640×640</text>
+<text class="t2" x="398.0" y="-534.5" text-anchor="middle">augmentation only in exp3 fork</text>
+<g filter="url(#shadow)"><rect x="326.0" y="-487.0" width="144.0" height="46.0" rx="9" fill="url(#gFill)" stroke="url(#gStroke)" stroke-width="1.6"/></g>
+<text class="t1" x="398.0" y="-467.1" text-anchor="middle">Dataset split</text>
+<text class="t2" x="398.0" y="-452.6" text-anchor="middle">train / valid / test</text>
+<g filter="url(#shadow)"><rect x="330.5" y="-405.0" width="135.0" height="46.0" rx="9" fill="url(#gFill)" stroke="url(#gStroke)" stroke-width="1.6"/></g>
+<text class="t1" x="398.0" y="-385.1" text-anchor="middle">YOLO export</text>
+<text class="t2" x="398.0" y="-370.6" text-anchor="middle">data.yaml + labels</text>
+<g filter="url(#shadow)"><rect x="294.5" y="-312.0" width="207.0" height="46.0" rx="9" fill="url(#gFill)" stroke="url(#gStroke)" stroke-width="1.6"/></g>
+<text class="t1" x="398.0" y="-292.1" text-anchor="middle">Google Colab training</text>
+<text class="t2" x="398.0" y="-277.6" text-anchor="middle">Ultralytics YOLOv8 / YOLOv11</text>
+<g filter="url(#shadow)"><rect x="253.0" y="-230.0" width="290.0" height="46.0" rx="9" fill="url(#gFill)" stroke="url(#gStroke)" stroke-width="1.6"/></g>
+<text class="t1" x="398.0" y="-210.1" text-anchor="middle">Runs, weights and metrics</text>
+<text class="t2" x="398.0" y="-195.6" text-anchor="middle">artifacts/runs/detect/*/weights/best.pt</text>
+<g filter="url(#shadow)"><rect x="8.100000000000009" y="-148.0" width="181.79999999999995" height="60.0" rx="9" fill="url(#gFill)" stroke="url(#gStroke)" stroke-width="1.6"/></g>
+<text class="t1" x="99.0" y="-128.3" text-anchor="middle">Quantitative evaluation</text>
+<text class="t2" x="99.0" y="-113.8" text-anchor="middle">mAP, Precision, Recall,</text>
+<text class="t2" x="99.0" y="-99.3" text-anchor="middle">confusion matrix</text>
+<g filter="url(#shadow)"><rect x="191.0" y="-148.0" width="162.0" height="60.0" rx="9" fill="url(#gFill)" stroke="url(#gStroke)" stroke-width="1.6"/></g>
+<text class="t1" x="272.0" y="-128.3" text-anchor="middle">Qualitative analysis</text>
+<text class="t2" x="272.0" y="-113.8" text-anchor="middle">hits, false positives,</text>
+<text class="t2" x="272.0" y="-99.3" text-anchor="middle">false negatives</text>
+<g filter="url(#shadow)"><rect x="361.5" y="-148.0" width="327.0" height="60.0" rx="9" fill="url(#gFill)" stroke="url(#gStroke)" stroke-width="1.6"/></g>
+<text class="t1" x="525.0" y="-128.3" text-anchor="middle">Field validation on unseen regions</text>
+<text class="t2" x="525.0" y="-113.8" text-anchor="middle">download_all_regions.py + auto_triage_regions.py</text>
+<text class="t2" x="525.0" y="-99.3" text-anchor="middle">(10 neighborhoods, 7,943 tiles)</text>
+<g filter="url(#shadow)"><rect x="707.0" y="-141.0" width="184.0" height="46.0" rx="9" fill="url(#gFill)" stroke="url(#gStroke)" stroke-width="1.6"/></g>
+<text class="t1" x="799.0" y="-121.0" text-anchor="middle">Interactive dashboard</text>
+<text class="t2" x="799.0" y="-106.5" text-anchor="middle">apps/streamlit_app/app.py</text>
+<g filter="url(#shadow)"><rect x="427.5" y="-52.0" width="195.0" height="36.0" rx="9" fill="url(#gFill)" stroke="url(#gStroke)" stroke-width="1.6"/></g>
+<text class="t1" x="525.0" y="-29.8" text-anchor="middle">Generalization assessment</text>
+<text class="ft" x="453" y="34" text-anchor="middle">Automated image-based visual detection, subject to errors and not equivalent to operational, legal, safety or aeronautical</text>
+<text class="ft" x="453" y="49" text-anchor="middle">validation. Helipad Detector project pipeline — São Paulo, Brazil.</text>
+</g></svg>
