@@ -648,6 +648,8 @@ The solution can be viewed as an architecture with [**seven main blocks**]():
 
 <br>
 
+<img width="915" height="2058" alt="Image" src="https://github.com/user-attachments/assets/6e622b4b-4d47-445b-b9b9-7767bf6f2f55" />
+
 <img width="915" height="2058" alt="Image" src="https://github.com/user-attachments/assets/511b726d-243d-43da-8cdc-fc54af9423a2" />
 
 
