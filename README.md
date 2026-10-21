@@ -664,6 +664,8 @@ The solution can be viewed as an architecture with [**seven main blocks**]():
 
 <br>
 
+<img width="915" height="1618" alt="Image" src="https://github.com/user-attachments/assets/8b0048dc-9f84-445a-bdfc-98d0739f7bf7" />
+
 <img width="1220" height="2083" alt="Image" src="https://github.com/user-attachments/assets/1e2432d1-aef2-4d5f-857b-1a41e5adfad2" />
 
 
