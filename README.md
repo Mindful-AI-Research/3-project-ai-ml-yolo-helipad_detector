@@ -826,7 +826,9 @@ The solution can be viewed as an architecture with [**seven main blocks**]():
 
 <br>
 
-<img width="915" height="1618" alt="Image" src="https://github.com/user-attachments/assets/8b0048dc-9f84-445a-bdfc-98d0739f7bf7" />
+<img width="915" height="2058" alt="Image" src="https://github.com/user-attachments/assets/511b726d-243d-43da-8cdc-fc54af9423a2" />
+
+
 
 
 
