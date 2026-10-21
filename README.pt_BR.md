@@ -432,8 +432,9 @@ https://github.com/user-attachments/assets/eab6e951-6b66-4c6c-a2c6-23ee2f902c5f
 
 ## [AI/ML Ops Pipeline]()
 
-<img width="915" height="1618" alt="Image" src="https://github.com/user-attachments/assets/324fcef0-e96c-4e15-91f3-d64a3a45d029" />
+<br>
 
+<img width="915" height="2058" alt="Image" src="https://github.com/user-attachments/assets/d81a8e7c-a40a-40c6-9bb5-f6a8776ac582" />
 
 
 <br><br>
