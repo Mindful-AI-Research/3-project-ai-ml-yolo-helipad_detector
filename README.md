@@ -309,12 +309,11 @@
 - [Contribution Attribution](#contribution-attribution)
 - [Acknowledgements](#acknowledgements)
 - [Final Statement](#final-statement)
+
+
+<br><br>
 <!-- ========= END Table of Contents ========= -->
  
- 
-<br><br>
- 
-
 <!-- ========= START Overview ========= -->
 <a id="overview"></a>
 ## [Overview]()
@@ -339,7 +338,7 @@ The choice of São Paulo is not incidental. Major metropolises such as New York,
 
 São Paulo, however, stands out for combining a large urban fleet, high building density, a significant presence of rooftop helipads, and a daily volume of operations that requires specialized management. The existence of **HELICONTROL** highlights the practical complexity of this air mobility and reinforces the relevance of using the city as a case study for the automated detection of potential helipads.
 
-<br>
+<br><br>
 
 
 | City | Country | Helicopter Air Mobility Context | Reference Source |
@@ -367,9 +366,9 @@ São Paulo, however, stands out for combining a large urban fleet, high building
 > [!TIP]
 > São Paulo was selected as the focus of **Helipad Detector** due to the combination of high urban density, a large concentration of buildings, a significant presence of rooftop heliport infrastructure, and intense helicopter traffic. This context demonstrates how Computer Vision and satellite data can support the automated mapping of urban infrastructure. The model's detections represent **visual candidates** and do not constitute regulatory, operational, or aeronautical confirmation of the existence of a heliport.
 
+<br><br>
 <!-- ========= END Contexto Global  ========= -->
 
-<br><br>
 
 <!-- ======== START Key Features ========= -->
 <a id="key-features"></a>
@@ -506,12 +505,14 @@ The project dataset was built from satellite imagery collected over São Paulo, 
 
 The geographical scope follows the briefing: [**city of São Paulo**](), focusing on neighborhoods near the PUC‑SP campus in Perdizes and regions with high helipad density, such as:
 
+<br>
+
 [-]() Perdizes, Higienópolis, Pacaembu and Sumaré  <br>
 [-]() Paulista Avenue, Itaim Bibi and Pinheiros  <br>
 [-]() Faria Lima, Berrini, Vila Olímpia and Brooklin  <br>
 [-]() other relevant urban areas such as Morumbi and adjacent regions  <br>
 
-<br>
+<br><br>
 
 
 <a id="image-sources"></a>
@@ -539,18 +540,18 @@ Whenever imagery or derived mosaics are reproduced, the required attribution is:
 
 Beyond the minimum briefing requirements, the group developed an **extra geospatial automation resource** to speed up helipad discovery before the annotation stage.
 
-<br>
+<br><br>
 
 <a id="technical-title-of-the-contribution"></a>
 ### ➠ [***Technical title of the contribution***]()
 
-<br>
+<br><br>
 
 > [!TIP]
 >
 > 👌🏻 [**Extra Resource — Automation System to Speed Up the Search for Geographic Points and Helipads**](https://github.com/Mindful-AI-Assistants/3-project-ai-ml-yolo-helipoint-detector/tree/2013898e5ed890337f05e5778c1ddf6bab1eb897/geographical_coordinates)
 
-<br>
+<br><br>
 
 ### ➠ [***Core Idea***]()
 
@@ -563,7 +564,7 @@ Instead of relying solely on manual inspection in maps, the system:
 [5.]()  uses these boxes as input to download ESRI satellite tiles  <br>
 [6.]()  generates mosaics ready for triage, annotation and upload to Roboflow  
 
-<br>
+<br><br>
 
 > [!IMPORTANT]
 >
@@ -589,7 +590,7 @@ https://github.com/user-attachments/assets/eab6e951-6b66-4c6c-a2c6-23ee2f902c5f
 
 The dashboard's [**🗺️ Map**]() tab (Streamlit, Folium) shows four real, separately-toggleable layers — the two static, geospatial-discovery layers described here, plus a field detection-rate layer (see [Field Validation](#field-validation--real-world-detection-across-10-são-paulo-neighborhoods)) and a live helicopter-traffic layer sourced from adsb.fi (see [Web Application](#web-application-optional-layer) and [Scope of the Live Flight-Traffic Layer](#scope-and-responsibility)):
 
-<br>
+<br><br>
 
 - 🟢 [**São Paulo training neighborhoods (10 regions) :**]() region-level bounding boxes from `src/data_preparation/image_preprocessing.ipynb`, saved to `src/geospatial/sp_neighborhoods_bbox.csv`. Two of these are labeled `Av_Paulista (trecho 1)` / `(trecho 2)`: the source notebook defines two bounding boxes with the same name, and their footprints overlap ~62–68% — i.e. two slightly-offset image-collection passes over the same avenue, not two different places. `Faria_Lima` was added manually (real geocoded coordinates, Jardim Paulistano) since it was listed as a target neighborhood in this README but had no corresponding bounding box in the source notebook — its bounding box has not yet been used to actually collect/curate training tiles, unlike the other 9.
 
@@ -652,8 +653,7 @@ The solution can be viewed as an architecture with [**seven main blocks**]():
 
 <br>
 
-<img width="915" height="2058" alt="Image" src="https://github.com/user-attachments/assets/6e622b4b-4d47-445b-b9b9-7767bf6f2f55" />
-
+<img width="915" height="2058" alt="Image" src="https://github.com/user-attachments/assets/71af0520-5f64-41fa-b131-6b00c3d82147" />
 
 <br><br><br>
 
