@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="297" height="32" viewBox="0 0 297 32" role="img" aria-label="Relatório Completo: Ler Relatório">
+<title>Relatório Completo: Ler Relatório</title>
+<defs>
+<linearGradient id="b" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#005C48"/><stop offset=".2" stop-color="#005B46"/><stop offset=".3" stop-color="#425943"/><stop offset=".4" stop-color="#6E513B"/><stop offset=".5" stop-color="#924227"/><stop offset=".6" stop-color="#B02813"/><stop offset=".7" stop-color="#C20000"/><stop offset=".8" stop-color="#D80000"/><stop offset="1" stop-color="#DD0000"/></linearGradient>
+<linearGradient id="t" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#2DD4B8"/><stop offset=".4" stop-color="#C2A67E"/><stop offset=".75" stop-color="#FF6B4A"/><stop offset="1" stop-color="#FF3030"/></linearGradient>
+<linearGradient id="f" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0d141b"/><stop offset="1" stop-color="#070b10"/></linearGradient>
+</defs>
+<rect x=".5" y=".5" width="296" height="31" rx="6.8" fill="url(#f)" stroke="url(#b)" stroke-width="1"/>
+<g transform="translate(15 9.2) scale(0.5666666666666667)" fill="#F1F5F9"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></g>
+<text x="37.8" y="19.38" font-family="Inter,'Segoe UI',Helvetica,Arial,sans-serif" font-size="9.72" font-weight="700" fill="#F8FAFC" textLength="132" lengthAdjust="spacing">RELATÓRIO COMPLETO</text>
+<rect x="183" y="9.2" width=".8" height="13.600000000000001" fill="url(#b)" opacity=".9"/>
+<text x="196.2" y="19.38" font-family="Inter,'Segoe UI',Helvetica,Arial,sans-serif" font-size="9.24" font-weight="600" fill="url(#t)" textLength="84" lengthAdjust="spacing">LER RELATÓRIO</text>
+</svg>
