@@ -1,3 +1,4 @@
+
 """UI strings (EN/PT-BR). Pure data — edit here to change any label.
 
 Keys are looked up by `t()` in app.py; unknown keys fall back to the key itself.
