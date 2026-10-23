@@ -4,16 +4,14 @@
 ##### \[[🇧🇷 Português](README.pt_BR.md)\] \[**[🇬🇧 English](README.md)**\]   
 <!--END 🇬🇧English LANGUAGE BUTTON  --  -->
 
-
 <br><br>
 
 
-<!-- ========= START HEADRE ========= -->
-<!-- ========= START tittke ========= -->
-
-
+<!-- ========= START HEADER ========= -->
+<!-- ========= START title ========= -->
 <p align="center">
-   <img src="https://github.com/user-attachments/assets/71d574fc-13fc-44ef-bdec-ff461288eacb" />
+   <img src="https://github.com/user-attachments/assets/dd86b10d-577f-45aa-8734-d4127e0a714b" />
+
 
 <!--
 <p align="center">
@@ -25,7 +23,7 @@
 ### <p align="center"> End-to-End Artificial Intelligence Platform for Automated Helipad Detection and Geospatial Intelligence from Satellite Imagery
 
 <br><br>
-<!-- ========= Ebnd tittke ========= -->
+<!-- ========= Ebnd title ========= -->
 
 <div align="center">
 
