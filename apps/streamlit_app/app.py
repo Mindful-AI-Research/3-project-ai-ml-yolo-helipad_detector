@@ -1944,12 +1944,22 @@ st.markdown(f"""
 </div>
 """, unsafe_allow_html=True)
 
-_main_title = t("main.title").replace(
-    "Detector",
-    '<span class="hd-title-red">Detector</span>',
-    1,
+_TITLE_COLORS = ["#8B0000", "#991414", "#A61B1B", "#B32222", "#C62828", "#D32F2F", "#C62828", "#B71C1C"]
+_title_words = t("main.title").replace("\U0001F681", "").strip().split(" ", 1)  # ["Helipad", "Detector"]
+_title_first = _title_words[0]
+_title_second = _title_words[1] if len(_title_words) > 1 else ""
+_title_letters = "".join(
+    f'<span style="color:{_TITLE_COLORS[k % len(_TITLE_COLORS)]}">{ch}</span>' for k, ch in enumerate(_title_second)
 )
-st.markdown(f'<h1 class="main-title">{_main_title}</h1>', unsafe_allow_html=True)
+st.markdown(
+    '<div class="hd-title-card">'
+    f'<h1 class="main-title" aria-label="{_title_first} {_title_second}">'
+    '<span class="hd-emoji" aria-hidden="true">\U0001F681</span> '
+    f'<span class="hd-text" data-text="{_title_first} {_title_second}">'
+    f'<span class="hd-white">{_title_first}</span> {_title_letters}</span></h1>'
+    '<div class="hd-title-line"></div></div>',
+    unsafe_allow_html=True,
+)
 st.markdown(f'<p class="subtitle">{t("main.subtitle")}</p>', unsafe_allow_html=True)
 if MODEL_OPTIONS:
     st.caption(f"{t('main.active_model')} **{st.session_state.get('model_choice') or list(MODEL_OPTIONS)[0]}**")
