@@ -1973,14 +1973,16 @@ model = get_selected_model()
 metrics_df = load_experiment_metrics()
 
 # ========================= COMPARISON BANDS (metrics tab) =========================
-# Palette tied to the project's visual identity (blue/teal on dark): green marks the
-# production model (exp2), blue the other experiments, mustard the methodological caution.
+# Palette tied to the project's visual identity (teal -> red on dark): teal = better than
+# exp1, slate-teal = essentially tied, red = worse than exp1, amber = methodological caution.
+# The text label always states the result, so color is never the only signal.
 import re as _re
 
 _BAND_STYLES = {
-    "green":   ("#22C55E", "rgba(34,197,94,0.13)",  "#86EFAC"),
-    "blue":    ("#3B82F6", "rgba(59,130,246,0.13)", "#93C5FD"),
-    "mustard": ("#D9A21B", "rgba(217,162,27,0.15)", "#F2CF75"),
+    "teal":    ("#14B8A6", "rgba(20,184,166,0.13)", "#5EEAD4"),
+    "slate":   ("#5F8F8B", "rgba(95,143,139,0.13)", "#A7C4C1"),
+    "red":     ("#DD0000", "rgba(221,0,0,0.13)",    "#FCA5A5"),
+    "mustard": ("#E0A82E", "rgba(224,168,46,0.15)", "#F2CF75"),
 }
 
 
@@ -3320,7 +3322,7 @@ with tab_metrics:
                             else "metrics.underperformed" if delta < -0.005
                             else "metrics.tied")
                 render_band(
-                    "green" if row["Experiment"] == "exp2" else "blue",
+                    {"metrics.outperformed": "teal", "metrics.underperformed": "red"}.get(_msg_key, "slate"),
                     t("metrics.band.vs_exp1").format(exp=str(row["Experiment"]).upper()),
                     t(_msg_key).format(exp=row["Experiment"], delta=f"{delta:+.4f}"),
                 )
