@@ -13,7 +13,7 @@
    <img src="https://github.com/user-attachments/assets/dd86b10d-577f-45aa-8734-d4127e0a714b" />
 
 
-### <p align="center"> End-to-End Artificial Intelligence Platform for Automated Helipad Detection and Geospatial Intelligence from Satellite Imagery
+### <p align="center"> Plataforma de Inteligência Artificial de Ponta a Ponta para Detecção Automatizada de Helipontos e Inteligência Geoespacial a partir de Imagens de Satélite
 
 <br><br>
 <!-- ========= Ebnd title ========= -->
