@@ -208,14 +208,14 @@
 <br><br>
 <!-- ========= END NOTE ========= -->
 
-<!-- =========START MAIN REPO =Projects REFERENCES ========= -->
+<!-- ========= START MAIN REPO / Projects REFERENCES ========= -->
 > [!TIP]
 >
-> This repository is part of the flagship ecosystem:
+> This repository is part of the main ecosystem:
 >
 > ## 🧠 AI/ML ✦ Neural Networks  ✦ Hub   ✦
-> 
-> Explore the complete collection of projects, notebooks, research materials, analyses, and interactive applications available in the central repository:
+>
+> Explore the complete collection of projects, notebooks, research materials, analyses and interactive applications available in the central repository:
 >
 > 🔗 **[AI/ML ✦ Neural Networks ✦ Hub](https://github.com/Mindful-AI-Research/1-ai-ml_neural-networks_hub)**
 >
@@ -227,9 +227,13 @@
 >
 > A deep learning system for handwritten character recognition using PyTorch and Streamlit.
 
-
 <br><br><br><br>
-<!-- =========END MAIN REPO =Projects REFERENCES ========= -->
+<!-- ========= END MAIN REPO / Projects REFERENCES ========= -->
+
+
+
+
+
 
 <!-- ========= START Table of Contents ========= -->
 <a id="table-of-contents"></a>
