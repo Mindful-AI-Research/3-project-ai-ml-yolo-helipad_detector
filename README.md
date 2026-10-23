@@ -95,7 +95,7 @@
 [**Primary Technology:**]() YOLO (You Only Look Once) <br>
 [**Project:**]() Object Detection in Satellite Imagery with YOLO <br>
 [**Project Background:**]() Originally developed as coursework for the Neural Networks course, taught by [✨ **Prof. Rooney Ribeiro Albuquerque Coelho**](https://www.linkedin.com/in/rooney-coelho-320857182/), the project was subsequently expanded into an applied research initiative. <br>
-[**Author & Researcher:**]() [Fabiana ⚡️ Campaner](https://linktr.ee/fabianacampanari) <br>
+[**Author & Researcher:**]() [Fabiana ⚡️ Campanari](https://linktr.ee/fabianacampanari) <br>
 [**Collaborator:**]() [Pedro Vyctor Almeida](https://github.com/ppvyctor/Helipoint-Detector)
 
 # 
