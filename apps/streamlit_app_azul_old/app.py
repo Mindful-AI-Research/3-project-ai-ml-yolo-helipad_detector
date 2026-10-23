@@ -1,0 +1,3665 @@
+import streamlit as st
+from ultralytics import YOLO
+from PIL import Image
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+import plotly.express as px
+import plotly.graph_objects as go
+import folium
+from folium.plugins import HeatMap
+from streamlit_folium import st_folium
+import base64
+import io
+import json
+import time
+import zipfile
+from datetime import datetime
+import math
+import re
+import requests
+from pathlib import Path
+import tempfile
+import shutil
+from concurrent.futures import ThreadPoolExecutor, as_completed
+
+# ========================= LANGUAGE / i18n =========================
+# Only static UI copy (labels, headers, captions, button text, messages) is
+# translated. Anything that comes from data at runtime — experiment names,
+# region names from CSV/JSON, raw dataframe columns (already in Portuguese
+# in the source CSVs), file paths — is left as-is, since translating it
+# would mean rewriting the underlying data, not just the UI.
+if "lang" not in st.session_state:
+    st.session_state["lang"] = "en"
+
+
+def _disclaimer() -> None:
+    """Mandatory scope-of-detection notice, shown under every detection result."""
+    st.markdown(
+        f'<div class="hd-disclaimer" role="note">⚠️ {t("detection.disclaimer")}</div>',
+        unsafe_allow_html=True,
+    )
+
+
+def t(key: str) -> str:
+    entry = TR.get(key)
+    if entry is None:
+        return key
+    return entry.get(st.session_state["lang"], entry.get("en", key))
+
+
+
+from i18n import TR  # noqa: E402  (UI strings live in i18n.py)
+
+
+st.set_page_config(
+    page_title="Helipad Detector • São Paulo",
+    page_icon="🚁",
+    layout="wide",
+    initial_sidebar_state="expanded"
+)
+
+# `.streamlit/config.toml` forces Streamlit's own theme colors to dark,
+# but that alone doesn't stop the BROWSER's native "color-scheme" hint —
+# a separate CSS-level signal that controls default rendering for form
+# controls, scrollbars, and any color not explicitly set by our CSS. If
+# the visitor's OS/browser is set to light mode, the browser still assumes
+# `color-scheme: light` unless told otherwise, which can make text look
+# washed out for light-mode visitors even with the theme forced. This
+# forces the browser itself to treat the whole page as dark, regardless
+# of the visitor's OS/browser preference.
+st.markdown(
+    "<style>:root, html, body { color-scheme: dark !important; }</style>",
+    unsafe_allow_html=True,
+)
+
+# streamlit-folium's map components (used in the Map tab) are unreliable on
+# the very first script execution of a session — they can mount with a 0-size
+# viewport and stay blank until something triggers another rerun (this is why
+# toggling Dark mode "fixed" it: the toggle itself causes a rerun). Rather
+# than rely on the user accidentally triggering that fix, force exactly one
+# automatic rerun on the first load of each session, before anything heavy
+# renders, so every map is already past that broken first pass by the time
+# the user actually sees the page.
+if "_warmed_up" not in st.session_state:
+    st.session_state["_warmed_up"] = True
+    st.rerun()
+
+from styles import GLOBAL_CSS  # noqa: E402
+
+st.markdown(GLOBAL_CSS, unsafe_allow_html=True)
+
+# ========================= COLOR HELPERS =========================
+def _hex_to_rgb(h):
+    h = h.lstrip("#")
+    return tuple(int(h[i:i + 2], 16) for i in (0, 2, 4))
+
+
+def _rgb_to_hex(rgb):
+    return "#{:02x}{:02x}{:02x}".format(*rgb)
+
+
+def _shade(hex_color: str, amount: float) -> str:
+    """amount > 0 lightens toward white; amount < 0 darkens toward deep navy."""
+    rgb = _hex_to_rgb(hex_color)
+    target = _hex_to_rgb("#FFFFFF") if amount > 0 else _hex_to_rgb("#0B1220")
+    factor = abs(amount)
+    blended = tuple(int(c + (t - c) * factor) for c, t in zip(rgb, target))
+    return _rgb_to_hex(blended)
+
+
+def blue_scale(t: float) -> str:
+    """Interpolates from deep navy (t=0, first step) to the project's teal
+    accent (t=1, last step) — the same blue-to-teal family used across the
+    dashboard's tables and metrics, but staying dark end-to-end so no card
+    ever turns near-white and breaks the dark theme."""
+    start, end = _hex_to_rgb("#1E3A8A"), _hex_to_rgb("#0E756D")
+    return _rgb_to_hex(tuple(int(a + (b - a) * t) for a, b in zip(start, end)))
+
+
+# ---- Standardized "Blues" gradient (single source of truth) -----------
+# This is the exact matplotlib "Blues" colormap used by the About tab's
+# "Top 10 Cities" table (the look the team wants everywhere): light blue
+# at frac=0.0, deep navy at frac=1.0. Every ranked/valued table, metric
+# card, bar chart and pipeline step in the dashboard should call
+# blues_scale()/style_rows_by_rank()/style_rows_by_value() below instead
+# of rolling its own gradient — that's what was causing the same visual
+# idea (a blue ranking gradient) to look different in different tabs
+# (navy->teal cards here, a light-to-navy 2-stop hand-rolled scale there,
+# pandas' own per-column .background_gradient() elsewhere, each with a
+# different curve and no guaranteed readable text color).
+def blues_scale(frac: float) -> str:
+    """Returns a hex color from matplotlib's real 'Blues' colormap for a
+    0..1 fraction. frac=1.0 -> darkest navy, frac=0.0 -> lightest blue."""
+    frac = max(0.0, min(1.0, frac))
+    rgba = plt.colormaps["Blues"](frac)
+    return "#{:02x}{:02x}{:02x}".format(*(int(c * 255) for c in rgba[:3]))
+
+
+def style_rows_by_rank(obj):
+    """Paints every row of an already-sorted, best-first table with the
+    standardized Blues gradient (same technique as the Top 10 Cities
+    table): row 0 gets the darkest navy, the last row the lightest blue,
+    with a readable text color computed per row. Accepts either a plain
+    DataFrame or a Styler that already has .format() applied — always
+    returns a Styler. Use this for tables where being FIRST is what
+    matters (a rank column, or rows pre-sorted best-to-worst); use
+    style_rows_by_value() instead when the *value* itself (not row
+    position) should drive how dark a row is."""
+    is_styler = hasattr(obj, "data")
+    df = obj.data if is_styler else obj
+    styler = obj if is_styler else obj.style
+    n = len(df)
+
+    def _row_style(row):
+        pos = df.index.get_loc(row.name)
+        frac = 1 - pos / max(n - 1, 1)
+        bg = blues_scale(frac)
+        return [f"background-color:{bg}; color:{readable_text_color(bg)};"] * len(row)
+
+    return styler.apply(_row_style, axis=1)
+
+
+def style_rows_by_value(obj, value_col: str, higher_is_darker: bool = True):
+    """Paints every row of a table with the standardized Blues gradient,
+    scaled by an actual metric column (value_col) rather than row
+    position — for tables kept in a fixed, meaningful order (e.g.
+    exp1/exp2/exp3 in experiment order) where color should still reflect
+    which rows scored better. Accepts a DataFrame or a Styler (with
+    .format() already applied) and always returns a Styler."""
+    is_styler = hasattr(obj, "data")
+    df = obj.data if is_styler else obj
+    styler = obj if is_styler else obj.style
+    vmin, vmax = df[value_col].min(), df[value_col].max()
+    span = (vmax - vmin) or 1.0
+
+    def _row_style(row):
+        frac = (row[value_col] - vmin) / span
+        if not higher_is_darker:
+            frac = 1 - frac
+        bg = blues_scale(frac)
+        return [f"background-color:{bg}; color:{readable_text_color(bg)};"] * len(row)
+
+    return styler.apply(_row_style, axis=1)
+
+
+def style_rows_by_cycle(obj, cycle: int = 10):
+    """Paints rows with the same standardized Blues gradient as
+    style_rows_by_rank, but restarts the scale every `cycle` rows instead
+    of spanning the whole table in one continuous fade. For long tables
+    (many more rows than the 10-tone scale has distinct shades) a single
+    continuous gradient mostly reads as one flat color by the last row;
+    resetting every `cycle` rows keeps each block visually readable while
+    still using the same darkest-to-lightest Blues progression throughout."""
+    is_styler = hasattr(obj, "data")
+    df = obj.data if is_styler else obj
+    styler = obj if is_styler else obj.style
+
+    def _row_style(row):
+        pos = df.index.get_loc(row.name) % cycle
+        frac = 1 - pos / max(cycle - 1, 1)
+        bg = blues_scale(frac)
+        return [f"background-color:{bg}; color:{readable_text_color(bg)};"] * len(row)
+
+    return styler.apply(_row_style, axis=1)
+
+
+# ========================= MAP TILE PROVIDERS =========================
+# Using explicit URL templates (instead of Folium's built-in preset strings
+# like "CartoDB dark_matter") because Folium ignores the custom `name=` we
+# pass for known presets and falls back to its own internal identifier
+# (e.g. "cartodbdarkmatter") in the layer control. A raw URL template has no
+# such special-casing, so our friendly name is always used.
+#
+# NOTE (basemap provider history): this used to point at CartoDB's free
+# endpoint, then briefly at Esri's "Canvas" gray basemaps. Both were dropped:
+#   - CartoDB's free/anonymous endpoint now requires an account + API key;
+#     without one it silently serves tiles stamped with an "API KEY
+#     REQUIRED" watermark instead of erroring out.
+#   - Esri's Canvas Dark/Light Gray basemaps are a generalized cartographic
+#     style (not real street-level data) with a native max zoom around 16;
+#     zooming past that returned an explicit "Map data not yet available"
+#     placeholder tile instead of the requested imagery, and even at their
+#     native max zoom, street names were already sparse/abstracted.
+# OpenStreetMap's own raster tile server is used instead: real, detailed
+# street-level cartography (actual OSM road/place data, not a generalized
+# style) with genuine tile coverage up to zoom 19 almost everywhere, no
+# account/key needed. It ships one style (light), so "dark mode" is done
+# with a CSS filter (`invert` + `hue-rotate`) applied only to the tile pane
+# of a given map instance — a standard, widely-used technique — which never
+# touches markers/popups/labels since those live in separate Leaflet panes.
+OSM_TILE_URL = "https://tile.openstreetmap.org/{z}/{x}/{y}.png"
+OSM_ATTR = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+OSM_MAX_ZOOM = 19
+# Applied via a scoped <style> (per Folium map container id) rather than a
+# global rule, so it only affects the specific map it's added to.
+OSM_DARK_FILTER_CSS = "invert(1) hue-rotate(180deg) brightness(0.95) contrast(0.9) saturate(0.85)"
+
+
+def add_osm_tile_layer(fmap: "folium.Map", dark_mode: bool, name: str | None = None,
+                        control: bool = True, container_id: str | None = None) -> None:
+    """Adds the OpenStreetMap base layer to `fmap` and, if dark_mode, injects
+    a CSS filter scoped to that map's own container so only its tile pane is
+    inverted — other maps on the same page and this map's own markers/popups
+    are unaffected.
+
+    `container_id`: which DOM id to scope the filter to. Matters because the
+    two ways this app renders a folium.Map end up with DIFFERENT real ids:
+      - st_folium(fmap, ...) (the main Maps-tab map): confirmed directly in
+        streamlit-folium's own frontend bundle that it hardcodes the map into
+        a div with id="map_div", discarding whatever fmap.get_name() was.
+        Pass container_id="map_div" for anything rendered this way.
+      - components.html(fmap.get_root().render(), ...) (the density map):
+        keeps Folium's own generated id, so fmap.get_name() (the default
+        here) is correct.
+    Getting this wrong doesn't error — the <style> tag still renders, it just
+    never matches anything, so the map silently stays in light mode. That's
+    exactly what was happening on the main map before this fix.
+    """
+    folium.TileLayer(
+        tiles=OSM_TILE_URL, attr=OSM_ATTR, name=(name or "OpenStreetMap"),
+        max_zoom=OSM_MAX_ZOOM, control=control,
+    ).add_to(fmap)
+    if dark_mode:
+        scope_id = container_id or fmap.get_name()
+        fmap.get_root().html.add_child(folium.Element(
+            f"<style>#{scope_id} .leaflet-tile-pane "
+            f"{{ filter: {OSM_DARK_FILTER_CSS}; }}</style>"
+        ))
+
+
+
+
+
+def _force_leaflet_resize(fmap: folium.Map) -> None:
+    """Leaflet maps rendered inside a container that isn't fully laid out yet
+    (e.g. below a heavier component that's still mounting, like the main map
+    above this one) can compute a 0-size viewport and stay blank until
+    something forces a relayout — this is what was happening with the
+    Density view map, which only appeared after toggling Dark mode (that
+    toggle triggers a rerun that happens to fix it). A single delayed resize
+    event wasn't reliable enough, so this calls invalidateSize() directly on
+    the actual Leaflet map instance, retried at a few increasing delays and
+    again on window 'load', to reliably catch whichever moment the container
+    finishes settling."""
+    map_var = fmap.get_name()
+    fmap.get_root().html.add_child(folium.Element(f"""
+    <script>
+    (function() {{
+        function fixSize() {{
+            if (typeof {map_var} !== 'undefined') {{
+                {map_var}.invalidateSize();
+            }}
+        }}
+        [100, 300, 700, 1200, 2000].forEach(function(ms) {{ setTimeout(fixSize, ms); }});
+        window.addEventListener('load', fixSize);
+    }})();
+    </script>
+    """))
+
+
+def _force_leaflet_fit_bounds(fmap: folium.Map, bounds: list) -> None:
+    """Folium's fit_bounds() bakes a `.fitBounds(...)` call directly into the
+    map's init-time script, which runs the instant the Leaflet map object is
+    created — before streamlit-folium's iframe has finished its own resize
+    handshake with the browser. With a near-zero-size container at that exact
+    moment, Leaflet's fitBounds computes the zoom needed to fit the bounds
+    into that (wrong) size, which for a small area comes out as an extremely
+    zoomed-OUT view (confirmed: a single São Paulo-area point rendered as a
+    whole-world map). invalidateSize() (see _force_leaflet_resize above) only
+    fixes the container's pixel size afterwards — it does not re-run
+    fitBounds, so the bad zoom level sticks. This re-issues both
+    invalidateSize() and fitBounds() together, retried at a few increasing
+    delays, so the correct zoom is recomputed once the container has a real
+    size. Use this INSTEAD of calling fmap.fit_bounds(...) in Python (which
+    would still bake the buggy immediate call) and instead of
+    _force_leaflet_resize for any map that needs to fit real bounds rather
+    than just keep its zoom_start."""
+    map_var = fmap.get_name()
+    bounds_json = json.dumps(bounds)
+    fmap.get_root().html.add_child(folium.Element(f"""
+    <script>
+    (function() {{
+        function refit() {{
+            if (typeof {map_var} !== 'undefined') {{
+                {map_var}.invalidateSize();
+                {map_var}.fitBounds({bounds_json});
+            }}
+        }}
+        [150, 400, 800, 1400, 2200].forEach(function(ms) {{ setTimeout(refit, ms); }});
+        window.addEventListener('load', refit);
+    }})();
+    </script>
+    """))
+
+
+# ========================= GLOBE → ZOOM → MAP INTRO =========================
+# Each of the 3 Folium maps (helipad map, density map, live traffic) can open
+# with a 3D globe that spins to São Paulo and dives in, then is REPLACED by the
+# real Folium map (timed fade). Globe (WebGL/three.js) and Folium (Leaflet) are
+# two unrelated renderers, so there is no pixel-continuous transition — the
+# overlay is a cover that fades out over a map that is already loaded
+# underneath. The overlay lives INSIDE the map's own HTML, so it works the same
+# for st_folium(...) and st.iframe(...). It plays once per browser
+# session per map, starts only when the map is actually visible (Streamlit
+# keeps hidden tabs mounted), skips itself on prefers-reduced-motion / no
+# WebGL / three.js failing to load, and has a "Skip" button.
+# Set the env var HD_GLOBE_INTRO=0 to disable it everywhere.
+GLOBE_INTRO_ENABLED = __import__("os").environ.get("HD_GLOBE_INTRO", "1") != "0"
+# Resolve from the repo root (…/apps/streamlit_app/app.py -> parents[2]) so the intro works
+# no matter which folder `streamlit run` is launched from; fall back to the CWD-relative path.
+GLOBE_INTRO_JS_PATH = next(
+    (c for c in (Path(__file__).resolve().parents[2] / "assets" / "globe_intro.js", Path("assets/globe_intro.js")) if c.exists()),
+    Path("assets/globe_intro.js"),
+)
+GLOBE_TARGET = (-23.5505, -46.6333)  # São Paulo
+
+
+@st.cache_data(show_spinner=False)
+def _read_globe_intro_js(path_str: str, mtime: float) -> str:
+    # `mtime` is part of the cache key, so replacing assets/globe_intro.js is picked up
+    # without having to clear Streamlit's cache by hand.
+    try:
+        return Path(path_str).read_text(encoding="utf-8")
+    except OSError:
+        return ""
+
+
+def _load_globe_intro_js() -> str:
+    try:
+        return _read_globe_intro_js(str(GLOBE_INTRO_JS_PATH), GLOBE_INTRO_JS_PATH.stat().st_mtime)
+    except OSError:
+        return ""
+
+
+def _clean_globe_points(rows, limit: int = 600) -> list:
+    out = []
+    for row in rows:
+        try:
+            lat, lon = float(row[0]), float(row[1])
+        except (TypeError, ValueError, IndexError):
+            continue
+        if lat != lat or lon != lon:  # NaN
+            continue
+        out.append([round(lat, 3), round(lon, 3)])
+        if len(out) >= limit:
+            break
+    return out
+
+
+from branca.element import MacroElement as _MacroElement
+from jinja2 import Template as _JinjaTemplate
+
+
+class _GlobeIntroScript(_MacroElement):
+    """Carries a block of JS into the map's <script> section (see add_globe_intro).
+    The code must not contain Jinja delimiters ({{ {% {#) — globe_intro.js and the JSON config don't."""
+    _template = _JinjaTemplate("{% macro script(this, kwargs) %}{{ this.code }}{% endmacro %}")
+
+    def __init__(self, code: str):
+        super().__init__()
+        self._name = "GlobeIntroScript"
+        self.code = code
+
+
+def add_globe_intro(fmap: "folium.Map", map_id: str, *, points=None, caption: str = "") -> None:
+    """Embeds the globe intro overlay into `fmap`'s HTML. Call it right before
+    st_folium(fmap, ...) / components.html(fmap.get_root().render(), ...).
+    `map_id` keys the once-per-session flag, so keep it unique per map.
+    Silently does nothing if assets/globe_intro.js is missing."""
+    try:
+        if not GLOBE_INTRO_ENABLED:
+            return
+        js = _load_globe_intro_js()
+        if not js:
+            print(f"[globe intro] assets/globe_intro.js not found (looked at {GLOBE_INTRO_JS_PATH.resolve()}) — intro disabled")
+            return
+        cfg = {
+            "id": map_id,
+            "target": list(GLOBE_TARGET),
+            "label": "São Paulo",
+            "caption": caption,
+            "entering": t("globe.entering"),
+            "skip": t("globe.skip"),
+            "points": _clean_globe_points(points or []),
+            # ?globe=force in the URL replays the intro every time and ignores the OS
+            # "reduce motion" setting (debug aid: the intro otherwise plays once per session).
+            "force": str(st.query_params.get("globe", "")).lower() in ("force", "1", "always"),
+            # ?globe=debug shows an on-screen log inside each map explaining what the intro did / why it did not play.
+            "debug": str(st.query_params.get("globe", "")).lower() == "debug",
+            "lang": st.session_state.get("lang", "en"),   # a language switch always replays the intro
+        }
+        # ?globe_ms=14000 sets the intro length in milliseconds (default lives in globe_intro.js).
+        try:
+            _ms = int(str(st.query_params.get("globe_ms", "")) or 0)
+            if 3000 <= _ms <= 60000:
+                cfg["durationMs"] = _ms
+        except (TypeError, ValueError):
+            pass
+        cfg_json = json.dumps(cfg, ensure_ascii=False).replace("</", "<\\/")
+        # HOW THE JS RUNS (lesson learned in production): the first version bootstrapped through an
+        # inline <img onload="..."> handler. It worked locally but on Streamlit Community Cloud the
+        # handler never ran (inline event-handler attributes can be blocked), so the intro silently
+        # never started. Now the engine is delivered as a real map <script> through a folium
+        # MacroElement: st_folium injects every child's script() output as an inline script block
+        # (exactly how the map itself is built) and st.iframe() renders it in the page body,
+        # so one mechanism covers all 3 maps and needs no inline handlers.
+        boot_code = (
+            "try{var _m=document.getElementById('hd-globe-dbg-static');if(_m){_m.textContent+=' | script ran';}" + js + "\n;window.HDGlobeIntro(" + cfg_json + ");}"
+            "catch(e){try{console.warn('HDGlobeIntro boot failed',e);"
+            "if(" + ("true" if cfg["debug"] else "false") + "){var d=document.createElement('div');"
+            "d.style.cssText='position:fixed;left:6px;top:6px;z-index:2147483647;background:#300;color:#fbb;"
+            "font:11px monospace;padding:5px 8px;border-radius:6px';d.textContent='HDGlobe boot FAILED: '+e;"
+            "document.body.appendChild(d);}}catch(_){}}"
+        )
+        fmap.add_child(_GlobeIntroScript(boot_code))
+        if cfg["debug"]:
+            # Static marker (plain markup, no JS): proves the map HTML reached the browser. If it is
+            # visible but no "[id] engine started" line appears, the script itself was not executed.
+            fmap.get_root().html.add_child(folium.Element(
+                "{% raw %}"
+                '<div id="hd-globe-dbg-static" style="position:fixed;right:6px;top:6px;z-index:2147483647;'
+                'background:rgba(0,0,0,.82);color:#9cf;font:11px monospace;padding:4px 8px;border-radius:6px">'
+                f"HDGlobe debug v3 (script-macro): map HTML injected ({map_id})</div>"
+                "{% endraw %}"
+            ))
+    except Exception as exc:  # the intro is decoration: never take the map down with it
+        print(f"[globe intro] skipped for {map_id!r}: {exc}")
+
+
+# ========================= INFERENCE DEMO VIDEOS (selector) =========================
+# ONE player + a selector, instead of 4 stacked players. Source order per demo:
+# local file demo/🎥 Demo N — …mp4 (matched by prefix, so the long title can change)
+# -> URL in DEMO_VIDEO_URLS (GitHub user-attachments) -> friendly "not published" note.
+DEMO_VIDEO_DIR = Path("demo")
+DEMO_VIDEO_URLS: dict = {  # paste the URL after uploading, e.g. "exp1": "https://github.com/user-attachments/assets/…"
+    "exp1": "", "exp2": "", "exp3": "", "exp4": "",
+}
+DEMO_VIDEOS = [("exp1", 1), ("exp2", 2), ("exp3", 3), ("exp4", 4)]
+
+
+def _demo_video_source(exp: str, n: int):
+    try:
+        for f in sorted(DEMO_VIDEO_DIR.glob(f"🎥 Demo {n} —*.mp4")):
+            return str(f)
+    except OSError:
+        pass
+    return DEMO_VIDEO_URLS.get(exp) or None
+
+
+def render_inference_demos(expanded: bool = False, default: str = "exp1") -> None:
+    with st.expander(t("demos.inf.expander_label"), expanded=expanded):
+        labels = {exp: f"Demo {n} · {exp}" for exp, n in DEMO_VIDEOS}
+        exp = st.radio(t("demos.inf.select_label"), [e for e, _ in DEMO_VIDEOS],
+                       format_func=lambda e: labels[e], horizontal=True, index=[e for e, _ in DEMO_VIDEOS].index(default), key="inference_demo_pick")
+        n = dict(DEMO_VIDEOS)[exp]
+        st.markdown(f"<p style='text-align:center;'>{t('demos.inf.caption.' + exp)}</p>", unsafe_allow_html=True)
+        src = _demo_video_source(exp, n)
+        if src:
+            st.video(src, muted=True)
+        else:
+            st.info(t("demos.inf.missing"))
+
+
+PRESENTATION_PPTX_EN_URL = "https://github.com/Mindful-AI-Research/3-project-ai-ml-yolo-helipad_detector/blob/6a6429169e3be15936c10a98de749955a5c96c72/presentations/Helipad_Detector_Presentation_EN.pptx"
+PRESENTATION_PPTX_PT_URL = "https://github.com/Mindful-AI-Research/3-project-ai-ml-yolo-helipad_detector/blob/dcd6cd1f6497d949d01f6f35c403213a8e5f9365/presentations/Helipad_Detector_Apresentacao_PT-BR.pptx"
+PRESENTATION_HTML_URL = "https://timely-brioche-b6c92f.netlify.app/"
+
+
+# ========================= AUTOMATIC MODEL DISCOVERY =========================
+# Instead of hardcoding "exp1"/"exp2" in the code, the app scans the runs folder
+# and lists any experiment that has a ready best.pt. This way, running a new
+# experiment (exp2, exp3...) requires no changes to this file.
+MODEL_ROOTS = [
+    Path("artifacts/runs/detect"),        # plain convention (no doubled "runs")
+    Path("artifacts/runs/runs/detect"),   # convention produced by the notebook's zip flow
+]
+SAMPLES_DIR = Path("data/samples")
+COORDS_CSV = Path("src/geospatial/helipad_coordinates_bbox.csv")
+SP_COORDS_CSV = Path("src/geospatial/sp_neighborhoods_bbox.csv")
+EXEC_REPORT_EN = Path("reports/helipad_detector_full_report/🇬🇧Helipad_Detector_Full_Report.pdf")
+EXEC_REPORT_PT = Path("reports/helipad_detector_full_report/🇧🇷Helipad_Detector_Relatorio_Completo.pdf")
+DATASET_RAR = Path("data/raw/helipad_dataset.rar")
+KEPLER_HTML = Path("src/geospatial/keplergl_map_loaded.html")
+
+
+def _all_exp_dirs():
+    """Yields experiment directories across all MODEL_ROOTS candidates,
+    de-duplicated by experiment name (first root that has a given name wins)."""
+    seen = set()
+    for root in MODEL_ROOTS:
+        if not root.exists():
+            continue
+        for exp_dir in sorted(root.iterdir()):
+            if exp_dir.is_dir() and exp_dir.name not in seen:
+                seen.add(exp_dir.name)
+                yield exp_dir
+
+
+def discover_models() -> dict[str, Path]:
+    """Returns {friendly_label: path_to_best.pt} for each experiment found,
+    across any of MODEL_ROOTS."""
+    found = {}
+    for exp_dir in _all_exp_dirs():
+        weights = exp_dir / "weights" / "best.pt"
+        if weights.exists():
+            found[f"{exp_dir.name} ({weights.stat().st_size // 1_000_000} MB)"] = weights
+    return found
+
+
+@st.cache_resource(show_spinner="🚁 Loading YOLO weights and warming up the detector...")
+def load_model(model_path: str) -> YOLO:
+    return YOLO(model_path)
+
+
+def _find_results_csv(exp_dir: Path) -> Path | None:
+    """results.csv naming isn't consistent across experiment folders in this
+    repo (e.g. exp1 uses 'exp1_results.csv' instead of 'results.csv') — check
+    a few known patterns instead of assuming one fixed name."""
+    candidates = [
+        exp_dir / "results.csv",
+        exp_dir / f"{exp_dir.name}_results.csv",
+    ]
+    for c in candidates:
+        if c.exists():
+            return c
+    # last resort: any *_results.csv or results*.csv in the folder
+    matches = list(exp_dir.glob("*results*.csv"))
+    return matches[0] if matches else None
+
+
+@st.cache_data(show_spinner=False)
+def load_experiment_metrics() -> pd.DataFrame:
+    """Scans every experiment folder (across MODEL_ROOTS) for results.csv and
+    builds a comparison table with the best epoch of each one found."""
+    rows = []
+    for exp_dir in _all_exp_dirs():
+        csv_path = _find_results_csv(exp_dir)
+        if csv_path is None:
+            continue
+        try:
+            df = pd.read_csv(csv_path)
+            df.columns = df.columns.str.strip()
+            best = df.loc[df["metrics/mAP50-95(B)"].idxmax()]
+            rows.append({
+                "Experiment": exp_dir.name,
+                "Best Epoch": int(best["epoch"]),
+                "Total Epochs": int(df["epoch"].max()),
+                "Precision": round(float(best["metrics/precision(B)"]), 4),
+                "Recall": round(float(best["metrics/recall(B)"]), 4),
+                "mAP@50": round(float(best["metrics/mAP50(B)"]), 4),
+                "mAP@50-95": round(float(best["metrics/mAP50-95(B)"]), 4),
+                "_dir": str(exp_dir),
+            })
+        except Exception:
+            continue
+
+    return pd.DataFrame(rows)
+
+
+@st.cache_data(show_spinner=False)
+def load_experiment_curves() -> dict[str, pd.DataFrame]:
+    """Returns {experiment_name: full results.csv as DataFrame} for the
+    per-epoch metric evolution chart, across any of MODEL_ROOTS."""
+    curves = {}
+    for exp_dir in _all_exp_dirs():
+        csv_path = _find_results_csv(exp_dir)
+        if csv_path is None:
+            continue
+        try:
+            df = pd.read_csv(csv_path)
+            df.columns = df.columns.str.strip()
+            curves[exp_dir.name] = df
+        except Exception:
+            continue
+    return curves
+
+
+_DMS_NUM = r"[-+]?\d+(?:\.\d+)?"
+# Triple-single-quoted (not triple-double-quoted) on purpose: this pattern's character
+# class matches a literal ASCII double-quote ["”″], and mixing that with a """-delimited
+# raw f-string, right above an @st.cache_data-decorated function, made Python 3.14's
+# tokenizer choke inside inspect.getsource()'s block-finder at deploy time (TokenError:
+# "unexpected character after line continuation character") — inspect.getsource() is
+# what Streamlit uses to hash a cached function's source for its cache key, so this
+# crashed on every app startup rather than only when the function was called. Using '''
+# here removes the ambiguity without changing what the regex matches.
+_DMS_COORD_RE = re.compile(
+    rf'''
+    (?P<g>{_DMS_NUM})\s*[°ºo]?\s*
+    (?:(?P<m>{_DMS_NUM})\s*['’′]?\s*)?
+    (?:(?P<s>{_DMS_NUM})\s*["”″]?\s*)?
+    (?P<dir>[NSEWnsew])?
+    ''',
+    re.VERBOSE,
+)
+
+
+def _dms_to_dd(graus: float, minutos: float, segundos: float, direcao: str = "") -> float:
+    dd = abs(graus) + minutos / 60 + segundos / 3600
+    if direcao.upper() in ("S", "W") or graus < 0:
+        dd = -dd
+    return dd
+
+
+def _parse_dms_point(texto: str):
+    """Same DMS-pair regex/logic as src/geospatial/transform_coordinates.py's
+    parse_dms_pair, reused here as a fallback for rows that were scraped by
+    helipad_bot.py but never actually run through transform_coordinates.py —
+    i.e. still a raw DD°MM′SS″H DD°MM′SS″H pair instead of the converted
+    'lon_min lat_min lon_max lat_max' bbox format. Returns a single (lat, lon)
+    point directly rather than fabricating a bounding box, since the only
+    thing load_helipad_locations ever does with the box is average it back
+    down to a center point anyway."""
+    coords = []
+    for m in _DMS_COORD_RE.finditer(str(texto)):
+        if m.group("g") is None or m.group(0).strip() == "":
+            continue
+        graus = float(m.group("g"))
+        minutos = float(m.group("m")) if m.group("m") else 0.0
+        segundos = float(m.group("s")) if m.group("s") else 0.0
+        direcao = m.group("dir") or ""
+        coords.append(_dms_to_dd(graus, minutos, segundos, direcao))
+    if len(coords) < 2:
+        return None, None
+    return coords[0], coords[1]  # lat, lon
+
+
+@st.cache_data(show_spinner=False)
+def load_helipad_locations(csv_path: Path = COORDS_CSV) -> pd.DataFrame:
+    """Reads a helipad-coordinates CSV (same schema as helipad_coordinates_bbox.csv)
+    and computes the center point (lat, lon) of each bounding box, for the map view.
+
+    Some rows in this CSV are the direct output of helipad_bot.py's scraper
+    but were never run through transform_coordinates.py's DMS-to-decimal
+    conversion (or that step failed silently for them), so they're still raw
+    DD°MM′SS″H DD°MM′SS″H pairs rather than a converted bounding box. Those
+    used to be dropped by the bbox parser below and silently vanish from
+    every map in the app — confirmed against the project's own
+    helipad_coordinates.csv: 80 of 129 rows (62%) were still in this raw
+    format, including a 7-point Belo Horizonte cluster that never showed up
+    on the Discovery Dataset map. parse_center() now falls back to the same
+    DMS parser transform_coordinates.py uses, so those rows render too
+    instead of requiring the conversion script to be re-run first.
+    """
+    if not csv_path.exists():
+        return pd.DataFrame()
+
+    def parse_center(raw: str):
+        parts = str(raw).replace(",", " ").split()
+        try:
+            lon_min, lat_min, lon_max, lat_max = (float(p) for p in parts[:4])
+            return (lat_min + lat_max) / 2, (lon_min + lon_max) / 2
+        except Exception:
+            pass
+        return _parse_dms_point(raw)
+
+    try:
+        df = pd.read_csv(csv_path)
+    except Exception:
+        return pd.DataFrame()
+
+    if "Coordenadas da Bounding Box" not in df.columns:
+        return pd.DataFrame()
+
+    centers = df["Coordenadas da Bounding Box"].apply(parse_center)
+    df["lat"] = centers.apply(lambda t: t[0])
+    df["lon"] = centers.apply(lambda t: t[1])
+    return df.dropna(subset=["lat", "lon"])
+
+
+@st.cache_data(show_spinner=False)
+def load_discovery_dataset_stats(csv_path: Path = COORDS_CSV) -> dict | None:
+    """Quick coverage summary of the national helipad-discovery dataset
+    (src/geospatial/helipad_bot.py output) — total points collected and
+    how many distinct location names appear, as a proxy for geographic
+    diversity. If src/geospatial/geocode_states.py has been run, its output
+    CSV (helipad_coordinates_com_estado.csv, next to csv_path) is picked up
+    here too and grouped into "by_state" counts — this is what lets the
+    About tab replace its "State-by-state breakdown pending" caption with
+    real numbers once that script has actually been run."""
+    if not csv_path.exists():
+        return None
+    try:
+        df = pd.read_csv(csv_path)
+    except Exception:
+        return None
+    bairro_col = "Nome do Bairro" if "Nome do Bairro" in df.columns else None
+    stats = {
+        "total_points": len(df),
+        "distinct_locations": df[bairro_col].nunique() if bairro_col else None,
+        "by_state": None,
+        "points_table": None,
+    }
+
+    ts_col = "Carimbo de data/hora" if "Carimbo de data/hora" in df.columns else None
+    points_df = pd.DataFrame({
+        "Nome do Bairro": df[bairro_col] if bairro_col else [""] * len(df),
+    })
+    if ts_col:
+        # Date only (drop the time-of-day) for a cleaner display column.
+        points_df["Coletado em"] = pd.to_datetime(
+            df[ts_col], format="%d/%m/%Y %H:%M:%S", errors="coerce"
+        ).dt.strftime("%d/%m/%Y")
+
+    by_state_path = csv_path.parent / "helipad_coordinates_com_estado.csv"
+    if by_state_path.exists():
+        try:
+            state_df = pd.read_csv(by_state_path)
+            if "Estado" in state_df.columns:
+                counts = state_df["Estado"].fillna("").replace("", "(desconhecido)").value_counts()
+                stats["by_state"] = counts.to_dict()
+                # Row-level "Estado" only when both files have the exact
+                # same row count — geocode_states.py is expected to process
+                # the coordinates file one-to-one, but there's no shared key
+                # to actually verify alignment by, so mismatched lengths
+                # skip this column rather than risk mismatched rows.
+                if len(state_df) == len(df):
+                    points_df["Estado"] = state_df["Estado"].fillna("(desconhecido)").values
+        except Exception:
+            pass  # malformed/partial CSV — fall back to the pending caption, don't crash the tab
+
+    stats["points_table"] = points_df
+    return stats
+
+
+def build_session_summary_pdf(metrics_df: pd.DataFrame, selected_model, conf_threshold, lang: str) -> bytes:
+    """One-page PDF snapshot of the current dashboard session — active
+    model, confidence threshold, the full experiment comparison table, and
+    field-validation totals if available. Meant as something quick to
+    attach to an email or the repo without regenerating the full 25-page
+    Word report every time a small thing changes."""
+    from reportlab.lib.pagesizes import letter
+    from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle
+    from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+    from reportlab.lib import colors
+    from reportlab.lib.units import cm
+
+    buf = io.BytesIO()
+    doc = SimpleDocTemplate(buf, pagesize=letter, topMargin=2 * cm, bottomMargin=2 * cm)
+    styles = getSampleStyleSheet()
+    title_style = ParagraphStyle("HeliTitle", parent=styles["Title"], textColor=colors.HexColor("#0E756D"))
+    h2_style = ParagraphStyle("HeliH2", parent=styles["Heading2"], textColor=colors.HexColor("#1E3A8A"),
+                               spaceBefore=14, spaceAfter=6)
+    body_style = styles["Normal"]
+
+    is_pt = lang == "pt"
+    story = []
+
+    story.append(Paragraph("🚁 Helipad Detector", title_style))
+    story.append(Paragraph(
+        "Session summary — Helipad Detector dashboard" if not is_pt else "Resumo de sessão — dashboard Helipad Detector",
+        styles["Heading3"]))
+    story.append(Paragraph(datetime.now().strftime("%Y-%m-%d %H:%M"), body_style))
+    story.append(Spacer(1, 14))
+
+    story.append(Paragraph("Active configuration" if not is_pt else "Configuração ativa", h2_style))
+    config_rows = [
+        ["Model" if not is_pt else "Modelo", str(selected_model) if selected_model else "—"],
+        ["Confidence threshold" if not is_pt else "Confiança mínima", f"{conf_threshold:.2f}" if conf_threshold is not None else "—"],
+        ["Language" if not is_pt else "Idioma", "Português" if is_pt else "English"],
+    ]
+    config_table = Table(config_rows, colWidths=[6 * cm, 9 * cm])
+    config_table.setStyle(TableStyle([
+        ("FONTSIZE", (0, 0), (-1, -1), 10),
+        ("TEXTCOLOR", (0, 0), (0, -1), colors.HexColor("#0E756D")),
+        ("BOTTOMPADDING", (0, 0), (-1, -1), 6),
+        ("LINEBELOW", (0, 0), (-1, -1), 0.5, colors.HexColor("#E2E8F0")),
+    ]))
+    story.append(config_table)
+
+    if not metrics_df.empty:
+        story.append(Paragraph("Experiments" if not is_pt else "Experimentos", h2_style))
+        cols = ["Experiment", "Best Epoch", "Total Epochs", "Precision", "Recall", "mAP@50", "mAP@50-95"]
+        available_cols = [c for c in cols if c in metrics_df.columns]
+        table_data = [available_cols] + metrics_df[available_cols].astype(str).values.tolist()
+        exp_table = Table(table_data, colWidths=[2.1 * cm] * len(available_cols))
+        exp_table.setStyle(TableStyle([
+            ("BACKGROUND", (0, 0), (-1, 0), colors.HexColor("#0E756D")),
+            ("TEXTCOLOR", (0, 0), (-1, 0), colors.white),
+            ("FONTSIZE", (0, 0), (-1, -1), 8),
+            ("GRID", (0, 0), (-1, -1), 0.5, colors.HexColor("#E2E8F0")),
+            ("ALIGN", (1, 0), (-1, -1), "CENTER"),
+        ]))
+        story.append(exp_table)
+
+    field_summary = load_field_detection_summary()
+    if field_summary:
+        story.append(Paragraph("Field validation" if not is_pt else "Validação de campo", h2_style))
+        try:
+            total_tiles = sum(r.get("total_tiles", 0) for r in field_summary.values())
+            total_detected = sum(r.get("detected", 0) for r in field_summary.values())
+            rate = (total_detected / total_tiles * 100) if total_tiles else 0
+            story.append(Paragraph(
+                f"{total_detected} / {total_tiles} tiles ({rate:.1f}%) across {len(field_summary)} regions"
+                if not is_pt else
+                f"{total_detected} / {total_tiles} tiles ({rate:.1f}%) em {len(field_summary)} regiões",
+                body_style))
+        except Exception:
+            pass
+
+    story.append(Spacer(1, 20))
+    story.append(Paragraph(
+        "Generated from the Helipad Detector Streamlit dashboard — PUC-SP FACEI, Machine Learning / Computer Vision, Project P2."
+        if not is_pt else
+        "Gerado a partir do dashboard Streamlit do Helipad Detector — PUC-SP FACEI, Machine Learning / Visão Computacional, Projeto P2.",
+        ParagraphStyle("Footer", parent=body_style, fontSize=8, textColor=colors.HexColor("#64748B"))))
+
+    doc.build(story)
+    return buf.getvalue()
+
+
+def get_selected_model():
+    if not MODEL_OPTIONS:
+        return None
+    label = st.session_state.get("model_choice") or next(iter(MODEL_OPTIONS))
+    return load_model(str(MODEL_OPTIONS[label]))
+
+
+def slugify_region(name: str) -> str:
+    """Matches the slug format used by src/geospatial/download_all_regions.py
+    and auto_triage_regions.py, so map markers can be joined with the
+    per-region detection summary by name."""
+    return str(name).strip().replace(" ", "_").replace("/", "-").replace("(", "").replace(")", "")
+
+
+# Approximate coordinates of the capital of each state helipad_bot.py is
+# configured to search (see DEFAULT_ESTADOS in src/geospatial/helipad_bot.py),
+# used only to add a city hint to Discovery Dataset marker labels. A bairro
+# name alone can be ambiguous — e.g. "Centro" showed up for Rio de Janeiro,
+# and could just as easily show up for Belo Horizonte or Fortaleza in a
+# future scrape — but its coordinates aren't. This is a label hint for
+# readability, not a claim about which municipality a point administratively
+# belongs to: if no capital is within CITY_HINT_RADIUS_DEG, no hint is added
+# rather than guessing one.
+BRAZIL_STATE_CAPITALS = {
+    "Rio de Janeiro": (-22.9068, -43.1729),
+    "Belo Horizonte": (-19.9167, -43.9345),
+    "Porto Alegre": (-30.0346, -51.2177),
+    "Curitiba": (-25.4284, -49.2733),
+    "Salvador": (-12.9714, -38.5014),
+    "Fortaleza": (-3.7172, -38.5433),
+    "Goiânia": (-16.6869, -49.2648),
+    "Florianópolis": (-27.5954, -48.5480),
+    "Recife": (-8.0476, -34.8770),
+    "Brasília": (-15.7939, -47.8828),
+    "Manaus": (-3.1190, -60.0217),
+    "Belém": (-1.4558, -48.5039),
+    "Vitória": (-20.3155, -40.3128),
+    "Cuiabá": (-15.6014, -56.0979),
+    "Campo Grande": (-20.4697, -54.6201),
+}
+CITY_HINT_RADIUS_DEG = 0.6  # ~65 km — the city + close metro area, not the whole state
+
+
+def city_hint(lat: float, lon: float) -> str | None:
+    """Nearest state capital within CITY_HINT_RADIUS_DEG, or None if the
+    point is too far from any of them to guess responsibly."""
+    best_city, best_dist = None, CITY_HINT_RADIUS_DEG
+    for city, (clat, clon) in BRAZIL_STATE_CAPITALS.items():
+        dist = ((lat - clat) ** 2 + (lon - clon) ** 2) ** 0.5
+        if dist < best_dist:
+            best_city, best_dist = city, dist
+    return best_city
+
+
+@st.cache_data(show_spinner=False)
+def load_state_lookup(csv_path: Path = COORDS_CSV) -> dict:
+    """Reads src/geospatial/helipad_coordinates_com_estado.csv (produced by
+    geocode_states.py) if it exists, keyed by the raw 'Coordenadas da
+    Bounding Box' string — a stable, unique-per-point join key that doesn't
+    depend on row order matching between this file and the main coordinates
+    CSV. Used as a fallback wherever city_hint() comes back empty: a point
+    can be too far from any of the 15 hardcoded state capitals to guess a
+    *city* responsibly (city_hint's job), while still having a known
+    *state* from geocode_states.py's real Nominatim lookup — a materially
+    more precise, distance-independent source for that one field."""
+    state_csv = csv_path.parent / "helipad_coordinates_com_estado.csv"
+    if not state_csv.exists():
+        return {}
+    try:
+        df = pd.read_csv(state_csv)
+        if "Coordenadas da Bounding Box" not in df.columns or "Estado" not in df.columns:
+            return {}
+        return dict(zip(df["Coordenadas da Bounding Box"], df["Estado"]))
+    except Exception:
+        return {}
+
+
+def location_hint(lat: float, lon: float, raw_bbox: str, state_lookup: dict) -> str | None:
+    """Best available human-readable hint for a Discovery Dataset point:
+    nearest state capital if close enough (city_hint), otherwise the real
+    geocoded state from geocode_states.py's output if that's been run,
+    otherwise None (let the caller decide how to render "we don't know")."""
+    hint = city_hint(lat, lon)
+    if hint:
+        return hint
+    state = state_lookup.get(raw_bbox)
+    return state if isinstance(state, str) and state.strip() else None
+
+
+# Region names that need a specific English translation, not just a literal
+# word swap (display-only — source CSV/folder names are untouched).
+REGION_NAME_TRANSLATIONS = {
+    "inter zonas": "Inter-Zone Corridor",
+}
+
+
+def format_region_display(name: str) -> str:
+    """Human-friendly display name for a region, regardless of whether it
+    comes from a raw CSV name (e.g. 'Av_Paulista (trecho 1)') or a JSON
+    slug (e.g. 'Av_Paulista_trecho_1'). Display-only — does not rename any
+    file, folder, or CSV entry. Follows the active language: 'Segment N'
+    in English, 'Trecho N' in Português (e.g. 'Av Paulista Trecho 1')."""
+    word = "Trecho" if st.session_state.get("lang") == "pt" else "Segment"
+    display = str(name).replace("_", " ")
+    display = re.sub(r"\btrecho\b", word, display, flags=re.IGNORECASE)
+    display = re.sub(r"\s+", " ", display).strip()
+    translated = REGION_NAME_TRANSLATIONS.get(display.lower())
+    return translated if translated else display
+
+
+def detection_rate_to_color(rate: float, min_rate: float, max_rate: float) -> str:
+    """Maps a detection rate to a hex color on a light-to-dark blue scale,
+    matching the same Blues gradient used in the Experiment/Field tables."""
+    if max_rate <= min_rate:
+        t = 0.5
+    else:
+        t = (rate - min_rate) / (max_rate - min_rate)
+    t = max(0.0, min(1.0, t))
+    # light blue (#dbeafe) -> navy (#1E3A8A)
+    light = (0xDB, 0xEA, 0xFE)
+    dark = (0x1E, 0x3A, 0x8A)
+    rgb = tuple(int(light[i] + (dark[i] - light[i]) * t) for i in range(3))
+    return f"#{rgb[0]:02x}{rgb[1]:02x}{rgb[2]:02x}"
+
+
+def readable_text_color(hex_color: str) -> str:
+    """Black or white, whichever reads better on top of hex_color — used to
+    keep the detection-rate tooltip's text legible across the full range of
+    detection_rate_to_color's light-blue-to-navy gradient (light backgrounds
+    need dark text, navy backgrounds need white text)."""
+    hex_color = hex_color.lstrip("#")
+    r, g, b = (int(hex_color[i:i + 2], 16) for i in (0, 2, 4))
+    luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255
+    return "#0a1f2b" if luminance > 0.55 else "#ffffff"
+
+
+def rate_popup_html(inner_html: str, bg_color: str, text_color: str) -> str:
+    """Wraps popup content in a div that bleeds into Leaflet's default popup
+    padding (negative margin) so the popup's visible content area reads as
+    fully colored, not just white-with-colored-text. Leaflet's own
+    .leaflet-popup-content-wrapper chrome (rounded corners, drop shadow,
+    little tip/arrow) stays its default white — Folium doesn't expose a
+    stable per-popup id to scope a CSS override at that layer — but this
+    covers the entire readable content area, which is what actually carries
+    the color signal."""
+    return (
+        f'<div style="background:{bg_color}; color:{text_color}; '
+        f'margin:-13px -20px; padding:12px 18px; border-radius:10px;">'
+        f'{inner_html}</div>'
+    )
+
+
+# ========================= FIELD DETECTIONS BY REGION (data) =========================
+# reports/detection_summary_by_region.json is generated by
+# src/geospatial/auto_triage_regions.py. Defined here (before it's first used
+# in the Map tab) so both the Map tab and the Field Detections tab can read it.
+FIELD_SUMMARY_PATH = Path("reports/detection_summary_by_region.json")
+
+# Per-experiment field-validation summaries — same JSON shape as
+# FIELD_SUMMARY_PATH above (that one is exp2, the model actually used for
+# the "main" Field Detections view). exp1/exp3 are optional: if their
+# files aren't present in the repo yet, the 3-way comparison section
+# below simply doesn't render, no error.
+FIELD_SUMMARY_PATHS_BY_EXP = {
+    "exp1": Path("reports/detection_summary_by_region_exp1.json"),
+    "exp2": FIELD_SUMMARY_PATH,
+    "exp3": Path("reports/detection_summary_by_region_exp3.json"),
+}
+# exp4 (YOLO11n, same dataset/epochs as exp2) is registered only once its
+# field-validation JSON exists, so the "missing summaries" caption below
+# doesn't show visitors a warning about a run that hasn't been executed yet.
+_EXP4_FIELD_PATH = Path("reports/detection_summary_by_region_exp4.json")
+if _EXP4_FIELD_PATH.exists():
+    FIELD_SUMMARY_PATHS_BY_EXP["exp4"] = _EXP4_FIELD_PATH
+
+# exp1, exp3 and exp4 were all field-validated on an identical 7,767-tile set.
+# exp2's ORIGINAL production run (FIELD_SUMMARY_PATH, used by the cards/chart
+# above) covered a slightly larger 7,943-tile set instead (Faria Lima and the
+# Av. Paulista split differ by a few hundred tiles there) — mixing that run
+# into the per-region comparison table below would silently compare rows
+# computed over different tile counts for the same neighborhood. exp2 was
+# re-run on the matching 7,767-tile set specifically to fix this; once that
+# file exists, the comparison table (not the production cards above, which
+# intentionally keep showing exp2's real deployed-run numbers) uses it
+# instead, so every column in that table shares one identical tile set.
+_EXP2_RERUN_FIELD_PATH = Path("reports/detection_summary_by_region_exp2_rerun.json")
+if _EXP2_RERUN_FIELD_PATH.exists():
+    FIELD_SUMMARY_PATHS_BY_EXP["exp2"] = _EXP2_RERUN_FIELD_PATH
+
+
+@st.cache_data(show_spinner=False)
+def load_field_detection_summary():
+    if not FIELD_SUMMARY_PATH.exists():
+        return None
+    try:
+        with open(FIELD_SUMMARY_PATH, "r", encoding="utf-8") as f:
+            return json.load(f)
+    except Exception:
+        return None
+
+
+@st.cache_data(show_spinner=False)
+def load_field_summaries_by_exp() -> dict:
+    """{exp_name: parsed_json} for every experiment whose field-validation
+    summary file actually exists in reports/ — used to build the 3-model
+    comparison table. Missing files are silently skipped."""
+    out = {}
+    for exp_name, path in FIELD_SUMMARY_PATHS_BY_EXP.items():
+        if path.exists():
+            try:
+                with open(path, "r", encoding="utf-8") as f:
+                    out[exp_name] = json.load(f)
+            except Exception:
+                pass
+    return out
+
+
+MODEL_OPTIONS = discover_models()
+
+# {exp_dir.name: weights_path} — used to build "view architecture in
+# Netron" links per experiment (Netron reads the file straight from its
+# raw GitHub URL, no upload needed).
+MODEL_WEIGHTS_BY_EXP = {exp_dir.name: (exp_dir / "weights" / "best.pt")
+                         for exp_dir in _all_exp_dirs()
+                         if (exp_dir / "weights" / "best.pt").exists()}
+
+GITHUB_REPO_RAW_BASE = (
+    "https://raw.githubusercontent.com/"
+    "Mindful-AI-Research/3-project-ai-ml-yolo-helipad_detector/main"
+)
+
+
+def netron_url_for(exp_name: str) -> str | None:
+    """Netron.app link that auto-loads a given experiment's best.pt
+    straight from its raw GitHub URL — no manual upload needed. Returns
+    None if that experiment's weights aren't tracked locally (Netron
+    still works via plain https://netron.app + manual upload in that case)."""
+    weights_path = MODEL_WEIGHTS_BY_EXP.get(exp_name)
+    if not weights_path:
+        return None
+    raw_url = f"{GITHUB_REPO_RAW_BASE}/{weights_path.as_posix()}"
+    return f"https://netron.app/?url={raw_url}"
+
+# ========================= LIVE HELICOPTER TRAFFIC (adsb.fi) =========================
+# Extra map layer, added on course feedback: overlays real-time ADS-B-derived aircraft
+# positions over the static helipad map, so the dashboard also shows actual air
+# traffic, not only ground infrastructure detected from satellite imagery. This is
+# fundamentally different in kind from the YOLO detections used elsewhere in this app:
+# it is live radar-like telemetry, not image-based inference, and it inherits its
+# provider's own coverage gaps — see the "map.flights_disclaimer" caption rendered
+# next to this layer, which must stay visible whenever the layer is shown.
+#
+# Provider history (why adsb.fi, not OpenSky): OpenSky Network was tried first (free,
+# no key), but its anonymous /states/all endpoint hard-times-out from every cloud host
+# tested (Streamlit Community Cloud and Hugging Face Spaces both fail identically with
+# a raw TCP connect timeout — confirmed 2026-09-21/22 — while the same URL works fine
+# from a home ISP connection via curl), which is consistent with OpenSky, a small
+# volunteer-run network, blocking datacenter/cloud IP ranges as an anti-abuse measure.
+# Two other free community feeds were also ruled out on the same investigation:
+# api.airplanes.live (403 on every endpoint, now key-gated) and api.adsb.lol
+# (always returns an empty aircraft list). adsb.fi's public v2 endpoint was still
+# serving real data with no API key as of this writing, and — because it is what
+# backs other cloud-hosted OSINT dashboards (independently confirmed by inspecting
+# github.com/simplifaisoul/osiris, MIT-licensed, which fetches this exact endpoint
+# from a Vercel-hosted Next.js app) — is a much better bet against the same cloud-IP
+# blocking problem than another volunteer ADS-B network would be.
+#
+# The other thing adsb.fi buys us that OpenSky structurally cannot: an actual aircraft
+# type code (field "t", e.g. "R44", "EC35", "S76") for most contacts, instead of
+# OpenSky's ADS-B "category" field, which the same Osiris investigation measured as
+# blank for ~96% of aircraft even when explicitly requested. Real type codes let this
+# layer classify helicopters by aircraft model — a materially stronger signal than the
+# airline-callsign-exclusion heuristic used in the previous OpenSky-based version of
+# this function — while still degrading gracefully to that same callsign heuristic for
+# the contacts that report no type, so it never regresses below what already worked.
+SP_LAT, SP_LON, SP_DIST_NM = -23.55, -46.63, 50  # São Paulo center, 50 nm radius (~92 km)
+ADSBFI_URL = f"https://opendata.adsb.fi/api/v2/lat/{SP_LAT}/lon/{SP_LON}/dist/{SP_DIST_NM}"
+ADSBFI_HEADERS = {"User-Agent": "HelipadDetector-Dashboard/1.0 (+https://github.com/Mindful-AI-Research/3-project-ai-ml-yolo-helipad_detector)"}
+ADSBFI_TIMEOUT = (5, 12)  # (connect, read) seconds
+ADSBFI_MAX_ATTEMPTS = 2   # one retry on transient connect/read failures before giving up
+MAX_FLIGHT_TRAIL_POINTS = 20  # per aircraft, session-local only — see map.flights_trail_note
+
+# ICAO type-designator codes for rotorcraft actually in civil/EMS/executive service —
+# adapted from the equivalent table in github.com/simplifaisoul/osiris (MIT-licensed),
+# trimmed to models plausible over São Paulo. Not exhaustive: any type absent from this
+# set falls through to the callsign heuristic below rather than being silently dropped.
+HELICOPTER_TYPE_CODES = {
+    "R22", "R44", "R66", "B06", "B06T", "B204", "B205", "B206", "B212", "B222", "B230",
+    "B407", "B412", "B427", "B429", "B430", "B505", "B525",
+    "AS32", "AS35", "AS50", "AS55", "AS65",
+    "EC20", "EC25", "EC30", "EC35", "EC45", "EC55", "EC75",
+    "H125", "H130", "H135", "H145", "H155", "H160", "H175", "H215", "H225",
+    "S55", "S58", "S61", "S64", "S70", "S76", "S92",
+    "A109", "A119", "A139", "A169", "A189", "AW09",
+    "MD52", "MD60", "MDHI", "MD90", "NOTR",
+}
+
+# Fallback for the contacts adsb.fi reports with no type code at all: a short, NOT
+# exhaustive list of ICAO 3-letter callsign prefixes for major airlines serving Greater
+# São Paulo's airports (Congonhas/Guarulhos/Viracopos). Any callsign starting with one
+# of these is confidently a scheduled commercial flight and is excluded; everything
+# else (blank callsigns, Brazilian registration-style callsigns like PP-/PR-/PT-/PS-xxx,
+# unlisted 3-letter codes) is kept as an unconfirmed "possible small aircraft" — which
+# may be a helicopter, an air taxi, an executive jet, or general aviation.
+KNOWN_AIRLINE_CALLSIGN_PREFIXES = {
+    "TAM", "JJ", "GLO", "G3", "AZU", "AD", "PTB", "TTL", "ONE", "AVJ",
+    "ARE", "ARG", "AVA", "CMP", "LAN", "LPE", "AAL", "UAL", "DAL", "JBU",
+    "ASA", "SWA", "FDX", "UPS", "BAW", "AFR", "DLH", "KLM", "IBE", "TAP",
+    "AZA", "SWR", "AUA", "SAS", "FIN", "ANA", "JAL", "UAE", "QTR", "ETD",
+    "THY", "ACA", "AMX", "AVT", "ABD", "GAI", "MPX",
+}
+
+
+def classify_possible_helicopter(callsign: str, type_code: str) -> str | None:
+    """Returns "confirmed" if adsb.fi reports a type code found in
+    HELICOPTER_TYPE_CODES, "heuristic" if there's no usable type code but the
+    callsign doesn't match a known commercial airline (kept as an unconfirmed
+    candidate), or None if it should be excluded (a typed non-rotorcraft, e.g.
+    an airliner, or a confidently-commercial callsign).
+    """
+    tc = (type_code or "").strip().upper()
+    if tc:
+        return "confirmed" if tc in HELICOPTER_TYPE_CODES else None
+    cs = (callsign or "").strip().upper()
+    prefix3, prefix2 = cs[:3], cs[:2]
+    if prefix3 in KNOWN_AIRLINE_CALLSIGN_PREFIXES or prefix2 in KNOWN_AIRLINE_CALLSIGN_PREFIXES:
+        return None
+    return "heuristic"
+
+
+@st.cache_data(ttl=30, show_spinner=False)
+def fetch_live_helicopter_flights(_unused_bbox=None) -> tuple[list[dict], str | None]:
+    """Queries adsb.fi's public v2 REST API for aircraft currently within
+    SP_DIST_NM of São Paulo, keeping only those classified as a possible
+    helicopter (see classify_possible_helicopter). Returns
+    (flights, error_message); never raises — a network hiccup, timeout, or
+    provider outage degrades this layer gracefully (empty list + short error
+    string) instead of crashing the tab. Cached for 30s so normal Streamlit
+    reruns don't hammer the provider.
+
+    `_unused_bbox` is accepted and ignored so the call site (and its cache
+    key) didn't need to change when this function moved from OpenSky's
+    lat/lon-bbox query shape to adsb.fi's center+radius shape.
+
+    Retries once on connection/timeout errors (covers most transient network
+    blips) before reporting the failure; does not retry on HTTP error status
+    codes, since those won't resolve by repeating the same request immediately.
+
+    (Osiris credit for the adsb.fi choice and the type-code classification
+    approach lives in the module-level comments right above SP_LAT/SP_LON and
+    HELICOPTER_TYPE_CODES, not repeated here.)
+    """
+    payload = None
+    last_error = None
+    for attempt in range(ADSBFI_MAX_ATTEMPTS):
+        try:
+            resp = requests.get(ADSBFI_URL, headers=ADSBFI_HEADERS, timeout=ADSBFI_TIMEOUT)
+            resp.raise_for_status()
+            payload = resp.json()
+            last_error = None
+            break
+        except requests.exceptions.HTTPError as exc:
+            return [], str(exc)  # 4xx/5xx — retrying immediately won't help
+        except requests.exceptions.RequestException as exc:
+            last_error = str(exc)
+            continue
+        except ValueError:
+            return [], "invalid (non-JSON) response"
+
+    if payload is None:
+        return [], last_error or "unknown error"
+
+    aircraft = payload.get("aircraft") or []
+    flights = []
+    for ac in aircraft:
+        lat, lon = ac.get("lat"), ac.get("lon")
+        if lat is None or lon is None:
+            continue
+        alt_baro = ac.get("alt_baro")
+        on_ground = alt_baro == "ground" or (isinstance(alt_baro, (int, float)) and alt_baro < 100)
+        if on_ground:
+            continue
+
+        callsign = (ac.get("flight") or "").strip()
+        type_code = ac.get("t") or ""
+        confidence = classify_possible_helicopter(callsign, type_code)
+        if confidence is None:
+            continue
+
+        flights.append({
+            "icao24": ac.get("hex", ""),
+            "callsign": callsign or ac.get("hex", "—"),
+            "origin_country": "—",  # adsb.fi doesn't report this; kept for popup compatibility
+            "lat": lat,
+            "lon": lon,
+            "altitude_m": alt_baro * 0.3048 if isinstance(alt_baro, (int, float)) else None,
+            "speed_ms": ac.get("gs", 0) * 0.514444 if ac.get("gs") is not None else None,  # knots -> m/s
+            "heading": ac.get("track") or 0.0,
+            "vertical_rate": ac.get("baro_rate"),
+            "type_code": type_code or "—",
+            "confidence": confidence,  # "confirmed" | "heuristic"
+        })
+    return flights, None
+
+
+def update_flight_trails(flights: list[dict]) -> None:
+    """Appends this poll's positions to a per-aircraft trail kept in
+    st.session_state, capped at MAX_FLIGHT_TRAIL_POINTS. Session-local,
+    best-effort trace built only from moments this dashboard was open and
+    refreshed — see map.flights_trail_note for the disclaimer shown in the UI."""
+    trails = st.session_state.setdefault("flight_trails", {})
+    for f in flights:
+        trail = trails.setdefault(f["icao24"], [])
+        point = (f["lat"], f["lon"])
+        if not trail or trail[-1] != point:
+            trail.append(point)
+        if len(trail) > MAX_FLIGHT_TRAIL_POINTS:
+            del trail[: len(trail) - MAX_FLIGHT_TRAIL_POINTS]
+
+
+# ========================= BACKGROUND MUSIC (sidebar widget) =========================
+# Track: "Passacaglia – Deep House Remix" — used here for educational /
+# academic-presentation purposes. Embedded as base64 so no separate static
+# file server is needed; loops indefinitely once started. The app never
+# autoplays audio (browsers block that anyway) — it always waits for the
+# person to click the 🔇/🔊 icon below, which starts fully muted/paused.
+AUDIO_PATH = Path("assets/audio/passacaglia-deep-house-remix.mp3")
+
+
+@st.cache_data(show_spinner=False)
+def _load_audio_base64(path: str):
+    p = Path(path)
+    if not p.exists():
+        return None
+    return base64.b64encode(p.read_bytes()).decode("ascii")
+
+
+def render_music_toggle():
+    audio_b64 = _load_audio_base64(str(AUDIO_PATH))
+    st.markdown(f"### {t('sidebar.music.title')}")
+    if not audio_b64:
+        st.caption(t("sidebar.music.missing"))
+        return
+
+    label_play = t("sidebar.music.play")
+    label_pause = t("sidebar.music.pause")
+
+    st.iframe(f"""
+    <button id="music-toggle-btn" title="{label_play}" style="
+      width:100%; display:flex; align-items:center; justify-content:center; gap:10px;
+      background:#0E756D; color:#fff; border:1.5px solid #14b8a6; border-radius:12px;
+      padding:12px 14px; font-family:'Inter',sans-serif; font-size:14px; font-weight:700;
+      letter-spacing:.02em; cursor:pointer; box-shadow:0 3px 14px rgba(14,117,109,.45);
+      transition:transform .15s, box-shadow .2s; animation:music-pulse 2.2s ease-in-out infinite;
+    ">
+      <span id="music-icon" style="font-size:18px;">🔇</span>
+      <span id="music-label">{label_play}</span>
+    </button>
+    <style>
+      @keyframes music-pulse {{
+        0%, 100% {{ box-shadow: 0 3px 14px rgba(14,117,109,.45); }}
+        50% {{ box-shadow: 0 3px 22px rgba(20,184,166,.85); }}
+      }}
+      #music-toggle-btn:hover {{ transform: translateY(-1px); }}
+      #music-toggle-btn.playing {{ animation: none; background:#134e4a; }}
+    </style>
+    <audio id="bg-music" src="data:audio/mp3;base64,{audio_b64}" loop preload="auto" muted></audio>
+    <script>
+      const btn = document.getElementById('music-toggle-btn');
+      const icon = document.getElementById('music-icon');
+      const label = document.getElementById('music-label');
+      const audio = document.getElementById('bg-music');
+      audio.volume = 0.35;
+      let playing = false;
+
+      function start() {{
+        if (playing) return;
+        audio.muted = false;
+        audio.play().then(() => {{
+          playing = true;
+          icon.textContent = '🔊';
+          btn.title = '{label_pause}';
+          label.textContent = '{label_pause}';
+          btn.classList.add('playing');
+        }}).catch(() => {{}});
+      }}
+      function stop() {{
+        audio.pause();
+        playing = false;
+        icon.textContent = '🔇';
+        btn.title = '{label_play}';
+        label.textContent = '{label_play}';
+        btn.classList.remove('playing');
+      }}
+
+      btn.addEventListener('click', () => {{ playing ? stop() : start(); }});
+
+      /* Auto-start on the very first interaction anywhere in the dashboard
+         (click, tap, or key press) — not just a click on this button.
+         The <audio> tag itself is muted/paused until then, so this never
+         violates the browser's autoplay-with-sound policy; it just widens
+         the trigger from "click this exact icon" to "do literally
+         anything in the app". Listening on window.parent.document works
+         because Streamlit's components.html iframe is same-origin with
+         the main app (srcdoc without a sandbox override inherits the
+         parent's origin) — if that ever changes in a future Streamlit
+         version, this silently no-ops and the button above still works
+         normally on its own. */
+      try {{
+        const parentDoc = window.parent.document;
+        const startOnce = () => {{
+          start();
+          parentDoc.removeEventListener('click', startOnce, true);
+          parentDoc.removeEventListener('keydown', startOnce, true);
+          parentDoc.removeEventListener('touchstart', startOnce, true);
+        }};
+        parentDoc.addEventListener('click', startOnce, {{ once: true, capture: true }});
+        parentDoc.addEventListener('keydown', startOnce, {{ once: true, capture: true }});
+        parentDoc.addEventListener('touchstart', startOnce, {{ once: true, capture: true, passive: true }});
+      }} catch (e) {{ /* cross-origin iframe — fallback: only the button click above starts the music */ }}
+    </script>
+    """, height=64)
+
+    # Download lives right next to the player — one contextual music
+    # experience in the sidebar (play + download together), instead of
+    # a separate, disconnected download link buried in another tab.
+    if AUDIO_PATH.exists():
+        st.markdown(
+            f"<p style='font-style:italic; font-size:12.5px; color:#9FB0B8; margin:10px 0 6px 0;'>"
+            f"{t('sidebar.music.tagline')}</p>",
+            unsafe_allow_html=True,
+        )
+        with open(AUDIO_PATH, "rb") as f:
+            st.download_button(
+                t("dl.music.download_button"),
+                data=f,
+                file_name="passacaglia-deep-house-remix.mp3",
+                mime="audio/mpeg",
+                width="stretch",
+            )
+
+
+# ========================= SIDEBAR: LANGUAGE + MODEL SELECTION =========================
+with st.sidebar:
+    lang_choice = st.radio(
+        "Language / Idioma",
+        options=["🇬🇧 English", "🇧🇷 Português"],
+        index=0 if st.session_state["lang"] == "en" else 1,
+        horizontal=True,
+        label_visibility="collapsed",
+        key="lang_radio",
+    )
+    st.session_state["lang"] = "en" if lang_choice.startswith("🇬🇧") else "pt"
+
+    render_music_toggle()
+
+    if "heli_paused" not in st.session_state:
+        st.session_state["heli_paused"] = False
+
+    with st.expander(t("sidebar.extras"), expanded=False):
+        heli_col1, heli_col2 = st.columns(2)
+        with heli_col1:
+            if st.button("🚁 " + t("sidebar.replay_heli"), width="stretch"):
+                st.session_state["heli_replay_nonce"] += 1
+                st.session_state["heli_paused"] = False
+                st.rerun()
+        with heli_col2:
+            if st.button("🌀 " + t("sidebar.spin_heli"), width="stretch"):
+                st.session_state["heli_spin_nonce"] += 1
+                st.rerun()
+
+        pause_label = t("sidebar.resume_heli") if st.session_state["heli_paused"] else t("sidebar.pause_heli")
+        pause_icon = "▶️" if st.session_state["heli_paused"] else "⏸️"
+        if st.button(f"{pause_icon} {pause_label}", width="stretch"):
+            st.session_state["heli_paused"] = not st.session_state["heli_paused"]
+            st.rerun()
+
+    st.markdown(f"### {t('sidebar.model')}")
+    if not MODEL_OPTIONS:
+        st.warning(t("sidebar.no_model.warning"))
+        st.session_state["model_choice"] = None
+        conf_threshold = 0.25
+    else:
+        st.selectbox(
+            t("sidebar.choose_experiment"),
+            options=list(MODEL_OPTIONS.keys()),
+            key="model_choice",
+            help=t("sidebar.choose_experiment.help"),
+        )
+        conf_threshold = st.slider(
+            t("sidebar.confidence"), min_value=0.05, max_value=0.95, value=0.25, step=0.05
+        )
+
+# ========================= TILE HELPERS =========================
+def deg2tile(lat, lon, z):
+    n = 2.0 ** z
+    x = int((lon + 180.0) / 360.0 * n)
+    lat_rad = math.radians(lat)
+    y = int((1.0 - math.asinh(math.tan(lat_rad)) / math.pi) / 2.0 * n)
+    return x, y
+
+def download_tile(z, x, y, temp_dir):
+    url = f"https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
+    headers = {"User-Agent": "Helipad-Detector-PUC-SP/1.0"}
+    path = temp_dir / f"tile_z{z}_x{x}_y{y}.jpg"
+
+    if path.exists():
+        return path
+
+    try:
+        r = requests.get(url, headers=headers, timeout=20)
+        if r.status_code == 200 and len(r.content) > 2000:
+            path.write_bytes(r.content)
+            return path
+    except requests.RequestException:
+        pass
+    return None
+
+# ========================= DETECTION =========================
+def is_blank_tile(image: Image.Image, threshold: float = 5.0) -> bool:
+    """Detecta tiles quase sem textura -- o sintoma classico de uma falha
+    parcial de download do ESRI (tile fica preto/cinza solido em vez da
+    imagem de satelite de verdade). Um tile real tem bastante variacao de
+    cor entre pixels; um tile vazio ou corrompido fica quase uniforme.
+    Ja documentado como limitacao conhecida no relatorio (Secao 10 e 12.3)
+    -- esta e a implementacao do filtro sugerido la."""
+    arr = np.asarray(image.convert("L"))  # escala de cinza, mais rapido de medir
+    return float(arr.std()) < threshold
+
+
+def detect_helipad(image, model: YOLO, conf: float):
+    result = model.predict(source=image, conf=conf, verbose=False)[0]
+    plotted = result.plot()[:, :, ::-1]  # BGR -> RGB
+    return plotted, len(result.boxes) > 0
+
+# ========================= INTERFACE =========================
+
+# ---- Flying helicopter, present on every tab (self-contained iframe
+# injecting into the PARENT document) ----
+#
+# Streamlit's tabs never trigger a script rerun — all tab content is
+# already in the DOM at once, and switching tabs is purely a client-side
+# CSS show/hide. So a Python-only "run once at the top" approach can never
+# know when the user changes tabs. Instead: the iframe below injects a
+# single persistent helicopter element straight into the PARENT document
+# (works because a components.html iframe using srcdoc, without a sandbox
+# override, inherits the parent's origin) with position:fixed, so it
+# floats above every tab, plus a click-listener on Streamlit's tab
+# buttons that restarts the flight animation whenever a different tab is
+# selected. Matches BOTH role="tab" (the ARIA attribute BaseWeb always
+# sets, most reliable) and data-baseweb="tab" (belt-and-suspenders) since
+# relying on only one turned out to miss real clicks. The style/element/
+# listener are only created once (guarded by DOM id) even though
+# Streamlit re-executes this components.html call on every rerun; small
+# "nonce" values let the sidebar buttons force a replay/spin on demand.
+# Flight path now varies per tab (4 distinct paths, picked by the clicked
+# tab's position — language-independent) and spins vary too (clockwise,
+# counter-clockwise, or a double spin, chosen at random each time), so it
+# reads as a helicopter actually patrolling the dashboard rather than one
+# looping clip. See FLIGHTS/SPINS inside the injected script below.
+
+if "heli_replay_nonce" not in st.session_state:
+    st.session_state["heli_replay_nonce"] = 0
+if "heli_spin_nonce" not in st.session_state:
+    st.session_state["heli_spin_nonce"] = 0
+
+st.iframe(f"""
+<script>
+(function() {{
+  try {{
+    var doc = window.parent.document;
+    var flyNonce = "{st.session_state['heli_replay_nonce']}";
+    var spinNonce = "{st.session_state['heli_spin_nonce']}";
+    var isPt = "{st.session_state.get('lang', 'pt')}" === 'pt';
+    var isPaused = {"true" if st.session_state.get("heli_paused") else "false"};
+
+    if (!doc.getElementById('heli-flyby-style')) {{
+      var style = doc.createElement('style');
+      style.id = 'heli-flyby-style';
+      style.textContent = `
+        /* Four distinct flight paths — different height range, duration
+           and number of undulations — so each tab feels like its own
+           little flight instead of one animation repeating everywhere. */
+        @keyframes heli-fly-v0 {{
+          0%   {{ left: 0%;   top: 44px; transform: rotate(-4deg)  scale(1);    opacity: 0; }}
+          8%   {{ opacity: 1; }}
+          25%  {{ top: 30px;  transform: rotate(12deg)  scale(1.03); }}
+          50%  {{ left: 48%;  top: 50px;  transform: rotate(-8deg)  scale(1); }}
+          75%  {{ top: 28px;  transform: rotate(12deg)  scale(1.03); }}
+          92%  {{ opacity: 1; }}
+          100% {{ left: 94%;  top: 42px;  transform: rotate(-4deg)  scale(1);   opacity: 0; }}
+        }}
+        @keyframes heli-fly-v1 {{
+          0%   {{ left: 0%;   top: 90px;  transform: rotate(-6deg)  scale(1);    opacity: 0; }}
+          8%   {{ opacity: 1; }}
+          20%  {{ top: 60px;  transform: rotate(10deg)  scale(1.04); }}
+          40%  {{ top: 105px; transform: rotate(-12deg) scale(1); }}
+          60%  {{ top: 65px;  transform: rotate(10deg)  scale(1.04); }}
+          80%  {{ top: 100px; transform: rotate(-10deg) scale(1); }}
+          92%  {{ opacity: 1; }}
+          100% {{ left: 94%;  top: 70px;  transform: rotate(-5deg)  scale(1);   opacity: 0; }}
+        }}
+        @keyframes heli-fly-v2 {{
+          0%   {{ left: 0%;   top: 56px; transform: rotate(-8deg)  scale(1);    opacity: 0; }}
+          6%   {{ opacity: 1; }}
+          30%  {{ left: 30%;  top: 36px;  transform: rotate(14deg)  scale(1.05); }}
+          50%  {{ left: 50%;  top: 66px;  transform: rotate(-14deg) scale(1); }}
+          70%  {{ left: 70%;  top: 36px;  transform: rotate(14deg)  scale(1.05); }}
+          94%  {{ opacity: 1; }}
+          100% {{ left: 96%;  top: 56px;  transform: rotate(-6deg)  scale(1);   opacity: 0; }}
+        }}
+        @keyframes heli-fly-v3 {{
+          0%   {{ left: 0%;   top: 34px; transform: rotate(-3deg) scale(0.95); opacity: 0; }}
+          10%  {{ opacity: 1; }}
+          50%  {{ left: 48%;  top: 40px; transform: rotate(3deg)  scale(1.08); }}
+          90%  {{ opacity: 1; }}
+          100% {{ left: 94%;  top: 32px; transform: rotate(-3deg) scale(0.95); opacity: 0; }}
+        }}
+        @keyframes heli-spin-cw {{
+          0%   {{ transform: rotate(0deg)   scale(1);    opacity: 1; }}
+          85%  {{ transform: rotate(360deg) scale(1.15); opacity: 1; }}
+          100% {{ transform: rotate(360deg) scale(1);    opacity: 0; }}
+        }}
+        @keyframes heli-spin-ccw {{
+          0%   {{ transform: rotate(0deg)    scale(1);    opacity: 1; }}
+          85%  {{ transform: rotate(-360deg) scale(1.15); opacity: 1; }}
+          100% {{ transform: rotate(-360deg) scale(1);    opacity: 0; }}
+        }}
+        @keyframes heli-spin-double {{
+          0%   {{ transform: rotate(0deg)   scale(1);    opacity: 1; }}
+          90%  {{ transform: rotate(720deg) scale(1.2);  opacity: 1; }}
+          100% {{ transform: rotate(720deg) scale(1);    opacity: 0; }}
+        }}
+        #heli-flyby-global {{
+          position: fixed; left: 0; top: 64px; font-size: 52px; z-index: 999999;
+          pointer-events: none;
+          filter: drop-shadow(0 2px 6px rgba(0,0,0,.35));
+        }}
+        #heli-tab-toast {{
+          position: fixed; left: 50%; bottom: 22px; transform: translate(-50%, 12px);
+          background: rgba(10,14,20,0.85); color: #C9D6DE; font-size: 12.5px;
+          font-family: 'Inter', 'Segoe UI', sans-serif; letter-spacing: .02em;
+          padding: 7px 16px; border-radius: 999px; border: 1px solid rgba(20,184,166,0.35);
+          pointer-events: none; z-index: 999998; opacity: 0;
+          transition: opacity .35s ease, transform .35s ease;
+          white-space: nowrap;
+        }}
+        #heli-tab-toast.show {{
+          opacity: 1; transform: translate(-50%, 0);
+        }}
+      `;
+      doc.head.appendChild(style);
+    }}
+
+    var heli = doc.getElementById('heli-flyby-global');
+    if (!heli) {{
+      heli = doc.createElement('div');
+      heli.id = 'heli-flyby-global';
+      heli.textContent = '🚁';
+      heli.dataset.lastFlyNonce = flyNonce;   // don't fly again on the render that creates it — replayFlight() below handles the first flight
+      heli.dataset.lastSpinNonce = spinNonce; // don't spin on creation, only on an actual button click later
+      doc.body.appendChild(heli);
+    }}
+
+    var toast = doc.getElementById('heli-tab-toast');
+    if (!toast) {{
+      toast = doc.createElement('div');
+      toast.id = 'heli-tab-toast';
+      doc.body.appendChild(toast);
+    }}
+    var toastTimer = null;
+    function showTabToast(tabLabel) {{
+      var prefix = isPt ? '🚁 Sobrevoando ' : '🚁 Flying over ';
+      toast.textContent = prefix + tabLabel + '...';
+      toast.classList.add('show');
+      if (toastTimer) clearTimeout(toastTimer);
+      toastTimer = setTimeout(function() {{ toast.classList.remove('show'); }}, 2000);
+    }}
+
+    var FLIGHTS = [
+      {{ name: 'heli-fly-v0', duration: 7  }},
+      {{ name: 'heli-fly-v1', duration: 11 }},
+      {{ name: 'heli-fly-v2', duration: 9  }},
+      {{ name: 'heli-fly-v3', duration: 6  }},
+    ];
+    var SPINS = ['heli-spin-cw', 'heli-spin-ccw', 'heli-spin-double'];
+    var currentFlightIdx = 0;
+
+    function replayFlight(idx) {{
+      if (typeof idx === 'number') currentFlightIdx = idx;
+      var f = FLIGHTS[currentFlightIdx % FLIGHTS.length];
+      heli.style.left = '0';
+      heli.style.animation = 'none';
+      void heli.offsetWidth; // force reflow so the restart actually takes effect
+      heli.style.animation = f.name + ' ' + f.duration + 's cubic-bezier(.45,.05,.55,.95) infinite alternate';
+    }}
+
+    function spinFlight() {{
+      if (isPaused) return;
+      var spinName = SPINS[Math.floor(Math.random() * SPINS.length)];
+      var rect = heli.getBoundingClientRect();
+      heli.style.left = Math.max(10, Math.min(90, (rect.left / doc.documentElement.clientWidth) * 100)) + '%';
+      heli.style.animation = 'none';
+      void heli.offsetWidth;
+      heli.style.animation = spinName + ' 2.2s ease-in-out 1 forwards';
+      // resume the continuous flight loop once the spin finishes
+      setTimeout(function() {{ replayFlight(); }}, 2300);
+    }}
+
+    // Applied on every run (cheap, idempotent) so the pause/resume button
+    // takes effect immediately without needing its own nonce dance —
+    // pausing freezes the animation exactly where it is via CSS
+    // animation-play-state, rather than stopping/losing position.
+    heli.style.animationPlayState = isPaused ? 'paused' : 'running';
+
+    // First-ever mount: fly in once immediately, and keep flying forever
+    // — every tab, no stopping — with an occasional smooth spin thrown in
+    // automatically (not only from the sidebar button), like a helicopter
+    // doing a lazy loop rather than a straight back-and-forth commute.
+    if (heli.dataset.mounted !== '1') {{
+      heli.dataset.mounted = '1';
+      if (!isPaused) replayFlight(0);
+      var scheduleAutoSpin = function() {{
+        var delay = 18000 + Math.random() * 20000; // every ~18-38s
+        setTimeout(function() {{
+          spinFlight();
+          scheduleAutoSpin();
+        }}, delay);
+      }};
+      scheduleAutoSpin();
+    }} else {{
+      if (heli.dataset.lastFlyNonce !== flyNonce) {{
+        heli.dataset.lastFlyNonce = flyNonce;
+        if (!isPaused) replayFlight();
+      }}
+      if (heli.dataset.lastSpinNonce !== spinNonce) {{
+        heli.dataset.lastSpinNonce = spinNonce;
+        spinFlight();
+      }}
+    }}
+
+    if (!doc.body.dataset.heliListenerAttached) {{
+      doc.body.dataset.heliListenerAttached = '1';
+      // Thematic mapping by tab position (About, Metrics, Field, Map,
+      // Search, Samples, Upload, Pipeline, Governance, Downloads): Map
+      // and Governance get the slow, low "survey" path (v1) since they're
+      // about surveying/overseeing; Field and Search get the looping
+      // exploration path (v2); the rest get quicker, lighter passes.
+      var TAB_FLIGHT_MAP = [3, 0, 2, 1, 2, 0, 3, 0, 1, 3];
+      doc.addEventListener('click', function(e) {{
+        var tabBtn = e.target.closest('[role="tab"], [data-baseweb="tab"]');
+        if (!tabBtn) return;
+        var allTabs = Array.prototype.slice.call(
+          doc.querySelectorAll('[role="tab"], [data-baseweb="tab"]')
+        );
+        var idx = allTabs.indexOf(tabBtn);
+        var flightIdx = (idx >= 0 && idx < TAB_FLIGHT_MAP.length) ? TAB_FLIGHT_MAP[idx] : (idx % FLIGHTS.length);
+        if (!isPaused) replayFlight(flightIdx);
+        showTabToast(tabBtn.textContent.trim());
+      }}, true);
+    }}
+  }} catch (e) {{ /* cross-origin iframe — feature unavailable in this Streamlit setup */ }}
+}})();
+</script>
+""", height=1)
+
+
+# ---- Ambient starfield background, behind every tab (parent-document
+# injection, same technique as the helicopter above) ----
+#
+# Matches the HTML presentation's visual identity (which renders its
+# starfield with real Three.js/WebGL — 850 silver points at #C9D6DE).
+# Both stars and particles use that same silver (#C9D6DE), not teal — the
+# whole field reads as one coherent silver starfield, like the reference.
+# Pulling an actual Three.js scene from a CDN into the parent document
+# here would add a real external dependency and a new failure surface
+# (CDN blocked, WebGL context denied, etc.) on top of everything already
+# debugged for the helicopter — not worth the risk for a background
+# decoration. This version reproduces the same *feel* — an orbiting,
+# mouse-reactive camera drifting slowly through a silver starfield — using
+# only CSS 3D transforms (perspective + rotateX/rotateY) driven by
+# requestAnimationFrame, with zero external dependencies.
+st.iframe("""
+<script>
+(function() {
+  try {
+    var doc = window.parent.document;
+    if (doc.getElementById('starfield-style')) return;
+
+    var style = doc.createElement('style');
+    style.id = 'starfield-style';
+    style.textContent = `
+      /* Streamlit's own app containers have an opaque background by
+         default, which sat ABOVE our z-index:-1 stage and hid it
+         completely. Making those specific containers transparent lets
+         the fixed starfield show through everywhere behind the actual
+         widgets (which each keep their own opaque card/table backgrounds
+         and stay perfectly readable on top). */
+      .stApp, [data-testid="stAppViewContainer"], [data-testid="stMain"],
+      [data-testid="stHeader"], .main, .block-container {
+        background: transparent !important;
+      }
+      /* Force Streamlit's real content to stack ABOVE the starfield
+         regardless of DOM insertion order, so the dashboard itself is
+         never accidentally covered by the background layer. */
+      [data-testid="stAppViewContainer"] {
+        position: relative; z-index: 1;
+      }
+      #starfield-stage {
+        position: fixed; top:0; left:0; width:100vw; height:100vh;
+        pointer-events: none; z-index: 0; overflow: hidden;
+        perspective: 900px; perspective-origin: 50% 50%;
+        background: #05070a radial-gradient(ellipse at 50% 30%, rgba(14,117,109,0.10), transparent 60%);
+      }
+      #starfield-layer {
+        position: absolute; top:-10%; left:-10%; width:120%; height:120%;
+        transform-style: preserve-3d;
+        will-change: transform;
+      }
+      .sf-star {
+        position: absolute; border-radius: 50%; background: #E8EEF2;
+        animation: sf-twinkle ease-in-out infinite;
+      }
+      @keyframes sf-twinkle {
+        0%, 100% {
+          opacity: 0.22; transform: scale(0.88);
+          box-shadow: 0 0 1px 0px rgba(201,214,222,0.12);
+        }
+        50% {
+          opacity: 0.95; transform: scale(1.2);
+          box-shadow: 0 0 6px 2px rgba(201,214,222,0.55);
+        }
+      }
+      .sf-particle {
+        position: absolute; background: #C9D6DE; border-radius: 2px;
+        box-shadow: 0 0 4px rgba(201,214,222,0.6);
+        animation: sf-drift linear infinite;
+      }
+      @keyframes sf-drift {
+        0%   { transform: translate(0,0); opacity: 0; }
+        12%  { opacity: 0.6; }
+        88%  { opacity: 0.6; }
+        100% { transform: translate(var(--dx), var(--dy)); opacity: 0; }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .sf-star { animation-duration: 6s !important; }
+        .sf-particle { animation: none !important; opacity: 0.35; }
+        #starfield-layer { transform: none !important; }
+      }
+    `;
+    doc.head.appendChild(style);
+
+    var stage = doc.createElement('div');
+    stage.id = 'starfield-stage';
+    var layer = doc.createElement('div');
+    layer.id = 'starfield-layer';
+    stage.appendChild(layer);
+    doc.body.appendChild(stage);
+
+    var starCount = 140;
+    for (var i = 0; i < starCount; i++) {
+      var s = doc.createElement('div');
+      s.className = 'sf-star';
+      var size = (Math.random() * 2.4 + 1.4).toFixed(1);
+      s.style.width = size + 'px';
+      s.style.height = size + 'px';
+      s.style.top = (Math.random() * 100) + '%';
+      s.style.left = (Math.random() * 100) + '%';
+      s.style.animationDuration = (2.5 + Math.random() * 6.5).toFixed(2) + 's';
+      s.style.animationDelay = (Math.random() * -10).toFixed(2) + 's';
+      layer.appendChild(s);
+    }
+
+    var particleCount = 24;
+    for (var j = 0; j < particleCount; j++) {
+      var p = doc.createElement('div');
+      p.className = 'sf-particle';
+      var psize = (Math.random() * 3 + 2).toFixed(1);
+      p.style.width = psize + 'px';
+      p.style.height = psize + 'px';
+      p.style.top = (Math.random() * 100) + '%';
+      p.style.left = (Math.random() * 100) + '%';
+      var dx = (Math.random() * 160 - 80).toFixed(0) + 'px';
+      var dy = (Math.random() * -140 - 40).toFixed(0) + 'px';
+      p.style.setProperty('--dx', dx);
+      p.style.setProperty('--dy', dy);
+      p.style.animationDuration = (14 + Math.random() * 14).toFixed(1) + 's';
+      p.style.animationDelay = (Math.random() * 10).toFixed(1) + 's';
+      layer.appendChild(p);
+    }
+
+    // Pseudo-3D "orbiting camera": the whole starfield slowly auto-rotates
+    // forever (like the presentation's `stars.rotation.y += 0.00015`),
+    // plus the mouse nudges azimuth/tilt further — same lerp-towards-target
+    // approach the presentation uses for its real Three.js camera, just
+    // driving a CSS rotateY/rotateX instead of an actual camera matrix.
+    var mouseX = 0, mouseY = 0;
+    var azimuth = 0, tilt = 0, autoAzimuth = 0;
+    var reduceMotion = doc.defaultView.matchMedia &&
+      doc.defaultView.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    doc.addEventListener('mousemove', function(e) {
+      mouseX = (e.clientX / doc.documentElement.clientWidth) * 2 - 1;
+      mouseY = (e.clientY / doc.documentElement.clientHeight) * 2 - 1;
+    });
+
+    function tick() {
+      if (!reduceMotion) {
+        autoAzimuth += 0.008;
+        azimuth += ((autoAzimuth + mouseX * 6) - azimuth) * 0.03;
+        tilt += ((mouseY * -3) - tilt) * 0.03;
+        layer.style.transform = 'rotateY(' + azimuth.toFixed(3) + 'deg) rotateX(' + tilt.toFixed(3) + 'deg)';
+        requestAnimationFrame(tick);
+      }
+    }
+    if (!reduceMotion) requestAnimationFrame(tick);
+  } catch (e) { /* cross-origin iframe — feature unavailable in this Streamlit setup */ }
+})();
+</script>
+""", height=1)
+
+# ---- Animated count-up for headline numbers (parent-document injection,
+# same technique as everything else above) ----
+#
+# Targets Streamlit's own st.metric() values (used for "Points collected"
+# / "Distinct locations" in the discovery-coverage section) and the
+# mAP@50-95 figure inside each custom .metric-card in the Metrics tab.
+# Runs once per element (guarded by a data-counted flag) and re-scans
+# periodically so it also catches cards that appear later — e.g. after
+# switching to a tab that wasn't rendered yet, or the field-summary cards
+# once their async data loads.
+st.iframe("""
+<script>
+(function() {
+  try {
+    var doc = window.parent.document;
+    if (doc.getElementById('heli-counter-marker')) return;
+    var marker = doc.createElement('div');
+    marker.id = 'heli-counter-marker';
+    marker.style.display = 'none';
+    doc.body.appendChild(marker);
+
+    function animateCount(el) {
+      if (el.dataset.counted) return;
+      var raw = el.textContent.trim();
+      var m = raw.match(/^([^\\d\\-]*)([\\d.,]+)(.*)$/);
+      if (!m) return;
+      var prefix = m[1], numStr = m[2].replace(/,/g, ''), suffix = m[3];
+      var decimals = numStr.indexOf('.') !== -1 ? numStr.split('.')[1].length : 0;
+      var target = parseFloat(numStr);
+      if (isNaN(target)) return;
+      el.dataset.counted = '1';
+      var duration = 1000, start = null;
+      function step(ts) {
+        if (!start) start = ts;
+        var progress = Math.min((ts - start) / duration, 1);
+        var eased = 1 - Math.pow(1 - progress, 3);
+        el.textContent = prefix + (target * eased).toFixed(decimals) + suffix;
+        if (progress < 1) requestAnimationFrame(step);
+        else el.textContent = raw;
+      }
+      requestAnimationFrame(step);
+    }
+
+    function scan() {
+      var candidates = doc.querySelectorAll(
+        '[data-testid="stMetricValue"], .metric-card p[style*="font-size:22px"]'
+      );
+      for (var i = 0; i < candidates.length; i++) animateCount(candidates[i]);
+    }
+    scan();
+    setInterval(scan, 700);
+  } catch (e) { /* cross-origin iframe — feature unavailable in this Streamlit setup */ }
+})();
+</script>
+""", height=1)
+
+# ---- Opening epigraph — condensed Passacaglia manifesto, shown before the
+# title so the visitor reads the conceptual frame ("we don't erase what
+# came before, we transform it") before encountering any data. Quiet and
+# small on purpose — an epigraph, not a banner competing with the title.
+st.markdown(f"""
+<div style="text-align:center; max-width:640px; margin:6px auto 22px auto;">
+    <p style="color:#7C8B93; font-style:italic; font-size:12.5px; letter-spacing:.03em; margin:0 0 6px 0;">
+        {t('epigraph.credit')}
+    </p>
+    <p style="color:#9FB0B8; font-style:italic; font-size:13.5px; line-height:1.6; margin:0 0 4px 0;">
+        {t('epigraph.line1')}
+    </p>
+    <p style="color:#C9D6DE; font-weight:700; font-size:13.5px; line-height:1.6; margin:0;">
+        {t('epigraph.line2')}
+    </p>
+</div>
+""", unsafe_allow_html=True)
+
+_TITLE_COLORS = ["#8B0000", "#991414", "#A61B1B", "#B32222", "#C62828", "#D32F2F", "#C62828", "#B71C1C"]
+_title_words = t("main.title").replace("\U0001F681", "").strip().split(" ", 1)  # ["Helipad", "Detector"]
+_title_first = _title_words[0]
+_title_second = _title_words[1] if len(_title_words) > 1 else ""
+_title_letters = "".join(
+    f'<span style="color:{_TITLE_COLORS[k % len(_TITLE_COLORS)]}">{ch}</span>' for k, ch in enumerate(_title_second)
+)
+st.markdown(
+    '<div class="hd-title-card">'
+    f'<h1 class="main-title" aria-label="{_title_first} {_title_second}">'
+    '<span class="hd-emoji" aria-hidden="true">\U0001F681</span> '
+    f'<span class="hd-text" data-text="{_title_first} {_title_second}">'
+    f'<span class="hd-white">{_title_first}</span> {_title_letters}</span></h1>'
+    '<div class="hd-title-line"></div></div>',
+    unsafe_allow_html=True,
+)
+st.markdown(f'<p class="subtitle">{t("main.subtitle")}</p>', unsafe_allow_html=True)
+if MODEL_OPTIONS:
+    st.caption(f"{t('main.active_model')} **{st.session_state.get('model_choice') or list(MODEL_OPTIONS)[0]}**")
+else:
+    st.caption(f"{t('main.active_model')} {t('main.active_model.none')}")
+
+model = get_selected_model()
+
+# Load metrics data early (used by both the Downloads tab and the metrics
+# panel at the bottom) — only the visual display moved, not the data load.
+metrics_df = load_experiment_metrics()
+
+# ========================= COMPARISON BANDS (metrics tab) =========================
+# Palette tied to the project's visual identity (teal -> red on dark): teal = better than
+# exp1, slate-teal = essentially tied, red = worse than exp1, amber = methodological caution.
+# The text label always states the result, so color is never the only signal.
+import re as _re
+
+_BAND_STYLES = {
+    "teal":    ("#14B8A6", "rgba(20,184,166,0.13)", "#5EEAD4"),
+    "slate":   ("#5F8F8B", "rgba(95,143,139,0.13)", "#A7C4C1"),
+    "red":     ("#DD0000", "rgba(221,0,0,0.13)",    "#FCA5A5"),
+    "mustard": ("#E0A82E", "rgba(224,168,46,0.15)", "#F2CF75"),
+}
+
+
+def render_band(kind: str, label: str, message: str) -> None:
+    """Renders one tinted comparison band: accent bar, small caps label, body text."""
+    accent, tint, label_color = _BAND_STYLES[kind]
+    body = _re.sub(r"\*\*(.+?)\*\*", r"<b>\1</b>", message)
+    st.markdown(
+        f'''
+        <div style="display:flex; align-items:stretch; margin:10px 0; border-radius:12px; overflow:hidden;
+                    border:1px solid {tint}; background:linear-gradient(90deg,{tint},rgba(255,255,255,0.025));
+                    box-shadow:0 2px 10px rgba(0,0,0,0.18);">
+            <div style="width:5px; background:{accent}; flex:none;"></div>
+            <div style="padding:12px 18px;">
+                <div style="font-size:11px; letter-spacing:.16em; text-transform:uppercase; font-weight:700;
+                            color:{label_color}; margin-bottom:3px;">{label}</div>
+                <div style="font-size:14.5px; line-height:1.55; color:#E2E8F0;">{body}</div>
+            </div>
+        </div>
+        ''',
+        unsafe_allow_html=True,
+    )
+
+
+tab_about, tab_metrics, tab_field, tab4, tab_flights, tab2, tab3, tab1, tab5, tab6, tab7 = st.tabs([
+    t("tabs.about"), t("tabs.metrics"), t("tabs.field"), t("tabs.map"), t("tabs.flights"),
+    t("tabs.search"), t("tabs.samples"), t("tabs.upload"),
+    t("tabs.pipeline"), t("tabs.governance"), t("tabs.downloads"),
+])
+
+# ====================== TAB 1: Upload ======================
+with tab1:
+    if model is None:
+        st.info(t("upload.no_model.info"))
+    else:
+        images = st.file_uploader(t("upload.uploader.label"),
+                                   type=["jpg", "jpeg", "png"],
+                                   accept_multiple_files=True, max_upload_size=10, help=t("upload.uploader.help"))
+
+        if images:
+            for idx, image_file in enumerate(images):
+                col1, col2 = st.columns(2)
+                original = Image.open(image_file)
+
+                with col1:
+                    st.image(original, caption=t("upload.original_caption"), width="stretch")
+
+                with col2:
+                    result_img, has_helipad = detect_helipad(original, model, conf_threshold)
+                    st.image(result_img, caption=t("upload.detection_caption"), width="stretch")
+                    if has_helipad:
+                        st.success(t("upload.success"))
+                    else:
+                        st.warning(t("upload.warning_none"))
+                    _disclaimer()
+
+# ====================== TAB 2: Bounding Box Search ======================
+with tab2:
+    st.subheader(t("search.subheader"))
+
+    # Caixas pequenas (~20-30 tiles no zoom 19), centradas no centroide da
+    # bounding box REAL de cada regiao (fonte: sp_neighborhoods_bbox.csv,
+    # a mesma usada para gerar os mosaicos da validacao de campo, Secao 9
+    # do relatorio) -- pensadas para demo ao vivo rapida, sem disparar o
+    # throttle de CPU do Streamlit Cloud como uma busca grande faz.
+    SEARCH_PRESETS = {
+        "Faria Lima":              (-46.696092, -23.569524, -46.691292, -23.564724),
+        "Itaim Bibi":              (-46.677400, -23.584900, -46.672600, -23.580100),
+        "Av. Paulista (Trecho 1)": (-46.652400, -23.565900, -46.647600, -23.561100),
+        "Av. Paulista (Trecho 2)": (-46.649070, -23.569637, -46.644270, -23.564836),
+        "Vila Olímpia":            (-46.682400, -23.593900, -46.677600, -23.589100),
+        "Vila Nova Conceição":     (-46.674948, -23.594089, -46.670148, -23.589289),
+        "Brooklin":                (-46.693521, -23.610911, -46.688721, -23.606111),
+        "Pinheiros":               (-46.691746, -23.568915, -46.686946, -23.564115),
+        "Alphaville Industrial":   (-46.852541, -23.500644, -46.847741, -23.495844),
+        "Inter-Zone Corridor":     (-46.688746, -23.591584, -46.683946, -23.586784),
+    }
+
+    def _apply_search_preset():
+        choice = st.session_state.get("search_preset_choice")
+        if choice and choice in SEARCH_PRESETS:
+            lon_min_p, lat_min_p, lon_max_p, lat_max_p = SEARCH_PRESETS[choice]
+            st.session_state["search_lon_min"] = lon_min_p
+            st.session_state["search_lat_min"] = lat_min_p
+            st.session_state["search_lon_max"] = lon_max_p
+            st.session_state["search_lat_max"] = lat_max_p
+
+    st.selectbox(
+        t("search.preset_label"),
+        options=[t("search.preset_custom")] + list(SEARCH_PRESETS.keys()),
+        key="search_preset_choice",
+        on_change=_apply_search_preset,
+        help=t("search.preset_help"),
+    )
+    st.caption(t("search.preset_scope_note"))
+
+    with st.expander(t("search.caption"), expanded=True):
+        col_a, col_b = st.columns(2)
+        with col_a:
+            lon_min = st.number_input(t("search.lon_min"), value=-46.6583, format="%.6f", key="search_lon_min")
+            lat_min = st.number_input(t("search.lat_min"), value=-23.5827, format="%.6f", key="search_lat_min")
+        with col_b:
+            lon_max = st.number_input(t("search.lon_max"), value=-46.6311, format="%.6f", key="search_lon_max")
+            lat_max = st.number_input(t("search.lat_max"), value=-23.5536, format="%.6f", key="search_lat_max")
+
+    zoom = st.slider(t("search.zoom"), 16, 20, 19)
+    search_btn = st.button(t("search.button"), type="primary", width="stretch")
+
+    if search_btn:
+        if model is None:
+            st.error(t("search.no_model.error"))
+        else:
+          with st.spinner(t("search.spinner")):
+            temp_dir = Path(tempfile.mkdtemp())
+
+            try:
+                x_min, y_max = deg2tile(lat_min, lon_min, zoom)
+                x_max, y_min = deg2tile(lat_max, lon_max, zoom)
+
+                jobs = [(zoom, x, y) for x in range(x_min, x_max+1) for y in range(y_min, y_max+1)]
+
+                st.info(f"{t('search.processing')} **{len(jobs)}** {t('search.satellite_tiles')}")
+                progress = st.progress(0, f"{t('search.progress')} ")
+
+                detected_tiles = []
+                failed_downloads = 0
+                blank_skipped = 0
+
+                # Downloads de rede são I/O-bound (esperando resposta do
+                # servidor ESRI), então rodar vários em paralelo com threads
+                # reduz bastante o tempo total de espera — mesma estratégia
+                # já usada em geospatial_image_collection.ipynb. A inferência
+                # do YOLO continua sequencial logo em seguida, tile a tile.
+                tile_paths = {}
+                with ThreadPoolExecutor(max_workers=8) as executor:
+                    future_to_job = {
+                        executor.submit(download_tile, z, x, y, temp_dir): (z, x, y)
+                        for z, x, y in jobs
+                    }
+                    for i, future in enumerate(as_completed(future_to_job)):
+                        z, x, y = future_to_job[future]
+                        progress.progress((i + 1) / len(jobs), f"{t('search.progress')} {i+1}/{len(jobs)} tiles")
+                        tile_path = future.result()
+                        if tile_path:
+                            tile_paths[(z, x, y)] = tile_path
+                        else:
+                            failed_downloads += 1
+
+                progress.progress(1.0, t("search.progress"))
+                for z, x, y in jobs:
+                    tile_path = tile_paths.get((z, x, y))
+                    if not tile_path:
+                        continue
+
+                    img = Image.open(tile_path)
+
+                    if is_blank_tile(img):
+                        blank_skipped += 1
+                        continue
+
+                    result_img, has_detection = detect_helipad(img, model, conf_threshold)
+
+                    if has_detection:
+                        detected_tiles.append((result_img, f"tile_z{z}_x{x}_y{y}.jpg"))
+
+                status_bits = []
+                if failed_downloads:
+                    status_bits.append(f"⚠️ {failed_downloads}/{len(jobs)} {t('search.failed_downloads')}")
+                if blank_skipped:
+                    status_bits.append(f"🕳️ {blank_skipped}/{len(jobs)} {t('search.blank_skipped')}")
+                if status_bits:
+                    st.caption(" · ".join(status_bits))
+
+                if detected_tiles:
+                    st.success(f"🎯 **{len(detected_tiles)} {t('search.found')}** {t('search.in_region')}")
+                    _disclaimer()
+
+                    if len(detected_tiles) > 1:
+                        zip_buffer = io.BytesIO()
+                        with zipfile.ZipFile(zip_buffer, "w", zipfile.ZIP_DEFLATED) as zf:
+                            for img_array, filename in detected_tiles:
+                                buf = io.BytesIO()
+                                Image.fromarray(img_array).save(buf, format="PNG")
+                                zf.writestr(filename.replace(".jpg", "_detected.png"), buf.getvalue())
+                        zip_buffer.seek(0)
+                        st.download_button(
+                            label=t("search.download_all_zip"),
+                            data=zip_buffer,
+                            file_name="helipad_search_results.zip",
+                            mime="application/zip",
+                            width="stretch",
+                        )
+
+                    cols = st.columns(3)
+                    for idx, (img_array, filename) in enumerate(detected_tiles):
+                        with cols[idx % 3]:
+                            st.image(img_array, caption=filename, width="stretch")
+
+                            buf = io.BytesIO()
+                            Image.fromarray(img_array).save(buf, format="PNG")
+                            buf.seek(0)
+
+                            st.download_button(
+                                label=t("search.download"),
+                                data=buf,
+                                file_name=filename.replace(".jpg", "_detected.png"),
+                                mime="image/png",
+                                key=f"dl_{idx}"
+                            )
+
+                    if len(detected_tiles) > 1:
+                        st.info(t("search.download_individually"))
+                else:
+                    st.warning(t("search.none_found"))
+
+            finally:
+                shutil.rmtree(temp_dir, ignore_errors=True)
+
+# ====================== TAB 3: Sample Images ======================
+with tab3:
+    st.subheader(t("samples.subheader"))
+    st.caption(t("samples.caption"))
+
+    sample_files = []
+    if SAMPLES_DIR.exists():
+        sample_files = sorted(
+            [p for p in SAMPLES_DIR.iterdir() if p.suffix.lower() in (".jpg", ".jpeg", ".png")]
+        )
+
+    if not sample_files:
+        st.info(t("samples.none_found").format(dir=SAMPLES_DIR))
+    else:
+        st.write(f"**{len(sample_files)} {t('samples.available')}**")
+
+        preview_cols = st.columns(min(len(sample_files), 6))
+        for i, path in enumerate(sample_files[:6]):
+            with preview_cols[i % len(preview_cols)]:
+                st.image(str(path), width="stretch", caption=path.name)
+        if len(sample_files) > 6:
+            st.caption(t("samples.more").format(n=len(sample_files) - 6))
+
+        col_run, col_dl = st.columns(2)
+
+        with col_run:
+            st.markdown('<div class="sample-btn">', unsafe_allow_html=True)
+            run_samples = st.button(
+                t("samples.run_button"),
+                width="stretch",
+            )
+            st.markdown('</div>', unsafe_allow_html=True)
+
+        with col_dl:
+            # Build the ZIP on demand, only when the user requests the download —
+            # useful for anyone running the hosted app without having cloned the repo.
+            zip_buffer = io.BytesIO()
+            with zipfile.ZipFile(zip_buffer, "w", zipfile.ZIP_DEFLATED) as zf:
+                for path in sample_files:
+                    zf.write(path, arcname=path.name)
+            zip_buffer.seek(0)
+
+            st.download_button(
+                t("samples.download_zip"),
+                data=zip_buffer,
+                file_name="helipad_sample_images.zip",
+                mime="application/zip",
+                width="stretch",
+            )
+
+        if run_samples:
+            if model is None:
+                st.error(t("samples.no_model.error"))
+            else:
+              with st.spinner(f"{t('samples.analyzing')} {len(sample_files)} {t('samples.sample_images')}"):
+                progress = st.progress(0, t("search.progress"))
+                result_cols = st.columns(3)
+                hits = 0
+
+                for i, path in enumerate(sample_files):
+                    progress.progress((i + 1) / len(sample_files), f"{t('search.progress')} {i+1}/{len(sample_files)}")
+                    img = Image.open(path)
+                    result_img, has_detection = detect_helipad(img, model, conf_threshold)
+                    if has_detection:
+                        hits += 1
+                    with result_cols[i % 3]:
+                        st.image(result_img, caption=path.name, width="stretch")
+                        if has_detection:
+                            st.success(t("samples.detected"))
+                        else:
+                            st.warning(t("samples.no_detection"))
+
+                st.info(t("samples.summary").format(hits=hits, total=len(sample_files)))
+                _disclaimer()
+
+# ====================== TAB 4: Interactive Map ======================
+with tab4:
+    st.subheader(t("map.subheader"))
+
+    col_caption, col_toggle = st.columns([4, 1])
+    with col_caption:
+        st.caption(t("map.caption"))
+    with col_toggle:
+        dark_mode = st.toggle(t("map.dark_mode"), value=True, key="map_theme")
+
+    map_tiles = "OSM dark" if dark_mode else "OSM light"
+    map_tiles_label = t("map.dark_base") if dark_mode else t("map.light_base")
+
+    sp_df = load_helipad_locations(SP_COORDS_CSV)
+    other_df = load_helipad_locations(COORDS_CSV)
+    state_lookup = load_state_lookup(COORDS_CSV)
+
+    if sp_df.empty and other_df.empty:
+        st.info(t("map.no_coords.info").format(sp=SP_COORDS_CSV, other=COORDS_CSV))
+    else:
+        lat_parts = [df["lat"] for df in (sp_df, other_df) if not df.empty]
+        lon_parts = [df["lon"] for df in (sp_df, other_df) if not df.empty]
+        center_lat = pd.concat(lat_parts).mean() if lat_parts else -23.5505  # fallback: São Paulo center
+        center_lon = pd.concat(lon_parts).mean() if lon_parts else -46.6333
+
+        # tiles=None avoids Folium auto-adding a base layer with an internal,
+        # unreadable name (e.g. "cartodbdarkmatter") to the layer control —
+        # we add our own TileLayer below, built from an explicit URL template
+        # (not a Folium preset string) so our friendly `name=` is always honored.
+        fmap = folium.Map(location=[center_lat, center_lon], zoom_start=5, tiles=None)
+        # container_id="map_div": this map is rendered via st_folium() further
+        # down, which hardcodes the map into a div with that literal id
+        # regardless of Folium's own generated name — see add_osm_tile_layer's
+        # docstring for how this was confirmed.
+        # control=False: the layer-control panel that used to float on top of
+        # the map (basemap name + the 3 feature-group checkboxes below) was
+        # moved out of the map canvas entirely, into the Streamlit checkboxes
+        # right below — this tile layer has nothing left to be listed in.
+        add_osm_tile_layer(fmap, dark_mode, name=map_tiles_label, control=False, container_id="map_div")
+
+        # Field-validation results (helipads found per region), loaded early so
+        # the training-region markers below can show a count, not just a name.
+        field_summary_for_map = load_field_detection_summary()
+        regions_by_slug = {}
+        min_rate, max_rate = 0.0, 1.0
+        if field_summary_for_map:
+            regions_by_slug = {r["region"]: r for r in field_summary_for_map.get("regions", [])}
+            rates = [r["detection_rate"] for r in regions_by_slug.values()]
+            min_rate, max_rate = (min(rates), max(rates)) if rates else (0.0, 1.0)
+
+        # Layer visibility now lives here, as ordinary Streamlit checkboxes
+        # above the map, instead of Leaflet's own floating control panel that
+        # used to sit on top of (and cover part of) the map canvas.
+        st.caption(t("map.layers_caption"))
+        col_l1, col_l2, col_l3 = st.columns(3)
+        with col_l1:
+            show_sp_layer = st.checkbox(f"🔴 {t('map.sp_layer')} ({len(sp_df)})", value=True, key="map_show_sp")
+        with col_l2:
+            show_other_layer = st.checkbox(f"🔵 {t('map.other_layer')} ({len(other_df)})", value=True, key="map_show_other")
+        with col_l3:
+            show_detection_layer = st.checkbox(t("map.detection_rate_layer"), value=True, key="map_show_detection")
+        # Live helicopter traffic (adsb.fi) moved out of this layer-toggle row into
+        # its own sub-tab — see "map.subtab_flights" below — so it never renders as
+        # a 4th checkbox mixed in with the YOLO/dataset-derived map layers above.
+
+        sp_layer = folium.FeatureGroup(name=f"🔴 {t('map.sp_layer')} ({len(sp_df)})", show=True)
+        for _, row in sp_df.iterrows():
+            raw_name = row.get("Nome do Bairro", "Unknown")
+            name = format_region_display(raw_name)
+            region_stats = regions_by_slug.get(slugify_region(raw_name))
+
+            if region_stats is not None:
+                found = region_stats["tiles_detected"]
+                rate = region_stats["detection_rate"]
+                tooltip_text = f"{name} · {found} {t('map.tiles_detected')} ({rate*100:.1f}%)"
+                # Same blue_scale color-coding as the detection-rate circles
+                # (detection_rate_to_color), applied to BOTH the hover
+                # tooltip and the click popup here — per explicit request,
+                # one shared blue signal for "how many points this region
+                # has" everywhere that number shows up, rather than a
+                # separate color per marker family.
+                color = detection_rate_to_color(rate, min_rate, max_rate)
+                text_color = readable_text_color(color)
+                tooltip_style = (
+                    f"background-color:{color}; color:{text_color}; "
+                    f"border:1px solid {text_color}22; border-radius:4px; "
+                    f"padding:4px 8px; font-weight:600; box-shadow:0 1px 4px rgba(0,0,0,0.35);"
+                )
+                tooltip = folium.Tooltip(tooltip_text, style=tooltip_style)
+                popup_html = rate_popup_html(
+                    f"<b>{name}</b><br>{t('map.training_region')}<br>"
+                    f"🚁 <b>{found}</b> {t('map.tiles_detected')} "
+                    f"({region_stats['tiles_detected']}/{region_stats['tiles_total']} · {rate*100:.1f}%)",
+                    color, text_color,
+                )
+            else:
+                tooltip = tooltip_text = name
+                popup_html = f"<b>{name}</b><br>{t('map.training_region')}"
+
+            folium.Marker(
+                location=[row["lat"], row["lon"]],
+                popup=folium.Popup(popup_html, max_width=250),
+                tooltip=tooltip,
+                icon=folium.Icon(color="red", icon="home"),
+            ).add_to(sp_layer)
+        if show_sp_layer:
+            sp_layer.add_to(fmap)
+
+        other_layer = folium.FeatureGroup(name=f"🔵 {t('map.other_layer')} ({len(other_df)})", show=True)
+        for _, row in other_df.iterrows():
+            neighborhood = row.get("Nome do Bairro", "Unknown")
+            hint = location_hint(row["lat"], row["lon"], row.get("Coordenadas da Bounding Box", ""), state_lookup)
+            display_name = f"{neighborhood} ({hint})" if hint else neighborhood
+            timestamp = row.get("Carimbo de data/hora", "")
+            folium.Marker(
+                location=[row["lat"], row["lon"]],
+                popup=folium.Popup(f"<b>{display_name}</b><br>{timestamp}", max_width=250),
+                tooltip=display_name,
+                icon=folium.Icon(color="blue", icon="info-sign"),
+            ).add_to(other_layer)
+        if show_other_layer:
+            other_layer.add_to(fmap)
+
+        # ---- Layer 3: field detection rate by region (blue scale, same as tables) ----
+        if regions_by_slug and not sp_df.empty:
+            detection_layer = folium.FeatureGroup(name=t("map.detection_rate_layer"), show=True)
+            matched = 0
+            for _, row in sp_df.iterrows():
+                name = row.get("Nome do Bairro", "")
+                slug = slugify_region(name)
+                region_stats = regions_by_slug.get(slug)
+                if region_stats is None:
+                    continue
+                matched += 1
+                display_name = format_region_display(name)
+                rate = region_stats["detection_rate"]
+                color = detection_rate_to_color(rate, min_rate, max_rate)
+                text_color = readable_text_color(color)
+                # Tooltip background matches this marker's own fill color (same
+                # blue_scale gradient, light=low rate -> navy=high rate), so
+                # the hover balloon reads as an extension of the marker's own
+                # color-coding instead of a plain white Leaflet default.
+                tooltip = folium.Tooltip(
+                    f"{display_name}: {region_stats['tiles_detected']}/{region_stats['tiles_total']} ({rate*100:.1f}%)",
+                    style=(
+                        f"background-color:{color}; color:{text_color}; "
+                        f"border:1px solid {text_color}22; border-radius:4px; "
+                        f"padding:4px 8px; font-weight:600; box-shadow:0 1px 4px rgba(0,0,0,0.35);"
+                    ),
+                )
+                folium.CircleMarker(
+                    location=[row["lat"], row["lon"]],
+                    radius=10 + rate * 40,
+                    color=color,
+                    fill=True,
+                    fill_color=color,
+                    fill_opacity=0.85,
+                    tooltip=tooltip,
+                    popup=folium.Popup(
+                        rate_popup_html(
+                            f"<b>{display_name}</b><br>"
+                            f"{region_stats['tiles_detected']} {t('map.tiles_detected')}<br>"
+                            f"{t('map.rate')}: {rate*100:.1f}%",
+                            color, text_color,
+                        ),
+                        max_width=250,
+                    ),
+                ).add_to(detection_layer)
+            if matched and show_detection_layer:
+                detection_layer.add_to(fmap)
+
+        # Live helicopter traffic (adsb.fi) used to render here as "Layer 4" of
+        # this same map, then briefly as a sub-tab nested inside "Map". It now
+        # has its own top-level tab — see `with tab_flights:` below — built as
+        # a separate folium.Map so it never shares a canvas with the YOLO/dataset
+        # helipad layers above.
+
+        # The layer-control panel that used to render here (folium.LayerControl,
+        # floating over the map's top-right corner) was replaced by the
+        # Streamlit checkboxes above, outside the map canvas.
+        _force_leaflet_resize(fmap)
+
+        st.write(t("map.summary").format(sp=len(sp_df), other=len(other_df)))
+        add_globe_intro(
+            fmap, "main",
+            points=pd.concat([d.reindex(columns=["lat", "lon"]) for d in (sp_df, other_df)]).values.tolist(),
+            caption=t("globe.caption.main"),
+        )
+        map_state = st_folium(fmap, use_container_width=True, height=520, key=f"main_map_{map_tiles}")
+
+        # ---- Helicopter reacts to real zoom: turn, land, pause, take off ----
+        # st_folium returns the live zoom/center of the Leaflet map after every
+        # pan/zoom, so "zoomed into a region" below is real map state, not a
+        # simulated one. When the visible center sits close enough to one of
+        # the SP training-region markers at a close-enough zoom, the ambient
+        # helicopter (persistent overlay defined earlier in this file) plays a
+        # bank-turn > land > pause > take-off sequence and a toast names the
+        # region, then it resumes its normal patrol.
+        #
+        # The touchdown spot is viewport-relative (bottom-center), not a
+        # pixel-accurate landing on the Leaflet marker itself: the map lives
+        # inside streamlit-folium's own nested iframe with its own coordinate
+        # system, and translating a lat/lon into the parent page's pixel
+        # space would need a second round-trip through Leaflet's internal
+        # projection — too fragile to chase for a decorative flourish.
+        #
+        # This runs as its OWN components.html call (its own iframe/script
+        # scope) rather than reusing the functions defined in the main
+        # helicopter script above, because two separate components.html
+        # iframes never share JS scope even though both inject into the same
+        # parent document. The one thing they DO share is the actual DOM node
+        # (`#heli-flyby-global`) and its `dataset` attributes, which is used
+        # here the same way `heli_replay_nonce`/`heli_spin_nonce` are used
+        # above: a nonce written by Python, compared against the last nonce
+        # the DOM element remembers, so the sequence fires once per landing
+        # rather than once per rerun.
+        LAND_ZOOM_THRESHOLD = 12
+        LAND_DISTANCE_DEG = 0.08  # ~9 km at this latitude — generous on purpose
+
+        landed_region = None
+        if map_state and not sp_df.empty:
+            zoom_level = map_state.get("zoom")
+            center = map_state.get("center") or {}
+            center_lat_live, center_lon_live = center.get("lat"), center.get("lng")
+            if zoom_level is not None and zoom_level >= LAND_ZOOM_THRESHOLD \
+                    and center_lat_live is not None and center_lon_live is not None:
+                distances = ((sp_df["lat"] - center_lat_live) ** 2 + (sp_df["lon"] - center_lon_live) ** 2) ** 0.5
+                nearest_idx = distances.idxmin()
+                if distances.loc[nearest_idx] <= LAND_DISTANCE_DEG:
+                    landed_region = format_region_display(sp_df.loc[nearest_idx, "Nome do Bairro"])
+
+        if landed_region != st.session_state.get("heli_landed_region"):
+            st.session_state["heli_landed_region"] = landed_region
+            st.session_state["heli_land_nonce"] = st.session_state.get("heli_land_nonce", 0) + 1
+
+        if landed_region:
+            region_name_js = json.dumps(landed_region)
+            st.iframe(f"""
+            <script>
+            (function() {{
+              try {{
+                var doc = window.parent.document;
+                var heli = doc.getElementById('heli-flyby-global');
+                if (!heli) return; // main helicopter overlay hasn't mounted yet — skip this run
+
+                var landNonce = "{st.session_state['heli_land_nonce']}";
+                if (heli.dataset.lastLandNonce === landNonce) return; // already played this landing
+                heli.dataset.lastLandNonce = landNonce;
+
+                var isPt = "{st.session_state.get('lang', 'pt')}" === 'pt';
+                var isPaused = {"true" if st.session_state.get("heli_paused") else "false"};
+                if (isPaused) return; // respect the sidebar pause toggle — don't force a landing over it
+                var regionName = {region_name_js};
+
+                if (!doc.getElementById('heli-landing-style')) {{
+                  var style = doc.createElement('style');
+                  style.id = 'heli-landing-style';
+                  style.textContent = `
+                    @keyframes heli-land-sequence {{
+                      0%   {{ top: var(--heli-cur-top); left: var(--heli-cur-left); transform: rotate(0deg) scale(1); }}
+                      25%  {{ transform: rotate(-22deg) scale(0.95); }}
+                      50%  {{ top: calc(100vh - 150px); left: 48%; transform: rotate(8deg) scale(0.88); }}
+                      75%  {{ top: calc(100vh - 110px); left: 48%; transform: rotate(-4deg) scale(0.80); }}
+                      100% {{ top: calc(100vh - 92px);  left: 48%; transform: rotate(0deg)  scale(0.72); }}
+                    }}
+                    @keyframes heli-takeoff-sequence {{
+                      0%   {{ top: calc(100vh - 92px);  left: 48%; transform: rotate(0deg)   scale(0.72); }}
+                      35%  {{ top: calc(100vh - 150px); left: 48%; transform: rotate(-14deg) scale(0.85); }}
+                      100% {{ top: 64px; left: 48%; transform: rotate(-4deg) scale(1); }}
+                    }}
+                    #heli-landing-pad {{
+                      position: fixed; left: 48%; top: calc(100vh - 58px); width: 46px; height: 14px;
+                      transform: translateX(-50%); border-radius: 50%;
+                      background: radial-gradient(ellipse at center, rgba(14,117,109,0.55), rgba(14,117,109,0) 72%);
+                      z-index: 999997; opacity: 0; transition: opacity .4s ease; pointer-events: none;
+                    }}
+                    #heli-landing-pad.show {{ opacity: 1; }}
+                  `;
+                  doc.head.appendChild(style);
+                }}
+
+                var pad = doc.getElementById('heli-landing-pad');
+                if (!pad) {{
+                  pad = doc.createElement('div');
+                  pad.id = 'heli-landing-pad';
+                  doc.body.appendChild(pad);
+                }}
+
+                var toast = doc.getElementById('heli-tab-toast');
+                function announce(text, ms) {{
+                  if (!toast) return;
+                  toast.textContent = text;
+                  toast.classList.add('show');
+                  clearTimeout(toast.dataset._landTimer);
+                  toast.dataset._landTimer = setTimeout(function() {{
+                    toast.classList.remove('show');
+                  }}, ms);
+                }}
+
+                // Same 4 patrol flights the main script uses, duplicated here
+                // (small maintenance cost) since this iframe can't reach the
+                // other iframe's FLIGHTS array — see comment above.
+                var FLIGHTS = [
+                  {{ name: 'heli-fly-v0', duration: 7  }},
+                  {{ name: 'heli-fly-v1', duration: 11 }},
+                  {{ name: 'heli-fly-v2', duration: 9  }},
+                  {{ name: 'heli-fly-v3', duration: 6  }},
+                ];
+
+                // 1) Freeze current position into CSS vars, then bank-turn + descend.
+                var rect = heli.getBoundingClientRect();
+                heli.style.setProperty('--heli-cur-top', rect.top + 'px');
+                heli.style.setProperty('--heli-cur-left', ((rect.left / doc.documentElement.clientWidth) * 100) + '%');
+                heli.style.animation = 'none';
+                void heli.offsetWidth;
+                heli.style.animation = 'heli-land-sequence 2.2s cubic-bezier(.3,.6,.3,1) forwards';
+                announce((isPt ? '🚁 Pousando em ' : '🚁 Landing in ') + regionName + '...', 2200);
+
+                // 2) Touch down: glow the pad, pause on the ground.
+                setTimeout(function() {{
+                  pad.classList.add('show');
+                }}, 2100);
+
+                // 3) Take back off after a short dwell on the ground.
+                setTimeout(function() {{
+                  pad.classList.remove('show');
+                  announce((isPt ? '🚁 Decolando de ' : '🚁 Taking off from ') + regionName + '...', 2000);
+                  heli.style.animation = 'none';
+                  void heli.offsetWidth;
+                  heli.style.animation = 'heli-takeoff-sequence 1.8s cubic-bezier(.3,.1,.3,1) forwards';
+                }}, 4300);
+
+                // 4) Resume normal patrol once the take-off climb finishes.
+                setTimeout(function() {{
+                  var f = FLIGHTS[Math.floor(Math.random() * FLIGHTS.length)];
+                  heli.style.left = '0';
+                  heli.style.animation = 'none';
+                  void heli.offsetWidth;
+                  heli.style.animation = f.name + ' ' + f.duration + 's cubic-bezier(.45,.05,.55,.95) infinite alternate';
+                }}, 6150);
+              }} catch (e) {{ /* cross-origin iframe — feature unavailable in this Streamlit setup */ }}
+            }})();
+            </script>
+            """, height=1)
+
+        st.markdown(f"#### {t('map.raw_data_expander')}")
+        with st.expander(t("map.raw_data_expander"), expanded=True):
+            t1, t2 = st.tabs([t("map.raw_data.sp_tab"), t("map.raw_data.other_tab")])
+            with t1:
+                sp_df_display = sp_df.copy()
+                if "Nome do Bairro" in sp_df_display.columns:
+                    _segment_word = "Trecho" if st.session_state.get("lang") == "pt" else "Segment"
+                    sp_df_display["Nome do Bairro"] = sp_df_display["Nome do Bairro"].astype(str).str.replace(
+                        r"\btrecho\b", _segment_word, regex=True, case=False
+                    )
+                sp_df_display.index = range(1, len(sp_df_display) + 1)
+                st.dataframe(sp_df_display, width="stretch")
+            with t2:
+                other_df_display = other_df.copy()
+                if not other_df_display.empty:
+                    city_col = t("map.raw_data.city_hint_col")
+                    other_df_display[city_col] = other_df_display.apply(
+                        lambda r: location_hint(
+                            r["lat"], r["lon"], r.get("Coordenadas da Bounding Box", ""), state_lookup
+                        ) or "—",
+                        axis=1,
+                    )
+                    # Most human-readable/general first (which state, which
+                    # neighborhood), then the precise numbers, then the raw
+                    # source string, timestamp metadata last — a zoom-in
+                    # from "where is this, in words" to "the exact technical
+                    # record it came from".
+                    _preferred_order = [
+                        city_col, "Nome do Bairro", "lat", "lon",
+                        "Coordenadas da Bounding Box", "Carimbo de data/hora",
+                    ]
+                    other_df_display = other_df_display[
+                        [c for c in _preferred_order if c in other_df_display.columns]
+                        + [c for c in other_df_display.columns if c not in _preferred_order]
+                    ]
+                    other_df_display.index = range(1, len(other_df_display) + 1)
+                st.dataframe(other_df_display, width="stretch")
+
+        st.divider()
+        col_density_title, col_density_toggle = st.columns([4, 1])
+        with col_density_title:
+            st.subheader(t("map.density.subheader"))
+            st.caption(t("map.density.caption"))
+        with col_density_toggle:
+            density_dark_mode = st.toggle(t("map.dark_mode"), value=True, key="density_map_theme")
+
+        if other_df.empty:
+            st.info(t("map.density.no_coords").format(path=COORDS_CSV))
+        else:
+            dark_map = folium.Map(
+                location=[other_df["lat"].mean(), other_df["lon"].mean()],
+                zoom_start=5,
+                tiles=None,
+            )
+            add_osm_tile_layer(dark_map, density_dark_mode, control=False)
+            for _, row in other_df.iterrows():
+                hint = location_hint(row["lat"], row["lon"], row.get("Coordenadas da Bounding Box", ""), state_lookup)
+                display_name = f"{row.get('Nome do Bairro', 'Unknown')} ({hint})" if hint else row.get("Nome do Bairro", "Unknown")
+                folium.CircleMarker(
+                    location=[row["lat"], row["lon"]],
+                    radius=5,
+                    color="#00CED1",
+                    fill=True,
+                    fill_color="#00CED1",
+                    fill_opacity=0.8,
+                    tooltip=display_name,
+                ).add_to(dark_map)
+            HeatMap(
+                other_df[["lat", "lon"]].values.tolist(),
+                radius=18,
+                blur=22,
+                gradient={"0.2": "#FFF8DC", "0.5": "#FFA855", "0.8": "#FF7804", "1.0": "#FF6800"},
+            ).add_to(dark_map)
+            _force_leaflet_resize(dark_map)
+            # Rendered as a plain HTML embed (not st_folium) because this view never
+            # needs the map's returned click/data — st_folium is a bidirectional custom
+            # component that negotiates its iframe height with the browser on mount, and
+            # that handshake was unreliable as the *second* such component on this tab
+            # (it kept rendering at 0 height until some later rerun, e.g. toggling Dark
+            # mode, happened to re-trigger it). st.iframe() just embeds static HTML
+            # in a fixed-height iframe, no handshake needed, so it always paints on the
+            # very first render.
+            add_globe_intro(
+                dark_map, "density",
+                points=other_df.reindex(columns=["lat", "lon"]).values.tolist(),
+                caption=t("globe.caption.density"),
+            )
+            st.iframe(dark_map.get_root().render(), height=550)
+
+# ====================== TAB: Live Traffic (Beta) ======================
+with tab_flights:
+    st.subheader(t("map.subtab_flights"))
+
+    # Standalone view: deliberately its own folium.Map (not a layer toggle on
+    # the helipad map above) — this is live ADS-B telemetry from a third-party
+    # feed (adsb.fi), unrelated to the satellite-image / YOLO pipeline used
+    # everywhere else in this app, and must never visually blend with it.
+    st.info(t("map.flights_notice_short"), icon="🛰️")
+
+    with st.expander(t("map.flights_details_title"), expanded=False):
+        st.markdown(t("map.flights_caption"))
+        st.markdown(t("map.flights_disclaimer"))
+        st.caption(t("map.flights_trail_note"))
+
+    legend_col1, legend_col2, legend_spacer = st.columns([2, 3, 4])
+    with legend_col1:
+        st.caption(f"**{t('map.flights_legend_title')}**")
+    with legend_col2:
+        st.markdown(
+            '<div style="display:flex; flex-direction:column; gap:4px; font-size:13px;">'
+            '<div><span style="font-size:16px;">🚁</span> ' + t("map.flights_confirmed") + '</div>'
+            '<div><span style="position:relative; display:inline-block; font-size:16px; opacity:.55;">🚁'
+            '<span style="position:absolute; top:-4px; right:-8px; background:#fbbf24; color:#000; '
+            'border-radius:50%; width:11px; height:11px; font-size:8px; line-height:11px; '
+            'text-align:center; font-weight:700;">?</span></span> ' + t("map.flights_unconfirmed") + '</div>'
+            '</div>',
+            unsafe_allow_html=True,
+        )
+
+    flights_top1, flights_top2, flights_top3 = st.columns([1, 1, 2])
+    with flights_top1:
+        if st.button(t("map.flights_refresh"), key="flights_refresh_btn"):
+            fetch_live_helicopter_flights.clear()
+    with flights_top2:
+        flights_dark_mode = st.toggle(t("map.dark_mode"), value=True, key="flights_map_theme")
+    with flights_top3:
+        st.caption(t("map.flights_last_update").format(time=datetime.now().strftime("%H:%M:%S")))
+
+    flights, flights_err = fetch_live_helicopter_flights()
+
+    if flights_err:
+        st.info(t("map.flights_error").format(err=flights_err))
+    else:
+        update_flight_trails(flights)
+        st.caption(t("map.flights_count").format(n=len(flights)))
+
+        flights_map = folium.Map(location=[SP_LAT, SP_LON], zoom_start=9, tiles=None)
+        # container_id="map_div": per add_osm_tile_layer's own docstring,
+        # streamlit-folium's frontend hardcodes EVERY st_folium(...) map into
+        # a div with this exact id, regardless of what we pass here — so this
+        # must match, not describe, the real DOM id (a "flights_map_div" id
+        # would silently fail to scope the dark-mode CSS filter). Known
+        # trade-off: since Streamlit keeps hidden-tab content mounted, this
+        # sub-tab's map and the main Helipad Map sub-tab's map can both carry
+        # id="map_div" at once; the dark-mode toggle is per-map in Python, but
+        # the resulting CSS filter is scoped by that shared id, so the two
+        # maps' dark-mode look isn't guaranteed independent. Low-impact here
+        # (both default to dark) — revisit if that ever needs to differ.
+        add_osm_tile_layer(
+            flights_map, flights_dark_mode,
+            name=(t("map.dark_base") if flights_dark_mode else t("map.light_base")),
+            control=False, container_id="map_div",
+        )
+
+        flights_layer = folium.FeatureGroup(name=t("map.flights_layer"), show=True)
+        trails = st.session_state.get("flight_trails", {})
+        for f in flights:
+            trail = trails.get(f["icao24"], [])
+            if len(trail) > 1:
+                folium.PolyLine(
+                    trail, color="#FF2500", weight=2, opacity=0.6, dash_array="4 6",
+                ).add_to(flights_layer)
+
+            alt_txt = f"{f['altitude_m']:.0f} m" if f["altitude_m"] is not None else "—"
+            speed_txt = f"{f['speed_ms'] * 3.6:.0f} km/h" if f["speed_ms"] is not None else "—"
+            is_confirmed = f["confidence"] == "confirmed"
+            confidence_txt = t("map.flights_confirmed") if is_confirmed else t("map.flights_unconfirmed")
+            if is_confirmed and f.get("type_code", "—") != "—":
+                confidence_txt = f"{confidence_txt} ({f['type_code']})"
+            popup_html = t("map.flights_popup").format(
+                callsign=f["callsign"], country=f["origin_country"],
+                alt=alt_txt, speed=speed_txt, heading=int(f["heading"]),
+                confidence=confidence_txt,
+            )
+            # A bare emoji on a Leaflet tile pane was hard to spot — it has no
+            # fixed size across browsers/OSes and blends into busy or dark
+            # terrain. Each marker now sits on a solid circular badge (teal for
+            # confirmed rotorcraft, amber-outlined for unconfirmed) with a drop
+            # shadow, so it reads as a marker at a glance instead of a stray
+            # character on the map — same color language as the legend above.
+            badge_bg = "#0E756D" if is_confirmed else "rgba(251,191,36,0.18)"
+            badge_border = "#14b8a6" if is_confirmed else "#fbbf24"
+            qmark = "" if is_confirmed else (
+                '<span style="position:absolute; top:-5px; right:-5px; '
+                'background:#fbbf24; color:#000; border-radius:50%; width:14px; '
+                'height:14px; font-size:10px; line-height:14px; text-align:center; '
+                'font-weight:700; box-shadow:0 1px 3px rgba(0,0,0,.6);">?</span>'
+            )
+            icon_html = (
+                f'<div style="position:relative; width:34px; height:34px;">'
+                f'<div style="width:34px; height:34px; border-radius:50%; '
+                f'background:{badge_bg}; border:2px solid {badge_border}; '
+                f'display:flex; align-items:center; justify-content:center; '
+                f'box-shadow:0 2px 8px rgba(0,0,0,.55);">'
+                f'<div style="font-size:19px; line-height:1; '
+                f'transform: rotate({int(f["heading"])}deg);">🚁</div></div>{qmark}</div>'
+            )
+            folium.Marker(
+                location=[f["lat"], f["lon"]],
+                popup=folium.Popup(popup_html, max_width=240),
+                tooltip=f"{f['callsign']} — {confidence_txt}",
+                icon=folium.DivIcon(html=icon_html, icon_size=(34, 34), icon_anchor=(17, 17)),
+            ).add_to(flights_layer)
+        flights_layer.add_to(flights_map)
+
+        # Fit the view to where the aircraft actually are instead of always
+        # showing the full ~92 km query radius (SP_DIST_NM) — with only 1-2
+        # aircraft on screen, that wide a view is why they were hard to spot.
+        # A small padding margin around a single point avoids fitBounds()
+        # zooming in to an unusably tight, near-street-level view.
+        #
+        # IMPORTANT: this calls _force_leaflet_fit_bounds(), NOT Python's
+        # own flights_map.fit_bounds(...) — that Python call bakes a
+        # `.fitBounds()` straight into the map's init script, which fires
+        # before streamlit-folium's iframe has a real size, and was
+        # confirmed to zoom the map all the way out to the whole world for
+        # a single São Paulo-area point. See that function's docstring.
+        # With zero aircraft there's nothing to fit to, so the map falls
+        # back to _force_leaflet_resize() and keeps its zoom_start=9
+        # default centered on São Paulo.
+        if flights:
+            pad = 0.12  # degrees, ~13 km — generous enough for a lone aircraft
+            lats = [f["lat"] for f in flights]
+            lons = [f["lon"] for f in flights]
+            fit_bounds = [
+                [min(lats) - pad, min(lons) - pad],
+                [max(lats) + pad, max(lons) + pad],
+            ]
+            _force_leaflet_fit_bounds(flights_map, fit_bounds)
+        else:
+            _force_leaflet_resize(flights_map)
+
+        add_globe_intro(
+            flights_map, "flights",
+            points=[[f["lat"], f["lon"]] for f in flights],
+            caption=t("globe.caption.flights"),
+        )
+        st_folium(flights_map, use_container_width=True, height=480, key=f"flights_map_{flights_dark_mode}")
+
+# ====================== TAB 5: Pipeline & Governance ======================
+with tab5:
+    st.subheader(t("pipeline.subheader"))
+    st.caption(t("pipeline.caption"))
+
+    # ---- AI/ML Ops Pipeline flowchart ----
+    # Same diagram documented in README.md's "AI/ML Ops Pipeline" section —
+    # keep both in sync if the pipeline itself changes. Rendered as a
+    # pre-generated static SVG (assets/pipeline_diagram.svg) via st.image(),
+    # not a live Mermaid/JS embed inside components.html: that approach was
+    # tried twice (CDN <script src>, then a fully vendored local copy of
+    # mermaid.min.js) and neither one actually displayed anything in the
+    # deployed app — not even a static status line with zero JS/network
+    # dependency of its own, which means the failure was components.html's
+    # sandboxed iframe not rendering at all in that environment (browser
+    # extension or Streamlit Cloud's iframe policy — unclear which, and not
+    # worth chasing further). st.image() is core Streamlit rendering with no
+    # iframe involved, so it doesn't share that failure mode. The flowing
+    # dashed-line animation on the edges is embedded as CSS directly inside
+    # the SVG file itself, so it still animates as a plain static image.
+    st.markdown(f"### {t('pipeline.flowchart_header')}")
+    # Language-specific diagram (PT-BR / EN); falls back to the other one if missing.
+    _pipeline_svg_candidates = (
+        [Path("assets/pipeline_diagram_pt_BR.svg"), Path("assets/pipeline_diagram.svg")]
+        if st.session_state.get("lang", "en") == "pt"
+        else [Path("assets/pipeline_diagram.svg"), Path("assets/pipeline_diagram_pt_BR.svg")]
+    )
+    _pipeline_svg_path = next((p for p in _pipeline_svg_candidates if p.exists()), _pipeline_svg_candidates[0])
+    if _pipeline_svg_path.exists():
+        st.image(str(_pipeline_svg_path), width="stretch")
+    else:
+        st.info(t("pipeline.diagram_missing_asset"))
+
+    st.markdown(f"#### {t('pipeline.steps_header')}")
+
+    pipeline_steps = [
+        ("🔍", t("pipeline.step1.title"), t("pipeline.step1.desc")),
+        ("📐", t("pipeline.step2.title"), t("pipeline.step2.desc")),
+        ("🛰️", t("pipeline.step3.title"), t("pipeline.step3.desc")),
+        ("🖼️", t("pipeline.step4.title"), t("pipeline.step4.desc")),
+        ("🏷️", t("pipeline.step5.title"), t("pipeline.step5.desc")),
+        ("🧠", t("pipeline.step6.title"), t("pipeline.step6.desc")),
+        ("📊", t("pipeline.step7.title"), t("pipeline.step7.desc")),
+        ("🌍", t("pipeline.step8.title"), t("pipeline.step8.desc")),
+        ("🚁", t("pipeline.step9.title"), t("pipeline.step9.desc")),
+    ]
+
+    n = len(pipeline_steps)
+    rows = [pipeline_steps[i:i + 3] for i in range(0, n, 3)]
+    step_idx = 0
+    for row in rows:
+        row_cols = st.columns(3)
+        for col, (icon, title, desc) in zip(row_cols, row):
+            # Standardized Blues gradient (blues_scale) instead of the old
+            # blue_scale() navy->teal family — step 1 is the darkest navy,
+            # the last step the lightest blue, same rank scale as Top 10
+            # Cities/the ranking tables/cards above. The diagonal
+            # light/dark 3-stop blend (_shade) is kept for the card's own
+            # depth effect, just recolored onto the Blues base tone.
+            frac = 1 - (step_idx / (n - 1) if n > 1 else 0.0)
+            # Compressed to [0.30, 1.00] instead of the full [0, 1] Blues
+            # range: with 9 steps, the raw range would fade the last cards
+            # to near-white, too pale for a glowing gradient card. Same
+            # colormap/scale as everywhere else, just floored so every
+            # step keeps enough color depth.
+            base = blues_scale(0.30 + 0.70 * frac)
+            bg_light = _shade(base, 0.16)
+            bg_dark = _shade(base, -0.30)
+            gradient = f"linear-gradient(145deg, {bg_light} 0%, {base} 55%, {bg_dark} 100%)"
+            accent_rgb = _hex_to_rgb(base)
+            glow = f"rgba({accent_rgb[0]},{accent_rgb[1]},{accent_rgb[2]},0.45)"
+            _pipeline_txt = readable_text_color(base)
+            title_color = _pipeline_txt
+            desc_color = "#E2E8F0" if _pipeline_txt == "#ffffff" else "#1E293B"
+            badge_bg = "rgba(255,255,255,0.16)" if _pipeline_txt == "#ffffff" else "rgba(15,23,42,0.16)"
+            badge_color = _pipeline_txt
+            with col:
+                st.markdown(f"""
+                <div class="flow-step" style="background:{gradient}; border-top:3px solid rgba(255,255,255,0.35); box-shadow: 0 6px 20px {glow}, inset 0 1px 0 rgba(255,255,255,0.12);">
+                    <span class="flow-badge" style="background:{badge_bg}; color:{badge_color}; box-shadow: 0 0 0 1px rgba(255,255,255,0.25);">{step_idx+1:02d}</span>
+                    <span class="flow-icon">{icon}</span>
+                    <p class="flow-title" style="color:{title_color};">{title}</p>
+                    <p class="flow-desc" style="color:{desc_color};">{desc}</p>
+                </div>
+                """, unsafe_allow_html=True)
+            step_idx += 1
+
+# ====================== TAB 6: Governance ======================
+with tab6:
+    with st.expander(t("gov.responsible_ai"), expanded=True):
+        st.markdown(t("gov.responsible_ai.body"))
+
+    st.markdown("")
+    with st.expander(t("gov.lgpd"), expanded=True):
+        st.markdown(t("gov.lgpd.body"))
+
+    st.markdown("")
+    with st.expander(t("gov.contributors"), expanded=True):
+        st.markdown(t("gov.contributors.body"))
+
+# ====================== TAB: About ======================
+with tab_about:
+    st.header(t("about.header"))
+    _about_intro = t("about.body_intro").replace(
+        "**Helipad Detector**",
+        '<span style="font-family:Georgia,\'Times New Roman\',serif;font-weight:700;font-size:1.25em;">'
+        '<span style="color:#FFFFFF;">Helipad</span> '
+        '<span style="background:linear-gradient(135deg,#7F1D1D 0%,#DC2626 55%,#EF4444 100%);'
+        '-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:#DC2626;">Detector</span></span>',
+        1,
+    )
+    st.markdown(_about_intro, unsafe_allow_html=True)
+
+    # ---- Global Context — helicopter air mobility worldwide ----
+    # Not a ranking (see the [!NOTE] below), so this deliberately does NOT
+    # use style_rows_by_rank()/st.dataframe() — a position-based gradient
+    # would visually imply "1st place, 2nd place..." even without a Rank
+    # column, which contradicts the NOTE's own text. Rendered as raw HTML
+    # (not plain st.markdown pipe-table) for two reasons: st.dataframe
+    # doesn't render the [text](url) reference-source links as clickable,
+    # and a plain markdown table only gets Streamlit's default thin 1px
+    # border — this needs the same visual weight (thick teal accent) used
+    # elsewhere in the dashboard (e.g. the 3px teal-bordered card below).
+    #
+    # Wrapped in st.expander (like every themed sub-section in Experiment
+    # Metrics — Model Evolution, Confusion Matrix, etc.) purely for the
+    # matching teal-outline "frame" that comes from this app's global
+    # [data-testid="stExpander"] CSS rule — not for collapsibility, hence
+    # expanded=True everywhere it's used this way.
+    with st.expander(t("cities.header"), expanded=True):
+        _cities_cols = t("cities.table.columns")
+        _cities_rows = t("cities.table.data")
+
+        def _md_cell_to_html(cell: str) -> str:
+            """Cell text here only ever uses two tiny markdown patterns —
+            **bold** and [text](url) links — so a couple of targeted regex
+            substitutions are enough; avoids depending on how Streamlit's
+            markdown parser treats content nested inside raw HTML tags."""
+            cell = re.sub(
+                r"\[([^\]]+)\]\(([^)]+)\)",
+                r'<a href="\2" target="_blank" style="color:#5EEAD4;">\1</a>',
+                cell,
+            )
+            cell = re.sub(r"\*\*([^*]+)\*\*", r"<strong>\1</strong>", cell)
+            return cell
+
+        _cities_thead = "".join(
+            f'<th style="text-align:left; padding:10px 14px; border-bottom:3px solid #14b8a6; '
+            f'color:#5EEAD4; font-size:12px; text-transform:uppercase; letter-spacing:.04em;">{c}</th>'
+            for c in _cities_cols
+        )
+        _cities_tbody = "".join(
+            "<tr>" + "".join(
+                f'<td style="padding:10px 14px; border-bottom:1px solid rgba(94,234,212,0.18); '
+                f'color:#E2E8F0; font-size:13.5px; vertical-align:top;">{_md_cell_to_html(cell)}</td>'
+                for cell in row
+            ) + "</tr>"
+            for row in _cities_rows
+        )
+        st.markdown(
+            f'<div style="overflow-x:auto;"><table style="width:100%; border-collapse:collapse;">'
+            f'<thead><tr>{_cities_thead}</tr></thead><tbody>{_cities_tbody}</tbody></table></div>',
+            unsafe_allow_html=True,
+        )
+
+        # [!NOTE] first, [!TIP] second — same order as README.md.
+        st.markdown(f"> **{t('cities.interpretation.title')}**  \n> {t('cities.interpretation.text')}")
+
+        st.markdown(f"""
+        <div style="border-left:3px solid #14b8a6; background:rgba(14,117,109,0.08);
+                    border-radius:8px; padding:14px 18px; margin:14px 0 4px 0;">
+            <p style="margin:0; color:#E2E8F0; font-size:14px; line-height:1.65;">
+                💡 {t('cities.why_sao_paulo')}
+            </p>
+        </div>
+        """, unsafe_allow_html=True)
+
+    # Extra vertical gap between framed sections — st.expander's own
+    # margin alone read as too tight once every section got the same
+    # bordered "card" treatment; this is the "increase and define the
+    # spacing between each subtitle" adjustment.
+    st.markdown("<div style='margin-top:28px;'></div>", unsafe_allow_html=True)
+
+    st.markdown(t("about.body_closing"))
+
+    with st.expander(t("about.discovery.title"), expanded=True):
+        st.caption(t("about.discovery.body"))
+        _disc_stats = load_discovery_dataset_stats()
+        if _disc_stats is None:
+            st.caption(t("about.discovery.missing").format(path=COORDS_CSV))
+        else:
+            disc_col1, disc_col2 = st.columns(2)
+            with disc_col1:
+                st.metric(t("about.discovery.points"), _disc_stats["total_points"])
+            with disc_col2:
+                if _disc_stats["distinct_locations"] is not None:
+                    st.metric(t("about.discovery.regions"), _disc_stats["distinct_locations"])
+
+            _points_df = _disc_stats.get("points_table")
+            if _points_df is not None and not _points_df.empty:
+                # Row-level listing (one row per discovered helipad point) —
+                # not aggregated by state — so the 10-row cycling gradient
+                # actually cycles a few times over and is visible, rather than
+                # barely completing once across a dozen-ish aggregated rows.
+                # "Estado" only appears if src/geospatial/geocode_states.py has
+                # been run AND its output lines up 1:1 with this CSV (see
+                # load_discovery_dataset_stats) — otherwise this table still
+                # renders fine with just Neighborhood + Collected-on.
+                _display_df = _points_df.rename(columns={
+                    "Nome do Bairro": t("about.discovery.location_col"),
+                    "Coletado em": t("about.discovery.date_col"),
+                    "Estado": t("about.discovery.state_col"),
+                })
+                st.dataframe(
+                    style_rows_by_cycle(_display_df, cycle=10),
+                    width="stretch", hide_index=True, height=420,
+                )
+            else:
+                st.caption(t("about.discovery.pending"))
+
+    st.markdown("<div style='margin-top:28px;'></div>", unsafe_allow_html=True)
+
+    # Scraping demo lives here, right after the Discovery dataset coverage
+    # section it illustrates ("Points collected" above were gathered by
+    # this same geospatial automation bot) and above the credits table.
+    # Layout: centered title line -> muted notice -> player -> centered
+    # credit line, matching the README's demo-video formatting.
+    with st.expander(t("about.demos.scraping.expander_label"), expanded=True):
+        st.markdown(f"<p style='text-align:center;'>{t('about.demos.scraping.title_line')}</p>", unsafe_allow_html=True)
+        st.markdown(f"<p style='text-align:center; color:#94A3B8; font-size:12.5px;'>{t('about.demos.muted_notice')}</p>", unsafe_allow_html=True)
+        # Muted by default in the dashboard only — two different soundtracks
+        # living in the same running tool (this one + the training demo in
+        # Experiment Metrics) can clash if someone plays both back to back.
+        # README.md / the presentation keep audio on, since each video is
+        # viewed in isolation there. The player's own sound icon still lets
+        # anyone unmute.
+        st.video("https://github.com/user-attachments/assets/eab6e951-6b66-4c6c-a2c6-23ee2f902c5f", muted=True)
+        st.markdown(f"<p style='text-align:center;'>{t('about.demos.scraping.credit_line')}</p>", unsafe_allow_html=True)
+
+    st.markdown("<div style='margin-top:28px;'></div>", unsafe_allow_html=True)
+
+    st.markdown("<div style='margin-top:28px;'></div>", unsafe_allow_html=True)
+
+    with st.expander(t("about.credits.expander_label"), expanded=True):
+        st.markdown(f"""
+        <div style="text-align:left;">
+            <table style="width:100%; font-size:14px; color:#E2E8F0; border-collapse:collapse;">
+                <tr><td style="padding:6px 0; color:#93C5FD; width:160px; vertical-align:top;">{t("about.institution")}</td>
+                    <td style="padding:6px 0;"><b>PUC-SP — FACEI</b></td></tr>
+                <tr><td style="padding:6px 0; color:#93C5FD; vertical-align:top;">{t("about.program")}</td>
+                    <td style="padding:6px 0;">BSc in Human Centered-AI & Data Science</td></tr>
+                <tr><td style="padding:6px 0; color:#93C5FD; vertical-align:top;">{t("about.course")}</td>
+                    <td style="padding:6px 0;">Machine Learning / Computer Vision — Project P2</td></tr>
+                <tr><td style="padding:6px 0; color:#93C5FD; vertical-align:top;">{t("about.authors")}</td>
+                    <td style="padding:6px 0;">
+                        <a href="https://linktr.ee/fabianacampanari" target="_blank" style="color:#5EEAD4;">Fabiana ⚡️ Campanari</a>
+                    </td></tr>
+                <tr><td style="padding:6px 0; color:#93C5FD; vertical-align:top;">{t("about.collaborators")}</td>
+                    <td style="padding:6px 0;">
+                        <a href="https://github.com/ppvyctor/Helipoint-Detector" target="_blank" style="color:#5EEAD4;">Pedro Vyctor Almeida</a>
+                    </td></tr>
+            </table>
+        </div>
+        """, unsafe_allow_html=True)
+
+# ====================== TAB 7: Downloads ======================
+with tab7:
+    st.subheader(t("dl.subheader"))
+    st.caption(t("dl.caption"))
+
+    dl_col1, dl_col2 = st.columns(2)
+
+    with dl_col1:
+        st.markdown(t("dl.executive_report"))
+        if EXEC_REPORT_EN.exists():
+            with open(EXEC_REPORT_EN, "rb") as f:
+                st.download_button(t("dl.exec_en_button"), f, file_name=EXEC_REPORT_EN.name,
+                                    mime="application/pdf", width="stretch")
+        else:
+            st.caption(t("dl.not_found").format(path=EXEC_REPORT_EN))
+
+        if EXEC_REPORT_PT.exists():
+            with open(EXEC_REPORT_PT, "rb") as f:
+                st.download_button(t("dl.exec_pt_button"), f, file_name=EXEC_REPORT_PT.name,
+                                    mime="application/pdf", width="stretch")
+        else:
+            st.caption(t("dl.not_found").format(path=EXEC_REPORT_PT))
+
+    with dl_col2:
+        st.markdown(t("dl.dataset_metrics"))
+        if DATASET_RAR.exists():
+            with open(DATASET_RAR, "rb") as f:
+                st.download_button(t("dl.dataset_button"), f, file_name=DATASET_RAR.name,
+                                    mime="application/octet-stream", width="stretch")
+        else:
+            st.caption(t("dl.not_found").format(path=DATASET_RAR))
+
+        if not metrics_df.empty:
+            csv_bytes = metrics_df.drop(columns=["_dir"], errors="ignore").to_csv(index=False).encode("utf-8")
+            st.download_button(t("dl.metrics_button"), csv_bytes, file_name="experiment_metrics.csv",
+                                mime="text/csv", width="stretch")
+        else:
+            st.caption(t("dl.no_metrics"))
+
+        st.markdown(t("dl.field_validation"))
+        if FIELD_SUMMARY_PATH.exists():
+            with open(FIELD_SUMMARY_PATH, "rb") as f:
+                st.download_button(t("dl.field_json_button"), f, file_name=FIELD_SUMMARY_PATH.name,
+                                    mime="application/json", width="stretch")
+        else:
+            st.caption(t("dl.not_found").format(path=FIELD_SUMMARY_PATH))
+
+    # ---- Presentations: 2 PPTX files (EN / PT) + the deployed interactive HTML deck ----
+    st.markdown("---")
+    st.markdown(t("dl.presentations"))
+    pres_c1, pres_c2, pres_c3 = st.columns(3)
+    # PPTX files are linked at pinned GitHub commits (not bundled with the app).
+    with pres_c1:
+        st.link_button(t("dl.pptx_en_button"), PRESENTATION_PPTX_EN_URL, width="stretch")
+    with pres_c2:
+        st.link_button(t("dl.pptx_pt_button"), PRESENTATION_PPTX_PT_URL, width="stretch")
+    with pres_c3:
+        st.link_button(t("dl.html_presentation_button"), PRESENTATION_HTML_URL, width="stretch")
+
+
+        TRIAGE_LOG_PATH = Path("reports/auto_triage_regions_log.txt")
+        if TRIAGE_LOG_PATH.exists():
+            with open(TRIAGE_LOG_PATH, "rb") as f:
+                st.download_button(t("dl.field_log_button"), f, file_name=TRIAGE_LOG_PATH.name,
+                                    mime="text/plain", width="stretch")
+        else:
+            st.caption(t("dl.not_found").format(path=TRIAGE_LOG_PATH))
+
+    st.markdown("---")
+    st.markdown(f"### {t('dl.session_summary.title')}")
+    st.caption(t("dl.session_summary.body"))
+    if st.button(t("dl.session_summary.button")):
+        st.session_state["session_pdf_bytes"] = build_session_summary_pdf(
+            metrics_df=metrics_df,
+            selected_model=st.session_state.get("model_choice"),
+            conf_threshold=conf_threshold,
+            lang=st.session_state.get("lang", "pt"),
+        )
+    if st.session_state.get("session_pdf_bytes"):
+        st.download_button(
+            t("dl.session_summary.download_button"),
+            data=st.session_state["session_pdf_bytes"],
+            file_name=f"helipad_detector_session_{datetime.now().strftime('%Y%m%d_%H%M')}.pdf",
+            mime="application/pdf",
+            width="stretch",
+        )
+
+    st.markdown("---")
+    st.markdown(f"""
+    <div class="dark-card">
+        <span class="repo-icon">🚁</span>
+        <h4>{t("dl.repo_title")}</h4>
+        <p style="color:#CBD5E1; font-size:14px;">
+            {t("dl.repo_desc")}
+        </p>
+        <a href="https://github.com/Mindful-AI-Research/3-project-ai-ml-yolo-helipad_detector" target="_blank" style="color:#93C5FD; font-weight:600;">
+            github.com/Mindful-AI-Research/3-project-ai-ml-yolo-helipad_detector
+        </a>
+    </div>
+    """, unsafe_allow_html=True)
+
+# ========================= METRICS DASHBOARD =========================
+with tab_metrics:
+    st.subheader(t("metrics.subheader"))
+    if metrics_df.empty:
+        st.info(t("metrics.no_csv"))
+    else:
+        n_exp = len(metrics_df)
+        cols = st.columns(n_exp) if n_exp <= 4 else [st.container()]
+        _metric_card_style = (
+            "padding:18px; border-radius:14px; text-align:center; "
+            "box-shadow:0 3px 10px rgba(15,23,42,0.25); "
+            "border:1px solid rgba(255,255,255,0.10);"
+        )
+        # Standardized Blues gradient (blues_scale), same fixed 3-step
+        # position scale as the "Field Detections by Region" cards (1.0 /
+        # 0.5 / 0.0 — navy, medium blue, near-white) instead of scaling by
+        # the mAP@50-95 value. This keeps every card family in the app on
+        # the exact same visual tone, regardless of how close/far apart
+        # the underlying numbers happen to be.
+        for i, row in metrics_df.iterrows():
+            target = cols[i] if n_exp <= 4 else st
+            with target:
+                netron_link = netron_url_for(row['Experiment']) or "https://netron.app/"
+                netron_label = t("metrics.netron_view") if row['Experiment'] in MODEL_WEIGHTS_BY_EXP else t("metrics.netron_manual")
+                _frac = 1 - (i / (n_exp - 1) if n_exp > 1 else 0.0)
+                card_bg = blues_scale(_frac)
+                # Real Blues runs light->navy (unlike the old navy->teal
+                # blue_scale, which was always dark), so text color is
+                # computed per card instead of hardcoded white — keeps the
+                # lowest-scoring card's paler background readable too.
+                _txt = readable_text_color(card_bg)
+                _sub = "#DCE8F5" if _txt == "#ffffff" else "#1E293B"
+                st.markdown(f"""
+                <div style="{_metric_card_style} background:{card_bg};">
+                    <h4 style="margin:0 0 8px 0; color:{_txt};">{row['Experiment']}</h4>
+                    <p style="margin:2px 0; color:{_sub}; font-size:13px;">
+                        {t('metrics.best_epoch')} {row['Best Epoch']} / {row['Total Epochs']}
+                    </p>
+                    <p style="margin:6px 0; font-size:22px; font-weight:700; color:{_txt};">
+                        {row['mAP@50-95']:.3f}
+                    </p>
+                    <p style="margin:0; color:{_sub}; font-size:12px;">mAP@50-95</p>
+                    <p style="margin:8px 0 0 0;">
+                        <a href="{netron_link}" target="_blank" rel="noopener noreferrer"
+                           style="font-size:12px; color:{_txt}; font-weight:600; text-decoration:underline;">
+                            {netron_label}
+                        </a>
+                    </p>
+                </div>
+                """, unsafe_allow_html=True)
+
+        # Netron previews render full-width, stacked one per row below the
+        # metric cards — a narrow column (1 of up to 4) is too cramped for
+        # an interactive graph viewer with its own zoom/pan controls.
+        # Loaded on demand (not eagerly) so opening the Metrics tab doesn't
+        # fire 3 external requests to netron.app on every rerun.
+        for i, row in metrics_df.iterrows():
+            if row['Experiment'] not in MODEL_WEIGHTS_BY_EXP:
+                continue
+            netron_link = netron_url_for(row['Experiment'])
+            with st.expander(f"{t('metrics.netron_expander')} — {row['Experiment']}", expanded=True):
+                load_key = f"netron_loaded_{row['Experiment']}"
+                if st.session_state.get(load_key):
+                    st.iframe(netron_link, height=560)
+                else:
+                    if st.button(t("metrics.netron_load_button"), key=f"netron_btn_{row['Experiment']}"):
+                        st.session_state[load_key] = True
+                        st.rerun()
+
+        st.markdown(t("metrics.comparison_title"))
+        # Standardized Blues row gradient (style_rows_by_value): unlike the
+        # ranked tables above, this one intentionally keeps its natural
+        # exp1/exp2/exp3 order rather than resorting by performance, so the
+        # shade is driven by the mAP@50-95 VALUE of each row (darker =
+        # better) instead of row position. Whole row painted, same readable
+        # text-color logic as every other table — no more single-column
+        # .background_gradient() leaving the rest of the row unstyled.
+        _metrics_table_styler = metrics_df.set_index("Experiment").style.format({
+            "Precision": "{:.3f}", "Recall": "{:.3f}",
+            "mAP@50": "{:.3f}", "mAP@50-95": "{:.3f}",
+        })
+        st.dataframe(
+            style_rows_by_value(_metrics_table_styler, "mAP@50-95"),
+            width="stretch",
+        )
+
+        if n_exp >= 2 and "exp1" in metrics_df["Experiment"].values:
+            exp1_row = metrics_df[metrics_df["Experiment"] == "exp1"].iloc[0]
+            for _, row in metrics_df.iterrows():
+                if row["Experiment"] == "exp1":
+                    continue
+                delta = row["mAP@50-95"] - exp1_row["mAP@50-95"]
+                _msg_key = ("metrics.outperformed" if delta > 0.005
+                            else "metrics.underperformed" if delta < -0.005
+                            else "metrics.tied")
+                render_band(
+                    {"metrics.outperformed": "teal", "metrics.underperformed": "red"}.get(_msg_key, "slate"),
+                    t("metrics.band.vs_exp1").format(exp=str(row["Experiment"]).upper()),
+                    t(_msg_key).format(exp=row["Experiment"], delta=f"{delta:+.4f}"),
+                )
+
+        render_band("mustard", t("metrics.band.caution"), t("metrics.not_controlled"))
+        with st.expander(t("lineage.expander"), expanded=False):
+            st.markdown(t("lineage.body"))
+            _disclaimer()
+
+        # ---- Per-epoch metric evolution (real data from results.csv) ----
+        curves = load_experiment_curves()
+        if curves:
+            with st.expander(t("metrics.evolution").lstrip("#").strip(), expanded=True):
+                metric_choice = st.selectbox(
+                    t("metrics.metric_label"),
+                    ["metrics/mAP50-95(B)", "metrics/mAP50(B)", "metrics/precision(B)", "metrics/recall(B)"],
+                    format_func=lambda m: m.replace("metrics/", "").replace("(B)", ""),
+                    key="metric_choice_curve",
+                )
+                fig = go.Figure()
+                for exp_name, df_curve in curves.items():
+                    if metric_choice in df_curve.columns:
+                        fig.add_trace(go.Scatter(
+                            x=df_curve["epoch"], y=df_curve[metric_choice],
+                            mode="lines", name=exp_name,
+                        ))
+                fig.update_layout(
+                    xaxis_title=t("metrics.epoch"), yaxis_title=metric_choice.replace("metrics/", "").replace("(B)", ""),
+                    height=320, margin=dict(l=10, r=10, t=10, b=10),
+                    legend=dict(orientation="h", yanchor="bottom", y=1.02),
+                )
+                st.plotly_chart(fig, width="stretch")
+
+        # ---- Confusion matrix per experiment (real image already generated by YOLO) ----
+        if not metrics_df.empty and "_dir" in metrics_df.columns:
+            with st.expander(t("metrics.confusion_matrix").lstrip("#").strip(), expanded=True):
+                cm_exp = st.selectbox(
+                    t("metrics.experiment_label"), metrics_df["Experiment"].tolist(), key="cm_exp_choice"
+                )
+                exp_dir_str = metrics_df.loc[metrics_df["Experiment"] == cm_exp, "_dir"].iloc[0]
+                cm_path = Path(exp_dir_str) / "confusion_matrix.png"
+                cm_norm_path = Path(exp_dir_str) / "confusion_matrix_normalized.png"
+                cm_col1, cm_col2 = st.columns(2)
+                with cm_col1:
+                    if cm_path.exists():
+                        st.image(str(cm_path), caption=f"{cm_exp} — {t('metrics.cm_caption')}", width="stretch")
+                    else:
+                        st.info(t("metrics.cm_not_found").format(path=cm_path.resolve()))
+                with cm_col2:
+                    if cm_norm_path.exists():
+                        st.image(str(cm_norm_path), caption=f"{cm_exp} — {t('metrics.cm_norm_caption')}", width="stretch")
+                    else:
+                        st.info(t("metrics.cm_norm_not_found").format(path=cm_norm_path.resolve()))
+
+        # ---- Inference demos (exp1-exp4) right below the Confusion Matrix ----
+        # Replaces the old single "Model Training" demo. One experiment is shown
+        # open; the others stay visible in the selector right above the player.
+        render_inference_demos(expanded=True, default="exp2")
+
+# ========================= FIELD DETECTIONS BY REGION =========================
+with tab_field:
+    st.subheader(t("field.subheader"))
+    field_summary = load_field_detection_summary()
+
+    if FIELD_SUMMARY_PATH.exists():
+        last_updated = datetime.fromtimestamp(FIELD_SUMMARY_PATH.stat().st_mtime)
+        st.caption(t("field.last_updated").format(date=last_updated.strftime('%b %d, %Y at %H:%M')))
+
+    if field_summary is None:
+        st.info(t("field.no_summary").format(path=FIELD_SUMMARY_PATH))
+    else:
+        totals = field_summary.get("totals", {})
+        regions = field_summary.get("regions", [])
+
+        total_tiles = totals.get("tiles_total", 0)
+        total_detected = totals.get("tiles_detected", 0)
+        total_rate = totals.get("detection_rate", 0.0)
+
+        card_cols = st.columns(3)
+        _field_card_style = (
+            "padding:18px; border-radius:14px; text-align:center; "
+            "box-shadow:0 3px 10px rgba(15,23,42,0.25); "
+            "border:1px solid rgba(255,255,255,0.10);"
+        )
+        # Standardized Blues gradient (blues_scale), same 3-step rank scale
+        # as Top 10 Cities: card 1 (headline number) darkest navy, fading
+        # to the lightest blue by card 3 — replaces the old blue_scale()
+        # navy->teal gradient so every card family in the app shares one
+        # visual language. Text color is computed per card since real
+        # Blues runs light at the low end.
+        _field_cards = [
+            (total_detected, t("field.detected_total"), 1.0),
+            (total_tiles, t("field.tiles_processed"), 0.5),
+            (f"{total_rate*100:.1f}%", t("field.overall_rate"), 0.0),
+        ]
+        for col, (value, label, frac) in zip(card_cols, _field_cards):
+            with col:
+                bg = blues_scale(frac)
+                txt = readable_text_color(bg)
+                sub = "#DCE8F5" if txt == "#ffffff" else "#1E293B"
+                st.markdown(f"""
+                <div style="{_field_card_style} background:{bg};">
+                    <p style="margin:6px 0; font-size:26px; font-weight:700; color:{txt};">{value}</p>
+                    <p style="margin:0; color:{sub}; font-size:12px;">{label}</p>
+                </div>
+                """, unsafe_allow_html=True)
+
+        if regions:
+            st.markdown("")
+            regions_df = pd.DataFrame(regions).sort_values("detection_rate", ascending=False)
+            regions_df["region"] = regions_df["region"].apply(format_region_display)
+
+            # Avenida Paulista is split into two survey segments ("Segment
+            # 1"/"Segment 2", "Trecho 1"/"Trecho 2" in Português) because the
+            # full avenue didn't fit one tile-download batch — it's one
+            # physical street. Rather than hiding the two segments behind a
+            # single merged row (which made it impossible to see each
+            # segment's own numbers), we keep both original rows AND add one
+            # extra "combined" row with the sum, so the reader sees Trecho 1,
+            # Trecho 2, and the summed total side by side.
+            # Wrapped in try/except so a JSON schema surprise falls back to
+            # the unmerged table instead of breaking this whole tab.
+            try:
+                _segment_suffix_re = re.compile(r"\s*\(?\s*(?:Trecho|Segment)\s*\d+\s*\)?\s*$", re.IGNORECASE)
+                regions_df["region_group"] = regions_df["region"].apply(lambda s: _segment_suffix_re.sub("", s).strip())
+                _grouped = regions_df.groupby("region_group", as_index=False).agg(
+                    tiles_total=("tiles_total", "sum"),
+                    tiles_detected=("tiles_detected", "sum"),
+                    top_confidence=("top_confidence", "max"),
+                    n_segments=("region", "count"),
+                )
+                _multi_segment = _grouped[_grouped["n_segments"] > 1].copy()
+                if not _multi_segment.empty:
+                    _combined_suffix = t("field.segments_combined_suffix")
+                    _multi_segment["detection_rate"] = _multi_segment["tiles_detected"] / _multi_segment["tiles_total"]
+                    _multi_segment["region"] = _multi_segment["region_group"] + _combined_suffix
+                    _combined_rows = _multi_segment.drop(columns=["region_group", "n_segments"])
+                    regions_df = pd.concat(
+                        [regions_df.drop(columns=["region_group"]), _combined_rows],
+                        ignore_index=True,
+                    ).sort_values("detection_rate", ascending=False)
+                else:
+                    regions_df = regions_df.drop(columns=["region_group"]).sort_values(
+                        "detection_rate", ascending=False
+                    )
+            except Exception:
+                pass  # fall back to the unmerged table below
+
+            # Standardized Blues gradient (blues_scale), one shade per bar
+            # by rank position — regions_df is already sorted best-first by
+            # detection_rate here, so the tallest bar is darkest navy and
+            # the shortest is lightest blue, matching the ranking table and
+            # Top 10 Cities instead of the old flat single navy color.
+            _n_bars = len(regions_df)
+            _bar_colors = [
+                blues_scale(1 - i / max(_n_bars - 1, 1)) for i in range(_n_bars)
+            ]
+            fig_regions = go.Figure(go.Bar(
+                x=regions_df["region"],
+                y=regions_df["detection_rate"] * 100,
+                marker_color=_bar_colors,
+                text=[f"{v}/{tot}" for v, tot in zip(regions_df["tiles_detected"], regions_df["tiles_total"])],
+                textposition="outside",
+            ))
+            fig_regions.update_layout(
+                yaxis_title=t("field.detection_rate_pct"), xaxis_title="",
+                height=340, margin=dict(l=10, r=10, t=10, b=10),
+            )
+            st.plotly_chart(fig_regions, width="stretch")
+
+            # Table is ranked by absolute helipads found (tiles_detected),
+            # not by rate — rate and raw count don't always agree (e.g. a
+            # small region can have a higher rate but fewer total finds
+            # than a bigger one), so an explicit rank column makes the
+            # "most helipads found overall" reading unambiguous.
+            regions_df_ranked = regions_df.sort_values("tiles_detected", ascending=False).reset_index(drop=True)
+            regions_df_ranked.insert(0, t("field.rank_col"), range(1, len(regions_df_ranked) + 1))
+            regions_df_display = regions_df_ranked.rename(columns={
+                "region": t("field.region_col"), "tiles_total": t("field.tiles_col"),
+                "tiles_detected": t("field.detected_col"), "detection_rate": t("field.rate_col"),
+                "top_confidence": t("field.top_confidence_col"),
+            })
+            # Rank, Region, Detected, Tiles, Detection Rate, Top Confidence —
+            # leads with the headline number (Detected) right after the
+            # region name, instead of Tiles (the denominator) coming first.
+            regions_df_display = regions_df_display[[
+                t("field.rank_col"), t("field.region_col"), t("field.detected_col"),
+                t("field.tiles_col"), t("field.rate_col"), t("field.top_confidence_col"),
+            ]]
+
+            st.markdown(f"#### {t('field.ranking_title')}")
+            # Standardized Blues row gradient (style_rows_by_rank), same as
+            # the About tab's "Top 10 Cities" table — the whole row is
+            # shaded by rank position (table is already sorted best-first
+            # by tiles_detected), instead of the old .background_gradient()
+            # on a single "Detected" column. That single-column gradient
+            # used pandas' own min/max normalization on just that column,
+            # leaving every other cell in its default (near-white) style —
+            # inconsistent with the rest of the row and with no guaranteed
+            # readable text color, which is what made the table look
+            # mismatched/"feio" after the last update.
+            _ranking_styler = regions_df_display.set_index(t("field.rank_col")).style.format({
+                t("field.rate_col"): "{:.1%}", t("field.top_confidence_col"): "{:.2f}",
+            })
+            st.dataframe(style_rows_by_rank(_ranking_styler), width="stretch")
+            st.caption(t("field.rate_definition"))
+
+            if "Inter-Zone Corridor" in regions_df["region"].values:
+                st.caption(t("field.inter_zone_note"))
+
+        generated_at = field_summary.get("generated_at")
+        if generated_at:
+            st.caption(f"{t('field.last_updated').format(date=generated_at)}")
+
+        # ---- N-model comparison on the same field validation ----
+        # Runs separately with each experiment's weights, all on the same
+        # tile set (see FIELD_SUMMARY_PATHS_BY_EXP above for why exp2 here
+        # is a re-run, not its original production numbers) — shows whether
+        # the "best" model on the curated val set (exp1, by Precision)
+        # actually generalizes as well in the field as the others do. Title
+        # and tile count are computed from whichever summaries are actually
+        # present, so this scales cleanly from exp1/exp2/exp3 to any future
+        # exp5+ without another code change.
+        all_summaries = load_field_summaries_by_exp()
+        if len(all_summaries) >= 2:
+            compare_tiles_total = next(iter(all_summaries.values())).get("totals", {}).get("tiles_total", "—")
+            with st.expander(t("field.compare.title").format(n=len(all_summaries)), expanded=True):
+                st.caption(t("field.compare.body").format(tiles=f"{compare_tiles_total:,}"))
+
+                def _norm_region(name: str) -> str:
+                    return str(name).strip().lower().replace("segment", "trecho")
+
+                comparison_rows = {}
+                for exp_name, summary in all_summaries.items():
+                    for r in summary.get("regions", []):
+                        key = _norm_region(r["region"])
+                        comparison_rows.setdefault(key, {"__display__": format_region_display(r["region"])})
+                        comparison_rows[key][exp_name] = r["detection_rate"]
+
+                exp_names_sorted = sorted(all_summaries.keys())
+                comp_df = pd.DataFrame([
+                    {"Region": v["__display__"], **{e: v.get(e) for e in exp_names_sorted}}
+                    for v in comparison_rows.values()
+                ]).sort_values(exp_names_sorted[0], ascending=False, na_position="last")
+
+                st.markdown(t("field.compare.table_title"))
+                # Standardized Blues row gradient: comp_df is already
+                # sorted best-first by exp_names_sorted[0], so a full-row
+                # rank-based shade (same technique as Top 10 Cities) reads
+                # cleanly instead of pandas' old per-column
+                # .background_gradient() across all 3 experiment columns,
+                # which colored each column on its own separate scale.
+                _comp_styler = comp_df.set_index("Region").style.format(
+                    {e: "{:.1%}" for e in exp_names_sorted}, na_rep="—"
+                )
+                st.dataframe(style_rows_by_rank(_comp_styler), width="stretch")
+
+                comp_totals = {
+                    exp_name: summary.get("totals", {}).get("detection_rate", 0.0)
+                    for exp_name, summary in all_summaries.items()
+                }
+                total_cols = st.columns(len(comp_totals))
+                for col, (exp_name, rate) in zip(total_cols, sorted(comp_totals.items())):
+                    with col:
+                        st.metric(exp_name, f"{rate*100:.1f}%")
+
+                if {"exp1", "exp2", "exp3"} <= set(all_summaries):
+                    reality_check_text = t('field.compare.reality_check')
+                    if "exp4" in comp_totals:
+                        reality_check_text += " " + t('field.compare.reality_check_exp4').format(
+                            exp4=comp_totals["exp4"], exp3=comp_totals["exp3"], exp2=comp_totals["exp2"],
+                        )
+                    st.markdown(f"""
+                    <div style="border-left:3px solid #14b8a6; background:rgba(14,117,109,0.08);
+                                border-radius:8px; padding:14px 18px; margin-top:14px;">
+                        <p style="margin:0; color:#E2E8F0; font-size:14px; line-height:1.65;">
+                            {reality_check_text}
+                        </p>
+                    </div>
+                    """, unsafe_allow_html=True)
+
+                missing = set(FIELD_SUMMARY_PATHS_BY_EXP) - set(all_summaries)
+                if missing:
+                    st.caption(t("field.compare.missing").format(missing=", ".join(sorted(missing))))
+
+# Footer
+st.markdown("---")
+
+st.iframe("""
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&display=swap" rel="stylesheet">
+<style>
+  html, body { margin:0; padding:0; overflow:visible; background:transparent; }
+  @keyframes mindful-glow {
+    0%   { text-shadow: 0 0 6px rgba(0,255,255,0.35), 0 0 14px rgba(0,255,255,0.15); }
+    50%  { text-shadow: 0 0 20px rgba(0,255,255,0.95), 0 0 42px rgba(0,255,255,0.55), 0 0 60px rgba(0,255,255,0.25); }
+    100% { text-shadow: 0 0 6px rgba(0,255,255,0.35), 0 0 14px rgba(0,255,255,0.15); }
+  }
+  .mindful-brand {
+    display: block; text-align: center; text-decoration: none;
+    font-family: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
+    font-weight: 700; font-size: 34px; letter-spacing: .02em;
+    animation: mindful-glow 3.2s ease-in-out infinite;
+  }
+  .mindful-brand span { text-decoration: none; }
+  @media (prefers-reduced-motion: reduce) {
+    .mindful-brand { animation: none; }
+  }
+</style>
+<a class="mindful-brand" href="https://github.com/Mindful-AI-Research" target="_blank" rel="noopener noreferrer">
+  <span style="color:#ffffff;">𖤐</span><span style="color:#00FFFF;"> Mindful</span><span style="color:#ffffff;"> AI</span><span style="color:#00FFFF;"> ॐ</span>
+</a>
+""", height=52)
+
+st.markdown(f"""
+<p align="center" style="margin: 10px 0 22px 0;">
+  <a href="https://github.com/sponsors/Mindful-AI-Research" target="_blank" rel="noopener noreferrer">
+    <img src="https://img.shields.io/badge/Sponsor-%E0%A5%90%20%E2%8B%86%20Mindful%20AI%20%E2%8B%86%20Research%20%26%20Consulting%20%F0%96%A4%90%20%E2%8B%86-3A424C?style=for-the-badge&logo=githubsponsors&logoColor=white&labelColor=07111F" alt="Sponsor ॐ ⋆ Mindful AI ⋆ Research & Consulting 𖤐 ⋆" height="36" style="vertical-align:middle;">
+  </a>
+</p>
+
+<hr style="border:none; border-top:1px solid rgba(255,255,255,0.15); max-width: 900px; margin: 0 auto 24px auto;">
+
+<p style="text-align:center; color:rgba(255,255,255,0.30); margin:0;">
+{t("footer.tagline")}
+</p>
+
+<p style="text-align:center; color:rgba(255,255,255,0.35); margin:4px 0;">
+{t("footer.line2")}
+</p>
+
+<p style="text-align:center; color:rgba(255,255,255,0.30); margin:6px 0 0 0; font-size:12px;">
+{t("footer.line3")}
+</p>
+
+<hr style="border:none; border-top:1px solid rgba(255,255,255,0.15); max-width: 900px; margin: 20px auto 0 auto;">
+
+<p style="text-align:center; color:#C9D6DE; font-weight:700; font-size:13px; letter-spacing:.02em; margin:20px 0 0 0; max-width:520px; margin-left:auto; margin-right:auto;">
+{t("epigraph.echo")}
+</p>
+""", unsafe_allow_html=True)
