@@ -113,7 +113,7 @@ def blue_scale(t: float) -> str:
     accent (t=1, last step) — the same blue-to-teal family used across the
     dashboard's tables and metrics, but staying dark end-to-end so no card
     ever turns near-white and breaks the dark theme."""
-    start, end = _hex_to_rgb("#1E3A8A"), _hex_to_rgb("#0E756D")
+    start, end = _hex_to_rgb("#063E39"), _hex_to_rgb("#14B8A6")
     return _rgb_to_hex(tuple(int(a + (b - a) * t) for a, b in zip(start, end)))
 
 
@@ -128,11 +128,23 @@ def blue_scale(t: float) -> str:
 # (navy->teal cards here, a light-to-navy 2-stop hand-rolled scale there,
 # pandas' own per-column .background_gradient() elsewhere, each with a
 # different curve and no guaranteed readable text color).
+_TEAL_SCALE = None
+
+
 def blues_scale(frac: float) -> str:
-    """Returns a hex color from matplotlib's real 'Blues' colormap for a
-    0..1 fraction. frac=1.0 -> darkest navy, frac=0.0 -> lightest blue."""
+    """Returns a hex color from the project's TEAL ramp for a 0..1 fraction
+    (name kept for backward compatibility: every table, card, bar chart and
+    map already calls this single function). frac=1.0 -> deepest teal,
+    frac=0.0 -> palest teal. Replaces matplotlib's 'Blues' to match the
+    project's teal -> red visual identity."""
+    global _TEAL_SCALE
+    if _TEAL_SCALE is None:
+        from matplotlib.colors import LinearSegmentedColormap
+        _TEAL_SCALE = LinearSegmentedColormap.from_list(
+            "hd_teal", ["#E3F8F5", "#7EE0D3", "#14B8A6", "#0E756D", "#063E39"]
+        )
     frac = max(0.0, min(1.0, frac))
-    rgba = plt.colormaps["Blues"](frac)
+    rgba = _TEAL_SCALE(frac)
     return "#{:02x}{:02x}{:02x}".format(*(int(c * 255) for c in rgba[:3]))
 
 
@@ -779,7 +791,7 @@ def build_session_summary_pdf(metrics_df: pd.DataFrame, selected_model, conf_thr
     doc = SimpleDocTemplate(buf, pagesize=letter, topMargin=2 * cm, bottomMargin=2 * cm)
     styles = getSampleStyleSheet()
     title_style = ParagraphStyle("HeliTitle", parent=styles["Title"], textColor=colors.HexColor("#0E756D"))
-    h2_style = ParagraphStyle("HeliH2", parent=styles["Heading2"], textColor=colors.HexColor("#1E3A8A"),
+    h2_style = ParagraphStyle("HeliH2", parent=styles["Heading2"], textColor=colors.HexColor("#0E756D"),
                                spaceBefore=14, spaceAfter=6)
     body_style = styles["Normal"]
 
@@ -967,11 +979,7 @@ def detection_rate_to_color(rate: float, min_rate: float, max_rate: float) -> st
     else:
         t = (rate - min_rate) / (max_rate - min_rate)
     t = max(0.0, min(1.0, t))
-    # light blue (#dbeafe) -> navy (#1E3A8A)
-    light = (0xDB, 0xEA, 0xFE)
-    dark = (0x1E, 0x3A, 0x8A)
-    rgb = tuple(int(light[i] + (dark[i] - light[i]) * t) for i in range(3))
-    return f"#{rgb[0]:02x}{rgb[1]:02x}{rgb[2]:02x}"
+    return blues_scale(t)  # same teal ramp as every other table/card
 
 
 def readable_text_color(hex_color: str) -> str:
@@ -982,7 +990,7 @@ def readable_text_color(hex_color: str) -> str:
     hex_color = hex_color.lstrip("#")
     r, g, b = (int(hex_color[i:i + 2], 16) for i in (0, 2, 4))
     luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255
-    return "#0a1f2b" if luminance > 0.55 else "#ffffff"
+    return "#0a1f2b" if luminance > 0.45 else "#ffffff"
 
 
 def rate_popup_html(inner_html: str, bg_color: str, text_color: str) -> str:
@@ -3107,17 +3115,17 @@ with tab_about:
         st.markdown(f"""
         <div style="text-align:left;">
             <table style="width:100%; font-size:14px; color:#E2E8F0; border-collapse:collapse;">
-                <tr><td style="padding:6px 0; color:#93C5FD; width:160px; vertical-align:top;">{t("about.institution")}</td>
+                <tr><td style="padding:6px 0; color:#5EEAD4; width:160px; vertical-align:top;">{t("about.institution")}</td>
                     <td style="padding:6px 0;"><b>PUC-SP — FACEI</b></td></tr>
-                <tr><td style="padding:6px 0; color:#93C5FD; vertical-align:top;">{t("about.program")}</td>
+                <tr><td style="padding:6px 0; color:#5EEAD4; vertical-align:top;">{t("about.program")}</td>
                     <td style="padding:6px 0;">BSc in Human Centered-AI & Data Science</td></tr>
-                <tr><td style="padding:6px 0; color:#93C5FD; vertical-align:top;">{t("about.course")}</td>
+                <tr><td style="padding:6px 0; color:#5EEAD4; vertical-align:top;">{t("about.course")}</td>
                     <td style="padding:6px 0;">Machine Learning / Computer Vision — Project P2</td></tr>
-                <tr><td style="padding:6px 0; color:#93C5FD; vertical-align:top;">{t("about.authors")}</td>
+                <tr><td style="padding:6px 0; color:#5EEAD4; vertical-align:top;">{t("about.authors")}</td>
                     <td style="padding:6px 0;">
                         <a href="https://linktr.ee/fabianacampanari" target="_blank" style="color:#5EEAD4;">Fabiana ⚡️ Campanari</a>
                     </td></tr>
-                <tr><td style="padding:6px 0; color:#93C5FD; vertical-align:top;">{t("about.collaborators")}</td>
+                <tr><td style="padding:6px 0; color:#5EEAD4; vertical-align:top;">{t("about.collaborators")}</td>
                     <td style="padding:6px 0;">
                         <a href="https://github.com/ppvyctor/Helipoint-Detector" target="_blank" style="color:#5EEAD4;">Pedro Vyctor Almeida</a>
                     </td></tr>
@@ -3220,7 +3228,7 @@ with tab7:
         <p style="color:#CBD5E1; font-size:14px;">
             {t("dl.repo_desc")}
         </p>
-        <a href="https://github.com/Mindful-AI-Research/3-project-ai-ml-yolo-helipad_detector" target="_blank" style="color:#93C5FD; font-weight:600;">
+        <a href="https://github.com/Mindful-AI-Research/3-project-ai-ml-yolo-helipad_detector" target="_blank" style="color:#5EEAD4; font-weight:600;">
             github.com/Mindful-AI-Research/3-project-ai-ml-yolo-helipad_detector
         </a>
     </div>
@@ -3257,7 +3265,7 @@ with tab_metrics:
                 # computed per card instead of hardcoded white — keeps the
                 # lowest-scoring card's paler background readable too.
                 _txt = readable_text_color(card_bg)
-                _sub = "#DCE8F5" if _txt == "#ffffff" else "#1E293B"
+                _sub = "#D7F3EF" if _txt == "#ffffff" else "#1E293B"
                 st.markdown(f"""
                 <div style="{_metric_card_style} background:{card_bg};">
                     <h4 style="margin:0 0 8px 0; color:{_txt};">{row['Experiment']}</h4>
@@ -3422,7 +3430,7 @@ with tab_field:
             with col:
                 bg = blues_scale(frac)
                 txt = readable_text_color(bg)
-                sub = "#DCE8F5" if txt == "#ffffff" else "#1E293B"
+                sub = "#D7F3EF" if txt == "#ffffff" else "#1E293B"
                 st.markdown(f"""
                 <div style="{_field_card_style} background:{bg};">
                     <p style="margin:6px 0; font-size:26px; font-weight:700; color:{txt};">{value}</p>
