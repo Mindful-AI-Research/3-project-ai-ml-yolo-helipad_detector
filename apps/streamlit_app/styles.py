@@ -2,7 +2,7 @@
 
 GLOBAL_CSS = """
     <style>
-    .main-title {font-size: 42px !important; font-weight: bold; color: #FFFFFF; text-align: center;}
+    .main-title {font-size: 52px !important; font-weight: bold; color: #FFFFFF; text-align: center;}
     .subtitle {text-align: center; color: #64748B; font-size: 18px; margin-bottom: 30px;}
     /* Subtle frame + vignette on every detection image (Sample Images,
        Upload, Search by Region) so satellite tiles read as part of the
@@ -196,6 +196,17 @@ GLOBAL_CSS = """
     }
     /* text selection */
     ::selection { background: rgba(221,0,0,0.45); color: #fff; }
+    /* main title: same look as assets/title.svg (serif, red gradient + sheen) */
+    .main-title { font-family: Georgia, 'Times New Roman', serif !important; letter-spacing: .01em; }
+    .main-title .hd-title-red {
+        background: linear-gradient(100deg,#8B0000 0%,#A61B1B 20%,#D32F2F 50%,#B71C1C 75%,#8B0000 100%);
+        background-size: 200% 100%;
+        -webkit-background-clip: text; background-clip: text;
+        -webkit-text-fill-color: transparent; color: #D32F2F;
+        animation: hd-sheen 5.5s ease-in-out infinite;
+    }
+    @keyframes hd-sheen { 0%,100% { background-position: 0% 0; } 50% { background-position: 100% 0; } }
+    @media (prefers-reduced-motion: reduce) { .main-title .hd-title-red { animation: none; } }
     /* mandatory detection disclaimer (responsible-AI notice) */
     .hd-disclaimer {
         margin: 10px 0 4px 0; padding: 10px 14px; font-size: 13px; line-height: 1.5;
