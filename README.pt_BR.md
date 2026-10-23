@@ -89,7 +89,7 @@
 [**Tecnologia Principal:**]() YOLO (You Only Look Once) <br>
 [**Projeto:**]() Detecção de Objetos em Imagens de Satélite com YOLO <br>
 [**Contexto do Projeto:**]() Desenvolvido originalmente como trabalho acadêmico na disciplina de Redes Neurais, ministrada pelo [✨ **Prof. Rooney Ribeiro Albuquerque Coelho**](https://www.linkedin.com/in/rooney-coelho-320857182/), o projeto foi posteriormente ampliado para uma iniciativa de pesquisa aplicada. <br>
-[**Autora e Pesquisadora:**]() [Fabiana ⚡️ Campaner](https://linktr.ee/fabianacampanari) <br>
+[**Autora e Pesquisadora:**]() [Fabiana ⚡️ Campanari](https://linktr.ee/fabianacampanari) <br>
 [**Colaborador:**]() [Pedro Vyctor Almeida](https://github.com/ppvyctor/Helipoint-Detector)
 
 
