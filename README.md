@@ -82,22 +82,23 @@
 <!-- ========= END PUC GIF ========= -->
 
 
-<!-- ========= START Institutional INFO ========= -->
+<!-- ========= START INSTITUTIONAL INFORMATION ========= -->
+
 [**Institution:**]() Pontifical Catholic University of São Paulo (PUC-SP) <br>
-[**School:**]() FACEI — Computer Science Department <br>
-[**Course:**]() BSc in Human-Centered AI & Data Science <br>
-[**Subject:**]() Machine Learning / Computer Vision — YOLO <br>
-[**Project:**]() Object Detection in Satellite Images with YOLO <br>
-
-
-**Professor:** [✨ Rooney Ribeiro Albuquerque Coelho](https://www.linkedin.com/in/rooney-coelho-320857182/)  <br>
-**Author:** [Fabiana ⚡️ Campanari](https://linktr.ee/fabianacampanari) <br>
-**Collaborator:**  [Pedro Vyctor Almeida](https://github.com/ppvyctor/Helipoint-Detector) 
+[**Academic Unit:**]() Faculty of Exact Sciences and Technology (FCET/FACEI) <br>
+[**Undergraduate Program:**]() B.Sc. in Human-Centered AI & Data Science <br>
+[**Original Coursework:**]() Neural Networks — 5th semester of the undergraduate program <br>
+[**Technical Focus:**]() Machine Learning and Computer Vision <br>
+[**Primary Technology:**]() YOLO (You Only Look Once) <br>
+[**Project:**]() Object Detection in Satellite Imagery with YOLO <br>
+[**Project Background:**]() Originally developed as coursework for the Neural Networks course, taught by [✨ **Prof. Rooney Ribeiro Albuquerque Coelho**](https://www.linkedin.com/in/rooney-coelho-320857182/), the project was subsequently expanded into an applied research initiative. <br>
+[**Author & Researcher:**]() [Fabiana ⚡️ Campaner](https://linktr.ee/fabianacampanari) <br>
+[**Collaborator:**]() [Pedro Vyctor Almeida](https://github.com/ppvyctor/Helipoint-Detector)
 
 # 
 
 <br><br><br>
-<!-- ========= END Institutional INFO ========= -->
+<!-- ========= END INSTITUTIONAL INFORMATION ========= -->
 
 
 <!-- ========= START Streamlit BADGE ========= -->
