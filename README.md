@@ -92,6 +92,8 @@
 [**Subject:**]() Machine Learning / Computer Vision — YOLO <br>
 [**Project:**]() Object Detection in Satellite Images with YOLO <br>
 
+
+**Professor:** [✨ Rooney Ribeiro Albuquerque Coelho](https://www.linkedin.com/in/rooney-coelho-320857182/)  <br>
 **Author:** [Fabiana ⚡️ Campanari](https://linktr.ee/fabianacampanari) <br>
 **Collaborator:**  [Pedro Vyctor Almeida](https://github.com/ppvyctor/Helipoint-Detector) 
 
