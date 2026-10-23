@@ -319,7 +319,19 @@
 <!-- =========END MAIN REPO =Projects REFERENCES ========= -->
 
 
-<!-- ========= START Overview ========= -->
+
+
+
+
+
+
+
+
+
+<!--
+
+
+<!-- ========= START Overview =========
 
 ## [Visão Geral]()
 
@@ -368,7 +380,7 @@ São Paulo, contudo, destaca-se pela combinação de uma frota urbana de grande 
 > São Paulo foi escolhida como foco do **Helipad Detector** pela combinação de elevada densidade urbana, grande concentração de edifícios, presença significativa de infraestrutura de helipontos em coberturas e tráfego intenso de helicópteros. Esse contexto permite demonstrar como a Visão Computacional e os dados de satélite podem apoiar o mapeamento automatizado de infraestrutura urbana. As detecções do modelo representam **candidatos visuais** e não constituem confirmação regulatória, operacional ou aeronáutica da existência de um heliponto.
 
 <br><br>
-<!-- ========= END Overview ========= -->
+<!-- ========= END Overview ========= 
 
 
 
@@ -402,10 +414,10 @@ São Paulo, contudo, destaca-se pela combinação de uma frota urbana de grande 
 #
 
 <br><br>
-<!-- ========= END Overview ========= -->
+<!-- ========= END Overview ========= 
 
  
-<!-- ========= START 🎥 **DEMO** ========= -->
+<!-- ========= START 🎥 **DEMO** =========
 ###### <p align="center">  🎥 **DEMO:** **HELIPAD DETECTION** ✧ `YOLO11` ✧ `MODEL TRAINING`  
 
 https://github.com/user-attachments/assets/5b7d581c-ab5e-416e-8471-d91136b2ada0
@@ -429,7 +441,7 @@ https://github.com/user-attachments/assets/eab6e951-6b66-4c6c-a2c6-23ee2f902c5f
 <!-- ========= END  🎥 **DEMO** ========= -->
 
 
-<!-- ========= START ToC-->
+<!-- ========= START ToC
 ##  Índice
 
 - [Global Helicopter Traffic Context — Why São Paulo?](#global-helicopter-traffic-context--why-são-paulo)
@@ -471,6 +483,7 @@ https://github.com/user-attachments/assets/eab6e951-6b66-4c6c-a2c6-23ee2f902c5f
 
 <br><br>
 
+-->
 
 
 
@@ -624,7 +637,7 @@ Helipad Detector
 └── runtime.txt
 ```
 
-
+ -->
 
 
 
