@@ -1946,8 +1946,7 @@ st.markdown(f"""
 
 _main_title = t("main.title").replace(
     "Detector",
-    '<span style="color:#DC2626;background:linear-gradient(135deg,#991B1B 0%,#EF4444 100%);'
-    '-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;">Detector</span>',
+    '<span class="hd-title-red">Detector</span>',
     1,
 )
 st.markdown(f'<h1 class="main-title">{_main_title}</h1>', unsafe_allow_html=True)
