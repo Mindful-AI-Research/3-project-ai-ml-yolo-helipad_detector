@@ -9,6 +9,13 @@
 
 
 <!-- ========= START HEADRE ========= -->
+<!-- ========= START tittke ========= -->
+<p align="center">
+   <img src="https://github.com/user-attachments/assets/165d7b94-b72f-48ca-9f71-46eec6b22fdb" />
+
+
+
+
 <h1 align="center">🚁 $$\Huge{\textbf{\color{#FFFFFF}{Helipad}}\space\textbf{\color{#8B0000}{D}}\textbf{\color{#991414}{e}}\textbf{\color{#A61B1B}{t}}\textbf{\color{#B32222}{e}}\textbf{\color{#C62828}{c}}\textbf{\color{#D32F2F}{t}}\textbf{\color{#C62828}{o}}\textbf{\color{#B71C1C}{r}}}$$</h1>
 
 
@@ -16,7 +23,7 @@
 ### <p align="center"> End-to-End Artificial Intelligence Platform for Automated Helipad Detection and Geospatial Intelligence from Satellite Imagery
 
 <br><br>
-
+<!-- ========= Ebnd tittke ========= -->
 
 <div align="center">
 
