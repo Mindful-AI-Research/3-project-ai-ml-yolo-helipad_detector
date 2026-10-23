@@ -281,8 +281,8 @@
 <!-- ========= START NOTE ========= -->
 > [!WARNING]
 >
-> ⚠️ Os projetos podem ser compartilhados publicamente quando permitido.  
-> O foco está no aprendizado aplicado e prático, utilizando datasets reais em contextos de governança e segurança de IA.  
+> ⚠️ Os projetos podem ser compartilhados publicamente quando permitido.
+> O foco está no aprendizado prático e aplicado, com conjuntos de dados reais em contextos de governança e segurança de IA.
 > Todo conteúdo sensível permanece protegido em repositórios privados quando necessário.
 >
 
@@ -292,6 +292,8 @@
 
 <br><br>
 <!-- ========= END NOTE ========= -->
+
+
 
 <!-- =========START MAIN REPO =Projects REFERENCES ========= -->
 > [!TIP]
