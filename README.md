@@ -58,18 +58,21 @@
 <br><br>
 <!-- ========= END TEASER ========= -->
 
-<!-- ========= Start SPONSOR BADGE ========= -->
+
+<!-- ========= START SPONSOR BADGE ========= -->
 <p align="center">
 
   <a href="https://github.com/sponsors/Mindful-AI-Research">
     <img
-      src="https://img.shields.io/badge/Sponsor-%E0%A5%90%20Mindful%20AI%20%E2%8B%86%20Research%20%26%20Consulting%20%F0%96%A4%90-3A424C?style=for-the-badge&logo=githubsponsors&logoColor=white&labelColor=07111F"
-      alt="Sponsor ॐ Mindful AI ⋆ Research & Consulting 𖤐"
+      src="https://img.shields.io/badge/Sponsor-%E0%A5%90%20%E2%8B%86%20Mindful%20AI%20%E2%8B%86%20Research%20%26%20Consulting%20%F0%96%A4%90%20%E2%8B%86-3A424C?style=for-the-badge&logo=githubsponsors&logoColor=white&labelColor=07111F"
+      alt="Sponsor ॐ ⋆ Mindful AI ⋆ Research & Consulting 𖤐 ⋆"
       height="36"
+    >
   </a>
+
 </p>
 
- <br><br>
+<br><br>
 <!-- ========= END SPONSOR BADGE ========= -->
 
 
