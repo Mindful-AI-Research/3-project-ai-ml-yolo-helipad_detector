@@ -7,14 +7,24 @@
 <br><br>
 
 
-<!-- ========= START HEADRE ========= -->
+<!-- ========= START HEADER ========= -->
+<!-- ========= START title ========= -->
+<p align="center">
+   <img src="https://github.com/user-attachments/assets/dd86b10d-577f-45aa-8734-d4127e0a714b" />
+
+
+<!--
+<p align="center">
+   <img src="https://github.com/user-attachments/assets/165d7b94-b72f-48ca-9f71-46eec6b22fdb" />
+
 <h1 align="center">🚁 $$\Huge{\textbf{\color{#FFFFFF}{Helipad}}\space\textbf{\color{#8B0000}{D}}\textbf{\color{#991414}{e}}\textbf{\color{#A61B1B}{t}}\textbf{\color{#B32222}{e}}\textbf{\color{#C62828}{c}}\textbf{\color{#D32F2F}{t}}\textbf{\color{#C62828}{o}}\textbf{\color{#B71C1C}{r}}}$$</h1>
+-->
 
-
-### <p align="center"> Plataforma de Inteligência Artificial End-to-End para Detecção Automatizada de Helipontos e Inteligência Geoespacial a partir de Imagens de Satélite
-
+### <p align="center"> End-to-End Artificial Intelligence Platform for Automated Helipad Detection and Geospatial Intelligence from Satellite Imagery
 
 <br><br>
+<!-- ========= Ebnd title ========= -->
+
 
 
 <div align="center">
@@ -81,6 +91,7 @@
 [**Curso:**]() Bacharelado em Human-Centered AI & Data Science  <br>
 [**Disciplina:**]() Machine Learning / Visão Computacional — YOLO <br>
 [**Projeto:**]() Detecção de Objetos em Imagens de Satélite com YOLO <br>
+
 **Autora:** [Fabiana ⚡️ Campanari](https://linktr.ee/fabianacampanari) <br>
 **Colaboradores:** [Pedro Vyctor Almeida](https://github.com/ppvyctor/Helipoint-Detector) 
 
