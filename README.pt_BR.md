@@ -125,7 +125,7 @@
 <!-- ========= END Presentation BADGE ========= -->
 
 <!-- ========= START Helipad Detector Full Report BADGE ========= -->
-  <a href="https://github.com/Mindful-AI-Research/3-project-ai-ml-yolo-helipad_detector/blob/d9b2800b270184a21d6905e3ef96952b1cbe3558/reports/helipad_detector_full_report/%F0%9F%87%AC%F0%9F%87%A7Helipad_Detector_Full_Report.pdf" target="_blank" rel="noopener noreferrer">
+  <a href="https://github.com/Mindful-AI-Research/3-project-ai-ml-yolo-helipad_detector/blob/07ec0970cf3b98533729b30aad10574cc23d0d3e/reports/helipad_detector_full_report/%F0%9F%87%A7%F0%9F%87%B7Helipad_Detector_Relatorio_Completo.pdf" target="_blank" rel="noopener noreferrer">
     <img
       src="assets/badges/pt-br/badge-full-report.svg"
       alt="Relatório Completo — Ler Relatório"
