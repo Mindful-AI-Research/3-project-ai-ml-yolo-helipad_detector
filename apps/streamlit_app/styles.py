@@ -2,8 +2,8 @@
 
 GLOBAL_CSS = """
     <style>
-    .main-title {font-size: 52px !important; font-weight: bold; color: #FFFFFF; text-align: center;}
-    .subtitle {text-align: center; color: #64748B; font-size: 18px; margin-bottom: 30px;}
+    .main-title {text-align: center;}
+    .subtitle {text-align: center; color: #94A3B8; font-size: 18px; margin: 10px 0 30px 0;}
     /* Subtle frame + vignette on every detection image (Sample Images,
        Upload, Search by Region) so satellite tiles read as part of the
        same designed piece instead of looking like raw, unstyled crops. */
@@ -160,12 +160,6 @@ GLOBAL_CSS = """
         border: 0 !important; height: 2px !important;
         background: var(--hd-grad) !important; opacity: .55; border-radius: 2px;
     }
-    /* subtitle: softer, with a gradient underline */
-    .subtitle { position: relative; padding-bottom: 14px; }
-    .subtitle::after {
-        content: ""; position: absolute; left: 50%; bottom: 0; transform: translateX(-50%);
-        width: min(320px, 60%); height: 2px; background: var(--hd-grad); border-radius: 2px;
-    }
     /* active tab: gradient underline instead of default red */
     [data-baseweb="tab-highlight"],
     [data-testid="stTabs"] .react-aria-SelectionIndicator { background: var(--hd-grad) !important; height: 3px !important; }
@@ -196,17 +190,30 @@ GLOBAL_CSS = """
     }
     /* text selection */
     ::selection { background: rgba(221,0,0,0.45); color: #fff; }
-    /* main title: same look as assets/title.svg (serif, red gradient + sheen) */
-    .main-title { font-family: Georgia, 'Times New Roman', serif !important; letter-spacing: .01em; }
-    .main-title .hd-title-red {
-        background: linear-gradient(100deg,#8B0000 0%,#A61B1B 20%,#D32F2F 50%,#B71C1C 75%,#8B0000 100%);
-        background-size: 200% 100%;
+    /* main title: same look as assets/title.svg (card, serif, per-letter reds, sheen, underline) */
+    .hd-title-card {
+        max-width: 760px; margin: 6px auto 4px auto; padding: 22px 16px 16px 16px; text-align: center;
+        border-radius: 14px; background: radial-gradient(ellipse at 50% 40%, #0b1216 0%, #05080b 100%);
+        border: 1px solid rgba(20,184,166,0.18);
+    }
+    .main-title { font-family: Georgia, 'Times New Roman', serif !important; font-size: 64px !important;
+        font-weight: 700 !important; letter-spacing: 1px; line-height: 1.1 !important; margin: 0 !important;
+        padding: 0 !important; white-space: nowrap; color: #FFFFFF; }
+    .main-title .hd-emoji { font-size: 0.84em; }
+    .main-title .hd-white { color: #FFFFFF; }
+    .main-title .hd-text { position: relative; display: inline-block; }
+    .main-title .hd-text::after {
+        content: attr(data-text); position: absolute; left: 0; top: 0; white-space: nowrap;
+        color: transparent; -webkit-text-fill-color: transparent; pointer-events: none;
+        background: linear-gradient(100deg, transparent 40%, rgba(255,255,255,.55) 50%, transparent 60%) no-repeat;
+        background-size: 250% 100%; background-position: 160% 0;
         -webkit-background-clip: text; background-clip: text;
-        -webkit-text-fill-color: transparent; color: #D32F2F;
         animation: hd-sheen 5.5s ease-in-out infinite;
     }
-    @keyframes hd-sheen { 0%,100% { background-position: 0% 0; } 50% { background-position: 100% 0; } }
-    @media (prefers-reduced-motion: reduce) { .main-title .hd-title-red { animation: none; } }
+    @keyframes hd-sheen { 0% { background-position: 160% 0; } 60%, 100% { background-position: -60% 0; } }
+    .hd-title-line { width: min(420px, 70%); height: 2px; margin: 12px auto 0 auto; border-radius: 1px; background: var(--hd-grad); }
+    @media (max-width: 640px) { .main-title { font-size: 34px !important; } }
+    @media (prefers-reduced-motion: reduce) { .main-title .hd-text::after { animation: none; } }
     /* mandatory detection disclaimer (responsible-AI notice) */
     .hd-disclaimer {
         margin: 10px 0 4px 0; padding: 10px 14px; font-size: 13px; line-height: 1.5;
