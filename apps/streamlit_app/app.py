@@ -1293,7 +1293,7 @@ if "_warmed_up" not in st.session_state:
 
 st.markdown("""
     <style>
-    .main-title {font-size: 42px !important; font-weight: bold; color: #1E3A8A; text-align: center;}
+    .main-title {font-size: 42px !important; font-weight: bold; color: #FFFFFF; text-align: center;}
     .subtitle {text-align: center; color: #64748B; font-size: 18px; margin-bottom: 30px;}
     /* Subtle frame + vignette on every detection image (Sample Images,
        Upload, Search by Region) so satellite tiles read as part of the
@@ -1402,10 +1402,10 @@ st.markdown("""
         text-align: center; color: #cbd5e1; font-size: 16px; padding-top: 40px;
     }
     .dark-card {
-        background: linear-gradient(135deg, #16213E 0%, #1E3A8A 100%);
+        background: linear-gradient(135deg, #0B1F1D 0%, #0E3B36 55%, #3A1A17 100%);
         padding: 28px 26px;
         border-radius: 14px;
-        border: 1px solid rgba(147, 197, 253, 0.25);
+        border: 1px solid rgba(20, 184, 166, 0.30);
         box-shadow: 0 6px 22px rgba(15, 23, 42, 0.35), inset 0 1px 0 rgba(255,255,255,0.06);
         text-align: center;
     }
@@ -1422,18 +1422,74 @@ st.markdown("""
         color: #FFFFFF;
     }
     .sample-btn > button {
-        background: linear-gradient(135deg, #1E3A8A 0%, #3B82F6 100%);
+        background: linear-gradient(135deg, #0E756D 0%, #924227 55%, #C20000 100%);
         color: white;
         font-weight: 600;
         border: none !important;
         padding: 0.75em 1.4em;
         border-radius: 10px;
-        box-shadow: 0 4px 14px rgba(30, 58, 138, 0.35);
+        box-shadow: 0 4px 14px rgba(194, 0, 0, 0.30);
         transition: transform 0.15s ease, box-shadow 0.15s ease;
     }
     .sample-btn > button:hover {
         transform: translateY(-1px);
-        box-shadow: 0 6px 18px rgba(30, 58, 138, 0.45);
+        box-shadow: 0 6px 18px rgba(194, 0, 0, 0.45);
+    }
+    /* ===== Visual identity: teal -> red gradient (same as README/SVGs) ===== */
+    :root {
+        --hd-grad: linear-gradient(90deg,#005C48 0%,#425943 30%,#6E513B 40%,#924227 50%,#B02813 60%,#C20000 70%,#D80000 80%,#DD0000 100%);
+        --hd-teal: #14b8a6;
+        --hd-red: #DD0000;
+    }
+    /* thin gradient line fixed at the very top of the page */
+    [data-testid="stApp"]::before {
+        content: ""; position: fixed; top: 0; left: 0; right: 0; height: 3px;
+        background: var(--hd-grad); z-index: 999999; pointer-events: none;
+    }
+    /* gradient divider for st.markdown("---") */
+    [data-testid="stMarkdownContainer"] hr {
+        border: 0 !important; height: 2px !important;
+        background: var(--hd-grad) !important; opacity: .55; border-radius: 2px;
+    }
+    /* subtitle: softer, with a gradient underline */
+    .subtitle { position: relative; padding-bottom: 14px; }
+    .subtitle::after {
+        content: ""; position: absolute; left: 50%; bottom: 0; transform: translateX(-50%);
+        width: min(320px, 60%); height: 2px; background: var(--hd-grad); border-radius: 2px;
+    }
+    /* active tab: gradient underline instead of default red */
+    [data-baseweb="tab-highlight"],
+    [data-testid="stTabs"] .react-aria-SelectionIndicator { background: var(--hd-grad) !important; height: 3px !important; }
+    [data-baseweb="tab"][aria-selected="true"],
+    [data-testid="stTab"][aria-selected="true"],
+    [data-testid="stTab"][aria-selected="true"] p { color: #FFFFFF !important; }
+    [data-baseweb="tab-border"] { background: rgba(20,184,166,0.18) !important; }
+    /* buttons: teal border turns into the red end on hover */
+    [data-testid="stDownloadButton"] > button:hover,
+    [data-testid="stButton"] > button:hover,
+    [data-testid="stLinkButton"] > a:hover {
+        border-color: rgba(221,0,0,0.75) !important; color: #FFFFFF !important;
+        box-shadow: 0 4px 16px rgba(194,0,0,0.28);
+    }
+    [data-testid="stLinkButton"] > a {
+        border: 1px solid rgba(20,184,166,0.35) !important; border-radius: 10px !important;
+    }
+    [data-testid="stExpander"]:hover { border-color: rgba(221,0,0,0.45) !important; }
+    /* cards, inputs and focus rings */
+    .metric-card:hover, .flow-step:hover { border-color: rgba(221,0,0,0.35); }
+    [data-testid="stSelectbox"] > div > div:focus-within,
+    [data-testid="stNumberInput"] > div:focus-within { border-color: rgba(221,0,0,0.7) !important; }
+    /* progress / slider accents */
+    [data-testid="stProgress"] > div > div > div > div { background: var(--hd-grad) !important; }
+    /* keyboard focus: visible and on-brand (accessibility) */
+    button:focus-visible, a:focus-visible, [role="tab"]:focus-visible {
+        outline: 2px solid var(--hd-teal) !important; outline-offset: 2px !important;
+    }
+    /* text selection */
+    ::selection { background: rgba(221,0,0,0.45); color: #fff; }
+    /* respect users who prefer reduced motion (page UI only) */
+    @media (prefers-reduced-motion: reduce) {
+        .metric-card, .flow-step, .sample-btn > button { transition: none !important; }
     }
     </style>
 """, unsafe_allow_html=True)
