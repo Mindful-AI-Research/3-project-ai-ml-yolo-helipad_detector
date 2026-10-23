@@ -209,31 +209,6 @@
 <!-- ========= END NOTE ========= -->
 
 
-<!-- ========= START MAIN REPO / Projects REFERENCES ========= -->
-> [!TIP]
->
-> Este repositório faz parte do ecossistema principal:
->
-> ## 🧠 AI/ML ✦ Neural Networks  ✦ Hub   ✦
->
-> Explore a coleção completa de projetos, notebooks, materiais de pesquisa, análises e aplicações interativas disponíveis no repositório central:
->
-> 🔗 **[AI/ML ✦ Neural Networks ✦ Hub](https://github.com/Mindful-AI-Research/1-ai-ml_neural-networks_hub)**
->
-> #
->
-> ###  Projeto Relacionado desta Série:
->
-> 🔗 **[AI/ML Project 1 · Computer Vision · EMNIST Vision Intelligence](https://github.com/Mindful-AI-Assistants/2-project-ai-ml-emnist-vision-intelligence)**
->
-> Um sistema de deep learning para reconhecimento de caracteres manuscritos usando PyTorch e Streamlit.
-
-<br><br><br><br>
-<!-- ========= END MAIN REPO / Projects REFERENCES ========= -->
-
-
-
-
 
 <!-- ========= START MAIN REPO / Projects REFERENCES ========= -->
 > [!TIP]
