@@ -95,54 +95,99 @@
 **Autora:** [Fabiana ⚡️ Campanari](https://linktr.ee/fabianacampanari) <br>
 **Colaboradores:** [Pedro Vyctor Almeida](https://github.com/ppvyctor/Helipoint-Detector) 
 
-# <br>
+# 
+
+<br>
 <!-- ========= END Institutional INFO ========= -->
 
+<!-- ========= START Streamlit BADGE ========= -->
+<p align="center" style="margin: 0;">
+  <a href="https://helipad-detector-sp.streamlit.app/" rel="noopener noreferrer">
+    <img
+      src="assets/badges/pt-br/badge-streamlit.svg"
+      alt="Streamlit — Abrir Dashboard"
+      style="height: 46px; width: auto;"
+    />
+  </a>
+</p>
+<!-- ========= END Streamlit BADGE ========= -->
 
-<!-- ======================================= Start Institutional  Atribuição de Contribuições / subm tidd ======== 
-### [Atribuição de Contribuições]()
+<!-- ========= START Presentation BADGE ========= -->
+<p align="center" style="margin: 0;">
 
-Este projeto evoluiu de uma base inicial envolvendo desenvolvimento de dataset, treinamento de modelos e um protótipo web para uma plataforma integrada de visão computacional e inteligência geoespacial. Os três colaboradores creditados participaram em diferentes etapas do projeto, com contribuições abrangendo distintas áreas técnicas e responsabilidades. <br><br>
+  <a href="https://mindful-ai-research.github.io/3-project-ai-ml-yolo-helipad_detector/" target="_blank" rel="noopener noreferrer">
+    <img
+      src="assets/badges/pt-br/badge-presentation.svg"
+      alt="Apresentação — Ver Slides"
+      style="height: 46px; width: auto; margin-right: 8px;"
+    />
+  </a>
+<!-- ========= END Presentation BADGE ========= -->
 
-* [Pedro Vyctor Almeida](https://github.com/ppvyctor/Helipoint-Detector) estabeleceu a base inicial do projeto, incluindo o dataset originalmente anotado, o protótipo inicial da aplicação web (`Site.py`) e o primeiro experimento de treinamento (`exp1`). Seu protótipo consistia em uma aplicação compacta em Streamlit, com duas funções principais: upload de imagens e busca de imagens de satélite por região. O trabalho original está documentado em seu [repositório Helipoint Detector](https://github.com/ppvyctor/Helipoint-Detector). <br><br>
+<!-- ========= START Helipad Detector Full Report BADGE ========= -->
+  <a href="https://github.com/Mindful-AI-Research/3-project-ai-ml-yolo-helipad_detector/blob/d9b2800b270184a21d6905e3ef96952b1cbe3558/reports/helipad_detector_full_report/%F0%9F%87%AC%F0%9F%87%A7Helipad_Detector_Full_Report.pdf" target="_blank" rel="noopener noreferrer">
+    <img
+      src="assets/badges/pt-br/badge-full-report.svg"
+      alt="Relatório Completo — Ler Relatório"
+      style="height: 46px; width: auto;"
+    />
+  </a>
 
-* [**Carlos Antonio dos Santos Roth Gorham**]() propôs o conceito de automação geoespacial para a descoberta de helipontos e contribuiu para o início dessa direção de implementação. <br><br>
+</p>
+<!-- ========= END Helipad Detector Full Report BADGE ========= -->
 
-* [Fabiana ⚡️ Campanari](https://linktr.ee/fabianacampanari) contribuiu para o desenvolvimento, expansão, integração, avaliação e consolidação subsequentes da plataforma final **Helipad Detector**. Seu trabalho incluiu: <br><br>
+<br><br>
 
-  * desenvolvimento e expansão da automação de scraping geoespacial e geocodificação;
-  * conversão de coordenadas geográficas brutas para coordenadas decimais e bounding boxes;
-  * integração da aquisição de imagens de satélite e dos fluxos de busca geográfica;
-  * execução dos experimentos `exp2` e `exp3`;
-  * benchmarking dos modelos, avaliação comparativa e análise de desempenho;
-  * comparação dos modelos treinados utilizando Precision, Recall, mAP@50, mAP@50–95, curvas de treinamento e matrizes de confusão;
-  * avaliação comparativa dos três experimentos utilizando o mesmo dataset de validação em condições reais de campo;
-  * análise da diferença entre o desempenho em benchmarks com dados curados e a generalização em imagens de satélite não curadas;
-  * validação em campo em dez regiões de São Paulo, utilizando mais de 7.900 tiles de imagens de satélite reais;
-  * expansão do protótipo inicial de duas abas para uma plataforma Streamlit bilíngue substancialmente mais ampla;
-  * implementação de descoberta automática de modelos e seleção dos pesos dos experimentos;
-  * desenvolvimento de mapas interativos, camadas geográficas, heatmaps, resumos regionais e visualizações das taxas de detecção;
-  * implementação de inferência com imagens de amostra, inferência por upload, busca regional de imagens de satélite e resultados de detecção para download;
-  * desenvolvimento das seções de governança, transparência, Responsible AI, LGPD, limitações e supervisão humana;
-  * implementação do suporte à interface bilíngue PT/EN;
-  * desenvolvimento completo do design visual, arquitetura da interface, layout, estilização, design de interação e experiência do usuário do dashboard;
-  * organização e consolidação do repositório final completo;
-  * criação da apresentação executiva interativa em React/HTML;
-  * preparação dos relatórios técnicos bilíngues completos, guias, documentação, demonstrações e materiais de apoio;
-  * desenvolvimento da camada de apresentação do projeto, narrativa visual, elementos interativos e integração da trilha sonora;
-  * pesquisa de mercado e análise comparativa de indicadores de presença e atividade de helicópteros, incluindo o ranking comparativo internacional utilizado para contextualizar a relevância prática do projeto. <br><br>
+#
 
-O repositório final representa a evolução do projeto a partir de seu protótipo inicial para uma plataforma integrada de visão computacional e inteligência geoespacial, abrangendo descoberta de dados, automação geoespacial, experimentação, benchmarking de modelos, avaliação comparativa, validação em campo, visualização, governança, documentação, apresentação e pesquisa contextual aplicada.
+<br><br><br><br>
+<!-- ========= BADGES  END ALLL PRESENTATIONS ------ BADGES  ========= -->
 
-**Os três colaboradores permanecem creditados por suas respectivas contribuições. Esta atribuição tem como objetivo documentar de forma transparente o histórico de desenvolvimento do projeto, a evolução de sua implementação e as áreas técnicas para as quais cada participante contribuiu.**
 
+
+<!-- 🚧<!-- ========= START 🎥 **DEMO** ========= 
+### 🎥 **DEMO: RESTful API & Dashboard Deployment** ✧ ` * Geocoding: Nominatim (OpenStreetMap)` ✧ ` MapLibre GL JS` ✧ `Streamlit`
+
+## Dashboard Preview
+
+###### <p align="center"> 🎬 **Creative Direction, Music Curation & Editing by Fab⚡️**
+###### <p align="center"> 🎶 **Soundtrack:** *"Canon in D"* — Johann Pachelbel
 
 <br>
 
 #
 
-<br><br><br> -->
-<!-- ======================================= END Institutional / mestr/ SUBMISSION =========================================== --> 
+<br><br>
+=========🚧 END 🎥 **DEMO** =========  -->
+
+
+<!-- ========= START TECH STACK / PIPELINE BADGES ========= -->
+<p align="center">
+  <img src="assets/badges/pt-br/badge-esri.svg" alt="ESRI Imagery — Tiles de Satélite" />
+  <img src="assets/badges/pt-br/badge-pytorch.svg" alt="PyTorch — Framework de Deep Learning" />
+  <img src="assets/badges/pt-br/badge-yolo.svg" alt="YOLO — Detecção de Objetos Ultralytics" />
+</p>
+
+<p align="center">
+  <img src="assets/badges/pt-br/badge-roboflow.svg" alt="Roboflow — Dataset e Anotação" />
+  <img src="assets/badges/pt-br/badge-geospatial.svg" alt="Geoespacial — Coordenadas e Mapas" />
+  <img src="assets/badges/pt-br/badge-computer-vision.svg" alt="Visão Computacional — Detecção de Objetos" />
+</p>
+
+<p align="center">
+  <img src="assets/badges/pt-br/badge-osint.svg" alt="OSINT — Dados Públicos de Aviação" />
+  <img src="assets/badges/pt-br/badge-evaluation.svg" alt="Avaliação — Métricas mAP / Precisão" />
+</p>
+
+
+<br><br>
+
+#
+
+<br><br>
+<!-- =========END TECH STACK / PIPELINE BADGES========= -->
+
+
 
 
 <!-- ========= START Streamlit BADGE ========= -->
