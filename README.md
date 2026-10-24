@@ -113,6 +113,7 @@
 <!-- ========= END INSTITUTIONAL INFORMATION ========= -->
 
 
+
 <!-- ========= START Streamlit BADGE ========= -->
 <p align="center" style="margin: 0;">
   <a href="https://helipad-detector-sp.streamlit.app/" rel="noopener noreferrer">
@@ -148,6 +149,19 @@
 
 </p>
 <!-- ========= END Helipad Detector Full Report BADGE ========= -->
+
+<!-- ========= START TIDD Pre-Project BADGE ========= -->
+<p align="center" style="margin: 0;">
+  <a href="https://github.com/Mindful-AI-Research/3-project-ai-ml-yolo-helipad_detector/blob/afc6e3f04ef7be965175b8c75569f58193bf5e06/TIDD-PhD-Application-Documents/pre-project_TIDD/pre-project_updated/pre-project_updated_pdf/fabiana-campaner_research-proposal_evaluating-visual-detectors-without-ground-truth_UPDATED.pdf" target="_blank" rel="noopener noreferrer">
+    <img
+      src="https://raw.githubusercontent.com/Mindful-AI-Research/3-project-ai-ml-yolo-helipad_detector/main/assets/badges/en/badge-pre-project.svg"
+      alt="TIDD Pre-Project — Image Semiotics — Read PDF"
+      style="height: 46px; width: auto;"
+    />
+  </a>
+</p>
+<!-- ========= END TIDD Pre-Project BADGE ========= -->
+
 
 <br><br>
 
