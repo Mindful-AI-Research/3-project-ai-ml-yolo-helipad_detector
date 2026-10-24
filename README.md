@@ -269,6 +269,7 @@
 
 <p align="center"><sub>🟢 <b>Green</b> — what it does and what was found &nbsp;·&nbsp; 🟡 <b>Yellow</b> — limits and care when interpreting &nbsp;·&nbsp; 🔴 <b>Red</b> — what must not be misread</sub></p>
 
+<!-- ========= END Project at a Glance ========= -->
 
 <br><br>
 
@@ -276,8 +277,6 @@
 
 
 <br><br>
-<!-- ========= END Project at a Glance ========= -->
-
 
 
 <!-- ========= START Table of Contents ========= -->
@@ -369,26 +368,18 @@
 - [Final Statement](#final-statement)
 <!-- ========= END Table of Contents ========= -->
 
-<br>
-
-<p align="center"><img src="https://raw.githubusercontent.com/Mindful-AI-Research/3-project-ai-ml-yolo-helipad_detector/main/assets/divider.svg" alt="" width="100%" /></p>
-
-
-<br>
-<!-- ========= END Project at a Glance ========= -->
-
 
 <br>
 
 <p align="center"><img src="https://raw.githubusercontent.com/Mindful-AI-Research/3-project-ai-ml-yolo-helipad_detector/main/assets/divider.svg" alt="" width="100%" /></p>
 
+
 <br>
+
 
 <!-- ========= START Overview ========= -->
 <a id="overview"></a>
 ## [Overview]()
-
-<p align="center"><img src="https://raw.githubusercontent.com/Mindful-AI-Research/3-project-ai-ml-yolo-helipad_detector/main/assets/divider.svg" alt="" width="100%" /></p>
 
 The [**Helipad Detector**]() is an end-to-end Artificial Intelligence and Computer Vision platform designed to automatically detect and map **possible helipads on building rooftops** from satellite imagery. The project transforms geospatial images into structured information, making it possible to identify visual patterns consistent with helicopter landing areas and represent them on an interactive map.
 
