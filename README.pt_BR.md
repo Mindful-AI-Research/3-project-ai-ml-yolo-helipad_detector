@@ -108,7 +108,7 @@
 <p align="center" style="margin: 0;">
   <a href="https://helipad-detector-sp.streamlit.app/" rel="noopener noreferrer">
     <img
-      src="assets/badges/pt-br/badge-streamlit.svg"
+      src="https://raw.githubusercontent.com/Mindful-AI-Research/3-project-ai-ml-yolo-helipad_detector/main/assets/badges/pt-br/badge-streamlit.svg"
       alt="Streamlit — Abrir Dashboard"
       style="height: 46px; width: auto;"
     />
@@ -121,7 +121,7 @@
 
   <a href="https://mindful-ai-research.github.io/3-project-ai-ml-yolo-helipad_detector/" target="_blank" rel="noopener noreferrer">
     <img
-      src="assets/badges/pt-br/badge-presentation.svg"
+      src="https://raw.githubusercontent.com/Mindful-AI-Research/3-project-ai-ml-yolo-helipad_detector/main/assets/badges/pt-br/badge-presentation.svg"
       alt="Apresentação — Ver Slides"
       style="height: 46px; width: auto; margin-right: 8px;"
     />
@@ -129,9 +129,9 @@
 <!-- ========= END Presentation BADGE ========= -->
 
 <!-- ========= START Helipad Detector Full Report BADGE ========= -->
-  <a href="https://github.com/Mindful-AI-Research/3-project-ai-ml-yolo-helipad_detector/blob/07ec0970cf3b98533729b30aad10574cc23d0d3e/reports/helipad_detector_full_report/%F0%9F%87%A7%F0%9F%87%B7Helipad_Detector_Relatorio_Completo.pdf" target="_blank" rel="noopener noreferrer">
+  <a href="https://github.com/Mindful-AI-Research/3-project-ai-ml-yolo-helipad_detector/blob/d9b2800b270184a21d6905e3ef96952b1cbe3558/reports/helipad_detector_full_report/%F0%9F%87%AC%F0%9F%87%A7Helipad_Detector_Full_Report.pdf" target="_blank" rel="noopener noreferrer">
     <img
-      src="assets/badges/pt-br/badge-full-report.svg"
+      src="https://raw.githubusercontent.com/Mindful-AI-Research/3-project-ai-ml-yolo-helipad_detector/main/assets/badges/pt-br/badge-full-report.svg"
       alt="Relatório Completo — Ler Relatório"
       style="height: 46px; width: auto;"
     />
@@ -152,7 +152,6 @@
 </p>
 <!-- ========= END TIDD Pre-Project BADGE ========= -->
 
-
 <br><br>
 
 <p align="center"><img src="https://raw.githubusercontent.com/Mindful-AI-Research/3-project-ai-ml-yolo-helipad_detector/main/assets/divider.svg" alt="" width="100%" /></p>
@@ -160,9 +159,6 @@
 
 <br><br><br><br>
 <!-- ========= BADGES  END ALLL PRESENTATIONS ------ BADGES  ========= -->
-
-
-
 
 <!-- 🚧<!-- ========= START 🎥 **DEMO** ========= 
 ### 🎥 **DEMO: RESTful API & Dashboard Deployment** ✧ ` * Geocoding: Nominatim (OpenStreetMap)` ✧ ` MapLibre GL JS` ✧ `Streamlit`
@@ -180,123 +176,32 @@
 =========🚧 END 🎥 **DEMO** =========  -->
 
 
-
 <!-- ========= START TECH STACK / PIPELINE BADGES ========= -->
 <p align="center">
-  <img src="https://raw.githubusercontent.com/Mindful-AI-Research/3-project-ai-ml-yolo-helipad_detector/main/assets/badges/en/badge-esri.svg" alt="ESRI Imagery Satellite Tiles" />
-  <img src="https://raw.githubusercontent.com/Mindful-AI-Research/3-project-ai-ml-yolo-helipad_detector/main/assets/badges/en/badge-pytorch.svg" alt="PyTorch Deep Learning Framework" />
-  <img src="https://raw.githubusercontent.com/Mindful-AI-Research/3-project-ai-ml-yolo-helipad_detector/main/assets/badges/en/badge-yolo.svg" alt="YOLO Ultralytics Object Detection" />
+  <img src="https://raw.githubusercontent.com/Mindful-AI-Research/3-project-ai-ml-yolo-helipad_detector/main/assets/badges/pt-br/badge-esri.svg" alt="ESRI Imagery — Tiles de Satélite" />
+  <img src="https://raw.githubusercontent.com/Mindful-AI-Research/3-project-ai-ml-yolo-helipad_detector/main/assets/badges/pt-br/badge-pytorch.svg" alt="PyTorch — Framework de Deep Learning" />
+  <img src="https://raw.githubusercontent.com/Mindful-AI-Research/3-project-ai-ml-yolo-helipad_detector/main/assets/badges/pt-br/badge-yolo.svg" alt="YOLO — Detecção de Objetos Ultralytics" />
 </p>
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/Mindful-AI-Research/3-project-ai-ml-yolo-helipad_detector/main/assets/badges/en/badge-roboflow.svg" alt="Roboflow Dataset and Annotation" />
-  <img src="https://raw.githubusercontent.com/Mindful-AI-Research/3-project-ai-ml-yolo-helipad_detector/main/assets/badges/en/badge-geospatial.svg" alt="Geospatial Coordinates and Maps" />
-  <img src="https://raw.githubusercontent.com/Mindful-AI-Research/3-project-ai-ml-yolo-helipad_detector/main/assets/badges/en/badge-computer-vision.svg" alt="Computer Vision Object Detection" />
+  <img src="https://raw.githubusercontent.com/Mindful-AI-Research/3-project-ai-ml-yolo-helipad_detector/main/assets/badges/pt-br/badge-roboflow.svg" alt="Roboflow — Dataset e Anotação" />
+  <img src="https://raw.githubusercontent.com/Mindful-AI-Research/3-project-ai-ml-yolo-helipad_detector/main/assets/badges/pt-br/badge-geospatial.svg" alt="Geoespacial — Coordenadas e Mapas" />
+  <img src="https://raw.githubusercontent.com/Mindful-AI-Research/3-project-ai-ml-yolo-helipad_detector/main/assets/badges/pt-br/badge-computer-vision.svg" alt="Visão Computacional — Detecção de Objetos" />
 </p>
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/Mindful-AI-Research/3-project-ai-ml-yolo-helipad_detector/main/assets/badges/en/badge-osint.svg" alt="OSINT Public Aviation Data" />
-  <img src="https://raw.githubusercontent.com/Mindful-AI-Research/3-project-ai-ml-yolo-helipad_detector/main/assets/badges/en/badge-evaluation.svg" alt="Evaluation mAP / Precision Metrics" />
-  <img src="https://raw.githubusercontent.com/Mindful-AI-Research/3-project-ai-ml-yolo-helipad_detector/main/assets/badges/en/badge-semiotics.svg" alt="Semiotics Sign and Image Interpretation" />
+  <img src="https://raw.githubusercontent.com/Mindful-AI-Research/3-project-ai-ml-yolo-helipad_detector/main/assets/badges/pt-br/badge-osint.svg" alt="OSINT — Dados Públicos de Aviação" />
+  <img src="https://raw.githubusercontent.com/Mindful-AI-Research/3-project-ai-ml-yolo-helipad_detector/main/assets/badges/pt-br/badge-evaluation.svg" alt="Avaliação — Métricas mAP / Precisão" />
+  <img src="https://raw.githubusercontent.com/Mindful-AI-Research/3-project-ai-ml-yolo-helipad_detector/main/assets/badges/pt-br/badge-semiotics.svg" alt="Semiótica — Signo e Interpretação da Imagem" />
 </p>
-
 
 <br><br>
 
-#
+<p align="center"><img src="https://raw.githubusercontent.com/Mindful-AI-Research/3-project-ai-ml-yolo-helipad_detector/main/assets/divider.svg" alt="" width="100%" /></p>
 
 <br><br>
 <!-- =========END TECH STACK / PIPELINE BADGES========= -->
 
-
-
-
-<!-- ========= START Streamlit BADGE ========= -->
-<p align="center" style="margin: 0;">
-  <a href="https://helipad-detector-sp.streamlit.app/" rel="noopener noreferrer">
-    <img 
-      src="https://img.shields.io/badge/Streamlit%20Repository-Helipad%20Detector-0f172a?style=for-the-badge&logo=streamlit&logoColor=white" 
-      alt="Streamlit Repository Helipad Detector"
-      style="height: 38px; width: auto;"
-    />
-  </a>
-</p>
-<!-- ========= END Streamlit BADGE ========= -->
-
-
-<!-- ========= START React Presentation BADGE ========= -->
-<p align="center" style="margin: 0;">
-
-  <a href="https://timely-brioche-b6c92f.netlify.app/" target="_blank" rel="noopener noreferrer">
-    <img
-      src="https://img.shields.io/badge/React%20Presentation-Slides%20and%20Overview-0f766e?style=for-the-badge&logo=react&logoColor=white"
-      alt="React Presentation Slides and Overview"
-      style="height: 32px; width: auto; margin-right: 8px;"
-    />
-  </a> 
-<!-- =========End REeact Presentation BADGE ========= -->
-
-<!-- ========= START Helipad Detector Relatório Completo. BADGE ========= -->
- <a href="https://github.com/Mindful-AI-Research/3-project-ai-ml-yolo-helipad_detector/blob/3849b944fbfbf2df224fbd7e636751872c35258a/reports/helipad_detector_full_report/%F0%9F%87%A7%F0%9F%87%B7Helipad_Detector_Relatorio_Completo.pdf" target="_blank" rel="noopener noreferrer">
-    <img 
-      src="https://img.shields.io/badge/Helipad%20Detector-Relat%C3%B3rio%20Completo-134e4a?style=for-the-badge&logo=github&logoColor=white&labelColor=022c22" 
-      alt="Helipad Detector — Relatório Completo"
-      style="height: 32px; width: auto;"
-    />
-  </a>
-
-</p>
-<!-- ========= END Helipad Detector Relatório Completo. BADGE ========= -->
-
-<br><br>
-
-#
-
-<br><br>
-<!-- =========  BADGES END Helipad Detector -------  ALL  PORESENBTATIONS  BADGES     ========= -->
-
-<!-- 🚧<!-- ========= START 🎥 **DEMO** ========= 
-### 🎥 **DEMO: RESTful API & Dashboard Deployment** ✧ ` * Geocoding: Nominatim (OpenStreetMap)` ✧ ` MapLibre GL JS` ✧ `Streamlit`
-
-## Dashboard Preview
-
-###### <p align="center"> 🎬 **Creative Direction, Music Curation & Editing by Fab⚡️**
-###### <p align="center"> 🎶 **Soundtrack:** *"Canon in D"* — Johann Pachelbel
-
-<br>
-
-#
-
-<br><br>
-=========🚧 END 🎥 **DEMO** =========  -->
-
-
-
-<!-- ========= START TECH STACK / PIPELINE BADGES ========= -->
-<p align="center">
-  <img src="https://img.shields.io/badge/Python-Core%20Language-0f172a?style=for-the-badge&logo=python&logoColor=white" />
-  <img src="https://img.shields.io/badge/PyTorch-Deep%20Learning%20Framework-101f2f?style=for-the-badge&logo=pytorch&logoColor=white" />
-  <img src="https://img.shields.io/badge/YOLO-Ultralytics%20Object%20Detection-112a3a?style=for-the-badge&logo=ultralytics&logoColor=white" />
-</p>
-
-<p align="center">
-  <img src="https://img.shields.io/badge/Roboflow-Dataset%20%26%20Annotation-134a4a?style=for-the-badge&logo=roboflow&logoColor=white" />
-  <img src="https://img.shields.io/badge/Geospatial-Satellite%20Imagery-124050?style=for-the-badge&logo=googleearth&logoColor=white" />
-  <img src="https://img.shields.io/badge/Computer%20Vision-Object%20Detection-0f2a2a?style=for-the-badge&logo=opencv&logoColor=white" />
-</p>
-
-<p align="center">
-  <img src="https://img.shields.io/badge/Google%20Colab-GPU%20Training-134e4a?style=for-the-badge&logo=googlecolab&logoColor=white" />
-  <img src="https://img.shields.io/badge/Evaluation-mAP%20%2F%20Precision%20Metrics-0f172a?style=for-the-badge&logo=githubactions&logoColor=white" />
-</p>
-
-
-<br><br>
-
-#
-
-<br><br>
-<!-- =========END TECH STACK / PIPELINE BADGES========= -->
 
 
 <!-- ========= START NOTE ========= -->
