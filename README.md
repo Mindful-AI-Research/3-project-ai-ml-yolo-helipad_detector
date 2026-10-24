@@ -206,6 +206,7 @@
 <p align="center">
   <img src="https://raw.githubusercontent.com/Mindful-AI-Research/3-project-ai-ml-yolo-helipad_detector/main/assets/badges/en/badge-osint.svg" alt="OSINT Public Aviation Data" />
   <img src="https://raw.githubusercontent.com/Mindful-AI-Research/3-project-ai-ml-yolo-helipad_detector/main/assets/badges/en/badge-evaluation.svg" alt="Evaluation mAP / Precision Metrics" />
+  <img src="https://raw.githubusercontent.com/Mindful-AI-Research/3-project-ai-ml-yolo-helipad_detector/main/assets/badges/en/badge-semiotics.svg" alt="Semiotics Sign and Image Interpretation" />
 </p>
 
 
