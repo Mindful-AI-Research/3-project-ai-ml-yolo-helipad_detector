@@ -87,8 +87,8 @@
 <p align="center">
   <img src="https://raw.githubusercontent.com/Mindful-AI-Research/3-project-ai-ml-yolo-helipad_detector/main/assets/badges/pt-br/badge-osint.svg" alt="OSINT — Dados Públicos de Aviação" />
   <img src="https://raw.githubusercontent.com/Mindful-AI-Research/3-project-ai-ml-yolo-helipad_detector/main/assets/badges/pt-br/badge-evaluation.svg" alt="Avaliação — Métricas mAP / Precisão" />
+  <img src="https://raw.githubusercontent.com/Mindful-AI-Research/3-project-ai-ml-yolo-helipad_detector/main/assets/badges/pt-br/badge-semiotics.svg" alt="Semiótica — Signo e Interpretação da Imagem" />
 </p>
-
 
 
 <br><br>
