@@ -135,12 +135,27 @@
 </p>
 <!-- ========= END Helipad Detector Full Report BADGE ========= -->
 
+<!-- ========= START TIDD Pre-Project BADGE ========= -->
+<p align="center" style="margin: 0;">
+  <a href="https://github.com/Mindful-AI-Research/3-project-ai-ml-yolo-helipad_detector/blob/afc6e3f04ef7be965175b8c75569f58193bf5e06/TIDD-PhD-Application-Documents/pre-project_TIDD/pre-project_updated/pre-project_updated_pdf/fabiana-campaner_pre-projeto_avaliacao-detectores-visuais-sem-verdade-de-campo_ATUALIZADO.pdf" target="_blank" rel="noopener noreferrer">
+    <img
+      src="https://raw.githubusercontent.com/Mindful-AI-Research/3-project-ai-ml-yolo-helipad_detector/main/assets/badges/pt-br/badge-pre-project.svg"
+      alt="Pré-Projeto TIDD — Semiótica da Imagem — Ler PDF"
+      style="height: 46px; width: auto;"
+    />
+  </a>
+</p>
+<!-- ========= END TIDD Pre-Project BADGE ========= -->
+
+
 <br><br>
 
-#
+<p align="center"><img src="https://raw.githubusercontent.com/Mindful-AI-Research/3-project-ai-ml-yolo-helipad_detector/main/assets/divider.svg" alt="" width="100%" /></p>
+
 
 <br><br><br><br>
 <!-- ========= BADGES  END ALLL PRESENTATIONS ------ BADGES  ========= -->
+
 
 
 
