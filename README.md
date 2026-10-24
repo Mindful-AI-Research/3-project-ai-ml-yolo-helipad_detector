@@ -53,7 +53,8 @@
 
 <br>
 
-#
+<p align="center"><img src="https://raw.githubusercontent.com/Mindful-AI-Research/3-project-ai-ml-yolo-helipad_detector/main/assets/divider.svg" alt="" width="100%" /></p>
+
 
 <br><br>
 <!-- ========= END TEASER ========= -->
@@ -98,9 +99,12 @@
 [**Author & Researcher:**]() [Fabiana ⚡️ Campanari](https://linktr.ee/fabianacampanari) <br>
 [**Collaborator:**]() [Pedro Vyctor Almeida](https://github.com/ppvyctor/Helipoint-Detector)
 
-# 
+<br><br>
 
-<br><br><br>
+<p align="center"><img src="https://raw.githubusercontent.com/Mindful-AI-Research/3-project-ai-ml-yolo-helipad_detector/main/assets/divider.svg" alt="" width="100%" /></p>
+
+
+<br><br>
 <!-- ========= END INSTITUTIONAL INFORMATION ========= -->
 
 
@@ -159,7 +163,8 @@
 
 <br>
 
-#
+<p align="center"><img src="https://raw.githubusercontent.com/Mindful-AI-Research/3-project-ai-ml-yolo-helipad_detector/main/assets/divider.svg" alt="" width="100%" /></p>
+
 
 <br><br>
 =========🚧 END 🎥 **DEMO** =========  -->
@@ -186,7 +191,8 @@
 
 <br><br>
 
-#
+<p align="center"><img src="https://raw.githubusercontent.com/Mindful-AI-Research/3-project-ai-ml-yolo-helipad_detector/main/assets/divider.svg" alt="" width="100%" /></p>
+
 
 <br><br>
 <!-- =========END TECH STACK / PIPELINE BADGES========= -->
@@ -203,7 +209,8 @@
 
 <br><br>
 
-#
+<p align="center"><img src="https://raw.githubusercontent.com/Mindful-AI-Research/3-project-ai-ml-yolo-helipad_detector/main/assets/divider.svg" alt="" width="100%" /></p>
+
 
 <br><br>
 <!-- ========= END NOTE ========= -->
@@ -231,7 +238,8 @@
 
 <br><br>
 
-#
+<p align="center"><img src="https://raw.githubusercontent.com/Mindful-AI-Research/3-project-ai-ml-yolo-helipad_detector/main/assets/divider.svg" alt="" width="100%" /></p>
+
 
 <br><br>
 <!-- ========= END MAIN REPO / Projects REFERENCES ========= -->
@@ -240,7 +248,6 @@
 <a id="project-at-a-glance"></a>
 ## [Project at a Glance]()
 
-<p align="center"><img src="https://raw.githubusercontent.com/Mindful-AI-Research/3-project-ai-ml-yolo-helipad_detector/main/assets/divider.svg" alt="" width="100%" /></p>
 
 > [!TIP]
 > **What it does.** A YOLO pipeline that detects rooftop helipads in São Paulo satellite imagery, covering data collection, annotation, training, field validation and an interactive dashboard.
