@@ -287,7 +287,7 @@
 **I · Context**
 
 - [Overview](#overview)
-- [Global Helicopter Traffic Context — Why São Paulo?](#global-helicopter-traffic-context-why-sao-paulo)
+- [Global Helicopter Traffic Context - Why São Paulo?](#global-helicopter-traffic-context-why-sao-paulo)
 - [Key Features](#key-features)
 - [Project Context](#project-context)
 - [Project Definition](#project-definition)
@@ -406,7 +406,7 @@ The platform implements a complete AI workflow, including public data collection
 
 <!-- ========= START Contexto Global ========= -->
 <a id="global-helicopter-traffic-context-why-sao-paulo"></a>
-## [Global Helicopter Traffic Context — Why São Paulo?]()
+## [Global Helicopter Traffic Context - Why São Paulo?]()
 
 
 The choice of São Paulo is not incidental. Major metropolises such as New York, Tokyo, Rio de Janeiro, London, Mexico City, and Bogotá use helicopters in different combinations of executive transport, tourism, medical emergencies, public safety, government services, and specialized operations.
