@@ -557,6 +557,23 @@ TR = {
     "pt": "⬇️ Apresentação (PPTX, português)",
 },
 
+"dl.preproject.title": {
+    "en": "🎓 Research pre-proposal — TIDD / PUC-SP",
+    "pt": "🎓 Pré-projeto de pesquisa — TIDD / PUC-SP",
+},
+"dl.preproject.body": {
+    "en": "<em>Evaluating visual detectors without ground truth: data lineage, human review and image semiotics in helipad detection from São Paulo satellite imagery.</em> Academic document; it evaluates detectors, not sites, and does not validate any helipad for operational, legal, safety or aeronautical use.",
+    "pt": "<em>Avaliação de detectores visuais sem verdade de campo: linhagem de dados, revisão humana e semiótica da imagem na detecção de helipontos em imagens de satélite de São Paulo.</em> Documento acadêmico; avalia detectores, não locais, e não valida nenhum heliponto para uso operacional, legal, de segurança ou aeronáutico.",
+},
+"dl.preproject.pt_button": {
+    "en": "📄 Pre-proposal (PDF, Português)",
+    "pt": "📄 Pré-projeto (PDF, Português)",
+},
+"dl.preproject.en_button": {
+    "en": "📄 Pre-proposal (PDF, English)",
+    "pt": "📄 Pré-projeto (PDF, Inglês)",
+},
+
 "dl.html_presentation_button": {
     "en": "🌐 Open the interactive HTML presentation",
     "pt": "🌐 Abrir a apresentação interativa em HTML",
@@ -885,7 +902,7 @@ TR = {
 "about.body_intro": {
     "en": (
         "**Helipad Detector** is an end-to-end Artificial Intelligence and Computer Vision "
-        "platform designed to automatically detect and map rooftop helipads from satellite imagery.\n\n"
+        "platform designed to automatically detect and map rooftop helipad candidates from satellite imagery.\n\n"
 
         "The project focuses on São Paulo, Brazil, a unique urban environment with the world's "
         "largest helicopter fleet, approximately **2,200 takeoffs and landings per day**, and "
@@ -900,18 +917,31 @@ TR = {
         "demonstrates how Computer Vision can support urban analysis, infrastructure mapping, "
         "and data-driven decision making for future smart city applications.\n\n"
 
+        "The project is also the case study of a research pre-proposal (PUC-SP / TIDD): "
+        "**how to evaluate visual detectors without ground truth**. Four experiments with nearly "
+        "identical validation scores (mAP@50 between **0.993** and **0.994**) produced very different "
+        "detection rates (**9.64%** to **21.00%**) on the same field imagery from ten regions of Greater "
+        "São Paulo, so validation metrics alone do not describe behavior in a real, unannotated region.\n\n"
+
+        "The theoretical lens is the **semiotics of the image**: seeing is not recording a fact but "
+        "interpreting a sign. A satellite image is a representation made by a sensor, at a given date and "
+        "resolution, and a detection is a visual inference about it, not a confirmation of what exists on "
+        "the ground. For this reason, every detection here is treated as a **candidate for human review**, "
+        "and human labels are treated as acts of interpretation, not as an answer key.\n\n"
+
         "The complete AI workflow includes:\n\n"
         "• Public data collection\n\n"
         "• Satellite imagery acquisition\n\n"
         "• Manual annotation in Roboflow\n\n"
         "• YOLOv8n / YOLOv11n training\n\n"
         "• Field validation on more than **7,900** real satellite tiles\n\n"
+        "• Planned research stage: data-lineage audit and sampled human review of detections\n\n"
     ),
 
     "pt": (
         "O **Helipad Detector** é uma plataforma completa de Inteligência Artificial e Visão "
-        "Computacional desenvolvida para detectar e mapear automaticamente helipontos em imagens "
-        "de satélite.\n\n"
+        "Computacional desenvolvida para detectar e mapear automaticamente candidatos a helipontos "
+        "em telhados, a partir de imagens de satélite.\n\n"
 
         "O projeto tem como foco São Paulo, um ambiente urbano único que possui a maior frota de "
         "helicópteros do mundo, com cerca de **2.200 pousos e decolagens por dia** e "
@@ -929,23 +959,41 @@ TR = {
         "demonstra como a Visão Computacional pode contribuir para análise urbana, mapeamento "
         "de infraestrutura e apoio à tomada de decisão em aplicações futuras de cidades inteligentes.\n\n"
 
+        "O projeto é também o estudo de caso de um pré-projeto de pesquisa (PUC-SP / TIDD): "
+        "**como avaliar detectores visuais sem verdade de campo**. Quatro experimentos com métricas de "
+        "validação praticamente idênticas (mAP@50 entre **0,993** e **0,994**) produziram taxas de detecção "
+        "muito diferentes (**9,64%** a **21,00%**) sobre as mesmas imagens de campo de dez regiões da Grande "
+        "São Paulo; logo, métricas de validação isoladas não descrevem o comportamento em uma região real "
+        "e não anotada.\n\n"
+
+        "A lente teórica é a **semiótica da imagem**: ver não é registrar um fato, é interpretar um signo. "
+        "Uma imagem de satélite é uma representação produzida por um sensor, em certa data e resolução, e "
+        "uma detecção é uma inferência visual sobre ela, não a confirmação do que existe no solo. Por isso, "
+        "toda detecção aqui é tratada como **candidata à revisão humana**, e os rótulos humanos são tratados "
+        "como atos de interpretação, não como gabarito.\n\n"
+
         "O fluxo completo de IA inclui:\n\n"
         "• Coleta de dados públicos\n\n"
         "• Obtenção de imagens de satélite\n\n"
         "• Anotação manual no Roboflow\n\n"
         "• Treinamento de modelos YOLOv8n / YOLOv11n\n\n"
         "• Validação em campo com mais de **7.900** mosaicos reais\n\n"
+        "• Etapa de pesquisa planejada: auditoria de linhagem dos dados e revisão humana amostral das detecções\n\n"
     ),
 },
 
 "about.body_closing": {
     "en": (
         "This dashboard provides transparent access to the AI pipeline, dataset, model performance, "
-        "and documented limitations."
+        "and documented limitations.\n\n"
+        "*Automated image-based visual detection, subject to errors and not equivalent to operational, "
+        "legal, safety or aeronautical validation.*"
     ),
     "pt": (
         "Este dashboard apresenta de forma transparente o pipeline de IA, o conjunto de dados, "
-        "o desempenho do modelo e suas limitações documentadas."
+        "o desempenho do modelo e suas limitações documentadas.\n\n"
+        "*Detecção visual automatizada baseada em imagem, sujeita a erros e não equivalente a validação "
+        "operacional, legal, de segurança ou aeronáutica.*"
     ),
 },
 
