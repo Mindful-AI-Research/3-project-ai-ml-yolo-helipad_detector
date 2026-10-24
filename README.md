@@ -6,28 +6,25 @@
 
 <br><br>
 
-
-<!-- ========= START HEADER ========= -->
 <!-- ========= START title ========= -->
 <p align="center">
    <img src="https://github.com/user-attachments/assets/dd86b10d-577f-45aa-8734-d4127e0a714b" />
 
-<!--
+#### <p align="center"> End-to-End Artificial Intelligence Platform for Automated Helipad Detection and Geospatial Intelligence from Satellite Imagery
 
+<br>
+
+##### <p align="center"> <em>Evaluating Visual Detectors Without Ground Truth: Data Lineage, Human Review and Image Semiotics in Helipad Detection from São Paulo Satellite Imagery</em>   
+
+<!--
 <h1 align="center">🚁 $$\Huge{\textbf{\color{#FFFFFF}{Helipad}}\space\textbf{\color{#8B0000}{D}}\textbf{\color{#991414}{e}}\textbf{\color{#A61B1B}{t}}\textbf{\color{#B32222}{e}}\textbf{\color{#C62828}{c}}\textbf{\color{#D32F2F}{t}}\textbf{\color{#C62828}{o}}\textbf{\color{#B71C1C}{r}}}$$</h1>
 -->
 
-### <p align="center"> End-to-End Artificial Intelligence Platform for Automated Helipad Detection and Geospatial Intelligence from Satellite Imagery
-
- <br>
-
-##### <p align="center"> <em>Evaluating Visual Detectors Without Ground Truth: Data Lineage, Human Review and Image Semiotics in Helipad Detection from São Paulo Satellite Imagery</em>
-
-<br>
+<br><br>
 
 <p align="center"><img src="https://raw.githubusercontent.com/Mindful-AI-Research/3-project-ai-ml-yolo-helipad_detector/main/assets/divider.svg" alt="" width="100%" /></p>
 
-<br>
+<br><br>
 <!-- ========= Ebnd title ========= -->
 
 <div align="center">
@@ -115,7 +112,7 @@
 <br><br>
 <!-- ========= END INSTITUTIONAL INFORMATION ========= -->
 
-
+<br>
 
 <!-- ========= START Streamlit BADGE ========= -->
 <p align="center" style="margin: 0;">
@@ -439,7 +436,7 @@ The choice of São Paulo is not incidental. Major metropolises such as New York,
 
 São Paulo, however, stands out for combining a large urban fleet, high building density, a significant presence of rooftop helipads, and a daily volume of operations that requires specialized management. The existence of **HELICONTROL** highlights the practical complexity of this air mobility and reinforces the relevance of using the city as a case study for the automated detection of potential helipads.
 
-<br><br>
+<br>
 
 
 | City | Country | Helicopter Air Mobility Context | Reference Source |
@@ -457,16 +454,12 @@ São Paulo, however, stands out for combining a large urban fleet, high building
 
 <br><br>
 
-
 > [!NOTE]
 > The cities presented in this table are qualitative references to urban environments where helicopters are used in different operational contexts. The selection does not constitute an official global ranking, a standardized statistical comparison of fleets, or an operational database directly equivalent across all locations. São Paulo is the primary study area of **Helipad Detector** and presents a specific operational context, including specialized helicopter traffic management through **HELICONTROL**.
 
 <br>
 
-
 <p align="center"><img src="https://raw.githubusercontent.com/Mindful-AI-Research/3-project-ai-ml-yolo-helipad_detector/main/assets/divider.svg" alt="" width="100%" /></p>
-
-<br>
 
 <br>
 
@@ -476,11 +469,7 @@ São Paulo, however, stands out for combining a large urban fleet, high building
 
 <br>
 
-<br>
-
 <p align="center"><img src="https://raw.githubusercontent.com/Mindful-AI-Research/3-project-ai-ml-yolo-helipad_detector/main/assets/divider.svg" alt="" width="100%" /></p>
-
-<br>
 
 <br>
 <!-- ========= END Contexto Global  ========= -->
