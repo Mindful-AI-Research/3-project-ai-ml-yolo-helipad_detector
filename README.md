@@ -44,7 +44,6 @@
 <br><br>
 
 <!-- ========= START TEASER ========= -->
-
 ###### <p align="center"> *Not every rooftop is just* ... ***A rooftop*** ... 👀
 
 ###### <p align="center"> <i>Teaching AI to see what the city overlooks.</i> </p>
@@ -64,7 +63,6 @@
 <br><br>
 <!-- ========= END TEASER ========= -->
 
-
 <!-- ========= START SPONSOR BADGE ========= -->
 <p align="center">
 
@@ -75,12 +73,10 @@
       height="36"
     >
   </a>
-
 </p>
 
 <br><br>
 <!-- ========= END SPONSOR BADGE ========= -->
-
 
 <!-- ========= START PUC GIF ========= -->
 <p align="center">
@@ -90,9 +86,7 @@
  <br><br>
 <!-- ========= END PUC GIF ========= -->
 
-
 <!-- ========= START INSTITUTIONAL INFORMATION ========= -->
-
 [**Institution:**]() Pontifical Catholic University of São Paulo (PUC-SP) <br>
 [**Academic Unit:**]() Faculty of Exact Sciences and Technology (FCET/FACEI) <br>
 [**Undergraduate Program:**]() B.Sc. in Human-Centered AI & Data Science <br>
@@ -107,7 +101,6 @@
 <br><br>
 
 <p align="center"><img src="https://raw.githubusercontent.com/Mindful-AI-Research/3-project-ai-ml-yolo-helipad_detector/main/assets/divider.svg" alt="" width="100%" /></p>
-
 
 <br><br>
 <!-- ========= END INSTITUTIONAL INFORMATION ========= -->
