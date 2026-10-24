@@ -263,13 +263,17 @@
 > [!CAUTION]
 > **How to use the output.** Automated image-based visual detection, subject to errors and not equivalent to operational, legal, safety or aeronautical validation. Any real-world use requires independent human review.
 
-<br>
+<br><br>
 
 <p align="center"><sub>🟢 <b>Green</b> — what it does and what was found &nbsp;·&nbsp; 🟡 <b>Yellow</b> — limits and care when interpreting &nbsp;·&nbsp; 🔴 <b>Red</b> — what must not be misread</sub></p>
 
+
+<br><br>
+
 <p align="center"><img src="https://raw.githubusercontent.com/Mindful-AI-Research/3-project-ai-ml-yolo-helipad_detector/main/assets/divider.svg" alt="" width="100%" /></p>
 
-<br><br><br><br>
+
+<br><br>
 <!-- ========= END Project at a Glance ========= -->
 
 
