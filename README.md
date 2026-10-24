@@ -489,36 +489,46 @@ São Paulo, however, stands out for combining a large urban fleet, high building
 
 <br>
 
-
-
-<!-- ======== START Key Features ========= -->
+<!-- ======== START Principais Recursos ========= -->
 <a id="key-features"></a>
 ## [Key Features]()
 
 [-]() End-to-end Artificial Intelligence and Computer Vision pipeline <br>
 
-[-]() Automated satellite imagery acquisition and preprocessing <br>
+[-]() Automated satellite image acquisition and preprocessing <br>
 
-[-]() Geospatial intelligence and spatial data processing workflow <br>
+[-]() Geospatial intelligence workflow and spatial data processing <br>
 
-[-]() YOLOv8n / YOLO11n object detection <br>
+[-]() Object detection with YOLOv8n / YOLO11n <br>
 
-[-]() Roboflow-based image annotation and dataset preparation <br>
+[-]() Image annotation and dataset preparation with Roboflow <br>
 
 [-]() Interactive geospatial maps with MapLibre GL JS + OpenStreetMap <br>
 
 [-]() Automated geocoding with Nominatim (OpenStreetMap) <br>
 
-[-]() Real-world validation across 7,900+ satellite tiles from 10 São Paulo neighborhoods <br>
+[-]() Real-world validation on more than 7,900 satellite tiles from 10 São Paulo neighborhoods <br>
 
-[-]() Interactive Streamlit web application and dashboard <br>
+[-]() Interactive web application and dashboard in Streamlit <br>
 
 [-]() Fully reproducible research repository <br>
 
-[-]() Downloadable datasets, notebooks and generated artifacts
+[-]() Datasets, notebooks and generated artifacts available for download
 
-<br><br>
-<!-- ========= END Key Features ========= -->
+<!-- ========= END Principais Recursos ========= -->
+
+
+
+
+
+
+
+
+
+
+
+<a id="project-context"></a>
+## [Project Context]()
 
 
 <a id="project-context"></a>
