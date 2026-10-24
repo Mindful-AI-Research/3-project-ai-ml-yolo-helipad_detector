@@ -421,11 +421,9 @@ The platform implements a complete AI workflow, including public data collection
 >
 > The interpretation of an image depends on the repertoire of whoever observes it ([SANTAELLA; NÖTH, 1998](#references)) and, in this project, also on the resolution and capture date of the satellite images. The capture date of the ESRI World Imagery images used: Unknown in the provided materials.
 
-
 <br>
 
 <p align="center"><img src="https://raw.githubusercontent.com/Mindful-AI-Research/3-project-ai-ml-yolo-helipad_detector/main/assets/divider.svg" alt="" width="100%" /></p>
-
 
 <br>
 
@@ -460,13 +458,28 @@ São Paulo, however, stands out for combining a large urban fleet, high building
 > [!NOTE]
 > The cities presented in this table are qualitative references to urban environments where helicopters are used in different operational contexts. The selection does not constitute an official global ranking, a standardized statistical comparison of fleets, or an operational database directly equivalent across all locations. São Paulo is the primary study area of **Helipad Detector** and presents a specific operational context, including specialized helicopter traffic management through **HELICONTROL**.
 
-<br><br>
+<br>
+
+
+<p align="center"><img src="https://raw.githubusercontent.com/Mindful-AI-Research/3-project-ai-ml-yolo-helipad_detector/main/assets/divider.svg" alt="" width="100%" /></p>
+
+<br>
+
+<br>
 
 
 > [!TIP]
 > São Paulo was selected as the focus of **Helipad Detector** due to the combination of high urban density, a large concentration of buildings, a significant presence of rooftop heliport infrastructure, and intense helicopter traffic. This context demonstrates how Computer Vision and satellite data can support the automated mapping of urban infrastructure. The model's detections represent **visual candidates** and do not constitute regulatory, operational, or aeronautical confirmation of the existence of a heliport.
 
-<br><br>
+<br>
+
+<br>
+
+<p align="center"><img src="https://raw.githubusercontent.com/Mindful-AI-Research/3-project-ai-ml-yolo-helipad_detector/main/assets/divider.svg" alt="" width="100%" /></p>
+
+<br>
+
+<br>
 <!-- ========= END Contexto Global  ========= -->
 
 
