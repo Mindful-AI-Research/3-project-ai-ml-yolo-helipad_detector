@@ -19,6 +19,11 @@
 
 ### <p align="center"> End-to-End Artificial Intelligence Platform for Automated Helipad Detection and Geospatial Intelligence from Satellite Imagery
 
+ <br>
+
+##### <p align="center"> <em>Evaluating Visual Detectors Without Ground Truth: Data Lineage, Human Review and Image Semiotics in Helipad Detection from São Paulo Satellite Imagery</em>
+
+
 <br><br>
 <!-- ========= Ebnd title ========= -->
 
