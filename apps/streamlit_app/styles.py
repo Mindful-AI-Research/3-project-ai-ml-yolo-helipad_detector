@@ -194,7 +194,6 @@ GLOBAL_CSS = """
     .hd-title-card {
         max-width: 760px; margin: 6px auto 4px auto; padding: 22px 16px 16px 16px; text-align: center;
         border-radius: 14px; background: radial-gradient(ellipse at 50% 40%, #0b1216 0%, #05080b 100%);
-        border: 1px solid rgba(20,184,166,0.18);
     }
     .main-title { font-family: Georgia, 'Times New Roman', serif !important; font-size: 64px !important;
         font-weight: 700 !important; letter-spacing: 1px; line-height: 1.1 !important; margin: 0 !important;
