@@ -249,6 +249,8 @@
 <a id="project-at-a-glance"></a>
 ## [Project at a Glance]()
 
+<br>
+
 
 > [!TIP]
 > **What it does.** A YOLO pipeline that detects rooftop helipads in São Paulo satellite imagery, covering data collection, annotation, training, field validation and an interactive dashboard.
@@ -275,8 +277,6 @@
 
 <br><br>
 <!-- ========= END Project at a Glance ========= -->
-
-
 
 
 
