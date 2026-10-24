@@ -2342,7 +2342,7 @@ with tab4:
         with col_l1:
             show_sp_layer = st.checkbox(f"🔴 {t('map.sp_layer')} ({len(sp_df)})", value=True, key="map_show_sp")
         with col_l2:
-            show_other_layer = st.checkbox(f"🔵 {t('map.other_layer')} ({len(other_df)})", value=True, key="map_show_other")
+            show_other_layer = st.checkbox(f"🟢 {t('map.other_layer')} ({len(other_df)})", value=True, key="map_show_other")
         with col_l3:
             show_detection_layer = st.checkbox(t("map.detection_rate_layer"), value=True, key="map_show_detection")
         # Live helicopter traffic (adsb.fi) moved out of this layer-toggle row into
@@ -2392,7 +2392,7 @@ with tab4:
         if show_sp_layer:
             sp_layer.add_to(fmap)
 
-        other_layer = folium.FeatureGroup(name=f"🔵 {t('map.other_layer')} ({len(other_df)})", show=True)
+        other_layer = folium.FeatureGroup(name=f"🟢 {t('map.other_layer')} ({len(other_df)})", show=True)
         for _, row in other_df.iterrows():
             neighborhood = row.get("Nome do Bairro", "Unknown")
             hint = location_hint(row["lat"], row["lon"], row.get("Coordenadas da Bounding Box", ""), state_lookup)
@@ -2402,7 +2402,7 @@ with tab4:
                 location=[row["lat"], row["lon"]],
                 popup=folium.Popup(f"<b>{display_name}</b><br>{timestamp}", max_width=250),
                 tooltip=display_name,
-                icon=folium.Icon(color="blue", icon="info-sign"),
+                icon=folium.Icon(color="green", icon="info-sign"),
             ).add_to(other_layer)
         if show_other_layer:
             other_layer.add_to(fmap)
@@ -3671,5 +3671,3 @@ st.markdown(f"""
 {t("epigraph.echo")}
 </p>
 """, unsafe_allow_html=True)
-
-
