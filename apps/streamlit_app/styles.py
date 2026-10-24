@@ -219,6 +219,54 @@ GLOBAL_CSS = """
         color: #FDE2E2; background: rgba(221,0,0,0.08);
         border: 1px solid rgba(221,0,0,0.25); border-left: 4px solid #DD0000; border-radius: 8px;
     }
+    /* Teal info callout — replaces Streamlit's default blue st.info band so
+       every notice uses the identity palette (teal, not blue). */
+    .hd-info {
+        display: flex; gap: 12px; align-items: flex-start;
+        margin: 6px 0 14px 0; padding: 14px 18px; font-size: 15px; line-height: 1.55;
+        color: #CFFAF3; background: rgba(20,184,166,0.10);
+        border: 1px solid rgba(20,184,166,0.40); border-left: 4px solid #14B8A6; border-radius: 10px;
+    }
+    .hd-info .hd-info-icon { font-size: 1.15em; line-height: 1.4; }
+    .hd-info strong { color: #FFFFFF; }
+    .hd-info code { color: #5EEAD4; background: rgba(0,0,0,0.25); padding: 1px 5px; border-radius: 4px; }
+
+    /* Global-context table (About): stronger frame, visible row and column
+       rules, header band, zebra rows, hover, São Paulo (study focus) row marked. */
+    .hd-ctx-wrap {
+        overflow-x: auto; border: 1.5px solid rgba(20,184,166,0.65); border-radius: 10px;
+        box-shadow: 0 0 0 1px rgba(20,184,166,0.10), 0 4px 16px rgba(0,0,0,0.35);
+    }
+    .hd-ctx { width: 100%; border-collapse: collapse; }
+    .hd-ctx th {
+        text-align: left; padding: 11px 14px; color: #5EEAD4; font-size: 12px;
+        text-transform: uppercase; letter-spacing: .05em;
+        background: rgba(20,184,166,0.14); border-bottom: 3px solid #14B8A6;
+        border-right: 1px solid rgba(94,234,212,0.28);
+    }
+    .hd-ctx td {
+        padding: 10px 14px; color: #E8EEF5; font-size: 13.5px; vertical-align: top;
+        border-bottom: 1px solid rgba(94,234,212,0.38);
+        border-right: 1px solid rgba(94,234,212,0.20);
+    }
+    .hd-ctx th:last-child, .hd-ctx td:last-child { border-right: none; }
+    .hd-ctx tbody tr:last-child td { border-bottom: none; }
+    .hd-ctx tbody tr:nth-child(even) td { background: rgba(255,255,255,0.025); }
+    .hd-ctx tbody tr:hover td { background: rgba(20,184,166,0.10); }
+    .hd-ctx tbody tr:first-child td {
+        background: rgba(20,184,166,0.12); border-bottom: 2px solid rgba(94,234,212,0.55);
+    }
+    .hd-ctx tbody tr:first-child td:first-child { box-shadow: inset 4px 0 0 #14B8A6; }
+    .hd-ctx a { color: #5EEAD4; }
+
+    /* Pre-project box (Downloads) */
+    .hd-preproj {
+        margin: 8px 0 10px 0; padding: 14px 18px; border-radius: 10px;
+        border: 1px solid rgba(20,184,166,0.45); border-left: 4px solid #14B8A6;
+        background: rgba(20,184,166,0.07);
+    }
+    .hd-preproj h4 { margin: 0 0 6px 0; color: #5EEAD4; font-size: 1.05rem; }
+    .hd-preproj p { margin: 0; color: #CBD5E1; font-size: 13.5px; line-height: 1.6; }
     /* respect users who prefer reduced motion (page UI only) */
     @media (prefers-reduced-motion: reduce) {
         .metric-card, .flow-step, .sample-btn > button { transition: none !important; }
