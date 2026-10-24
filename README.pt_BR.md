@@ -7,7 +7,6 @@
 <br><br>
 
 
-<!-- ========= START HEADER ========= -->
 <!-- ========= START title ========= -->
 <p align="center">
    <img src="https://github.com/user-attachments/assets/dd86b10d-577f-45aa-8734-d4127e0a714b" />
@@ -497,8 +496,6 @@ https://github.com/user-attachments/assets/eab6e951-6b66-4c6c-a2c6-23ee2f902c5f
 
 
 
-
-
 <br><br>
 
 ## [AI/ML Ops Pipeline]()
@@ -508,8 +505,6 @@ https://github.com/user-attachments/assets/eab6e951-6b66-4c6c-a2c6-23ee2f902c5f
 <p align="center">
   <img width="915" height="2058" alt="Institutional Information" src="https://github.com/user-attachments/assets/6e622b4b-4d47-445b-b9b9-7767bf6f2f55" />
 </p>
-
-<br><br>
 
 
 ## [Estrutura do Repositório]()
