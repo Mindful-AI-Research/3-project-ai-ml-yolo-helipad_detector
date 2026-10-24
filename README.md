@@ -368,14 +368,11 @@
 - [Final Statement](#final-statement)
 <!-- ========= END Table of Contents ========= -->
 
-
 <br>
 
 <p align="center"><img src="https://raw.githubusercontent.com/Mindful-AI-Research/3-project-ai-ml-yolo-helipad_detector/main/assets/divider.svg" alt="" width="100%" /></p>
 
-
 <br>
-
 
 <!-- ========= START Overview ========= -->
 <a id="overview"></a>
@@ -383,20 +380,29 @@
 
 The [**Helipad Detector**]() is an end-to-end Artificial Intelligence and Computer Vision platform designed to automatically detect and map **possible helipads on building rooftops** from satellite imagery. The project transforms geospatial images into structured information, making it possible to identify visual patterns consistent with helicopter landing areas and represent them on an interactive map.
 
+The project focuses on [**São Paulo, Brazil**](https://www.prefeitura.sp.gov.br/), an urban environment particularly relevant to this kind of application. The city is widely recognized for having one of the largest urban helicopter fleets in the world. Industry sources report more than **400 registered helicopters**, in addition to a network of more than **260 helipads**; operational estimates vary depending on the period and the geographic scope, reaching approximately **2,200 landings and takeoffs per day** in the metropolitan region. [São Paulo: a cidade dos helicópteros — Folha de S.Paulo](https://www1.folha.uol.com.br/tv/2026/04/sao-paulo-a-cidade-dos-helicopteros.shtml) · [São Paulo tem a maior frota de helicópteros do mundo — Exame](https://exame.com/casual/sao-paulo-tem-a-maior-frota-de-helicopteros-do-mundo-e-a-segunda-em-jatos/) · [Dados da frota de helicópteros em São Paulo — Avantto](https://www.avantto.com.br/blog/business/parabens-sao-paulo/)
 
-The project focuses on [**São Paulo, Brazil**](https://www.prefeitura.sp.gov.br/), an urban environment particularly relevant to this type of application. The city is widely recognized for having one of the world's largest urban helicopter fleets. Industry sources report more than **400 registered helicopters**, alongside a network of more than **260 helipads**; operational estimates vary depending on the period and geographic scope, reaching approximately **2,200 takeoffs and landings per day** across the metropolitan area. [São Paulo: the city of helicopters — Folha de S.Paulo](https://www1.folha.uol.com.br/tv/2026/04/sao-paulo-a-cidade-dos-helicopteros.shtml) · [São Paulo has the world's largest helicopter fleet — Exame](https://exame.com/casual/sao-paulo-tem-a-maior-frota-de-helicopteros-do-mundo-e-a-segunda-em-jatos/) · [Helicopter fleet data in São Paulo — Avantto](https://www.avantto.com.br/blog/business/parabens-sao-paulo/)
+To manage this highly complex airspace, the city relies on [**HELICONTROL**](https://www.fab.mil.br/noticias/imprime/42060/CONTROLE%20DO%20ESPA%C3%87O%20A%C3%89REO%20-%20HELICONTROL:%20Seguran%C3%A7a%20e%20fluidez%20no%20controle%20de%20helic%C3%B3pteros%20em%20S%C3%A3o%20Paulo), a service developed by the [**Brazilian Air Force (FAB)**](https://www.fab.mil.br/) through the [**Airspace Control Department (DECEA)**](https://www.decea.mil.br/). Operating within the Congonhas Control Tower, the system coordinates helicopter traffic and contributes to the safe coexistence of helicopter operations and regular aircraft traffic. [DECEA atua no controle de tráfego aéreo de helicópteros — FAB](https://www.fab.mil.br/noticias/imprime/42044/SEGURAN%C3%87A%20DE%20VOO%20-%20DECEA%20atua%20no%20Controle%20de%20Tr%C3%A1fego%20A%C3%A9reo%20de%20Helic%C3%B3pteros%20do%20Brasil) · [CRCEA-SE — DECEA](https://www.decea.mil.br/?i=unidades&p=crcea-se)
 
-To manage this highly complex airspace environment, the city relies on [**HELICONTROL**](https://www.fab.mil.br/noticias/imprime/42060/CONTROLE%20DO%20ESPA%C3%87O%20A%C3%89REO%20-%20HELICONTROL:%20Seguran%C3%A7a%20e%20fluidez%20no%20controle%20de%20helic%C3%B3pteros%20em%20S%C3%A3o%20Paulo), a service developed by the [**Brazilian Air Force (FAB)**](https://www.fab.mil.br/) through the [**Department of Airspace Control (DECEA)**](https://www.decea.mil.br/). Operating within the context of the Congonhas Control Tower, the system coordinates helicopter traffic and contributes to the safe coexistence of helicopter operations with regular aircraft traffic. [DECEA operates helicopter air traffic control — FAB](https://www.fab.mil.br/noticias/imprime/42044/SEGURAN%C3%87A%20DE%20VOO%20-%20DECEA%20atua%20no%20Controle%20de%20Tr%C3%A1fego%20A%C3%A9reo%20de%20Helic%C3%B3pteros%20do%20Brasil) · [CRCEA-SE — DECEA](https://www.decea.mil.br/?i=unidades&p=crcea-se)
+These conditions make São Paulo a real and challenging setting for AI-based geospatial intelligence applications. **The Helipad Detector does not perform air traffic control** and does not replace operational systems such as HELICONTROL. Its purpose is to support infrastructure mapping, identifying, from satellite imagery, locations with visual characteristics consistent with helipads and organizing that information as geospatial data for urban analysis, academic research and future Smart City applications.
 
-These conditions make São Paulo a challenging real-world setting for AI-based geospatial intelligence applications. [**Helipad Detector does not perform air traffic control**]() and does not replace operational systems such as HELICONTROL. Its purpose is to support infrastructure mapping by identifying, from satellite imagery, locations with visual characteristics compatible with helipads and organizing this information as geospatial data for urban analysis, academic research, and future Smart City applications.
+The platform implements a complete AI workflow, including public data collection, geocoding, satellite image acquisition, manual annotation with [**Roboflow**](https://roboflow.com/), training with [**Ultralytics YOLOv8**](https://docs.ultralytics.com/models/yolov8/) and [**Ultralytics YOLO11**](https://docs.ultralytics.com/models/yolo11/), as well as real-world validation on more than **7,900 satellite tiles**. Its interactive dashboard provides access to the pipeline, the datasets, the performance results and the identified limitations, reinforcing principles of reproducibility, explainability and Responsible AI.
+<!-- ========= END Overview ========= -->
 
-The platform implements a complete AI workflow, including public data collection, geocoding, satellite imagery acquisition, manual annotation with [**Roboflow**](https://roboflow.com/), training with [**Ultralytics YOLOv8**](https://docs.ultralytics.com/models/yolov8/) and [**Ultralytics YOLO11**](https://docs.ultralytics.com/models/yolo11/), as well as real-world validation across more than [**7,900 satellite tiles**](). Its interactive dashboard provides access to the pipeline, datasets, performance results, and identified limitations, reinforcing principles of reproducibility, explainability, and Responsible AI.
+<br>
+
+> [!CAUTION]
+> **Usage notice.** Automated image-based visual detection, subject to errors and not equivalent to operational, legal, safety or aeronautical validation.
+>
+> The interpretation of an image depends on the repertoire of whoever observes it ([SANTAELLA; NÖTH, 1998](#references)) and, in this project, also on the resolution and capture date of the satellite images. The capture date of the ESRI World Imagery images used: Unknown in the provided materials.
+
 
 <br><br>
 
-<!-- ========= START Global Context ========= -->
+<!-- ========= START Contexto Global ========= -->
 <a id="global-helicopter-traffic-context-why-sao-paulo"></a>
 ## [Global Helicopter Traffic Context — Why São Paulo?]()
+
 
 The choice of São Paulo is not incidental. Major metropolises such as New York, Tokyo, Rio de Janeiro, London, Mexico City, and Bogotá use helicopters in different combinations of executive transport, tourism, medical emergencies, public safety, government services, and specialized operations.
 
