@@ -517,18 +517,11 @@ São Paulo, however, stands out for combining a large urban fleet, high building
 
 <!-- ========= END Principais Recursos ========= -->
 
+<br>
 
+<p align="center"><img src="https://raw.githubusercontent.com/Mindful-AI-Research/3-project-ai-ml-yolo-helipad_detector/main/assets/divider.svg" alt="" width="100%" /></p>
 
-
-
-
-
-
-
-
-
-<a id="project-context"></a>
-## [Project Context]()
+<br>
 
 
 <a id="project-context"></a>
