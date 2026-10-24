@@ -389,7 +389,7 @@ These conditions make São Paulo a real and challenging setting for AI-based geo
 The platform implements a complete AI workflow, including public data collection, geocoding, satellite image acquisition, manual annotation with [**Roboflow**](https://roboflow.com/), training with [**Ultralytics YOLOv8**](https://docs.ultralytics.com/models/yolov8/) and [**Ultralytics YOLO11**](https://docs.ultralytics.com/models/yolo11/), as well as real-world validation on more than **7,900 satellite tiles**. Its interactive dashboard provides access to the pipeline, the datasets, the performance results and the identified limitations, reinforcing principles of reproducibility, explainability and Responsible AI.
 <!-- ========= END Overview ========= -->
 
-<br>
+<br><br>
 
 > [!CAUTION]
 > **Usage notice.** Automated image-based visual detection, subject to errors and not equivalent to operational, legal, safety or aeronautical validation.
