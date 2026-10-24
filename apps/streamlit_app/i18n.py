@@ -355,8 +355,8 @@ TR = {
 },
 
 "map.caption": {
-    "en": "🔴 **Training Areas (São Paulo)**: regional bounding boxes used to build and validate the training dataset. 🔵 **Discovery Dataset**: helipad candidates identified across other Brazilian states.",
-    "pt": "🔴 **Áreas de Treinamento (São Paulo)**: regiões delimitadas por bounding boxes utilizadas na construção e validação do conjunto de treinamento. 🔵 **Dataset de Descoberta**: candidatos a helipontos identificados em outros estados brasileiros.",
+    "en": "🔴 **Training Areas (São Paulo)**: regional bounding boxes used to build and validate the training dataset. 🟢 **Discovery Dataset**: helipad candidates identified across other Brazilian states.",
+    "pt": "🔴 **Áreas de Treinamento (São Paulo)**: regiões delimitadas por bounding boxes utilizadas na construção e validação do conjunto de treinamento. 🟢 **Dataset de Descoberta**: candidatos a helipontos identificados em outros estados brasileiros.",
 },
 
 "map.dark_mode": {
@@ -395,8 +395,8 @@ TR = {
 },
 
 "map.detection_rate_layer": {
-    "en": "🔵 Field detection rate",
-    "pt": "🔵 Taxa de detecção em campo",
+    "en": "🟢 Field detection rate",
+    "pt": "🟢 Taxa de detecção em campo",
 },
 
 "map.tiles_detected": {
@@ -410,8 +410,8 @@ TR = {
 },
 
 "map.summary": {
-    "en": "**{sp} training region(s)** 🔴 · **{other} discovered helipad(s)** 🔵",
-    "pt": "**{sp} região(ões) de treinamento** 🔴 · **{other} heliponto(s) descoberto(s)** 🔵",
+    "en": "**{sp} training region(s)** 🔴 · **{other} discovered helipad(s)** 🟢",
+    "pt": "**{sp} região(ões) de treinamento** 🔴 · **{other} heliponto(s) descoberto(s)** 🟢",
 },
 
 "map.layers_caption": {
