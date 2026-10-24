@@ -89,10 +89,9 @@
   <img src="https://raw.githubusercontent.com/Mindful-AI-Research/3-project-ai-ml-yolo-helipad_detector/main/assets/badges/pt-br/badge-semiotics.svg" alt="Semiótica — Signo e Interpretação da Imagem" />
 </p>
 
-
 <br><br>
 
-#
+<p align="center"><img src="https://raw.githubusercontent.com/Mindful-AI-Research/3-project-ai-ml-yolo-helipad_detector/main/assets/divider.svg" alt="" width="100%" /></p>
 
 <br><br>
 <!-- =========END TECH STACK / PIPELINE BADGES========= -->
