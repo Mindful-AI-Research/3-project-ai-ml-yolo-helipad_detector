@@ -397,7 +397,12 @@ The platform implements a complete AI workflow, including public data collection
 > The interpretation of an image depends on the repertoire of whoever observes it ([SANTAELLA; NÖTH, 1998](#references)) and, in this project, also on the resolution and capture date of the satellite images. The capture date of the ESRI World Imagery images used: Unknown in the provided materials.
 
 
-<br><br>
+<br>
+
+<p align="center"><img src="https://raw.githubusercontent.com/Mindful-AI-Research/3-project-ai-ml-yolo-helipad_detector/main/assets/divider.svg" alt="" width="100%" /></p>
+
+
+<br>
 
 <!-- ========= START Contexto Global ========= -->
 <a id="global-helicopter-traffic-context-why-sao-paulo"></a>
