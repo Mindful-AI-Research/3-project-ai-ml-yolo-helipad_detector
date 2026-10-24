@@ -48,12 +48,11 @@
 
 <br><br>
 
-#
+<p align="center"><img src="https://raw.githubusercontent.com/Mindful-AI-Research/3-project-ai-ml-yolo-helipad_detector/main/assets/divider.svg" alt="" width="100%" /></p>
+
 
 <br><br><br><br>
 <!-- ========= BADGES  END ALLL PRESENTATIONS ------ BADGES  ========= -->
-
-
 
 <!-- 🚧<!-- ========= START 🎥 **DEMO** ========= 
 ### 🎥 **DEMO: RESTful API & Dashboard Deployment** ✧ ` * Geocoding: Nominatim (OpenStreetMap)` ✧ ` MapLibre GL JS` ✧ `Streamlit`
