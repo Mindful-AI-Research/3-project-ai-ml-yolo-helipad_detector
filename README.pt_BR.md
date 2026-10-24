@@ -3,26 +3,24 @@
 \[**[🇧🇷 Português](README.pt_BR.md)**\] \[[🇬🇧 English](README.md)\]
 <!--END 🇧🇷 Portuguese LANGUAGE BUTTON  -->
 
-
 <br><br>
-
 
 <!-- ========= START title ========= -->
 <p align="center">
    <img src="https://github.com/user-attachments/assets/dd86b10d-577f-45aa-8734-d4127e0a714b" />
 
-
-### <p align="center"> Plataforma de Inteligência Artificial de Ponta a Ponta para Detecção Automatizada de Helipontos e Inteligência Geoespacial a partir de Imagens de Satélite
-
+#### <p align="center"> Plataforma de Inteligência Artificial de Ponta a Ponta para Detecção Automatizada de Helipontos e Inteligência Geoespacial a partir de Imagens de Satélite
 
 <br>
 
 ##### <p align="center"> <em>Avaliação de detectores visuais sem verdade de campo: linhagem de dados, revisão humana e semiótica da imagem na detecção de helipontos em imagens de satélite de São Paulo</em>
 
 <br><br>
+
+<p align="center"><img src="https://raw.githubusercontent.com/Mindful-AI-Research/3-project-ai-ml-yolo-helipad_detector/main/assets/divider.svg" alt="" width="100%" /></p>
+
+<br><br>
 <!-- ========= Ebnd title ========= -->
-
-
 
 <div align="center">
 
@@ -41,7 +39,6 @@
 <br><br>
 
 <!-- ========= START TEASER ========= -->
-
 ###### <p align="center"> *Not every rooftop is just* ... ***A rooftop*** ... 👀
 
 ###### <p align="center"> <i>Teaching AI to see what the city overlooks.</i> </p>
@@ -52,29 +49,27 @@
 
 #### <p align="center"> ⚡️
 
-
 <br>
 
-#
+<p align="center"><img src="https://raw.githubusercontent.com/Mindful-AI-Research/3-project-ai-ml-yolo-helipad_detector/main/assets/divider.svg" alt="" width="100%" /></p>
 
 <br><br>
 <!-- ========= END TEASER ========= -->
 
-
-<!-- ========= Start SPONSOR BADGE ========= -->
+<!-- ========= START SPONSOR BADGE ========= -->
 <p align="center">
 
   <a href="https://github.com/sponsors/Mindful-AI-Research">
     <img
-      src="https://img.shields.io/badge/Sponsor-%E0%A5%90%20Mindful%20AI%20%E2%8B%86%20Research%20%26%20Consulting%20%F0%96%A4%90-3A424C?style=for-the-badge&logo=githubsponsors&logoColor=white&labelColor=07111F"
-      alt="Sponsor ॐ Mindful AI ⋆ Research & Consulting 𖤐"
+      src="https://img.shields.io/badge/Sponsor-%E0%A5%90%20%E2%8B%86%20Mindful%20AI%20%E2%8B%86%20Research%20%26%20Consulting%20%F0%96%A4%90%20%E2%8B%86-3A424C?style=for-the-badge&logo=githubsponsors&logoColor=white&labelColor=07111F"
+      alt="Sponsor ॐ ⋆ Mindful AI ⋆ Research & Consulting 𖤐 ⋆"
       height="36"
+    >
   </a>
 </p>
 
- <br><br>
+<br><br>
 <!-- ========= END SPONSOR BADGE ========= -->
-
 
 <!-- ========= START PUC GIF ========= -->
 <p align="center">
@@ -96,13 +91,14 @@
 [**Autora e Pesquisadora:**]() [Fabiana ⚡️ Campanari](https://linktr.ee/fabianacampanari) <br>
 [**Colaborador:**]() [Pedro Vyctor Almeida](https://github.com/ppvyctor/Helipoint-Detector)
 
+<br><br>
 
-# 
+<p align="center"><img src="https://raw.githubusercontent.com/Mindful-AI-Research/3-project-ai-ml-yolo-helipad_detector/main/assets/divider.svg" alt="" width="100%" /></p>
 
-<br><br><br>
-<!-- ========= END Informações Institucionais ========= -->
+<br><br>
+<!-- ========= END INSTITUTIONAL INFORMATION ========= -->
 
-
+<br>
 
 <!-- ========= START Streamlit BADGE ========= -->
 <p align="center" style="margin: 0;">
