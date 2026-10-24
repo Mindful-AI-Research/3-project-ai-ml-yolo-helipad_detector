@@ -14,6 +14,11 @@
 
 ### <p align="center"> Plataforma de Inteligência Artificial de Ponta a Ponta para Detecção Automatizada de Helipontos e Inteligência Geoespacial a partir de Imagens de Satélite
 
+
+<br>
+
+##### <p align="center"> <em>Avaliação de detectores visuais sem verdade de campo: linhagem de dados, revisão humana e semiótica da imagem na detecção de helipontos em imagens de satélite de São Paulo</em>
+
 <br><br>
 <!-- ========= Ebnd title ========= -->
 
