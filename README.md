@@ -472,14 +472,23 @@ São Paulo, however, stands out for combining a large urban fleet, high building
 
 
 > [!TIP]
-> São Paulo was selected as the focus of **Helipad Detector** due to the combination of high urban density, a large concentration of buildings, a significant presence of rooftop heliport infrastructure, and intense helicopter traffic. This context demonstrates how Computer Vision and satellite data can support the automated mapping of urban infrastructure. The model's detections represent **visual candidates** and do not constitute regulatory, operational, or aeronautical confirmation of the existence of a heliport.
+> **Why São Paulo?** High urban density, many rooftop helipads and intense helicopter traffic. Detections are visual candidates, not confirmation.
+>
+> <details>
+> <summary>Details</summary>
+>
+> São Paulo was chosen as the focus of the **Helipad Detector** because of the combination of high urban density, a large concentration of buildings, a significant presence of rooftop helipad infrastructure and intense helicopter traffic. This context demonstrates how Computer Vision and satellite data can support the automated mapping of urban infrastructure. The model's detections represent **visual candidates** and do not constitute regulatory, operational or aeronautical confirmation of the existence of a helipad.
+>
+> </details>
+
+<!-- ========= END Contexto Global ========= -->
 
 <br>
 
 <p align="center"><img src="https://raw.githubusercontent.com/Mindful-AI-Research/3-project-ai-ml-yolo-helipad_detector/main/assets/divider.svg" alt="" width="100%" /></p>
 
 <br>
-<!-- ========= END Contexto Global  ========= -->
+
 
 
 <!-- ======== START Key Features ========= -->
