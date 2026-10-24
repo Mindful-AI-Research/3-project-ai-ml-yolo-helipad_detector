@@ -33,6 +33,19 @@ if "lang" not in st.session_state:
     st.session_state["lang"] = "en"
 
 
+def _info(text: str, icon: str = "ℹ️") -> None:
+    """Identity-colored (teal) replacement for st.info — the default blue band
+    clashed with the teal/red palette. Supports only **bold** and `code`."""
+    import html as _html
+    body = _html.escape(str(text), quote=False).replace("\n", "<br>")
+    body = re.sub(r"\*\*([^*]+)\*\*", r"<strong>\1</strong>", body)
+    body = re.sub(r"`([^`]+)`", r"<code>\1</code>", body)
+    st.markdown(
+        f'<div class="hd-info" role="note"><span class="hd-info-icon">{icon}</span><div>{body}</div></div>',
+        unsafe_allow_html=True,
+    )
+
+
 def _disclaimer() -> None:
     """Mandatory scope-of-detection notice, shown under every detection result."""
     st.markdown(
@@ -510,12 +523,20 @@ def render_inference_demos(expanded: bool = False, default: str = "exp1") -> Non
         if src:
             st.video(src, muted=True)
         else:
-            st.info(t("demos.inf.missing"))
+            _info(t("demos.inf.missing"))
 
 
 PRESENTATION_PPTX_EN_URL = "https://github.com/Mindful-AI-Research/3-project-ai-ml-yolo-helipad_detector/blob/6a6429169e3be15936c10a98de749955a5c96c72/presentations/Helipad_Detector_Presentation_EN.pptx"
 PRESENTATION_PPTX_PT_URL = "https://github.com/Mindful-AI-Research/3-project-ai-ml-yolo-helipad_detector/blob/dcd6cd1f6497d949d01f6f35c403213a8e5f9365/presentations/Helipad_Detector_Apresentacao_PT-BR.pptx"
 PRESENTATION_HTML_URL = "https://timely-brioche-b6c92f.netlify.app/"
+# TIDD research pre-proposal PDFs, pinned to a commit (permalinks).
+_PREPROJECT_BASE = (
+    "https://github.com/Mindful-AI-Research/3-project-ai-ml-yolo-helipad_detector/blob/"
+    "afc6e3f04ef7be965175b8c75569f58193bf5e06/TIDD-PhD-Application-Documents/"
+    "pre-project_TIDD/pre-project_updated/pre-project_updated_pdf/"
+)
+PREPROJECT_PDF_PT_URL = _PREPROJECT_BASE + "fabiana-campaner_pre-projeto_avaliacao-detectores-visuais-sem-verdade-de-campo_ATUALIZADO.pdf"
+PREPROJECT_PDF_EN_URL = _PREPROJECT_BASE + "fabiana-campaner_research-proposal_evaluating-visual-detectors-without-ground-truth_UPDATED.pdf"
 
 
 # ========================= AUTOMATIC MODEL DISCOVERY =========================
@@ -2024,7 +2045,7 @@ tab_about, tab_metrics, tab_field, tab4, tab_flights, tab2, tab3, tab1, tab5, ta
 # ====================== TAB 1: Upload ======================
 with tab1:
     if model is None:
-        st.info(t("upload.no_model.info"))
+        _info(t("upload.no_model.info"))
     else:
         images = st.file_uploader(t("upload.uploader.label"),
                                    type=["jpg", "jpeg", "png"],
@@ -2112,7 +2133,7 @@ with tab2:
 
                 jobs = [(zoom, x, y) for x in range(x_min, x_max+1) for y in range(y_min, y_max+1)]
 
-                st.info(f"{t('search.processing')} **{len(jobs)}** {t('search.satellite_tiles')}")
+                _info(f"{t('search.processing')} **{len(jobs)}** {t('search.satellite_tiles')}")
                 progress = st.progress(0, f"{t('search.progress')} ")
 
                 detected_tiles = []
@@ -2202,7 +2223,7 @@ with tab2:
                             )
 
                     if len(detected_tiles) > 1:
-                        st.info(t("search.download_individually"))
+                        _info(t("search.download_individually"))
                 else:
                     st.warning(t("search.none_found"))
 
@@ -2221,7 +2242,7 @@ with tab3:
         )
 
     if not sample_files:
-        st.info(t("samples.none_found").format(dir=SAMPLES_DIR))
+        _info(t("samples.none_found").format(dir=SAMPLES_DIR))
     else:
         st.write(f"**{len(sample_files)} {t('samples.available')}**")
 
@@ -2281,7 +2302,7 @@ with tab3:
                         else:
                             st.warning(t("samples.no_detection"))
 
-                st.info(t("samples.summary").format(hits=hits, total=len(sample_files)))
+                _info(t("samples.summary").format(hits=hits, total=len(sample_files)))
                 _disclaimer()
 
 # ====================== TAB 4: Interactive Map ======================
@@ -2302,7 +2323,7 @@ with tab4:
     state_lookup = load_state_lookup(COORDS_CSV)
 
     if sp_df.empty and other_df.empty:
-        st.info(t("map.no_coords.info").format(sp=SP_COORDS_CSV, other=COORDS_CSV))
+        _info(t("map.no_coords.info").format(sp=SP_COORDS_CSV, other=COORDS_CSV))
     else:
         lat_parts = [df["lat"] for df in (sp_df, other_df) if not df.empty]
         lon_parts = [df["lon"] for df in (sp_df, other_df) if not df.empty]
@@ -2676,7 +2697,7 @@ with tab4:
             density_dark_mode = st.toggle(t("map.dark_mode"), value=True, key="density_map_theme")
 
         if other_df.empty:
-            st.info(t("map.density.no_coords").format(path=COORDS_CSV))
+            _info(t("map.density.no_coords").format(path=COORDS_CSV))
         else:
             dark_map = folium.Map(
                 location=[other_df["lat"].mean(), other_df["lon"].mean()],
@@ -2726,7 +2747,7 @@ with tab_flights:
     # the helipad map above) — this is live ADS-B telemetry from a third-party
     # feed (adsb.fi), unrelated to the satellite-image / YOLO pipeline used
     # everywhere else in this app, and must never visually blend with it.
-    st.info(t("map.flights_notice_short"), icon="🛰️")
+    _info(t("map.flights_notice_short"), icon="🛰️")
 
     with st.expander(t("map.flights_details_title"), expanded=False):
         st.markdown(t("map.flights_caption"))
@@ -2760,7 +2781,7 @@ with tab_flights:
     flights, flights_err = fetch_live_helicopter_flights()
 
     if flights_err:
-        st.info(t("map.flights_error").format(err=flights_err))
+        _info(t("map.flights_error").format(err=flights_err))
     else:
         update_flight_trails(flights)
         st.caption(t("map.flights_count").format(n=len(flights)))
@@ -2899,7 +2920,7 @@ with tab5:
     if _pipeline_svg_path.exists():
         st.image(str(_pipeline_svg_path), width="stretch")
     else:
-        st.info(t("pipeline.diagram_missing_asset"))
+        _info(t("pipeline.diagram_missing_asset"))
 
     st.markdown(f"#### {t('pipeline.steps_header')}")
 
@@ -3008,27 +3029,22 @@ with tab_about:
             markdown parser treats content nested inside raw HTML tags."""
             cell = re.sub(
                 r"\[([^\]]+)\]\(([^)]+)\)",
-                r'<a href="\2" target="_blank" style="color:#5EEAD4;">\1</a>',
+                r'<a href="\2" target="_blank" rel="noopener">\1</a>',
                 cell,
             )
             cell = re.sub(r"\*\*([^*]+)\*\*", r"<strong>\1</strong>", cell)
             return cell
 
-        _cities_thead = "".join(
-            f'<th style="text-align:left; padding:10px 14px; border-bottom:3px solid #14b8a6; '
-            f'color:#5EEAD4; font-size:12px; text-transform:uppercase; letter-spacing:.04em;">{c}</th>'
-            for c in _cities_cols
-        )
+        # Styling lives in styles.py (.hd-ctx*): framed table, visible row/column
+        # rules, header band, zebra + hover; first row (São Paulo, the study
+        # focus) is marked — a visual accent only, not a ranking.
+        _cities_thead = "".join(f"<th>{c}</th>" for c in _cities_cols)
         _cities_tbody = "".join(
-            "<tr>" + "".join(
-                f'<td style="padding:10px 14px; border-bottom:1px solid rgba(94,234,212,0.18); '
-                f'color:#E2E8F0; font-size:13.5px; vertical-align:top;">{_md_cell_to_html(cell)}</td>'
-                for cell in row
-            ) + "</tr>"
+            "<tr>" + "".join(f"<td>{_md_cell_to_html(cell)}</td>" for cell in row) + "</tr>"
             for row in _cities_rows
         )
         st.markdown(
-            f'<div style="overflow-x:auto;"><table style="width:100%; border-collapse:collapse;">'
+            f'<div class="hd-ctx-wrap"><table class="hd-ctx">'
             f'<thead><tr>{_cities_thead}</tr></thead><tbody>{_cities_tbody}</tbody></table></div>',
             unsafe_allow_html=True,
         )
@@ -3036,11 +3052,12 @@ with tab_about:
         # [!NOTE] first, [!TIP] second — same order as README.md.
         st.markdown(f"> **{t('cities.interpretation.title')}**  \n> {t('cities.interpretation.text')}")
 
+        _why_sp_html = re.sub(r"\*\*([^*]+)\*\*", r"<strong>\1</strong>", t("cities.why_sao_paulo"))
         st.markdown(f"""
         <div style="border-left:3px solid #14b8a6; background:rgba(14,117,109,0.08);
                     border-radius:8px; padding:14px 18px; margin:14px 0 4px 0;">
             <p style="margin:0; color:#E2E8F0; font-size:14px; line-height:1.65;">
-                💡 {t('cities.why_sao_paulo')}
+                💡 {_why_sp_html}
             </p>
         </div>
         """, unsafe_allow_html=True)
@@ -3201,6 +3218,18 @@ with tab7:
         else:
             st.caption(t("dl.not_found").format(path=TRIAGE_LOG_PATH))
 
+    # ---- TIDD research pre-proposal (PT / EN) ----
+    st.markdown("---")
+    st.markdown(
+        f'<div class="hd-preproj"><h4>{t("dl.preproject.title")}</h4><p>{t("dl.preproject.body")}</p></div>',
+        unsafe_allow_html=True,
+    )
+    pp_c1, pp_c2 = st.columns(2)
+    with pp_c1:
+        st.link_button(t("dl.preproject.pt_button"), PREPROJECT_PDF_PT_URL, width="stretch")
+    with pp_c2:
+        st.link_button(t("dl.preproject.en_button"), PREPROJECT_PDF_EN_URL, width="stretch")
+
     st.markdown("---")
     st.markdown(f"### {t('dl.session_summary.title')}")
     st.caption(t("dl.session_summary.body"))
@@ -3238,7 +3267,7 @@ with tab7:
 with tab_metrics:
     st.subheader(t("metrics.subheader"))
     if metrics_df.empty:
-        st.info(t("metrics.no_csv"))
+        _info(t("metrics.no_csv"))
     else:
         n_exp = len(metrics_df)
         cols = st.columns(n_exp) if n_exp <= 4 else [st.container()]
@@ -3378,12 +3407,12 @@ with tab_metrics:
                     if cm_path.exists():
                         st.image(str(cm_path), caption=f"{cm_exp} — {t('metrics.cm_caption')}", width="stretch")
                     else:
-                        st.info(t("metrics.cm_not_found").format(path=cm_path.resolve()))
+                        _info(t("metrics.cm_not_found").format(path=cm_path.resolve()))
                 with cm_col2:
                     if cm_norm_path.exists():
                         st.image(str(cm_norm_path), caption=f"{cm_exp} — {t('metrics.cm_norm_caption')}", width="stretch")
                     else:
-                        st.info(t("metrics.cm_norm_not_found").format(path=cm_norm_path.resolve()))
+                        _info(t("metrics.cm_norm_not_found").format(path=cm_norm_path.resolve()))
 
         # ---- Inference demos (exp1-exp4) right below the Confusion Matrix ----
         # Replaces the old single "Model Training" demo. One experiment is shown
@@ -3400,7 +3429,7 @@ with tab_field:
         st.caption(t("field.last_updated").format(date=last_updated.strftime('%b %d, %Y at %H:%M')))
 
     if field_summary is None:
-        st.info(t("field.no_summary").format(path=FIELD_SUMMARY_PATH))
+        _info(t("field.no_summary").format(path=FIELD_SUMMARY_PATH))
     else:
         totals = field_summary.get("totals", {})
         regions = field_summary.get("regions", [])
