@@ -378,26 +378,20 @@
 <!-- ========= END Project at a Glance ========= -->
 
 
+<br>
 
+<p align="center"><img src="https://raw.githubusercontent.com/Mindful-AI-Research/3-project-ai-ml-yolo-helipad_detector/main/assets/divider.svg" alt="" width="100%" /></p>
 
+<br>
 
-
-
-
-
-
-
-
-
-
-
-
- 
 <!-- ========= START Overview ========= -->
 <a id="overview"></a>
 ## [Overview]()
 
-[**Helipad Detector**]() is an end-to-end Artificial Intelligence and Computer Vision platform designed to automatically detect and map [**potential rooftop helipads**]() from satellite imagery. The project transforms geospatial imagery into structured information, enabling the identification of visual patterns compatible with helicopter landing areas and their representation on an interactive map.
+<p align="center"><img src="https://raw.githubusercontent.com/Mindful-AI-Research/3-project-ai-ml-yolo-helipad_detector/main/assets/divider.svg" alt="" width="100%" /></p>
+
+The [**Helipad Detector**]() is an end-to-end Artificial Intelligence and Computer Vision platform designed to automatically detect and map **possible helipads on building rooftops** from satellite imagery. The project transforms geospatial images into structured information, making it possible to identify visual patterns consistent with helicopter landing areas and represent them on an interactive map.
+
 
 The project focuses on [**São Paulo, Brazil**](https://www.prefeitura.sp.gov.br/), an urban environment particularly relevant to this type of application. The city is widely recognized for having one of the world's largest urban helicopter fleets. Industry sources report more than **400 registered helicopters**, alongside a network of more than **260 helipads**; operational estimates vary depending on the period and geographic scope, reaching approximately **2,200 takeoffs and landings per day** across the metropolitan area. [São Paulo: the city of helicopters — Folha de S.Paulo](https://www1.folha.uol.com.br/tv/2026/04/sao-paulo-a-cidade-dos-helicopteros.shtml) · [São Paulo has the world's largest helicopter fleet — Exame](https://exame.com/casual/sao-paulo-tem-a-maior-frota-de-helicopteros-do-mundo-e-a-segunda-em-jatos/) · [Helicopter fleet data in São Paulo — Avantto](https://www.avantto.com.br/blog/business/parabens-sao-paulo/)
 
