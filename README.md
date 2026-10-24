@@ -232,6 +232,32 @@
 <br><br><br><br>
 <!-- ========= END MAIN REPO / Projects REFERENCES ========= -->
 
+<!-- ========= START Project at a Glance ========= -->
+<a id="project-at-a-glance"></a>
+## [Project at a Glance]()
+
+<br><br>
+
+<p align="center"><img src="https://raw.githubusercontent.com/Mindful-AI-Research/3-project-ai-ml-yolo-helipad_detector/main/assets/divider.svg" alt="" width="100%" /></p>
+
+> [!TIP]
+> **What it does.** A YOLO pipeline that detects rooftop helipads in São Paulo satellite imagery, covering data collection, annotation, training, field validation and an interactive dashboard.
+
+> [!WARNING]
+> **What it does not prove.** The curated dataset has 226 images (178 training, 34 validation, 14 test). Experiments exp1 and exp2 are not a controlled comparison, and 125 of the 225 images annotated with coordinates are copies of field *tiles* (2.3% of the 5,540 distinct *tiles*). The field detection rate is neither precision nor recall.
+
+> [!CAUTION]
+> **How to use the output.** Automated image-based visual detection, subject to errors and not equivalent to operational, legal, safety or aeronautical validation. Any real-world use requires independent human review.
+
+<br>
+
+<p align="center"><sub>🟢 <b>Green</b> — what it does and what was found &nbsp;·&nbsp; 🟡 <b>Yellow</b> — limits and care when interpreting &nbsp;·&nbsp; 🔴 <b>Red</b> — what must not be misread</sub></p>
+
+<p align="center"><img src="https://raw.githubusercontent.com/Mindful-AI-Research/3-project-ai-ml-yolo-helipad_detector/main/assets/divider.svg" alt="" width="100%" /></p>
+
+<br><br><br><br>
+<!-- ========= END Project at a Glance ========= -->
+
 
 
 
