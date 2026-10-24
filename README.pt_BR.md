@@ -180,22 +180,24 @@
 =========🚧 END 🎥 **DEMO** =========  -->
 
 
+
 <!-- ========= START TECH STACK / PIPELINE BADGES ========= -->
 <p align="center">
-  <img src="assets/badges/pt-br/badge-esri.svg" alt="ESRI Imagery — Tiles de Satélite" />
-  <img src="assets/badges/pt-br/badge-pytorch.svg" alt="PyTorch — Framework de Deep Learning" />
-  <img src="assets/badges/pt-br/badge-yolo.svg" alt="YOLO — Detecção de Objetos Ultralytics" />
+  <img src="https://raw.githubusercontent.com/Mindful-AI-Research/3-project-ai-ml-yolo-helipad_detector/main/assets/badges/en/badge-esri.svg" alt="ESRI Imagery Satellite Tiles" />
+  <img src="https://raw.githubusercontent.com/Mindful-AI-Research/3-project-ai-ml-yolo-helipad_detector/main/assets/badges/en/badge-pytorch.svg" alt="PyTorch Deep Learning Framework" />
+  <img src="https://raw.githubusercontent.com/Mindful-AI-Research/3-project-ai-ml-yolo-helipad_detector/main/assets/badges/en/badge-yolo.svg" alt="YOLO Ultralytics Object Detection" />
 </p>
 
 <p align="center">
-  <img src="assets/badges/pt-br/badge-roboflow.svg" alt="Roboflow — Dataset e Anotação" />
-  <img src="assets/badges/pt-br/badge-geospatial.svg" alt="Geoespacial — Coordenadas e Mapas" />
-  <img src="assets/badges/pt-br/badge-computer-vision.svg" alt="Visão Computacional — Detecção de Objetos" />
+  <img src="https://raw.githubusercontent.com/Mindful-AI-Research/3-project-ai-ml-yolo-helipad_detector/main/assets/badges/en/badge-roboflow.svg" alt="Roboflow Dataset and Annotation" />
+  <img src="https://raw.githubusercontent.com/Mindful-AI-Research/3-project-ai-ml-yolo-helipad_detector/main/assets/badges/en/badge-geospatial.svg" alt="Geospatial Coordinates and Maps" />
+  <img src="https://raw.githubusercontent.com/Mindful-AI-Research/3-project-ai-ml-yolo-helipad_detector/main/assets/badges/en/badge-computer-vision.svg" alt="Computer Vision Object Detection" />
 </p>
 
 <p align="center">
-  <img src="assets/badges/pt-br/badge-osint.svg" alt="OSINT — Dados Públicos de Aviação" />
-  <img src="assets/badges/pt-br/badge-evaluation.svg" alt="Avaliação — Métricas mAP / Precisão" />
+  <img src="https://raw.githubusercontent.com/Mindful-AI-Research/3-project-ai-ml-yolo-helipad_detector/main/assets/badges/en/badge-osint.svg" alt="OSINT Public Aviation Data" />
+  <img src="https://raw.githubusercontent.com/Mindful-AI-Research/3-project-ai-ml-yolo-helipad_detector/main/assets/badges/en/badge-evaluation.svg" alt="Evaluation mAP / Precision Metrics" />
+  <img src="https://raw.githubusercontent.com/Mindful-AI-Research/3-project-ai-ml-yolo-helipad_detector/main/assets/badges/en/badge-semiotics.svg" alt="Semiotics Sign and Image Interpretation" />
 </p>
 
 
