@@ -454,8 +454,15 @@ São Paulo, however, stands out for combining a large urban fleet, high building
 
 <br><br>
 
-> [!NOTE]
-> The cities presented in this table are qualitative references to urban environments where helicopters are used in different operational contexts. The selection does not constitute an official global ranking, a standardized statistical comparison of fleets, or an operational database directly equivalent across all locations. São Paulo is the primary study area of **Helipad Detector** and presents a specific operational context, including specialized helicopter traffic management through **HELICONTROL**.
+> [!WARNING]
+> **Qualitative reference, not an official ranking.**
+>
+> <details>
+> <summary>Details</summary>
+>
+> The cities presented in this table are qualitative references of urban environments in which helicopters are used in different operational contexts. The selection is not an official global ranking, a standardized statistical comparison of fleets, or an operational database directly equivalent across all locations. São Paulo is the main study area of the **Helipad Detector** and presents a specific operational context, including the specialized management of helicopter traffic by **HELICONTROL**.
+>
+> </details>
 
 <br>
 
