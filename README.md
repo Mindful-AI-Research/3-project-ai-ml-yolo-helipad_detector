@@ -683,13 +683,11 @@ The solution can be viewed as an architecture with [**seven main blocks**]():
 
 <br>
 
-<img width="915" height="2058" alt="Image" src="https://github.com/user-attachments/assets/71af0520-5f64-41fa-b131-6b00c3d82147" />
+<p align="center">
+  <img width="915" height="2058" alt="Image" src="https://github.com/user-attachments/assets/71af0520-5f64-41fa-b131-6b00c3d82147" />
+</p>
 
-<br><br><br>
 
-> [!TIP]
->
-> The pipeline should be understood as a learning architecture as much as a software architecture. It shows how raw geospatial imagery is gradually transformed into a validated and demonstrable AI artifact.
 
 <br><br>
 
@@ -823,6 +821,10 @@ Helipad Detector
 
 
 <br><br>
+
+
+
+
 
 
 <a id="what-is-helipad-dataset"></a>

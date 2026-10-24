@@ -496,22 +496,15 @@ https://github.com/user-attachments/assets/eab6e951-6b66-4c6c-a2c6-23ee2f902c5f
 
 
 
-
-
 <br><br>
 
 ## [AI/ML Ops Pipeline]()
 
 <br>
 
-<img width="915" height="2058" alt="Image" src="https://github.com/user-attachments/assets/6e622b4b-4d47-445b-b9b9-7767bf6f2f55" />
-
-<br><br>
-
-
-
-
-
+<p align="center">
+  <img width="915" height="2058" alt="Institutional Information" src="https://github.com/user-attachments/assets/6e622b4b-4d47-445b-b9b9-7767bf6f2f55" />
+</p>
 
 
 ## [Estrutura do Repositório]()
