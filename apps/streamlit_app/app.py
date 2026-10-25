@@ -64,16 +64,20 @@ def t(key: str) -> str:
 
 
 _IFRAME_RESET = (
-    "<style>html, html body { background: transparent !important; }</style>"
+    '<meta name="color-scheme" content="dark">'
+    "<style>:root { color-scheme: dark; }"
+    " html, html body { background: transparent !important; margin: 0 !important;"
+    " overflow: hidden !important; }"
+    " html body { padding: 8px 6px; box-sizing: border-box; }</style>"
 )
 
 
 def _html_iframe(html: str, height: int) -> None:
     """st.iframe for our small HTML/JS snippets (music button, brand footer,
-    helper scripts). Forces a transparent document background: without it the
-    embedded page can paint an opaque white canvas over the dark theme (white
-    box around the music button, white 1px lines for the height=1 script
-    frames, white band behind the footer logo)."""
+    helper scripts). Dark color-scheme + transparent background + no overflow:
+    the default 8px body margin made the 1px / 52px / 64px frames overflow, so
+    the browser drew its own (light) scrollbars and canvas — white lines above
+    the title, white box around the music button, white band behind the logo."""
     st.iframe(_IFRAME_RESET + html, height=height)
 
 
@@ -1345,7 +1349,7 @@ def render_music_toggle():
       width:100%; display:flex; align-items:center; justify-content:center; gap:10px;
       background:#0E756D; color:#fff; border:1.5px solid #14b8a6; border-radius:12px;
       padding:12px 14px; font-family:'Inter',sans-serif; font-size:14px; font-weight:700;
-      letter-spacing:.02em; cursor:pointer; box-shadow:0 3px 14px rgba(14,117,109,.45);
+      letter-spacing:.02em; cursor:pointer; box-shadow:0 2px 8px rgba(14,117,109,.45);
       transition:transform .15s, box-shadow .2s; animation:music-pulse 2.2s ease-in-out infinite;
     ">
       <span id="music-icon" style="font-size:18px;">🔇</span>
@@ -1353,8 +1357,8 @@ def render_music_toggle():
     </button>
     <style>
       @keyframes music-pulse {{
-        0%, 100% {{ box-shadow: 0 3px 14px rgba(14,117,109,.45); }}
-        50% {{ box-shadow: 0 3px 22px rgba(20,184,166,.85); }}
+        0%, 100% {{ box-shadow: 0 2px 8px rgba(14,117,109,.45); }}
+        50% {{ box-shadow: 0 2px 12px rgba(20,184,166,.8); }}
       }}
       #music-toggle-btn:hover {{ transform: translateY(-1px); }}
       #music-toggle-btn.playing {{ animation: none; background:#134e4a; }}
