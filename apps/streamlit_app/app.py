@@ -318,6 +318,8 @@ GLOBAL_CSS = """
         padding: 0 !important; white-space: nowrap; color: #FFFFFF; }
     .main-title .hd-emoji { font-size: 0.84em; }
     .main-title .hd-white { color: #FFFFFF; }
+    .main-title .hd-red { opacity: 1 !important; filter: none !important; mix-blend-mode: normal !important;
+        text-shadow: none !important; background: none !important; }
     .main-title .hd-text { position: relative; display: inline-block; }
     .hd-title-line { width: min(420px, 70%); height: 2px; margin: 12px auto 0 auto; border-radius: 1px; background: var(--hd-grad); }
     @media (max-width: 640px) { .main-title { font-size: 34px !important; } }
@@ -2259,12 +2261,12 @@ st.markdown(f"""
 </div>
 """, unsafe_allow_html=True)
 
-_TITLE_COLORS = ["#8B0000", "#991414", "#A61B1B", "#B32222", "#C62828", "#D32F2F", "#C62828", "#B71C1C"]
+_TITLE_COLORS = ["#A80000", "#B80000", "#C20000", "#D10000", "#DD0000", "#D10000", "#C20000", "#B80000"]
 _title_words = t("main.title").replace("\U0001F681", "").strip().split(" ", 1)  # ["Helipad", "Detector"]
 _title_first = _title_words[0]
 _title_second = _title_words[1] if len(_title_words) > 1 else ""
 _title_letters = "".join(
-    f'<span style="color:{_TITLE_COLORS[k % len(_TITLE_COLORS)]}">{ch}</span>' for k, ch in enumerate(_title_second)
+    f'<span class="hd-red" style="color:{_TITLE_COLORS[k % len(_TITLE_COLORS)]} !important;-webkit-text-fill-color:{_TITLE_COLORS[k % len(_TITLE_COLORS)]}">{ch}</span>' for k, ch in enumerate(_title_second)
 )
 st.markdown(
     '<div class="hd-title-card">'
