@@ -814,8 +814,8 @@ def render_inference_demos(expanded: bool = False, default: str = "exp1") -> Non
             _info(t("demos.inf.missing"))
 
 
-PRESENTATION_PPTX_EN_URL = "https://github.com/Mindful-AI-Research/3-project-ai-ml-yolo-helipad_detector/blob/6a6429169e3be15936c10a98de749955a5c96c72/presentations/Helipad_Detector_Presentation_EN.pptx"
-PRESENTATION_PPTX_PT_URL = "https://github.com/Mindful-AI-Research/3-project-ai-ml-yolo-helipad_detector/blob/dcd6cd1f6497d949d01f6f35c403213a8e5f9365/presentations/Helipad_Detector_Apresentacao_PT-BR.pptx"
+PRESENTATION_PPTX_EN_URL = "https://github.com/Mindful-AI-Research/3-project-ai-ml-yolo-helipad_detector/blob/9c10a1d52ab56948a2cc4f8cf8e6c874219aae39/presentations/Helipad_Detector_Presentation_EN.pptx"
+PRESENTATION_PPTX_PT_URL = "https://github.com/Mindful-AI-Research/3-project-ai-ml-yolo-helipad_detector/blob/9c10a1d52ab56948a2cc4f8cf8e6c874219aae39/presentations/Helipad_Detector_Apresentacao_PT-BR.pptx"
 PRESENTATION_HTML_URL = "https://mindful-ai-research.github.io/3-project-ai-ml-yolo-helipad_detector/"
 # TIDD research pre-proposal PDFs, pinned to a commit (permalinks).
 _PREPROJECT_BASE = (
