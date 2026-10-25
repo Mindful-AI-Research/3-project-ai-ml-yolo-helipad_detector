@@ -646,7 +646,7 @@
     const SLIDES_EN = [
       { id:'cover', type:'cover', label:'Cover', eyebrow:'Helipad Detector · AI/ML · Neural Networks · PUC-SP · 2026',
         title:'Helipad Detector', titleAccent:'São Paulo from above · Detecting helipads with Computer Vision',
-        subtitle:'A computer vision solution for identifying rooftop helipads from satellite imagery of São Paulo — integrating web scraping and automation with Selenium, geospatial data, model training, and interactive visualization through a dashboard.',
+        subtitle:'A computer vision solution for identifying rooftop helipads from satellite imagery of São Paulo — integrating web scraping and automation with Selenium, geospatial data, model training, and interactive visualization through a dashboard. Also the case study of a research pre-proposal on evaluating visual detectors without ground truth.',
         badges:['YOLOv8n / YOLOv11n','Roboflow','ESRI World Imagery','Streamlit','Selenium','Google Colab T4'] },
 
       { id:'focus', type:'globe', label:'Geographic Focus', eyebrow:'GEOGRAPHIC FOCUS',
@@ -902,6 +902,18 @@
           ['Educational, non-surveillance intent','No individual tracking or surveillance use case'],
         ] },
 
+      { id:'research', type:'info', label:'Research Continuation', eyebrow:'RESEARCH CONTINUATION · TIDD PRE-PROJECT',
+        title:'From a detector to', titleAccent:'evaluating detectors without ground truth',
+        text:'This project is also the case study of a research pre-proposal (PUC-SP / TIDD). Four experiments with nearly identical validation scores (mAP@50 between 0.993 and 0.994) produced very different detection rates (9.64% to 21.00%) on the same field imagery, so validation metrics alone do not describe behavior in a real, unannotated region.',
+        facts:[
+          ['Research question','How can visual detectors be evaluated when there is no ground truth for the region of use?'],
+          ['Theoretical lens','Semiotics of the image: a satellite image is a sign produced by a sensor, and a detection is a visual inference about it, not a confirmation of what exists on the ground.'],
+          ['Consequence','Every detection is a candidate for human review; human labels are acts of interpretation, not an answer key.'],
+          ['Planned stage','Data-lineage audit and sampled human review of detections.'],
+          ['Read the pre-project', <><a href="https://github.com/Mindful-AI-Research/3-project-ai-ml-yolo-helipad_detector/blob/afc6e3f04ef7be965175b8c75569f58193bf5e06/TIDD-PhD-Application-Documents/pre-project_TIDD/pre-project_updated/pre-project_updated_pdf/fabiana-campaner_research-proposal_evaluating-visual-detectors-without-ground-truth_UPDATED.pdf" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--teal)' }}>English (PDF) ↗</a> &nbsp;·&nbsp; <a href="https://github.com/Mindful-AI-Research/3-project-ai-ml-yolo-helipad_detector/blob/afc6e3f04ef7be965175b8c75569f58193bf5e06/TIDD-PhD-Application-Documents/pre-project_TIDD/pre-project_updated/pre-project_updated_pdf/fabiana-campaner_pre-projeto_avaliacao-detectores-visuais-sem-verdade-de-campo_ATUALIZADO.pdf" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--teal)' }}>Português (PDF) ↗</a></>],
+        ],
+        badges:['Semiotics of the image','Data lineage','Human review','Not operational validation'] },
+
       { id:'governance', type:'splitlist', label:'AI Governance', eyebrow:'AI GOVERNANCE',
         title:'Practices that echo', titleAccent:'emerging AI-Act principles',
         text:'The project does not claim regulatory certification, but several of its practices mirror principles the EU AI Act asks of higher-risk AI systems: documentation, human oversight, and data governance.',
@@ -932,7 +944,7 @@
     const SLIDES_PT = [
       { id:'cover', type:'cover', label:'Capa', eyebrow:'Helipad Detector · AI/ML · Redes Neurais · PUC-SP · 2026',
         title:'Helipad Detector', titleAccent:'São Paulo vista do alto · Detectando helipontos com Computer Vision',
-        subtitle:'Uma solução de visão computacional para identificar helipontos em coberturas de edifícios a partir de imagens de satélite de São Paulo — integrando scraping e automação com Selenium, dados geoespaciais, treinamento de modelos e visualização dos resultados em um dashboard interativo.',
+        subtitle:'Uma solução de visão computacional para identificar helipontos em coberturas de edifícios a partir de imagens de satélite de São Paulo — integrando scraping e automação com Selenium, dados geoespaciais, treinamento de modelos e visualização dos resultados em um dashboard interativo. Também é o estudo de caso de um pré-projeto de pesquisa sobre avaliação de detectores visuais sem verdade de campo.',
         badges:['YOLOv8n / YOLOv11n','Roboflow','ESRI World Imagery','Streamlit','Selenium','Google Colab T4'] },
 
       { id:'focus', type:'globe', label:'Foco Geográfico', eyebrow:'FOCO GEOGRÁFICO',
@@ -1187,6 +1199,18 @@
           ['Uso de IA generativa declarado','Qualquer assistência de IA utilizada é documentada no relatório'],
           ['Finalidade educacional, não de vigilância','Não há caso de uso para rastreamento individual ou vigilância'],
         ] },
+
+      { id:'research', type:'info', label:'Continuidade da Pesquisa', eyebrow:'CONTINUIDADE DA PESQUISA · PRÉ-PROJETO TIDD',
+        title:'De um detector à', titleAccent:'avaliação de detectores sem verdade de campo',
+        text:'Este projeto é também o estudo de caso de um pré-projeto de pesquisa (PUC-SP / TIDD). Quatro experimentos com métricas de validação praticamente idênticas (mAP@50 entre 0,993 e 0,994) produziram taxas de detecção muito diferentes (9,64% a 21,00%) sobre as mesmas imagens de campo; logo, métricas de validação isoladas não descrevem o comportamento em uma região real e não anotada.',
+        facts:[
+          ['Pergunta de pesquisa','Como avaliar detectores visuais quando não há verdade de campo para a região de uso?'],
+          ['Lente teórica','Semiótica da imagem: uma imagem de satélite é um signo produzido por um sensor, e uma detecção é uma inferência visual sobre ela, não a confirmação do que existe no solo.'],
+          ['Consequência','Toda detecção é candidata à revisão humana; os rótulos humanos são atos de interpretação, não gabarito.'],
+          ['Etapa planejada','Auditoria de linhagem dos dados e revisão humana amostral das detecções.'],
+          ['Ler o pré-projeto', <><a href="https://github.com/Mindful-AI-Research/3-project-ai-ml-yolo-helipad_detector/blob/afc6e3f04ef7be965175b8c75569f58193bf5e06/TIDD-PhD-Application-Documents/pre-project_TIDD/pre-project_updated/pre-project_updated_pdf/fabiana-campaner_pre-projeto_avaliacao-detectores-visuais-sem-verdade-de-campo_ATUALIZADO.pdf" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--teal)' }}>Português (PDF) ↗</a> &nbsp;·&nbsp; <a href="https://github.com/Mindful-AI-Research/3-project-ai-ml-yolo-helipad_detector/blob/afc6e3f04ef7be965175b8c75569f58193bf5e06/TIDD-PhD-Application-Documents/pre-project_TIDD/pre-project_updated/pre-project_updated_pdf/fabiana-campaner_research-proposal_evaluating-visual-detectors-without-ground-truth_UPDATED.pdf" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--teal)' }}>English (PDF) ↗</a></>],
+        ],
+        badges:['Semiótica da imagem','Linhagem de dados','Revisão humana','Não é validação operacional'] },
 
       { id:'governance', type:'splitlist', label:'Governança de IA', eyebrow:'GOVERNANÇA DE IA',
         title:'Práticas que incorporam', titleAccent:'princípios do AI Act',
