@@ -26,7 +26,7 @@ opencv-python-headless>=4.6.0
 # Web, APIs & Applications
 ########################
 flask>=2.0.0
-# st.iframe requires Streamlit >= 1.56
+# st.iframe requires Streamlit >= 1.66.1
 streamlit>=1.56
 folium>=0.16.0
 streamlit-folium>=0.23.0
