@@ -30,7 +30,7 @@ flask>=2.0.0
 streamlit>=1.56
 folium>=0.16.0
 streamlit-folium>=0.23.0
-plotly>=7.1.0
+plotly>=5.20.0
 reportlab>=4.0.0
 
 ########################
@@ -42,6 +42,6 @@ webdriver-manager>=3.8.0
 ########################
 # General Utilities
 ########################
-requests>=2.34.2
+requests>=2.23.0
 psutil
 py-cpuinfo
