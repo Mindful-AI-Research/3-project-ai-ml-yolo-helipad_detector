@@ -62,6 +62,21 @@ def t(key: str) -> str:
 
 
 
+
+_IFRAME_RESET = (
+    "<style>html, html body { background: transparent !important; }</style>"
+)
+
+
+def _html_iframe(html: str, height: int) -> None:
+    """st.iframe for our small HTML/JS snippets (music button, brand footer,
+    helper scripts). Forces a transparent document background: without it the
+    embedded page can paint an opaque white canvas over the dark theme (white
+    box around the music button, white 1px lines for the height=1 script
+    frames, white band behind the footer logo)."""
+    st.iframe(_IFRAME_RESET + html, height=height)
+
+
 from i18n import TR  # noqa: E402  (UI strings live in i18n.py)
 
 
@@ -1325,7 +1340,7 @@ def render_music_toggle():
     label_play = t("sidebar.music.play")
     label_pause = t("sidebar.music.pause")
 
-    st.iframe(f"""
+    _html_iframe(f"""
     <button id="music-toggle-btn" title="{label_play}" style="
       width:100%; display:flex; align-items:center; justify-content:center; gap:10px;
       background:#0E756D; color:#fff; border:1.5px solid #14b8a6; border-radius:12px;
@@ -1544,7 +1559,7 @@ if "heli_replay_nonce" not in st.session_state:
 if "heli_spin_nonce" not in st.session_state:
     st.session_state["heli_spin_nonce"] = 0
 
-st.iframe(f"""
+_html_iframe(f"""
 <script>
 (function() {{
   try {{
@@ -1760,7 +1775,7 @@ st.iframe(f"""
 # mouse-reactive camera drifting slowly through a silver starfield — using
 # only CSS 3D transforms (perspective + rotateX/rotateY) driven by
 # requestAnimationFrame, with zero external dependencies.
-st.iframe("""
+_html_iframe("""
 <script>
 (function() {
   try {
@@ -1909,7 +1924,7 @@ st.iframe("""
 # periodically so it also catches cards that appear later — e.g. after
 # switching to a tab that wasn't rendered yet, or the field-summary cards
 # once their async data loads.
-st.iframe("""
+_html_iframe("""
 <script>
 (function() {
   try {
@@ -2542,7 +2557,7 @@ with tab4:
 
         if landed_region:
             region_name_js = json.dumps(landed_region)
-            st.iframe(f"""
+            _html_iframe(f"""
             <script>
             (function() {{
               try {{
@@ -3648,7 +3663,7 @@ with tab_field:
 # Footer
 st.markdown("---")
 
-st.iframe("""
+_html_iframe("""
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&display=swap" rel="stylesheet">
 <style>
   html, body { margin:0; padding:0; overflow:visible; background:transparent; }
