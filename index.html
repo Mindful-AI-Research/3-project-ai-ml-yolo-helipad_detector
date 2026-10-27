@@ -919,6 +919,18 @@
         text:'The project does not claim regulatory certification, but several of its practices mirror principles the EU AI Act asks of higher-risk AI systems: documentation, human oversight, and data governance.',
         list:['Documentation → full technical pipeline, glossary, and governance section in the report','Human oversight → manual triage before annotation; qualitative review of hits/FP/FN','Data governance → public-area imagery only, no personal identifiers, LGPD-aligned minimization','Transparency → auto-discovered experiment metrics, visible live in the dashboard'] },
 
+      { id:'ai-security', type:'info', label:'AI Security', eyebrow:'AI SECURITY',
+        title:'Protecting the detector', titleAccent:'as an AI system',
+        text:'No LLM, retrieval or agent tools: the attack surface is data, weights, image upload and external APIs. Controls come from a review against a practical guide on AI in cybersecurity.',
+        facts:[
+          ['Weights integrity','The .pt format is pickle-based. A SHA-256 manifest is checked before a model loads, and a mismatch refuses the load.'],
+          ['Upload hygiene','10 MB limit, structural check, 50 MP cap, and the image is rebuilt from raw pixels so EXIF/GPS metadata is dropped.'],
+          ['Human review','Every detection is a candidate for independent human review; a detection rate is never presented as precision or recall.'],
+          ['Secrets','A hardcoded Roboflow key was found, removed and moved to environment variables. Unknown in the provided materials: whether it was revoked.'],
+          ['Still open','Robustness suite, label provenance, dependency audit, Model Card and Data Card. Unknown in the provided materials: production monitoring, rollback criteria and formal ownership.']
+        ],
+        badges:['Weights checksum','Upload hardening','Threat model','Not operational validation'] },
+
       { id:'conclusion', type:'quote', label:'Conclusion', eyebrow:'CONCLUSION',
         title:'Data quality before', titleAccent:'model complexity',
         text:'Helipad Detector reaches professional-grade metrics — mAP@50 near 99% and mAP@50-95 near 88% — on a dataset built entirely from scratch. The deeper contribution is what that result proves: that a small, well-curated, well-governed dataset can outweigh architectural sophistication, and that transparent documentation of both successes and mistakes is itself part of responsible AI practice.' },
@@ -1216,6 +1228,18 @@
         title:'Práticas que incorporam', titleAccent:'princípios do AI Act',
         text:'O projeto não reivindica certificação regulatória. Ainda assim, várias de suas práticas estão alinhadas a princípios previstos pelo EU AI Act para sistemas de IA de maior risco, como documentação, supervisão humana e governança de dados.',
         list:['Documentação → pipeline técnico completo, glossário e seção de governança no relatório','Supervisão humana → triagem manual antes da anotação; revisão qualitativa de acertos/FP/FN','Governança de dados → apenas imagens de áreas públicas, sem identificadores pessoais, com minimização alinhada à LGPD','Transparência → métricas dos experimentos detectadas automaticamente e exibidas no dashboard'] },
+
+      { id:'ai-security', type:'info', label:'Segurança de IA', eyebrow:'SEGURANÇA DE IA',
+        title:'Protegendo o detector', titleAccent:'como sistema de IA',
+        text:'Sem LLM, recuperação nem ferramentas de agente: a superfície de ataque são dados, pesos, upload de imagem e APIs externas. Os controles vêm de uma revisão contra um guia prático de IA em cibersegurança.',
+        facts:[
+          ['Integridade dos pesos','O formato .pt é baseado em pickle. Um manifesto SHA-256 é verificado antes de carregar um modelo, e uma divergência recusa o carregamento.'],
+          ['Higiene do upload','Limite de 10 MB, verificação estrutural, teto de 50 MP, e a imagem é reconstruída a partir dos pixels para descartar metadados EXIF/GPS.'],
+          ['Revisão humana','Toda detecção é candidata à revisão humana independente; a taxa de detecção nunca é apresentada como precision ou recall.'],
+          ['Segredos','Uma chave do Roboflow estava no código, foi removida e movida para variáveis de ambiente. Desconhecido nos materiais fornecidos: se ela foi revogada.'],
+          ['Ainda em aberto','Suíte de robustez, proveniência dos labels, auditoria de dependências, Model Card e Data Card. Desconhecido nos materiais fornecidos: monitoramento em produção, critérios de rollback e responsabilidade formal.']
+        ],
+        badges:['Checksum dos pesos','Upload seguro','Modelo de ameaças','Não é validação operacional'] },
 
       { id:'conclusion', type:'quote', label:'Conclusão', eyebrow:'CONCLUSÃO',
         title:'Qualidade dos dados antes', titleAccent:'da complexidade do modelo',
