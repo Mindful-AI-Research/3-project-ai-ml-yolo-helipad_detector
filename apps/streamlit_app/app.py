@@ -1,3 +1,14 @@
+Claude
+/
+
+
+
+
+
+
+
+
+App · PY
 import streamlit as st
 from ultralytics import YOLO
 from PIL import Image
@@ -22,7 +33,7 @@ from pathlib import Path
 import tempfile
 import shutil
 from concurrent.futures import ThreadPoolExecutor, as_completed
-
+ 
 # ========================= LANGUAGE / i18n =========================
 # Only static UI copy (labels, headers, captions, button text, messages) is
 # translated. Anything that comes from data at runtime — experiment names,
@@ -31,8 +42,8 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 # would mean rewriting the underlying data, not just the UI.
 if "lang" not in st.session_state:
     st.session_state["lang"] = "en"
-
-
+ 
+ 
 def _info(text: str, icon: str = "ℹ️") -> None:
     """Identity-colored (teal) replacement for st.info — the default blue band
     clashed with the teal/red palette. Supports only **bold** and `code`."""
@@ -44,25 +55,25 @@ def _info(text: str, icon: str = "ℹ️") -> None:
         f'<div class="hd-info" role="note"><span class="hd-info-icon">{icon}</span><div>{body}</div></div>',
         unsafe_allow_html=True,
     )
-
-
+ 
+ 
 def _disclaimer() -> None:
     """Mandatory scope-of-detection notice, shown under every detection result."""
     st.markdown(
         f'<div class="hd-disclaimer" role="note">⚠️ {t("detection.disclaimer")}</div>',
         unsafe_allow_html=True,
     )
-
-
+ 
+ 
 def t(key: str) -> str:
     entry = TR.get(key)
     if entry is None:
         return key
     return entry.get(st.session_state["lang"], entry.get("en", key))
-
-
-
-
+ 
+ 
+ 
+ 
 _IFRAME_RESET = (
     '<meta name="color-scheme" content="dark">'
     "<style>:root { color-scheme: dark; }"
@@ -70,8 +81,8 @@ _IFRAME_RESET = (
     " overflow: hidden !important; }"
     " html body { padding: 8px 6px; box-sizing: border-box; }</style>"
 )
-
-
+ 
+ 
 def _html_iframe(html: str, height: int) -> None:
     """st.iframe for our small HTML/JS snippets (music button, brand footer,
     helper scripts). Dark color-scheme + transparent background + no overflow:
@@ -79,18 +90,18 @@ def _html_iframe(html: str, height: int) -> None:
     the browser drew its own (light) scrollbars and canvas — white lines above
     the title, white box around the music button, white band behind the logo."""
     st.iframe(_IFRAME_RESET + html, height=height)
-
-
+ 
+ 
 from i18n import TR  # noqa: E402  (UI strings live in i18n.py)
-
-
+ 
+ 
 st.set_page_config(
     page_title="Helipad Detector • São Paulo",
     page_icon="🚁",
     layout="wide",
     initial_sidebar_state="expanded"
 )
-
+ 
 # `.streamlit/config.toml` forces Streamlit's own theme colors to dark,
 # but that alone doesn't stop the BROWSER's native "color-scheme" hint —
 # a separate CSS-level signal that controls default rendering for form
@@ -104,7 +115,7 @@ st.markdown(
     "<style>:root, html, body { color-scheme: dark !important; }</style>",
     unsafe_allow_html=True,
 )
-
+ 
 # streamlit-folium's map components (used in the Map tab) are unreliable on
 # the very first script execution of a session — they can mount with a 0-size
 # viewport and stay blank until something triggers another rerun (this is why
@@ -116,7 +127,7 @@ st.markdown(
 if "_warmed_up" not in st.session_state:
     st.session_state["_warmed_up"] = True
     st.rerun()
-
+ 
 # GLOBAL_CSS lives here (was styles.py) so the app is a single file + i18n.py.
 GLOBAL_CSS = """
     <style>
@@ -343,7 +354,7 @@ GLOBAL_CSS = """
     .hd-info .hd-info-icon { font-size: 1.15em; line-height: 1.4; }
     .hd-info strong { color: #FFFFFF; }
     .hd-info code { color: #5EEAD4; background: rgba(0,0,0,0.25); padding: 1px 5px; border-radius: 4px; }
-
+ 
     /* Global-context table (About): stronger frame, visible row and column
        rules, header band, zebra rows, hover, São Paulo (study focus) row marked. */
     .hd-ctx-wrap {
@@ -371,7 +382,7 @@ GLOBAL_CSS = """
     }
     .hd-ctx tbody tr:first-child td:first-child { box-shadow: inset 4px 0 0 #14B8A6; }
     .hd-ctx a { color: #5EEAD4; }
-
+ 
     /* Pre-project box (Downloads) */
     .hd-preproj {
         margin: 8px 0 10px 0; padding: 14px 18px; border-radius: 10px;
@@ -386,20 +397,20 @@ GLOBAL_CSS = """
     }
     </style>
 """
-
-
+ 
+ 
 st.markdown(GLOBAL_CSS, unsafe_allow_html=True)
-
+ 
 # ========================= COLOR HELPERS =========================
 def _hex_to_rgb(h):
     h = h.lstrip("#")
     return tuple(int(h[i:i + 2], 16) for i in (0, 2, 4))
-
-
+ 
+ 
 def _rgb_to_hex(rgb):
     return "#{:02x}{:02x}{:02x}".format(*rgb)
-
-
+ 
+ 
 def _shade(hex_color: str, amount: float) -> str:
     """amount > 0 lightens toward white; amount < 0 darkens toward deep navy."""
     rgb = _hex_to_rgb(hex_color)
@@ -407,8 +418,8 @@ def _shade(hex_color: str, amount: float) -> str:
     factor = abs(amount)
     blended = tuple(int(c + (t - c) * factor) for c, t in zip(rgb, target))
     return _rgb_to_hex(blended)
-
-
+ 
+ 
 def blue_scale(t: float) -> str:
     """Interpolates from deep navy (t=0, first step) to the project's teal
     accent (t=1, last step) — the same blue-to-teal family used across the
@@ -416,8 +427,8 @@ def blue_scale(t: float) -> str:
     ever turns near-white and breaks the dark theme."""
     start, end = _hex_to_rgb("#063E39"), _hex_to_rgb("#14B8A6")
     return _rgb_to_hex(tuple(int(a + (b - a) * t) for a, b in zip(start, end)))
-
-
+ 
+ 
 # ---- Standardized "Blues" gradient (single source of truth) -----------
 # This is the exact matplotlib "Blues" colormap used by the About tab's
 # "Top 10 Cities" table (the look the team wants everywhere): light blue
@@ -430,8 +441,8 @@ def blue_scale(t: float) -> str:
 # pandas' own per-column .background_gradient() elsewhere, each with a
 # different curve and no guaranteed readable text color).
 _TEAL_SCALE = None
-
-
+ 
+ 
 def blues_scale(frac: float) -> str:
     """Returns a hex color from the project's TEAL ramp for a 0..1 fraction
     (name kept for backward compatibility: every table, card, bar chart and
@@ -447,8 +458,8 @@ def blues_scale(frac: float) -> str:
     frac = max(0.0, min(1.0, frac))
     rgba = _TEAL_SCALE(frac)
     return "#{:02x}{:02x}{:02x}".format(*(int(c * 255) for c in rgba[:3]))
-
-
+ 
+ 
 def style_rows_by_rank(obj):
     """Paints every row of an already-sorted, best-first table with the
     standardized Blues gradient (same technique as the Top 10 Cities
@@ -463,16 +474,16 @@ def style_rows_by_rank(obj):
     df = obj.data if is_styler else obj
     styler = obj if is_styler else obj.style
     n = len(df)
-
+ 
     def _row_style(row):
         pos = df.index.get_loc(row.name)
         frac = 1 - pos / max(n - 1, 1)
         bg = blues_scale(frac)
         return [f"background-color:{bg}; color:{readable_text_color(bg)};"] * len(row)
-
+ 
     return styler.apply(_row_style, axis=1)
-
-
+ 
+ 
 def style_rows_by_value(obj, value_col: str, higher_is_darker: bool = True):
     """Paints every row of a table with the standardized Blues gradient,
     scaled by an actual metric column (value_col) rather than row
@@ -485,17 +496,17 @@ def style_rows_by_value(obj, value_col: str, higher_is_darker: bool = True):
     styler = obj if is_styler else obj.style
     vmin, vmax = df[value_col].min(), df[value_col].max()
     span = (vmax - vmin) or 1.0
-
+ 
     def _row_style(row):
         frac = (row[value_col] - vmin) / span
         if not higher_is_darker:
             frac = 1 - frac
         bg = blues_scale(frac)
         return [f"background-color:{bg}; color:{readable_text_color(bg)};"] * len(row)
-
+ 
     return styler.apply(_row_style, axis=1)
-
-
+ 
+ 
 def style_rows_by_cycle(obj, cycle: int = 10):
     """Paints rows with the same standardized Blues gradient as
     style_rows_by_rank, but restarts the scale every `cycle` rows instead
@@ -507,16 +518,16 @@ def style_rows_by_cycle(obj, cycle: int = 10):
     is_styler = hasattr(obj, "data")
     df = obj.data if is_styler else obj
     styler = obj if is_styler else obj.style
-
+ 
     def _row_style(row):
         pos = df.index.get_loc(row.name) % cycle
         frac = 1 - pos / max(cycle - 1, 1)
         bg = blues_scale(frac)
         return [f"background-color:{bg}; color:{readable_text_color(bg)};"] * len(row)
-
+ 
     return styler.apply(_row_style, axis=1)
-
-
+ 
+ 
 # ========================= MAP TILE PROVIDERS =========================
 # Using explicit URL templates (instead of Folium's built-in preset strings
 # like "CartoDB dark_matter") because Folium ignores the custom `name=` we
@@ -547,15 +558,15 @@ OSM_MAX_ZOOM = 19
 # Applied via a scoped <style> (per Folium map container id) rather than a
 # global rule, so it only affects the specific map it's added to.
 OSM_DARK_FILTER_CSS = "invert(1) hue-rotate(180deg) brightness(0.95) contrast(0.9) saturate(0.85)"
-
-
+ 
+ 
 def add_osm_tile_layer(fmap: "folium.Map", dark_mode: bool, name: str | None = None,
                         control: bool = True, container_id: str | None = None) -> None:
     """Adds the OpenStreetMap base layer to `fmap` and, if dark_mode, injects
     a CSS filter scoped to that map's own container so only its tile pane is
     inverted — other maps on the same page and this map's own markers/popups
     are unaffected.
-
+ 
     `container_id`: which DOM id to scope the filter to. Matters because the
     two ways this app renders a folium.Map end up with DIFFERENT real ids:
       - st_folium(fmap, ...) (the main Maps-tab map): confirmed directly in
@@ -579,11 +590,11 @@ def add_osm_tile_layer(fmap: "folium.Map", dark_mode: bool, name: str | None = N
             f"<style>#{scope_id} .leaflet-tile-pane "
             f"{{ filter: {OSM_DARK_FILTER_CSS}; }}</style>"
         ))
-
-
-
-
-
+ 
+ 
+ 
+ 
+ 
 def _force_leaflet_resize(fmap: folium.Map) -> None:
     """Leaflet maps rendered inside a container that isn't fully laid out yet
     (e.g. below a heavier component that's still mounting, like the main map
@@ -609,8 +620,8 @@ def _force_leaflet_resize(fmap: folium.Map) -> None:
     }})();
     </script>
     """))
-
-
+ 
+ 
 def _force_leaflet_fit_bounds(fmap: folium.Map, bounds: list) -> None:
     """Folium's fit_bounds() bakes a `.fitBounds(...)` call directly into the
     map's init-time script, which runs the instant the Leaflet map object is
@@ -644,8 +655,8 @@ def _force_leaflet_fit_bounds(fmap: folium.Map, bounds: list) -> None:
     }})();
     </script>
     """))
-
-
+ 
+ 
 # ========================= GLOBE → ZOOM → MAP INTRO =========================
 # Each of the 3 Folium maps (helipad map, density map, live traffic) can open
 # with a 3D globe that spins to São Paulo and dives in, then is REPLACED by the
@@ -666,8 +677,8 @@ GLOBE_INTRO_JS_PATH = next(
     Path("assets/globe_intro.js"),
 )
 GLOBE_TARGET = (-23.5505, -46.6333)  # São Paulo
-
-
+ 
+ 
 @st.cache_data(show_spinner=False)
 def _read_globe_intro_js(path_str: str, mtime: float) -> str:
     # `mtime` is part of the cache key, so replacing assets/globe_intro.js is picked up
@@ -676,15 +687,15 @@ def _read_globe_intro_js(path_str: str, mtime: float) -> str:
         return Path(path_str).read_text(encoding="utf-8")
     except OSError:
         return ""
-
-
+ 
+ 
 def _load_globe_intro_js() -> str:
     try:
         return _read_globe_intro_js(str(GLOBE_INTRO_JS_PATH), GLOBE_INTRO_JS_PATH.stat().st_mtime)
     except OSError:
         return ""
-
-
+ 
+ 
 def _clean_globe_points(rows, limit: int = 600) -> list:
     out = []
     for row in rows:
@@ -698,23 +709,23 @@ def _clean_globe_points(rows, limit: int = 600) -> list:
         if len(out) >= limit:
             break
     return out
-
-
+ 
+ 
 from branca.element import MacroElement as _MacroElement
 from jinja2 import Template as _JinjaTemplate
-
-
+ 
+ 
 class _GlobeIntroScript(_MacroElement):
     """Carries a block of JS into the map's <script> section (see add_globe_intro).
     The code must not contain Jinja delimiters ({{ {% {#) — globe_intro.js and the JSON config don't."""
     _template = _JinjaTemplate("{% macro script(this, kwargs) %}{{ this.code }}{% endmacro %}")
-
+ 
     def __init__(self, code: str):
         super().__init__()
         self._name = "GlobeIntroScript"
         self.code = code
-
-
+ 
+ 
 def add_globe_intro(fmap: "folium.Map", map_id: str, *, points=None, caption: str = "") -> None:
     """Embeds the globe intro overlay into `fmap`'s HTML. Call it right before
     st_folium(fmap, ...) / components.html(fmap.get_root().render(), ...).
@@ -778,8 +789,8 @@ def add_globe_intro(fmap: "folium.Map", map_id: str, *, points=None, caption: st
             ))
     except Exception as exc:  # the intro is decoration: never take the map down with it
         print(f"[globe intro] skipped for {map_id!r}: {exc}")
-
-
+ 
+ 
 # ========================= INFERENCE DEMO VIDEOS (selector) =========================
 # ONE player + a selector, instead of 4 stacked players. Source order per demo:
 # local file demo/🎥 Demo N — …mp4 (matched by prefix, so the long title can change)
@@ -789,8 +800,8 @@ DEMO_VIDEO_URLS: dict = {  # paste the URL after uploading, e.g. "exp1": "https:
     "exp1": "", "exp2": "", "exp3": "", "exp4": "",
 }
 DEMO_VIDEOS = [("exp1", 1), ("exp2", 2), ("exp3", 3), ("exp4", 4)]
-
-
+ 
+ 
 def _demo_video_source(exp: str, n: int):
     try:
         for f in sorted(DEMO_VIDEO_DIR.glob(f"🎥 Demo {n} —*.mp4")):
@@ -798,8 +809,8 @@ def _demo_video_source(exp: str, n: int):
     except OSError:
         pass
     return DEMO_VIDEO_URLS.get(exp) or None
-
-
+ 
+ 
 def render_inference_demos(expanded: bool = False, default: str = "exp1") -> None:
     with st.expander(t("demos.inf.expander_label"), expanded=expanded):
         labels = {exp: f"Demo {n} · {exp}" for exp, n in DEMO_VIDEOS}
@@ -812,8 +823,8 @@ def render_inference_demos(expanded: bool = False, default: str = "exp1") -> Non
             st.video(src, muted=True)
         else:
             _info(t("demos.inf.missing"))
-
-
+ 
+ 
 PRESENTATION_PPTX_EN_URL = "https://github.com/Mindful-AI-Research/3-project-ai-ml-yolo-helipad_detector/blob/9c10a1d52ab56948a2cc4f8cf8e6c874219aae39/presentations/Helipad_Detector_Presentation_EN.pptx"
 PRESENTATION_PPTX_PT_URL = "https://github.com/Mindful-AI-Research/3-project-ai-ml-yolo-helipad_detector/blob/9c10a1d52ab56948a2cc4f8cf8e6c874219aae39/presentations/Helipad_Detector_Apresentacao_PT-BR.pptx"
 PRESENTATION_HTML_URL = "https://mindful-ai-research.github.io/3-project-ai-ml-yolo-helipad_detector/"
@@ -825,8 +836,8 @@ _PREPROJECT_BASE = (
 )
 PREPROJECT_PDF_PT_URL = _PREPROJECT_BASE + "fabiana-campaner_pre-projeto_avaliacao-detectores-visuais-sem-verdade-de-campo_ATUALIZADO.pdf"
 PREPROJECT_PDF_EN_URL = _PREPROJECT_BASE + "fabiana-campaner_research-proposal_evaluating-visual-detectors-without-ground-truth_UPDATED.pdf"
-
-
+ 
+ 
 # ========================= AUTOMATIC MODEL DISCOVERY =========================
 # Instead of hardcoding "exp1"/"exp2" in the code, the app scans the runs folder
 # and lists any experiment that has a ready best.pt. This way, running a new
@@ -842,8 +853,8 @@ EXEC_REPORT_EN = Path("reports/helipad_detector_full_report/🇬🇧Helipad_Dete
 EXEC_REPORT_PT = Path("reports/helipad_detector_full_report/🇧🇷Helipad_Detector_Relatorio_Completo.pdf")
 DATASET_RAR = Path("data/raw/helipad_dataset.rar")
 KEPLER_HTML = Path("src/geospatial/keplergl_map_loaded.html")
-
-
+ 
+ 
 def _all_exp_dirs():
     """Yields experiment directories across all MODEL_ROOTS candidates,
     de-duplicated by experiment name (first root that has a given name wins)."""
@@ -855,8 +866,8 @@ def _all_exp_dirs():
             if exp_dir.is_dir() and exp_dir.name not in seen:
                 seen.add(exp_dir.name)
                 yield exp_dir
-
-
+ 
+ 
 def discover_models() -> dict[str, Path]:
     """Returns {friendly_label: path_to_best.pt} for each experiment found,
     across any of MODEL_ROOTS."""
@@ -866,13 +877,13 @@ def discover_models() -> dict[str, Path]:
         if weights.exists():
             found[f"{exp_dir.name} ({weights.stat().st_size // 1_000_000} MB)"] = weights
     return found
-
-
+ 
+ 
 @st.cache_resource(show_spinner="🚁 Loading YOLO weights and warming up the detector...")
 def load_model(model_path: str) -> YOLO:
     return YOLO(model_path)
-
-
+ 
+ 
 def _find_results_csv(exp_dir: Path) -> Path | None:
     """results.csv naming isn't consistent across experiment folders in this
     repo (e.g. exp1 uses 'exp1_results.csv' instead of 'results.csv') — check
@@ -887,8 +898,8 @@ def _find_results_csv(exp_dir: Path) -> Path | None:
     # last resort: any *_results.csv or results*.csv in the folder
     matches = list(exp_dir.glob("*results*.csv"))
     return matches[0] if matches else None
-
-
+ 
+ 
 @st.cache_data(show_spinner=False)
 def load_experiment_metrics() -> pd.DataFrame:
     """Scans every experiment folder (across MODEL_ROOTS) for results.csv and
@@ -914,10 +925,10 @@ def load_experiment_metrics() -> pd.DataFrame:
             })
         except Exception:
             continue
-
+ 
     return pd.DataFrame(rows)
-
-
+ 
+ 
 @st.cache_data(show_spinner=False)
 def load_experiment_curves() -> dict[str, pd.DataFrame]:
     """Returns {experiment_name: full results.csv as DataFrame} for the
@@ -934,8 +945,8 @@ def load_experiment_curves() -> dict[str, pd.DataFrame]:
         except Exception:
             continue
     return curves
-
-
+ 
+ 
 _DMS_NUM = r"[-+]?\d+(?:\.\d+)?"
 # Triple-single-quoted (not triple-double-quoted) on purpose: this pattern's character
 # class matches a literal ASCII double-quote ["”″], and mixing that with a """-delimited
@@ -954,15 +965,15 @@ _DMS_COORD_RE = re.compile(
     ''',
     re.VERBOSE,
 )
-
-
+ 
+ 
 def _dms_to_dd(graus: float, minutos: float, segundos: float, direcao: str = "") -> float:
     dd = abs(graus) + minutos / 60 + segundos / 3600
     if direcao.upper() in ("S", "W") or graus < 0:
         dd = -dd
     return dd
-
-
+ 
+ 
 def _parse_dms_point(texto: str):
     """Same DMS-pair regex/logic as src/geospatial/transform_coordinates.py's
     parse_dms_pair, reused here as a fallback for rows that were scraped by
@@ -984,13 +995,13 @@ def _parse_dms_point(texto: str):
     if len(coords) < 2:
         return None, None
     return coords[0], coords[1]  # lat, lon
-
-
+ 
+ 
 @st.cache_data(show_spinner=False)
 def load_helipad_locations(csv_path: Path = COORDS_CSV) -> pd.DataFrame:
     """Reads a helipad-coordinates CSV (same schema as helipad_coordinates_bbox.csv)
     and computes the center point (lat, lon) of each bounding box, for the map view.
-
+ 
     Some rows in this CSV are the direct output of helipad_bot.py's scraper
     but were never run through transform_coordinates.py's DMS-to-decimal
     conversion (or that step failed silently for them), so they're still raw
@@ -1005,7 +1016,7 @@ def load_helipad_locations(csv_path: Path = COORDS_CSV) -> pd.DataFrame:
     """
     if not csv_path.exists():
         return pd.DataFrame()
-
+ 
     def parse_center(raw: str):
         parts = str(raw).replace(",", " ").split()
         try:
@@ -1014,21 +1025,21 @@ def load_helipad_locations(csv_path: Path = COORDS_CSV) -> pd.DataFrame:
         except Exception:
             pass
         return _parse_dms_point(raw)
-
+ 
     try:
         df = pd.read_csv(csv_path)
     except Exception:
         return pd.DataFrame()
-
+ 
     if "Coordenadas da Bounding Box" not in df.columns:
         return pd.DataFrame()
-
+ 
     centers = df["Coordenadas da Bounding Box"].apply(parse_center)
     df["lat"] = centers.apply(lambda t: t[0])
     df["lon"] = centers.apply(lambda t: t[1])
     return df.dropna(subset=["lat", "lon"])
-
-
+ 
+ 
 @st.cache_data(show_spinner=False)
 def load_discovery_dataset_stats(csv_path: Path = COORDS_CSV) -> dict | None:
     """Quick coverage summary of the national helipad-discovery dataset
@@ -1052,7 +1063,7 @@ def load_discovery_dataset_stats(csv_path: Path = COORDS_CSV) -> dict | None:
         "by_state": None,
         "points_table": None,
     }
-
+ 
     ts_col = "Carimbo de data/hora" if "Carimbo de data/hora" in df.columns else None
     points_df = pd.DataFrame({
         "Nome do Bairro": df[bairro_col] if bairro_col else [""] * len(df),
@@ -1062,7 +1073,7 @@ def load_discovery_dataset_stats(csv_path: Path = COORDS_CSV) -> dict | None:
         points_df["Coletado em"] = pd.to_datetime(
             df[ts_col], format="%d/%m/%Y %H:%M:%S", errors="coerce"
         ).dt.strftime("%d/%m/%Y")
-
+ 
     by_state_path = csv_path.parent / "helipad_coordinates_com_estado.csv"
     if by_state_path.exists():
         try:
@@ -1079,11 +1090,11 @@ def load_discovery_dataset_stats(csv_path: Path = COORDS_CSV) -> dict | None:
                     points_df["Estado"] = state_df["Estado"].fillna("(desconhecido)").values
         except Exception:
             pass  # malformed/partial CSV — fall back to the pending caption, don't crash the tab
-
+ 
     stats["points_table"] = points_df
     return stats
-
-
+ 
+ 
 def build_session_summary_pdf(metrics_df: pd.DataFrame, selected_model, conf_threshold, lang: str) -> bytes:
     """One-page PDF snapshot of the current dashboard session — active
     model, confidence threshold, the full experiment comparison table, and
@@ -1095,7 +1106,7 @@ def build_session_summary_pdf(metrics_df: pd.DataFrame, selected_model, conf_thr
     from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
     from reportlab.lib import colors
     from reportlab.lib.units import cm
-
+ 
     buf = io.BytesIO()
     doc = SimpleDocTemplate(buf, pagesize=letter, topMargin=2 * cm, bottomMargin=2 * cm)
     styles = getSampleStyleSheet()
@@ -1103,17 +1114,17 @@ def build_session_summary_pdf(metrics_df: pd.DataFrame, selected_model, conf_thr
     h2_style = ParagraphStyle("HeliH2", parent=styles["Heading2"], textColor=colors.HexColor("#0E756D"),
                                spaceBefore=14, spaceAfter=6)
     body_style = styles["Normal"]
-
+ 
     is_pt = lang == "pt"
     story = []
-
+ 
     story.append(Paragraph("🚁 Helipad Detector", title_style))
     story.append(Paragraph(
         "Session summary — Helipad Detector dashboard" if not is_pt else "Resumo de sessão — dashboard Helipad Detector",
         styles["Heading3"]))
     story.append(Paragraph(datetime.now().strftime("%Y-%m-%d %H:%M"), body_style))
     story.append(Spacer(1, 14))
-
+ 
     story.append(Paragraph("Active configuration" if not is_pt else "Configuração ativa", h2_style))
     config_rows = [
         ["Model" if not is_pt else "Modelo", str(selected_model) if selected_model else "—"],
@@ -1128,7 +1139,7 @@ def build_session_summary_pdf(metrics_df: pd.DataFrame, selected_model, conf_thr
         ("LINEBELOW", (0, 0), (-1, -1), 0.5, colors.HexColor("#E2E8F0")),
     ]))
     story.append(config_table)
-
+ 
     if not metrics_df.empty:
         story.append(Paragraph("Experiments" if not is_pt else "Experimentos", h2_style))
         cols = ["Experiment", "Best Epoch", "Total Epochs", "Precision", "Recall", "mAP@50", "mAP@50-95"]
@@ -1143,7 +1154,7 @@ def build_session_summary_pdf(metrics_df: pd.DataFrame, selected_model, conf_thr
             ("ALIGN", (1, 0), (-1, -1), "CENTER"),
         ]))
         story.append(exp_table)
-
+ 
     field_summary = load_field_detection_summary()
     if field_summary:
         story.append(Paragraph("Field validation" if not is_pt else "Validação de campo", h2_style))
@@ -1158,32 +1169,32 @@ def build_session_summary_pdf(metrics_df: pd.DataFrame, selected_model, conf_thr
                 body_style))
         except Exception:
             pass
-
+ 
     story.append(Spacer(1, 20))
     story.append(Paragraph(
         "Generated from the Helipad Detector Streamlit dashboard — PUC-SP FACEI, Machine Learning / Computer Vision, Project P2."
         if not is_pt else
         "Gerado a partir do dashboard Streamlit do Helipad Detector — PUC-SP FACEI, Machine Learning / Visão Computacional, Projeto P2.",
         ParagraphStyle("Footer", parent=body_style, fontSize=8, textColor=colors.HexColor("#64748B"))))
-
+ 
     doc.build(story)
     return buf.getvalue()
-
-
+ 
+ 
 def get_selected_model():
     if not MODEL_OPTIONS:
         return None
     label = st.session_state.get("model_choice") or next(iter(MODEL_OPTIONS))
     return load_model(str(MODEL_OPTIONS[label]))
-
-
+ 
+ 
 def slugify_region(name: str) -> str:
     """Matches the slug format used by src/geospatial/download_all_regions.py
     and auto_triage_regions.py, so map markers can be joined with the
     per-region detection summary by name."""
     return str(name).strip().replace(" ", "_").replace("/", "-").replace("(", "").replace(")", "")
-
-
+ 
+ 
 # Approximate coordinates of the capital of each state helipad_bot.py is
 # configured to search (see DEFAULT_ESTADOS in src/geospatial/helipad_bot.py),
 # used only to add a city hint to Discovery Dataset marker labels. A bairro
@@ -1211,8 +1222,8 @@ BRAZIL_STATE_CAPITALS = {
     "Campo Grande": (-20.4697, -54.6201),
 }
 CITY_HINT_RADIUS_DEG = 0.6  # ~65 km — the city + close metro area, not the whole state
-
-
+ 
+ 
 def city_hint(lat: float, lon: float) -> str | None:
     """Nearest state capital within CITY_HINT_RADIUS_DEG, or None if the
     point is too far from any of them to guess responsibly."""
@@ -1222,8 +1233,8 @@ def city_hint(lat: float, lon: float) -> str | None:
         if dist < best_dist:
             best_city, best_dist = city, dist
     return best_city
-
-
+ 
+ 
 @st.cache_data(show_spinner=False)
 def load_state_lookup(csv_path: Path = COORDS_CSV) -> dict:
     """Reads src/geospatial/helipad_coordinates_com_estado.csv (produced by
@@ -1245,8 +1256,8 @@ def load_state_lookup(csv_path: Path = COORDS_CSV) -> dict:
         return dict(zip(df["Coordenadas da Bounding Box"], df["Estado"]))
     except Exception:
         return {}
-
-
+ 
+ 
 def location_hint(lat: float, lon: float, raw_bbox: str, state_lookup: dict) -> str | None:
     """Best available human-readable hint for a Discovery Dataset point:
     nearest state capital if close enough (city_hint), otherwise the real
@@ -1257,15 +1268,15 @@ def location_hint(lat: float, lon: float, raw_bbox: str, state_lookup: dict) -> 
         return hint
     state = state_lookup.get(raw_bbox)
     return state if isinstance(state, str) and state.strip() else None
-
-
+ 
+ 
 # Region names that need a specific English translation, not just a literal
 # word swap (display-only — source CSV/folder names are untouched).
 REGION_NAME_TRANSLATIONS = {
     "inter zonas": "Inter-Zone Corridor",
 }
-
-
+ 
+ 
 def format_region_display(name: str) -> str:
     """Human-friendly display name for a region, regardless of whether it
     comes from a raw CSV name (e.g. 'Av_Paulista (trecho 1)') or a JSON
@@ -1278,8 +1289,8 @@ def format_region_display(name: str) -> str:
     display = re.sub(r"\s+", " ", display).strip()
     translated = REGION_NAME_TRANSLATIONS.get(display.lower())
     return translated if translated else display
-
-
+ 
+ 
 def detection_rate_to_color(rate: float, min_rate: float, max_rate: float) -> str:
     """Maps a detection rate to a hex color on a light-to-dark blue scale,
     matching the same Blues gradient used in the Experiment/Field tables."""
@@ -1289,8 +1300,8 @@ def detection_rate_to_color(rate: float, min_rate: float, max_rate: float) -> st
         t = (rate - min_rate) / (max_rate - min_rate)
     t = max(0.0, min(1.0, t))
     return blues_scale(t)  # same teal ramp as every other table/card
-
-
+ 
+ 
 def readable_text_color(hex_color: str) -> str:
     """Black or white, whichever reads better on top of hex_color — used to
     keep the detection-rate tooltip's text legible across the full range of
@@ -1300,8 +1311,8 @@ def readable_text_color(hex_color: str) -> str:
     r, g, b = (int(hex_color[i:i + 2], 16) for i in (0, 2, 4))
     luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255
     return "#0a1f2b" if luminance > 0.45 else "#ffffff"
-
-
+ 
+ 
 def rate_popup_html(inner_html: str, bg_color: str, text_color: str) -> str:
     """Wraps popup content in a div that bleeds into Leaflet's default popup
     padding (negative margin) so the popup's visible content area reads as
@@ -1316,14 +1327,14 @@ def rate_popup_html(inner_html: str, bg_color: str, text_color: str) -> str:
         f'margin:-13px -20px; padding:12px 18px; border-radius:10px;">'
         f'{inner_html}</div>'
     )
-
-
+ 
+ 
 # ========================= FIELD DETECTIONS BY REGION (data) =========================
 # reports/detection_summary_by_region.json is generated by
 # src/geospatial/auto_triage_regions.py. Defined here (before it's first used
 # in the Map tab) so both the Map tab and the Field Detections tab can read it.
 FIELD_SUMMARY_PATH = Path("reports/detection_summary_by_region.json")
-
+ 
 # Per-experiment field-validation summaries — same JSON shape as
 # FIELD_SUMMARY_PATH above (that one is exp2, the model actually used for
 # the "main" Field Detections view). exp1/exp3 are optional: if their
@@ -1340,7 +1351,7 @@ FIELD_SUMMARY_PATHS_BY_EXP = {
 _EXP4_FIELD_PATH = Path("reports/detection_summary_by_region_exp4.json")
 if _EXP4_FIELD_PATH.exists():
     FIELD_SUMMARY_PATHS_BY_EXP["exp4"] = _EXP4_FIELD_PATH
-
+ 
 # exp1, exp3 and exp4 were all field-validated on an identical 7,767-tile set.
 # exp2's ORIGINAL production run (FIELD_SUMMARY_PATH, used by the cards/chart
 # above) covered a slightly larger 7,943-tile set instead (Faria Lima and the
@@ -1354,8 +1365,8 @@ if _EXP4_FIELD_PATH.exists():
 _EXP2_RERUN_FIELD_PATH = Path("reports/detection_summary_by_region_exp2_rerun.json")
 if _EXP2_RERUN_FIELD_PATH.exists():
     FIELD_SUMMARY_PATHS_BY_EXP["exp2"] = _EXP2_RERUN_FIELD_PATH
-
-
+ 
+ 
 @st.cache_data(show_spinner=False)
 def load_field_detection_summary():
     if not FIELD_SUMMARY_PATH.exists():
@@ -1365,8 +1376,8 @@ def load_field_detection_summary():
             return json.load(f)
     except Exception:
         return None
-
-
+ 
+ 
 @st.cache_data(show_spinner=False)
 def load_field_summaries_by_exp() -> dict:
     """{exp_name: parsed_json} for every experiment whose field-validation
@@ -1381,23 +1392,23 @@ def load_field_summaries_by_exp() -> dict:
             except Exception:
                 pass
     return out
-
-
+ 
+ 
 MODEL_OPTIONS = discover_models()
-
+ 
 # {exp_dir.name: weights_path} — used to build "view architecture in
 # Netron" links per experiment (Netron reads the file straight from its
 # raw GitHub URL, no upload needed).
 MODEL_WEIGHTS_BY_EXP = {exp_dir.name: (exp_dir / "weights" / "best.pt")
                          for exp_dir in _all_exp_dirs()
                          if (exp_dir / "weights" / "best.pt").exists()}
-
+ 
 GITHUB_REPO_RAW_BASE = (
     "https://raw.githubusercontent.com/"
     "Mindful-AI-Research/3-project-ai-ml-yolo-helipad_detector/main"
 )
-
-
+ 
+ 
 def netron_url_for(exp_name: str) -> str | None:
     """Netron.app link that auto-loads a given experiment's best.pt
     straight from its raw GitHub URL — no manual upload needed. Returns
@@ -1408,7 +1419,7 @@ def netron_url_for(exp_name: str) -> str | None:
         return None
     raw_url = f"{GITHUB_REPO_RAW_BASE}/{weights_path.as_posix()}"
     return f"https://netron.app/?url={raw_url}"
-
+ 
 # ========================= LIVE HELICOPTER TRAFFIC (adsb.fi) =========================
 # Extra map layer, added on course feedback: overlays real-time ADS-B-derived aircraft
 # positions over the static helipad map, so the dashboard also shows actual air
@@ -1447,7 +1458,7 @@ ADSBFI_HEADERS = {"User-Agent": "HelipadDetector-Dashboard/1.0 (+https://github.
 ADSBFI_TIMEOUT = (5, 12)  # (connect, read) seconds
 ADSBFI_MAX_ATTEMPTS = 2   # one retry on transient connect/read failures before giving up
 MAX_FLIGHT_TRAIL_POINTS = 20  # per aircraft, session-local only — see map.flights_trail_note
-
+ 
 # ICAO type-designator codes for rotorcraft actually in civil/EMS/executive service —
 # adapted from the equivalent table in github.com/simplifaisoul/osiris (MIT-licensed),
 # trimmed to models plausible over São Paulo. Not exhaustive: any type absent from this
@@ -1462,7 +1473,7 @@ HELICOPTER_TYPE_CODES = {
     "A109", "A119", "A139", "A169", "A189", "AW09",
     "MD52", "MD60", "MDHI", "MD90", "NOTR",
 }
-
+ 
 # Fallback for the contacts adsb.fi reports with no type code at all: a short, NOT
 # exhaustive list of ICAO 3-letter callsign prefixes for major airlines serving Greater
 # São Paulo's airports (Congonhas/Guarulhos/Viracopos). Any callsign starting with one
@@ -1477,8 +1488,8 @@ KNOWN_AIRLINE_CALLSIGN_PREFIXES = {
     "AZA", "SWR", "AUA", "SAS", "FIN", "ANA", "JAL", "UAE", "QTR", "ETD",
     "THY", "ACA", "AMX", "AVT", "ABD", "GAI", "MPX",
 }
-
-
+ 
+ 
 def classify_possible_helicopter(callsign: str, type_code: str) -> str | None:
     """Returns "confirmed" if adsb.fi reports a type code found in
     HELICOPTER_TYPE_CODES, "heuristic" if there's no usable type code but the
@@ -1494,8 +1505,8 @@ def classify_possible_helicopter(callsign: str, type_code: str) -> str | None:
     if prefix3 in KNOWN_AIRLINE_CALLSIGN_PREFIXES or prefix2 in KNOWN_AIRLINE_CALLSIGN_PREFIXES:
         return None
     return "heuristic"
-
-
+ 
+ 
 @st.cache_data(ttl=30, show_spinner=False)
 def fetch_live_helicopter_flights(_unused_bbox=None) -> tuple[list[dict], str | None]:
     """Queries adsb.fi's public v2 REST API for aircraft currently within
@@ -1505,15 +1516,15 @@ def fetch_live_helicopter_flights(_unused_bbox=None) -> tuple[list[dict], str | 
     provider outage degrades this layer gracefully (empty list + short error
     string) instead of crashing the tab. Cached for 30s so normal Streamlit
     reruns don't hammer the provider.
-
+ 
     `_unused_bbox` is accepted and ignored so the call site (and its cache
     key) didn't need to change when this function moved from OpenSky's
     lat/lon-bbox query shape to adsb.fi's center+radius shape.
-
+ 
     Retries once on connection/timeout errors (covers most transient network
     blips) before reporting the failure; does not retry on HTTP error status
     codes, since those won't resolve by repeating the same request immediately.
-
+ 
     (Osiris credit for the adsb.fi choice and the type-code classification
     approach lives in the module-level comments right above SP_LAT/SP_LON and
     HELICOPTER_TYPE_CODES, not repeated here.)
@@ -1534,10 +1545,10 @@ def fetch_live_helicopter_flights(_unused_bbox=None) -> tuple[list[dict], str | 
             continue
         except ValueError:
             return [], "invalid (non-JSON) response"
-
+ 
     if payload is None:
         return [], last_error or "unknown error"
-
+ 
     aircraft = payload.get("aircraft") or []
     flights = []
     for ac in aircraft:
@@ -1548,13 +1559,13 @@ def fetch_live_helicopter_flights(_unused_bbox=None) -> tuple[list[dict], str | 
         on_ground = alt_baro == "ground" or (isinstance(alt_baro, (int, float)) and alt_baro < 100)
         if on_ground:
             continue
-
+ 
         callsign = (ac.get("flight") or "").strip()
         type_code = ac.get("t") or ""
         confidence = classify_possible_helicopter(callsign, type_code)
         if confidence is None:
             continue
-
+ 
         flights.append({
             "icao24": ac.get("hex", ""),
             "callsign": callsign or ac.get("hex", "—"),
@@ -1569,8 +1580,8 @@ def fetch_live_helicopter_flights(_unused_bbox=None) -> tuple[list[dict], str | 
             "confidence": confidence,  # "confirmed" | "heuristic"
         })
     return flights, None
-
-
+ 
+ 
 def update_flight_trails(flights: list[dict]) -> None:
     """Appends this poll's positions to a per-aircraft trail kept in
     st.session_state, capped at MAX_FLIGHT_TRAIL_POINTS. Session-local,
@@ -1584,8 +1595,8 @@ def update_flight_trails(flights: list[dict]) -> None:
             trail.append(point)
         if len(trail) > MAX_FLIGHT_TRAIL_POINTS:
             del trail[: len(trail) - MAX_FLIGHT_TRAIL_POINTS]
-
-
+ 
+ 
 # ========================= BACKGROUND MUSIC (sidebar widget) =========================
 # Track: "Passacaglia – Deep House Remix" — used here for educational /
 # academic-presentation purposes. Embedded as base64 so no separate static
@@ -1593,26 +1604,26 @@ def update_flight_trails(flights: list[dict]) -> None:
 # autoplays audio (browsers block that anyway) — it always waits for the
 # person to click the 🔇/🔊 icon below, which starts fully muted/paused.
 AUDIO_PATH = Path("assets/audio/passacaglia-deep-house-remix.mp3")
-
-
+ 
+ 
 @st.cache_data(show_spinner=False)
 def _load_audio_base64(path: str):
     p = Path(path)
     if not p.exists():
         return None
     return base64.b64encode(p.read_bytes()).decode("ascii")
-
-
+ 
+ 
 def render_music_toggle():
     audio_b64 = _load_audio_base64(str(AUDIO_PATH))
     st.markdown(f"### {t('sidebar.music.title')}")
     if not audio_b64:
         st.caption(t("sidebar.music.missing"))
         return
-
+ 
     label_play = t("sidebar.music.play")
     label_pause = t("sidebar.music.pause")
-
+ 
     _html_iframe(f"""
     <button id="music-toggle-btn" title="{label_play}" style="
       width:100%; display:flex; align-items:center; justify-content:center; gap:10px;
@@ -1640,7 +1651,7 @@ def render_music_toggle():
       const audio = document.getElementById('bg-music');
       audio.volume = 0.35;
       let playing = false;
-
+ 
       function start() {{
         if (playing) return;
         audio.muted = false;
@@ -1660,9 +1671,9 @@ def render_music_toggle():
         label.textContent = '{label_play}';
         btn.classList.remove('playing');
       }}
-
+ 
       btn.addEventListener('click', () => {{ playing ? stop() : start(); }});
-
+ 
       /* Auto-start on the very first interaction anywhere in the dashboard
          (click, tap, or key press) — not just a click on this button.
          The <audio> tag itself is muted/paused until then, so this never
@@ -1688,7 +1699,7 @@ def render_music_toggle():
       }} catch (e) {{ /* cross-origin iframe — fallback: only the button click above starts the music */ }}
     </script>
     """, height=64)
-
+ 
     # Download lives right next to the player — one contextual music
     # experience in the sidebar (play + download together), instead of
     # a separate, disconnected download link buried in another tab.
@@ -1706,8 +1717,8 @@ def render_music_toggle():
                 mime="audio/mpeg",
                 width="stretch",
             )
-
-
+ 
+ 
 # ========================= SIDEBAR: LANGUAGE + MODEL SELECTION =========================
 with st.sidebar:
     lang_choice = st.radio(
@@ -1719,12 +1730,12 @@ with st.sidebar:
         key="lang_radio",
     )
     st.session_state["lang"] = "en" if lang_choice.startswith("🇬🇧") else "pt"
-
+ 
     render_music_toggle()
-
+ 
     if "heli_paused" not in st.session_state:
         st.session_state["heli_paused"] = False
-
+ 
     with st.expander(t("sidebar.extras"), expanded=False):
         heli_col1, heli_col2 = st.columns(2)
         with heli_col1:
@@ -1736,13 +1747,13 @@ with st.sidebar:
             if st.button("🌀 " + t("sidebar.spin_heli"), width="stretch"):
                 st.session_state["heli_spin_nonce"] += 1
                 st.rerun()
-
+ 
         pause_label = t("sidebar.resume_heli") if st.session_state["heli_paused"] else t("sidebar.pause_heli")
         pause_icon = "▶️" if st.session_state["heli_paused"] else "⏸️"
         if st.button(f"{pause_icon} {pause_label}", width="stretch"):
             st.session_state["heli_paused"] = not st.session_state["heli_paused"]
             st.rerun()
-
+ 
     st.markdown(f"### {t('sidebar.model')}")
     if not MODEL_OPTIONS:
         st.warning(t("sidebar.no_model.warning"))
@@ -1758,7 +1769,7 @@ with st.sidebar:
         conf_threshold = st.slider(
             t("sidebar.confidence"), min_value=0.05, max_value=0.95, value=0.25, step=0.05
         )
-
+ 
 # ========================= TILE HELPERS =========================
 def deg2tile(lat, lon, z):
     n = 2.0 ** z
@@ -1766,15 +1777,15 @@ def deg2tile(lat, lon, z):
     lat_rad = math.radians(lat)
     y = int((1.0 - math.asinh(math.tan(lat_rad)) / math.pi) / 2.0 * n)
     return x, y
-
+ 
 def download_tile(z, x, y, temp_dir):
     url = f"https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
     headers = {"User-Agent": "Helipad-Detector-PUC-SP/1.0"}
     path = temp_dir / f"tile_z{z}_x{x}_y{y}.jpg"
-
+ 
     if path.exists():
         return path
-
+ 
     try:
         r = requests.get(url, headers=headers, timeout=20)
         if r.status_code == 200 and len(r.content) > 2000:
@@ -1783,7 +1794,7 @@ def download_tile(z, x, y, temp_dir):
     except requests.RequestException:
         pass
     return None
-
+ 
 # ========================= DETECTION =========================
 def is_blank_tile(image: Image.Image, threshold: float = 5.0) -> bool:
     """Detecta tiles quase sem textura -- o sintoma classico de uma falha
@@ -1794,15 +1805,15 @@ def is_blank_tile(image: Image.Image, threshold: float = 5.0) -> bool:
     -- esta e a implementacao do filtro sugerido la."""
     arr = np.asarray(image.convert("L"))  # escala de cinza, mais rapido de medir
     return float(arr.std()) < threshold
-
-
+ 
+ 
 def detect_helipad(image, model: YOLO, conf: float):
     result = model.predict(source=image, conf=conf, verbose=False)[0]
     plotted = result.plot()[:, :, ::-1]  # BGR -> RGB
     return plotted, len(result.boxes) > 0
-
+ 
 # ========================= INTERFACE =========================
-
+ 
 # ---- Flying helicopter, present on every tab (self-contained iframe
 # injecting into the PARENT document) ----
 #
@@ -1826,12 +1837,12 @@ def detect_helipad(image, model: YOLO, conf: float):
 # counter-clockwise, or a double spin, chosen at random each time), so it
 # reads as a helicopter actually patrolling the dashboard rather than one
 # looping clip. See FLIGHTS/SPINS inside the injected script below.
-
+ 
 if "heli_replay_nonce" not in st.session_state:
     st.session_state["heli_replay_nonce"] = 0
 if "heli_spin_nonce" not in st.session_state:
     st.session_state["heli_spin_nonce"] = 0
-
+ 
 _html_iframe(f"""
 <script>
 (function() {{
@@ -1841,7 +1852,7 @@ _html_iframe(f"""
     var spinNonce = "{st.session_state['heli_spin_nonce']}";
     var isPt = "{st.session_state.get('lang', 'pt')}" === 'pt';
     var isPaused = {"true" if st.session_state.get("heli_paused") else "false"};
-
+ 
     if (!doc.getElementById('heli-flyby-style')) {{
       var style = doc.createElement('style');
       style.id = 'heli-flyby-style';
@@ -1919,7 +1930,7 @@ _html_iframe(f"""
       `;
       doc.head.appendChild(style);
     }}
-
+ 
     var heli = doc.getElementById('heli-flyby-global');
     if (!heli) {{
       heli = doc.createElement('div');
@@ -1929,7 +1940,7 @@ _html_iframe(f"""
       heli.dataset.lastSpinNonce = spinNonce; // don't spin on creation, only on an actual button click later
       doc.body.appendChild(heli);
     }}
-
+ 
     var toast = doc.getElementById('heli-tab-toast');
     if (!toast) {{
       toast = doc.createElement('div');
@@ -1944,7 +1955,7 @@ _html_iframe(f"""
       if (toastTimer) clearTimeout(toastTimer);
       toastTimer = setTimeout(function() {{ toast.classList.remove('show'); }}, 2000);
     }}
-
+ 
     var FLIGHTS = [
       {{ name: 'heli-fly-v0', duration: 7  }},
       {{ name: 'heli-fly-v1', duration: 11 }},
@@ -1953,7 +1964,7 @@ _html_iframe(f"""
     ];
     var SPINS = ['heli-spin-cw', 'heli-spin-ccw', 'heli-spin-double'];
     var currentFlightIdx = 0;
-
+ 
     function replayFlight(idx) {{
       if (typeof idx === 'number') currentFlightIdx = idx;
       var f = FLIGHTS[currentFlightIdx % FLIGHTS.length];
@@ -1962,7 +1973,7 @@ _html_iframe(f"""
       void heli.offsetWidth; // force reflow so the restart actually takes effect
       heli.style.animation = f.name + ' ' + f.duration + 's cubic-bezier(.45,.05,.55,.95) infinite alternate';
     }}
-
+ 
     function spinFlight() {{
       if (isPaused) return;
       var spinName = SPINS[Math.floor(Math.random() * SPINS.length)];
@@ -1974,13 +1985,13 @@ _html_iframe(f"""
       // resume the continuous flight loop once the spin finishes
       setTimeout(function() {{ replayFlight(); }}, 2300);
     }}
-
+ 
     // Applied on every run (cheap, idempotent) so the pause/resume button
     // takes effect immediately without needing its own nonce dance —
     // pausing freezes the animation exactly where it is via CSS
     // animation-play-state, rather than stopping/losing position.
     heli.style.animationPlayState = isPaused ? 'paused' : 'running';
-
+ 
     // First-ever mount: fly in once immediately, and keep flying forever
     // — every tab, no stopping — with an occasional smooth spin thrown in
     // automatically (not only from the sidebar button), like a helicopter
@@ -2006,7 +2017,7 @@ _html_iframe(f"""
         spinFlight();
       }}
     }}
-
+ 
     if (!doc.body.dataset.heliListenerAttached) {{
       doc.body.dataset.heliListenerAttached = '1';
       // Thematic mapping by tab position (About, Metrics, Field, Map,
@@ -2031,8 +2042,8 @@ _html_iframe(f"""
 }})();
 </script>
 """, height=1)
-
-
+ 
+ 
 # ---- Ambient starfield background, behind every tab (parent-document
 # injection, same technique as the helicopter above) ----
 #
@@ -2054,7 +2065,7 @@ _html_iframe("""
   try {
     var doc = window.parent.document;
     if (doc.getElementById('starfield-style')) return;
-
+ 
     var style = doc.createElement('style');
     style.id = 'starfield-style';
     style.textContent = `
@@ -2117,14 +2128,14 @@ _html_iframe("""
       }
     `;
     doc.head.appendChild(style);
-
+ 
     var stage = doc.createElement('div');
     stage.id = 'starfield-stage';
     var layer = doc.createElement('div');
     layer.id = 'starfield-layer';
     stage.appendChild(layer);
     doc.body.appendChild(stage);
-
+ 
     var starCount = 140;
     for (var i = 0; i < starCount; i++) {
       var s = doc.createElement('div');
@@ -2138,7 +2149,7 @@ _html_iframe("""
       s.style.animationDelay = (Math.random() * -10).toFixed(2) + 's';
       layer.appendChild(s);
     }
-
+ 
     var particleCount = 24;
     for (var j = 0; j < particleCount; j++) {
       var p = doc.createElement('div');
@@ -2156,7 +2167,7 @@ _html_iframe("""
       p.style.animationDelay = (Math.random() * 10).toFixed(1) + 's';
       layer.appendChild(p);
     }
-
+ 
     // Pseudo-3D "orbiting camera": the whole starfield slowly auto-rotates
     // forever (like the presentation's `stars.rotation.y += 0.00015`),
     // plus the mouse nudges azimuth/tilt further — same lerp-towards-target
@@ -2166,12 +2177,12 @@ _html_iframe("""
     var azimuth = 0, tilt = 0, autoAzimuth = 0;
     var reduceMotion = doc.defaultView.matchMedia &&
       doc.defaultView.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
+ 
     doc.addEventListener('mousemove', function(e) {
       mouseX = (e.clientX / doc.documentElement.clientWidth) * 2 - 1;
       mouseY = (e.clientY / doc.documentElement.clientHeight) * 2 - 1;
     });
-
+ 
     function tick() {
       if (!reduceMotion) {
         autoAzimuth += 0.008;
@@ -2186,7 +2197,7 @@ _html_iframe("""
 })();
 </script>
 """, height=1)
-
+ 
 # ---- Animated count-up for headline numbers (parent-document injection,
 # same technique as everything else above) ----
 #
@@ -2207,7 +2218,7 @@ _html_iframe("""
     marker.id = 'heli-counter-marker';
     marker.style.display = 'none';
     doc.body.appendChild(marker);
-
+ 
     function animateCount(el) {
       if (el.dataset.counted) return;
       var raw = el.textContent.trim();
@@ -2229,7 +2240,7 @@ _html_iframe("""
       }
       requestAnimationFrame(step);
     }
-
+ 
     function scan() {
       var candidates = doc.querySelectorAll(
         '[data-testid="stMetricValue"], .metric-card p[style*="font-size:22px"]'
@@ -2242,7 +2253,7 @@ _html_iframe("""
 })();
 </script>
 """, height=1)
-
+ 
 # ---- Opening epigraph — condensed Passacaglia manifesto, shown before the
 # title so the visitor reads the conceptual frame ("we don't erase what
 # came before, we transform it") before encountering any data. Quiet and
@@ -2260,7 +2271,7 @@ st.markdown(f"""
     </p>
 </div>
 """, unsafe_allow_html=True)
-
+ 
 _TITLE_COLORS = ["#A80000", "#B80000", "#C20000", "#D10000", "#DD0000", "#D10000", "#C20000", "#B80000"]
 _title_words = t("main.title").replace("\U0001F681", "").strip().split(" ", 1)  # ["Helipad", "Detector"]
 _title_first = _title_words[0]
@@ -2282,27 +2293,27 @@ if MODEL_OPTIONS:
     st.caption(f"{t('main.active_model')} **{st.session_state.get('model_choice') or list(MODEL_OPTIONS)[0]}**")
 else:
     st.caption(f"{t('main.active_model')} {t('main.active_model.none')}")
-
+ 
 model = get_selected_model()
-
+ 
 # Load metrics data early (used by both the Downloads tab and the metrics
 # panel at the bottom) — only the visual display moved, not the data load.
 metrics_df = load_experiment_metrics()
-
+ 
 # ========================= COMPARISON BANDS (metrics tab) =========================
 # Palette tied to the project's visual identity (teal -> red on dark): teal = better than
 # exp1, slate-teal = essentially tied, red = worse than exp1, amber = methodological caution.
 # The text label always states the result, so color is never the only signal.
 import re as _re
-
+ 
 _BAND_STYLES = {
     "teal":    ("#14B8A6", "rgba(20,184,166,0.13)", "#5EEAD4"),
     "slate":   ("#5F8F8B", "rgba(95,143,139,0.13)", "#A7C4C1"),
     "red":     ("#DD0000", "rgba(221,0,0,0.13)",    "#FCA5A5"),
     "mustard": ("#E0A82E", "rgba(224,168,46,0.15)", "#F2CF75"),
 }
-
-
+ 
+ 
 def render_band(kind: str, label: str, message: str) -> None:
     """Renders one tinted comparison band: accent bar, small caps label, body text."""
     accent, tint, label_color = _BAND_STYLES[kind]
@@ -2322,14 +2333,14 @@ def render_band(kind: str, label: str, message: str) -> None:
         ''',
         unsafe_allow_html=True,
     )
-
-
+ 
+ 
 tab_about, tab_metrics, tab_field, tab4, tab_flights, tab2, tab3, tab1, tab5, tab6, tab7 = st.tabs([
     t("tabs.about"), t("tabs.metrics"), t("tabs.field"), t("tabs.map"), t("tabs.flights"),
     t("tabs.search"), t("tabs.samples"), t("tabs.upload"),
     t("tabs.pipeline"), t("tabs.governance"), t("tabs.downloads"),
 ])
-
+ 
 # ====================== TAB 1: Upload ======================
 with tab1:
     if model is None:
@@ -2338,15 +2349,15 @@ with tab1:
         images = st.file_uploader(t("upload.uploader.label"),
                                    type=["jpg", "jpeg", "png"],
                                    accept_multiple_files=True, max_upload_size=10, help=t("upload.uploader.help"))
-
+ 
         if images:
             for idx, image_file in enumerate(images):
                 col1, col2 = st.columns(2)
                 original = Image.open(image_file)
-
+ 
                 with col1:
                     st.image(original, caption=t("upload.original_caption"), width="stretch")
-
+ 
                 with col2:
                     result_img, has_helipad = detect_helipad(original, model, conf_threshold)
                     st.image(result_img, caption=t("upload.detection_caption"), width="stretch")
@@ -2355,11 +2366,11 @@ with tab1:
                     else:
                         st.warning(t("upload.warning_none"))
                     _disclaimer()
-
+ 
 # ====================== TAB 2: Bounding Box Search ======================
 with tab2:
     st.subheader(t("search.subheader"))
-
+ 
     # Caixas pequenas (~20-30 tiles no zoom 19), centradas no centroide da
     # bounding box REAL de cada regiao (fonte: sp_neighborhoods_bbox.csv,
     # a mesma usada para gerar os mosaicos da validacao de campo, Secao 9
@@ -2377,7 +2388,7 @@ with tab2:
         "Alphaville Industrial":   (-46.852541, -23.500644, -46.847741, -23.495844),
         "Inter-Zone Corridor":     (-46.688746, -23.591584, -46.683946, -23.586784),
     }
-
+ 
     def _apply_search_preset():
         choice = st.session_state.get("search_preset_choice")
         if choice and choice in SEARCH_PRESETS:
@@ -2386,7 +2397,7 @@ with tab2:
             st.session_state["search_lat_min"] = lat_min_p
             st.session_state["search_lon_max"] = lon_max_p
             st.session_state["search_lat_max"] = lat_max_p
-
+ 
     st.selectbox(
         t("search.preset_label"),
         options=[t("search.preset_custom")] + list(SEARCH_PRESETS.keys()),
@@ -2395,7 +2406,7 @@ with tab2:
         help=t("search.preset_help"),
     )
     st.caption(t("search.preset_scope_note"))
-
+ 
     with st.expander(t("search.caption"), expanded=True):
         col_a, col_b = st.columns(2)
         with col_a:
@@ -2404,30 +2415,30 @@ with tab2:
         with col_b:
             lon_max = st.number_input(t("search.lon_max"), value=-46.6311, format="%.6f", key="search_lon_max")
             lat_max = st.number_input(t("search.lat_max"), value=-23.5536, format="%.6f", key="search_lat_max")
-
+ 
     zoom = st.slider(t("search.zoom"), 16, 20, 19)
     search_btn = st.button(t("search.button"), type="primary", width="stretch")
-
+ 
     if search_btn:
         if model is None:
             st.error(t("search.no_model.error"))
         else:
           with st.spinner(t("search.spinner")):
             temp_dir = Path(tempfile.mkdtemp())
-
+ 
             try:
                 x_min, y_max = deg2tile(lat_min, lon_min, zoom)
                 x_max, y_min = deg2tile(lat_max, lon_max, zoom)
-
+ 
                 jobs = [(zoom, x, y) for x in range(x_min, x_max+1) for y in range(y_min, y_max+1)]
-
+ 
                 _info(f"{t('search.processing')} **{len(jobs)}** {t('search.satellite_tiles')}")
                 progress = st.progress(0, f"{t('search.progress')} ")
-
+ 
                 detected_tiles = []
                 failed_downloads = 0
                 blank_skipped = 0
-
+ 
                 # Downloads de rede são I/O-bound (esperando resposta do
                 # servidor ESRI), então rodar vários em paralelo com threads
                 # reduz bastante o tempo total de espera — mesma estratégia
@@ -2447,24 +2458,24 @@ with tab2:
                             tile_paths[(z, x, y)] = tile_path
                         else:
                             failed_downloads += 1
-
+ 
                 progress.progress(1.0, t("search.progress"))
                 for z, x, y in jobs:
                     tile_path = tile_paths.get((z, x, y))
                     if not tile_path:
                         continue
-
+ 
                     img = Image.open(tile_path)
-
+ 
                     if is_blank_tile(img):
                         blank_skipped += 1
                         continue
-
+ 
                     result_img, has_detection = detect_helipad(img, model, conf_threshold)
-
+ 
                     if has_detection:
                         detected_tiles.append((result_img, f"tile_z{z}_x{x}_y{y}.jpg"))
-
+ 
                 status_bits = []
                 if failed_downloads:
                     status_bits.append(f"⚠️ {failed_downloads}/{len(jobs)} {t('search.failed_downloads')}")
@@ -2472,11 +2483,11 @@ with tab2:
                     status_bits.append(f"🕳️ {blank_skipped}/{len(jobs)} {t('search.blank_skipped')}")
                 if status_bits:
                     st.caption(" · ".join(status_bits))
-
+ 
                 if detected_tiles:
                     st.success(f"🎯 **{len(detected_tiles)} {t('search.found')}** {t('search.in_region')}")
                     _disclaimer()
-
+ 
                     if len(detected_tiles) > 1:
                         zip_buffer = io.BytesIO()
                         with zipfile.ZipFile(zip_buffer, "w", zipfile.ZIP_DEFLATED) as zf:
@@ -2492,16 +2503,16 @@ with tab2:
                             mime="application/zip",
                             width="stretch",
                         )
-
+ 
                     cols = st.columns(3)
                     for idx, (img_array, filename) in enumerate(detected_tiles):
                         with cols[idx % 3]:
                             st.image(img_array, caption=filename, width="stretch")
-
+ 
                             buf = io.BytesIO()
                             Image.fromarray(img_array).save(buf, format="PNG")
                             buf.seek(0)
-
+ 
                             st.download_button(
                                 label=t("search.download"),
                                 data=buf,
@@ -2509,40 +2520,40 @@ with tab2:
                                 mime="image/png",
                                 key=f"dl_{idx}"
                             )
-
+ 
                     if len(detected_tiles) > 1:
                         _info(t("search.download_individually"))
                 else:
                     st.warning(t("search.none_found"))
-
+ 
             finally:
                 shutil.rmtree(temp_dir, ignore_errors=True)
-
+ 
 # ====================== TAB 3: Sample Images ======================
 with tab3:
     st.subheader(t("samples.subheader"))
     st.caption(t("samples.caption"))
-
+ 
     sample_files = []
     if SAMPLES_DIR.exists():
         sample_files = sorted(
             [p for p in SAMPLES_DIR.iterdir() if p.suffix.lower() in (".jpg", ".jpeg", ".png")]
         )
-
+ 
     if not sample_files:
         _info(t("samples.none_found").format(dir=SAMPLES_DIR))
     else:
         st.write(f"**{len(sample_files)} {t('samples.available')}**")
-
+ 
         preview_cols = st.columns(min(len(sample_files), 6))
         for i, path in enumerate(sample_files[:6]):
             with preview_cols[i % len(preview_cols)]:
                 st.image(str(path), width="stretch", caption=path.name)
         if len(sample_files) > 6:
             st.caption(t("samples.more").format(n=len(sample_files) - 6))
-
+ 
         col_run, col_dl = st.columns(2)
-
+ 
         with col_run:
             st.markdown('<div class="sample-btn">', unsafe_allow_html=True)
             run_samples = st.button(
@@ -2550,7 +2561,7 @@ with tab3:
                 width="stretch",
             )
             st.markdown('</div>', unsafe_allow_html=True)
-
+ 
         with col_dl:
             # Build the ZIP on demand, only when the user requests the download —
             # useful for anyone running the hosted app without having cloned the repo.
@@ -2559,7 +2570,7 @@ with tab3:
                 for path in sample_files:
                     zf.write(path, arcname=path.name)
             zip_buffer.seek(0)
-
+ 
             st.download_button(
                 t("samples.download_zip"),
                 data=zip_buffer,
@@ -2567,7 +2578,7 @@ with tab3:
                 mime="application/zip",
                 width="stretch",
             )
-
+ 
         if run_samples:
             if model is None:
                 st.error(t("samples.no_model.error"))
@@ -2576,7 +2587,7 @@ with tab3:
                 progress = st.progress(0, t("search.progress"))
                 result_cols = st.columns(3)
                 hits = 0
-
+ 
                 for i, path in enumerate(sample_files):
                     progress.progress((i + 1) / len(sample_files), f"{t('search.progress')} {i+1}/{len(sample_files)}")
                     img = Image.open(path)
@@ -2589,27 +2600,27 @@ with tab3:
                             st.success(t("samples.detected"))
                         else:
                             st.warning(t("samples.no_detection"))
-
+ 
                 _info(t("samples.summary").format(hits=hits, total=len(sample_files)))
                 _disclaimer()
-
+ 
 # ====================== TAB 4: Interactive Map ======================
 with tab4:
     st.subheader(t("map.subheader"))
-
+ 
     col_caption, col_toggle = st.columns([4, 1])
     with col_caption:
         st.caption(t("map.caption"))
     with col_toggle:
         dark_mode = st.toggle(t("map.dark_mode"), value=True, key="map_theme")
-
+ 
     map_tiles = "OSM dark" if dark_mode else "OSM light"
     map_tiles_label = t("map.dark_base") if dark_mode else t("map.light_base")
-
+ 
     sp_df = load_helipad_locations(SP_COORDS_CSV)
     other_df = load_helipad_locations(COORDS_CSV)
     state_lookup = load_state_lookup(COORDS_CSV)
-
+ 
     if sp_df.empty and other_df.empty:
         _info(t("map.no_coords.info").format(sp=SP_COORDS_CSV, other=COORDS_CSV))
     else:
@@ -2617,7 +2628,7 @@ with tab4:
         lon_parts = [df["lon"] for df in (sp_df, other_df) if not df.empty]
         center_lat = pd.concat(lat_parts).mean() if lat_parts else -23.5505  # fallback: São Paulo center
         center_lon = pd.concat(lon_parts).mean() if lon_parts else -46.6333
-
+ 
         # tiles=None avoids Folium auto-adding a base layer with an internal,
         # unreadable name (e.g. "cartodbdarkmatter") to the layer control —
         # we add our own TileLayer below, built from an explicit URL template
@@ -2632,7 +2643,7 @@ with tab4:
         # moved out of the map canvas entirely, into the Streamlit checkboxes
         # right below — this tile layer has nothing left to be listed in.
         add_osm_tile_layer(fmap, dark_mode, name=map_tiles_label, control=False, container_id="map_div")
-
+ 
         # Field-validation results (helipads found per region), loaded early so
         # the training-region markers below can show a count, not just a name.
         field_summary_for_map = load_field_detection_summary()
@@ -2642,7 +2653,7 @@ with tab4:
             regions_by_slug = {r["region"]: r for r in field_summary_for_map.get("regions", [])}
             rates = [r["detection_rate"] for r in regions_by_slug.values()]
             min_rate, max_rate = (min(rates), max(rates)) if rates else (0.0, 1.0)
-
+ 
         # Layer visibility now lives here, as ordinary Streamlit checkboxes
         # above the map, instead of Leaflet's own floating control panel that
         # used to sit on top of (and cover part of) the map canvas.
@@ -2657,13 +2668,13 @@ with tab4:
         # Live helicopter traffic (adsb.fi) moved out of this layer-toggle row into
         # its own sub-tab — see "map.subtab_flights" below — so it never renders as
         # a 4th checkbox mixed in with the YOLO/dataset-derived map layers above.
-
+ 
         sp_layer = folium.FeatureGroup(name=f"🔴 {t('map.sp_layer')} ({len(sp_df)})", show=True)
         for _, row in sp_df.iterrows():
             raw_name = row.get("Nome do Bairro", "Unknown")
             name = format_region_display(raw_name)
             region_stats = regions_by_slug.get(slugify_region(raw_name))
-
+ 
             if region_stats is not None:
                 found = region_stats["tiles_detected"]
                 rate = region_stats["detection_rate"]
@@ -2691,7 +2702,7 @@ with tab4:
             else:
                 tooltip = tooltip_text = name
                 popup_html = f"<b>{name}</b><br>{t('map.training_region')}"
-
+ 
             folium.Marker(
                 location=[row["lat"], row["lon"]],
                 popup=folium.Popup(popup_html, max_width=250),
@@ -2700,7 +2711,7 @@ with tab4:
             ).add_to(sp_layer)
         if show_sp_layer:
             sp_layer.add_to(fmap)
-
+ 
         other_layer = folium.FeatureGroup(name=f"🟢 {t('map.other_layer')} ({len(other_df)})", show=True)
         for _, row in other_df.iterrows():
             neighborhood = row.get("Nome do Bairro", "Unknown")
@@ -2715,7 +2726,7 @@ with tab4:
             ).add_to(other_layer)
         if show_other_layer:
             other_layer.add_to(fmap)
-
+ 
         # ---- Layer 3: field detection rate by region (blue scale, same as tables) ----
         if regions_by_slug and not sp_df.empty:
             detection_layer = folium.FeatureGroup(name=t("map.detection_rate_layer"), show=True)
@@ -2763,18 +2774,18 @@ with tab4:
                 ).add_to(detection_layer)
             if matched and show_detection_layer:
                 detection_layer.add_to(fmap)
-
+ 
         # Live helicopter traffic (adsb.fi) used to render here as "Layer 4" of
         # this same map, then briefly as a sub-tab nested inside "Map". It now
         # has its own top-level tab — see `with tab_flights:` below — built as
         # a separate folium.Map so it never shares a canvas with the YOLO/dataset
         # helipad layers above.
-
+ 
         # The layer-control panel that used to render here (folium.LayerControl,
         # floating over the map's top-right corner) was replaced by the
         # Streamlit checkboxes above, outside the map canvas.
         _force_leaflet_resize(fmap)
-
+ 
         st.write(t("map.summary").format(sp=len(sp_df), other=len(other_df)))
         add_globe_intro(
             fmap, "main",
@@ -2782,7 +2793,7 @@ with tab4:
             caption=t("globe.caption.main"),
         )
         map_state = st_folium(fmap, use_container_width=True, height=520, key=f"main_map_{map_tiles}")
-
+ 
         # ---- Helicopter reacts to real zoom: turn, land, pause, take off ----
         # st_folium returns the live zoom/center of the Leaflet map after every
         # pan/zoom, so "zoomed into a region" below is real map state, not a
@@ -2811,7 +2822,7 @@ with tab4:
         # rather than once per rerun.
         LAND_ZOOM_THRESHOLD = 12
         LAND_DISTANCE_DEG = 0.08  # ~9 km at this latitude — generous on purpose
-
+ 
         landed_region = None
         if map_state and not sp_df.empty:
             zoom_level = map_state.get("zoom")
@@ -2823,11 +2834,11 @@ with tab4:
                 nearest_idx = distances.idxmin()
                 if distances.loc[nearest_idx] <= LAND_DISTANCE_DEG:
                     landed_region = format_region_display(sp_df.loc[nearest_idx, "Nome do Bairro"])
-
+ 
         if landed_region != st.session_state.get("heli_landed_region"):
             st.session_state["heli_landed_region"] = landed_region
             st.session_state["heli_land_nonce"] = st.session_state.get("heli_land_nonce", 0) + 1
-
+ 
         if landed_region:
             region_name_js = json.dumps(landed_region)
             _html_iframe(f"""
@@ -2837,16 +2848,16 @@ with tab4:
                 var doc = window.parent.document;
                 var heli = doc.getElementById('heli-flyby-global');
                 if (!heli) return; // main helicopter overlay hasn't mounted yet — skip this run
-
+ 
                 var landNonce = "{st.session_state['heli_land_nonce']}";
                 if (heli.dataset.lastLandNonce === landNonce) return; // already played this landing
                 heli.dataset.lastLandNonce = landNonce;
-
+ 
                 var isPt = "{st.session_state.get('lang', 'pt')}" === 'pt';
                 var isPaused = {"true" if st.session_state.get("heli_paused") else "false"};
                 if (isPaused) return; // respect the sidebar pause toggle — don't force a landing over it
                 var regionName = {region_name_js};
-
+ 
                 if (!doc.getElementById('heli-landing-style')) {{
                   var style = doc.createElement('style');
                   style.id = 'heli-landing-style';
@@ -2873,14 +2884,14 @@ with tab4:
                   `;
                   doc.head.appendChild(style);
                 }}
-
+ 
                 var pad = doc.getElementById('heli-landing-pad');
                 if (!pad) {{
                   pad = doc.createElement('div');
                   pad.id = 'heli-landing-pad';
                   doc.body.appendChild(pad);
                 }}
-
+ 
                 var toast = doc.getElementById('heli-tab-toast');
                 function announce(text, ms) {{
                   if (!toast) return;
@@ -2891,7 +2902,7 @@ with tab4:
                     toast.classList.remove('show');
                   }}, ms);
                 }}
-
+ 
                 // Same 4 patrol flights the main script uses, duplicated here
                 // (small maintenance cost) since this iframe can't reach the
                 // other iframe's FLIGHTS array — see comment above.
@@ -2901,7 +2912,7 @@ with tab4:
                   {{ name: 'heli-fly-v2', duration: 9  }},
                   {{ name: 'heli-fly-v3', duration: 6  }},
                 ];
-
+ 
                 // 1) Freeze current position into CSS vars, then bank-turn + descend.
                 var rect = heli.getBoundingClientRect();
                 heli.style.setProperty('--heli-cur-top', rect.top + 'px');
@@ -2910,12 +2921,12 @@ with tab4:
                 void heli.offsetWidth;
                 heli.style.animation = 'heli-land-sequence 2.2s cubic-bezier(.3,.6,.3,1) forwards';
                 announce((isPt ? '🚁 Pousando em ' : '🚁 Landing in ') + regionName + '...', 2200);
-
+ 
                 // 2) Touch down: glow the pad, pause on the ground.
                 setTimeout(function() {{
                   pad.classList.add('show');
                 }}, 2100);
-
+ 
                 // 3) Take back off after a short dwell on the ground.
                 setTimeout(function() {{
                   pad.classList.remove('show');
@@ -2924,7 +2935,7 @@ with tab4:
                   void heli.offsetWidth;
                   heli.style.animation = 'heli-takeoff-sequence 1.8s cubic-bezier(.3,.1,.3,1) forwards';
                 }}, 4300);
-
+ 
                 // 4) Resume normal patrol once the take-off climb finishes.
                 setTimeout(function() {{
                   var f = FLIGHTS[Math.floor(Math.random() * FLIGHTS.length)];
@@ -2937,7 +2948,7 @@ with tab4:
             }})();
             </script>
             """, height=1)
-
+ 
         st.markdown(f"#### {t('map.raw_data_expander')}")
         with st.expander(t("map.raw_data_expander"), expanded=True):
             t1, t2 = st.tabs([t("map.raw_data.sp_tab"), t("map.raw_data.other_tab")])
@@ -2975,7 +2986,7 @@ with tab4:
                     ]
                     other_df_display.index = range(1, len(other_df_display) + 1)
                 st.dataframe(other_df_display, width="stretch")
-
+ 
         st.divider()
         col_density_title, col_density_toggle = st.columns([4, 1])
         with col_density_title:
@@ -2983,7 +2994,7 @@ with tab4:
             st.caption(t("map.density.caption"))
         with col_density_toggle:
             density_dark_mode = st.toggle(t("map.dark_mode"), value=True, key="density_map_theme")
-
+ 
         if other_df.empty:
             _info(t("map.density.no_coords").format(path=COORDS_CSV))
         else:
@@ -3026,22 +3037,22 @@ with tab4:
                 caption=t("globe.caption.density"),
             )
             st.iframe(dark_map.get_root().render(), height=550)
-
+ 
 # ====================== TAB: Live Traffic (Beta) ======================
 with tab_flights:
     st.subheader(t("map.subtab_flights"))
-
+ 
     # Standalone view: deliberately its own folium.Map (not a layer toggle on
     # the helipad map above) — this is live ADS-B telemetry from a third-party
     # feed (adsb.fi), unrelated to the satellite-image / YOLO pipeline used
     # everywhere else in this app, and must never visually blend with it.
     _info(t("map.flights_notice_short"), icon="🛰️")
-
+ 
     with st.expander(t("map.flights_details_title"), expanded=False):
         st.markdown(t("map.flights_caption"))
         st.markdown(t("map.flights_disclaimer"))
         st.caption(t("map.flights_trail_note"))
-
+ 
     legend_col1, legend_col2, legend_spacer = st.columns([2, 3, 4])
     with legend_col1:
         st.caption(f"**{t('map.flights_legend_title')}**")
@@ -3056,7 +3067,7 @@ with tab_flights:
             '</div>',
             unsafe_allow_html=True,
         )
-
+ 
     flights_top1, flights_top2, flights_top3 = st.columns([1, 1, 2])
     with flights_top1:
         if st.button(t("map.flights_refresh"), key="flights_refresh_btn"):
@@ -3065,15 +3076,15 @@ with tab_flights:
         flights_dark_mode = st.toggle(t("map.dark_mode"), value=True, key="flights_map_theme")
     with flights_top3:
         st.caption(t("map.flights_last_update").format(time=datetime.now().strftime("%H:%M:%S")))
-
+ 
     flights, flights_err = fetch_live_helicopter_flights()
-
+ 
     if flights_err:
         _info(t("map.flights_error").format(err=flights_err))
     else:
         update_flight_trails(flights)
         st.caption(t("map.flights_count").format(n=len(flights)))
-
+ 
         flights_map = folium.Map(location=[SP_LAT, SP_LON], zoom_start=9, tiles=None)
         # container_id="map_div": per add_osm_tile_layer's own docstring,
         # streamlit-folium's frontend hardcodes EVERY st_folium(...) map into
@@ -3091,7 +3102,7 @@ with tab_flights:
             name=(t("map.dark_base") if flights_dark_mode else t("map.light_base")),
             control=False, container_id="map_div",
         )
-
+ 
         flights_layer = folium.FeatureGroup(name=t("map.flights_layer"), show=True)
         trails = st.session_state.get("flight_trails", {})
         for f in flights:
@@ -3100,7 +3111,7 @@ with tab_flights:
                 folium.PolyLine(
                     trail, color="#FF2500", weight=2, opacity=0.6, dash_array="4 6",
                 ).add_to(flights_layer)
-
+ 
             alt_txt = f"{f['altitude_m']:.0f} m" if f["altitude_m"] is not None else "—"
             speed_txt = f"{f['speed_ms'] * 3.6:.0f} km/h" if f["speed_ms"] is not None else "—"
             is_confirmed = f["confidence"] == "confirmed"
@@ -3142,7 +3153,7 @@ with tab_flights:
                 icon=folium.DivIcon(html=icon_html, icon_size=(34, 34), icon_anchor=(17, 17)),
             ).add_to(flights_layer)
         flights_layer.add_to(flights_map)
-
+ 
         # Fit the view to where the aircraft actually are instead of always
         # showing the full ~92 km query radius (SP_DIST_NM) — with only 1-2
         # aircraft on screen, that wide a view is why they were hard to spot.
@@ -3169,19 +3180,19 @@ with tab_flights:
             _force_leaflet_fit_bounds(flights_map, fit_bounds)
         else:
             _force_leaflet_resize(flights_map)
-
+ 
         add_globe_intro(
             flights_map, "flights",
             points=[[f["lat"], f["lon"]] for f in flights],
             caption=t("globe.caption.flights"),
         )
         st_folium(flights_map, use_container_width=True, height=480, key=f"flights_map_{flights_dark_mode}")
-
+ 
 # ====================== TAB 5: Pipeline & Governance ======================
 with tab5:
     st.subheader(t("pipeline.subheader"))
     st.caption(t("pipeline.caption"))
-
+ 
     # ---- AI/ML Ops Pipeline flowchart ----
     # Same diagram documented in README.md's "AI/ML Ops Pipeline" section —
     # keep both in sync if the pipeline itself changes. Rendered as a
@@ -3209,9 +3220,9 @@ with tab5:
         st.image(str(_pipeline_svg_path), width="stretch")
     else:
         _info(t("pipeline.diagram_missing_asset"))
-
+ 
     st.markdown(f"#### {t('pipeline.steps_header')}")
-
+ 
     pipeline_steps = [
         ("🔍", t("pipeline.step1.title"), t("pipeline.step1.desc")),
         ("📐", t("pipeline.step2.title"), t("pipeline.step2.desc")),
@@ -3223,7 +3234,7 @@ with tab5:
         ("🌍", t("pipeline.step8.title"), t("pipeline.step8.desc")),
         ("🚁", t("pipeline.step9.title"), t("pipeline.step9.desc")),
     ]
-
+ 
     n = len(pipeline_steps)
     rows = [pipeline_steps[i:i + 3] for i in range(0, n, 3)]
     step_idx = 0
@@ -3263,20 +3274,20 @@ with tab5:
                 </div>
                 """, unsafe_allow_html=True)
             step_idx += 1
-
+ 
 # ====================== TAB 6: Governance ======================
 with tab6:
     with st.expander(t("gov.responsible_ai"), expanded=True):
         st.markdown(t("gov.responsible_ai.body"))
-
+ 
     st.markdown("")
     with st.expander(t("gov.lgpd"), expanded=True):
         st.markdown(t("gov.lgpd.body"))
-
+ 
     st.markdown("")
     with st.expander(t("gov.contributors"), expanded=True):
         st.markdown(t("gov.contributors.body"))
-
+ 
 # ====================== TAB: About ======================
 with tab_about:
     st.header(t("about.header"))
@@ -3289,7 +3300,7 @@ with tab_about:
         1,
     )
     st.markdown(_about_intro, unsafe_allow_html=True)
-
+ 
     # ---- Global Context — helicopter air mobility worldwide ----
     # Not a ranking (see the [!NOTE] below), so this deliberately does NOT
     # use style_rows_by_rank()/st.dataframe() — a position-based gradient
@@ -3309,7 +3320,7 @@ with tab_about:
     with st.expander(t("cities.header"), expanded=True):
         _cities_cols = t("cities.table.columns")
         _cities_rows = t("cities.table.data")
-
+ 
         def _md_cell_to_html(cell: str) -> str:
             """Cell text here only ever uses two tiny markdown patterns —
             **bold** and [text](url) links — so a couple of targeted regex
@@ -3322,7 +3333,7 @@ with tab_about:
             )
             cell = re.sub(r"\*\*([^*]+)\*\*", r"<strong>\1</strong>", cell)
             return cell
-
+ 
         # Styling lives in styles.py (.hd-ctx*): framed table, visible row/column
         # rules, header band, zebra + hover; first row (São Paulo, the study
         # focus) is marked — a visual accent only, not a ranking.
@@ -3336,10 +3347,10 @@ with tab_about:
             f'<thead><tr>{_cities_thead}</tr></thead><tbody>{_cities_tbody}</tbody></table></div>',
             unsafe_allow_html=True,
         )
-
+ 
         # [!NOTE] first, [!TIP] second — same order as README.md.
         st.markdown(f"> **{t('cities.interpretation.title')}**  \n> {t('cities.interpretation.text')}")
-
+ 
         _why_sp_html = re.sub(r"\*\*([^*]+)\*\*", r"<strong>\1</strong>", t("cities.why_sao_paulo"))
         st.markdown(f"""
         <div style="border-left:3px solid #14b8a6; background:rgba(14,117,109,0.08);
@@ -3349,15 +3360,15 @@ with tab_about:
             </p>
         </div>
         """, unsafe_allow_html=True)
-
+ 
     # Extra vertical gap between framed sections — st.expander's own
     # margin alone read as too tight once every section got the same
     # bordered "card" treatment; this is the "increase and define the
     # spacing between each subtitle" adjustment.
     st.markdown("<div style='margin-top:28px;'></div>", unsafe_allow_html=True)
-
+ 
     st.markdown(t("about.body_closing"))
-
+ 
     with st.expander(t("about.discovery.title"), expanded=True):
         st.caption(t("about.discovery.body"))
         _disc_stats = load_discovery_dataset_stats()
@@ -3370,7 +3381,7 @@ with tab_about:
             with disc_col2:
                 if _disc_stats["distinct_locations"] is not None:
                     st.metric(t("about.discovery.regions"), _disc_stats["distinct_locations"])
-
+ 
             _points_df = _disc_stats.get("points_table")
             if _points_df is not None and not _points_df.empty:
                 # Row-level listing (one row per discovered helipad point) —
@@ -3392,9 +3403,9 @@ with tab_about:
                 )
             else:
                 st.caption(t("about.discovery.pending"))
-
+ 
     st.markdown("<div style='margin-top:28px;'></div>", unsafe_allow_html=True)
-
+ 
     # Scraping demo lives here, right after the Discovery dataset coverage
     # section it illustrates ("Points collected" above were gathered by
     # this same geospatial automation bot) and above the credits table.
@@ -3411,11 +3422,11 @@ with tab_about:
         # anyone unmute.
         st.video("https://github.com/user-attachments/assets/eab6e951-6b66-4c6c-a2c6-23ee2f902c5f", muted=True)
         st.markdown(f"<p style='text-align:center;'>{t('about.demos.scraping.credit_line')}</p>", unsafe_allow_html=True)
-
+ 
     st.markdown("<div style='margin-top:28px;'></div>", unsafe_allow_html=True)
-
+ 
     st.markdown("<div style='margin-top:28px;'></div>", unsafe_allow_html=True)
-
+ 
     with st.expander(t("about.credits.expander_label"), expanded=True):
         st.markdown(f"""
         <div style="text-align:left;">
@@ -3437,14 +3448,14 @@ with tab_about:
             </table>
         </div>
         """, unsafe_allow_html=True)
-
+ 
 # ====================== TAB 7: Downloads ======================
 with tab7:
     st.subheader(t("dl.subheader"))
     st.caption(t("dl.caption"))
-
+ 
     dl_col1, dl_col2 = st.columns(2)
-
+ 
     with dl_col1:
         st.markdown(t("dl.executive_report"))
         if EXEC_REPORT_EN.exists():
@@ -3453,14 +3464,14 @@ with tab7:
                                     mime="application/pdf", width="stretch")
         else:
             st.caption(t("dl.not_found").format(path=EXEC_REPORT_EN))
-
+ 
         if EXEC_REPORT_PT.exists():
             with open(EXEC_REPORT_PT, "rb") as f:
                 st.download_button(t("dl.exec_pt_button"), f, file_name=EXEC_REPORT_PT.name,
                                     mime="application/pdf", width="stretch")
         else:
             st.caption(t("dl.not_found").format(path=EXEC_REPORT_PT))
-
+ 
     with dl_col2:
         st.markdown(t("dl.dataset_metrics"))
         if DATASET_RAR.exists():
@@ -3469,14 +3480,14 @@ with tab7:
                                     mime="application/octet-stream", width="stretch")
         else:
             st.caption(t("dl.not_found").format(path=DATASET_RAR))
-
+ 
         if not metrics_df.empty:
             csv_bytes = metrics_df.drop(columns=["_dir"], errors="ignore").to_csv(index=False).encode("utf-8")
             st.download_button(t("dl.metrics_button"), csv_bytes, file_name="experiment_metrics.csv",
                                 mime="text/csv", width="stretch")
         else:
             st.caption(t("dl.no_metrics"))
-
+ 
         st.markdown(t("dl.field_validation"))
         if FIELD_SUMMARY_PATH.exists():
             with open(FIELD_SUMMARY_PATH, "rb") as f:
@@ -3484,7 +3495,7 @@ with tab7:
                                     mime="application/json", width="stretch")
         else:
             st.caption(t("dl.not_found").format(path=FIELD_SUMMARY_PATH))
-
+ 
     # ---- Presentations: 2 PPTX files (EN / PT) + the deployed interactive HTML deck ----
     st.markdown("---")
     st.markdown(t("dl.presentations"))
@@ -3496,8 +3507,8 @@ with tab7:
         st.link_button(t("dl.pptx_pt_button"), PRESENTATION_PPTX_PT_URL, width="stretch")
     with pres_c3:
         st.link_button(t("dl.html_presentation_button"), PRESENTATION_HTML_URL, width="stretch")
-
-
+ 
+ 
         TRIAGE_LOG_PATH = Path("reports/auto_triage_regions_log.txt")
         if TRIAGE_LOG_PATH.exists():
             with open(TRIAGE_LOG_PATH, "rb") as f:
@@ -3505,7 +3516,7 @@ with tab7:
                                     mime="text/plain", width="stretch")
         else:
             st.caption(t("dl.not_found").format(path=TRIAGE_LOG_PATH))
-
+ 
     # ---- TIDD research pre-proposal (PT / EN) ----
     st.markdown("---")
     st.markdown(
@@ -3517,7 +3528,7 @@ with tab7:
         st.link_button(t("dl.preproject.pt_button"), PREPROJECT_PDF_PT_URL, width="stretch")
     with pp_c2:
         st.link_button(t("dl.preproject.en_button"), PREPROJECT_PDF_EN_URL, width="stretch")
-
+ 
     st.markdown("---")
     st.markdown(f"### {t('dl.session_summary.title')}")
     st.caption(t("dl.session_summary.body"))
@@ -3536,7 +3547,7 @@ with tab7:
             mime="application/pdf",
             width="stretch",
         )
-
+ 
     st.markdown("---")
     st.markdown(f"""
     <div class="dark-card">
@@ -3550,7 +3561,7 @@ with tab7:
         </a>
     </div>
     """, unsafe_allow_html=True)
-
+ 
 # ========================= METRICS DASHBOARD =========================
 with tab_metrics:
     st.subheader(t("metrics.subheader"))
@@ -3601,7 +3612,7 @@ with tab_metrics:
                     </p>
                 </div>
                 """, unsafe_allow_html=True)
-
+ 
         # Netron previews render full-width, stacked one per row below the
         # metric cards — a narrow column (1 of up to 4) is too cramped for
         # an interactive graph viewer with its own zoom/pan controls.
@@ -3619,7 +3630,7 @@ with tab_metrics:
                     if st.button(t("metrics.netron_load_button"), key=f"netron_btn_{row['Experiment']}"):
                         st.session_state[load_key] = True
                         st.rerun()
-
+ 
         st.markdown(t("metrics.comparison_title"))
         # Standardized Blues row gradient (style_rows_by_value): unlike the
         # ranked tables above, this one intentionally keeps its natural
@@ -3636,7 +3647,7 @@ with tab_metrics:
             style_rows_by_value(_metrics_table_styler, "mAP@50-95"),
             width="stretch",
         )
-
+ 
         if n_exp >= 2 and "exp1" in metrics_df["Experiment"].values:
             exp1_row = metrics_df[metrics_df["Experiment"] == "exp1"].iloc[0]
             for _, row in metrics_df.iterrows():
@@ -3651,12 +3662,12 @@ with tab_metrics:
                     t("metrics.band.vs_exp1").format(exp=str(row["Experiment"]).upper()),
                     t(_msg_key).format(exp=row["Experiment"], delta=f"{delta:+.4f}"),
                 )
-
+ 
         render_band("mustard", t("metrics.band.caution"), t("metrics.not_controlled"))
         with st.expander(t("lineage.expander"), expanded=False):
             st.markdown(t("lineage.body"))
             _disclaimer()
-
+ 
         # ---- Per-epoch metric evolution (real data from results.csv) ----
         curves = load_experiment_curves()
         if curves:
@@ -3680,7 +3691,7 @@ with tab_metrics:
                     legend=dict(orientation="h", yanchor="bottom", y=1.02),
                 )
                 st.plotly_chart(fig, width="stretch")
-
+ 
         # ---- Confusion matrix per experiment (real image already generated by YOLO) ----
         if not metrics_df.empty and "_dir" in metrics_df.columns:
             with st.expander(t("metrics.confusion_matrix").lstrip("#").strip(), expanded=True):
@@ -3701,31 +3712,31 @@ with tab_metrics:
                         st.image(str(cm_norm_path), caption=f"{cm_exp} — {t('metrics.cm_norm_caption')}", width="stretch")
                     else:
                         _info(t("metrics.cm_norm_not_found").format(path=cm_norm_path.resolve()))
-
+ 
         # ---- Inference demos (exp1-exp4) right below the Confusion Matrix ----
         # Replaces the old single "Model Training" demo. One experiment is shown
         # open; the others stay visible in the selector right above the player.
         render_inference_demos(expanded=True, default="exp2")
-
+ 
 # ========================= FIELD DETECTIONS BY REGION =========================
 with tab_field:
     st.subheader(t("field.subheader"))
     field_summary = load_field_detection_summary()
-
+ 
     if FIELD_SUMMARY_PATH.exists():
         last_updated = datetime.fromtimestamp(FIELD_SUMMARY_PATH.stat().st_mtime)
         st.caption(t("field.last_updated").format(date=last_updated.strftime('%b %d, %Y at %H:%M')))
-
+ 
     if field_summary is None:
         _info(t("field.no_summary").format(path=FIELD_SUMMARY_PATH))
     else:
         totals = field_summary.get("totals", {})
         regions = field_summary.get("regions", [])
-
+ 
         total_tiles = totals.get("tiles_total", 0)
         total_detected = totals.get("tiles_detected", 0)
         total_rate = totals.get("detection_rate", 0.0)
-
+ 
         card_cols = st.columns(3)
         _field_card_style = (
             "padding:18px; border-radius:14px; text-align:center; "
@@ -3754,12 +3765,12 @@ with tab_field:
                     <p style="margin:0; color:{sub}; font-size:12px;">{label}</p>
                 </div>
                 """, unsafe_allow_html=True)
-
+ 
         if regions:
             st.markdown("")
             regions_df = pd.DataFrame(regions).sort_values("detection_rate", ascending=False)
             regions_df["region"] = regions_df["region"].apply(format_region_display)
-
+ 
             # Avenida Paulista is split into two survey segments ("Segment
             # 1"/"Segment 2", "Trecho 1"/"Trecho 2" in Português) because the
             # full avenue didn't fit one tile-download batch — it's one
@@ -3795,7 +3806,7 @@ with tab_field:
                     )
             except Exception:
                 pass  # fall back to the unmerged table below
-
+ 
             # Standardized Blues gradient (blues_scale), one shade per bar
             # by rank position — regions_df is already sorted best-first by
             # detection_rate here, so the tallest bar is darkest navy and
@@ -3817,7 +3828,7 @@ with tab_field:
                 height=340, margin=dict(l=10, r=10, t=10, b=10),
             )
             st.plotly_chart(fig_regions, width="stretch")
-
+ 
             # Table is ranked by absolute helipads found (tiles_detected),
             # not by rate — rate and raw count don't always agree (e.g. a
             # small region can have a higher rate but fewer total finds
@@ -3837,7 +3848,7 @@ with tab_field:
                 t("field.rank_col"), t("field.region_col"), t("field.detected_col"),
                 t("field.tiles_col"), t("field.rate_col"), t("field.top_confidence_col"),
             ]]
-
+ 
             st.markdown(f"#### {t('field.ranking_title')}")
             # Standardized Blues row gradient (style_rows_by_rank), same as
             # the About tab's "Top 10 Cities" table — the whole row is
@@ -3854,14 +3865,14 @@ with tab_field:
             })
             st.dataframe(style_rows_by_rank(_ranking_styler), width="stretch")
             st.caption(t("field.rate_definition"))
-
+ 
             if "Inter-Zone Corridor" in regions_df["region"].values:
                 st.caption(t("field.inter_zone_note"))
-
+ 
         generated_at = field_summary.get("generated_at")
         if generated_at:
             st.caption(f"{t('field.last_updated').format(date=generated_at)}")
-
+ 
         # ---- N-model comparison on the same field validation ----
         # Runs separately with each experiment's weights, all on the same
         # tile set (see FIELD_SUMMARY_PATHS_BY_EXP above for why exp2 here
@@ -3876,23 +3887,23 @@ with tab_field:
             compare_tiles_total = next(iter(all_summaries.values())).get("totals", {}).get("tiles_total", "—")
             with st.expander(t("field.compare.title").format(n=len(all_summaries)), expanded=True):
                 st.caption(t("field.compare.body").format(tiles=f"{compare_tiles_total:,}"))
-
+ 
                 def _norm_region(name: str) -> str:
                     return str(name).strip().lower().replace("segment", "trecho")
-
+ 
                 comparison_rows = {}
                 for exp_name, summary in all_summaries.items():
                     for r in summary.get("regions", []):
                         key = _norm_region(r["region"])
                         comparison_rows.setdefault(key, {"__display__": format_region_display(r["region"])})
                         comparison_rows[key][exp_name] = r["detection_rate"]
-
+ 
                 exp_names_sorted = sorted(all_summaries.keys())
                 comp_df = pd.DataFrame([
                     {"Region": v["__display__"], **{e: v.get(e) for e in exp_names_sorted}}
                     for v in comparison_rows.values()
                 ]).sort_values(exp_names_sorted[0], ascending=False, na_position="last")
-
+ 
                 st.markdown(t("field.compare.table_title"))
                 # Standardized Blues row gradient: comp_df is already
                 # sorted best-first by exp_names_sorted[0], so a full-row
@@ -3904,7 +3915,7 @@ with tab_field:
                     {e: "{:.1%}" for e in exp_names_sorted}, na_rep="—"
                 )
                 st.dataframe(style_rows_by_rank(_comp_styler), width="stretch")
-
+ 
                 comp_totals = {
                     exp_name: summary.get("totals", {}).get("detection_rate", 0.0)
                     for exp_name, summary in all_summaries.items()
@@ -3913,7 +3924,7 @@ with tab_field:
                 for col, (exp_name, rate) in zip(total_cols, sorted(comp_totals.items())):
                     with col:
                         st.metric(exp_name, f"{rate*100:.1f}%")
-
+ 
                 if {"exp1", "exp2", "exp3"} <= set(all_summaries):
                     reality_check_text = t('field.compare.reality_check')
                     if "exp4" in comp_totals:
@@ -3928,14 +3939,14 @@ with tab_field:
                         </p>
                     </div>
                     """, unsafe_allow_html=True)
-
+ 
                 missing = set(FIELD_SUMMARY_PATHS_BY_EXP) - set(all_summaries)
                 if missing:
                     st.caption(t("field.compare.missing").format(missing=", ".join(sorted(missing))))
-
+ 
 # Footer
 st.markdown("---")
-
+ 
 _html_iframe("""
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&display=swap" rel="stylesheet">
 <style>
@@ -3960,31 +3971,33 @@ _html_iframe("""
   <span style="color:#ffffff;">𖤐</span><span style="color:#00FFFF;"> Mindful</span><span style="color:#ffffff;"> AI</span><span style="color:#00FFFF;"> ॐ</span>
 </a>
 """, height=52)
-
+ 
 st.markdown(f"""
 <p align="center" style="margin: 10px 0 22px 0;">
   <a href="https://github.com/sponsors/Mindful-AI-Research" target="_blank" rel="noopener noreferrer">
     <img src="https://img.shields.io/badge/Sponsor-%E0%A5%90%20%E2%8B%86%20Mindful%20AI%20%E2%8B%86%20Research%20%26%20Consulting%20%F0%96%A4%90%20%E2%8B%86-3A424C?style=for-the-badge&logo=githubsponsors&logoColor=white&labelColor=07111F" alt="Sponsor ॐ ⋆ Mindful AI ⋆ Research & Consulting 𖤐 ⋆" height="36" style="vertical-align:middle;">
   </a>
 </p>
-
+ 
 <hr style="border:none; border-top:1px solid rgba(255,255,255,0.15); max-width: 900px; margin: 0 auto 24px auto;">
-
+ 
 <p style="text-align:center; color:rgba(255,255,255,0.30); margin:0;">
 {t("footer.tagline")}
 </p>
-
+ 
 <p style="text-align:center; color:rgba(255,255,255,0.35); margin:4px 0;">
 {t("footer.line2")}
 </p>
-
+ 
 <p style="text-align:center; color:rgba(255,255,255,0.30); margin:6px 0 0 0; font-size:12px;">
 {t("footer.line3")}
 </p>
-
+ 
 <hr style="border:none; border-top:1px solid rgba(255,255,255,0.15); max-width: 900px; margin: 20px auto 0 auto;">
-
+ 
 <p style="text-align:center; color:#C9D6DE; font-weight:700; font-size:13px; letter-spacing:.02em; margin:20px 0 0 0; max-width:520px; margin-left:auto; margin-right:auto;">
 {t("epigraph.echo")}
 </p>
 """, unsafe_allow_html=True)
+ 
+Claude is asking: Permission request: Terminal. Find it just before the message box.
