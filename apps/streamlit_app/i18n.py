@@ -242,6 +242,10 @@ TR = {
     "upload.detection_caption": {"en": "Detection", "pt": "Detecção"},
     "upload.success": {"en": "✅ Possible helipad detected (visual detection only; human review required).", "pt": "✅ Possível heliponto detectado (apenas detecção visual; exige revisão humana)."},
     "upload.warning_none": {"en": "No helipad found.", "pt": "Nenhum heliponto encontrado."},
+    "security.model_verified": {"en": "🔒 Model integrity: SHA-256 matches the published manifest.", "pt": "🔒 Integridade do modelo: SHA-256 confere com o manifesto publicado."},
+    "security.model_unlisted": {"en": "ℹ️ Model integrity: no checksum listed for this file (not verified).", "pt": "ℹ️ Integridade do modelo: sem checksum listado para este arquivo (não verificado)."},
+    "security.model_mismatch": {"en": "Model file does not match its published SHA-256 checksum; refusing to load it.", "pt": "O arquivo do modelo não confere com o SHA-256 publicado; carregamento recusado."},
+    "security.upload_invalid": {"en": "'{name}' is not a valid image or exceeds the pixel limit (50 MP) and was skipped.", "pt": "'{name}' não é uma imagem válida ou excede o limite de pixels (50 MP) e foi ignorada."},
 
     # ---- Shared: mandatory scope-of-detection disclaimer (shown under any detection result) ----
     "detection.disclaimer": {
