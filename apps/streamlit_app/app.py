@@ -2139,54 +2139,36 @@ _html_iframe("""
       #starfield-stage {
         position: fixed; top:0; left:0; width:100vw; height:100vh;
         pointer-events: none; z-index: 0; overflow: hidden;
-        perspective: 900px; perspective-origin: 50% 50%;
         background: #05070a radial-gradient(ellipse at 50% 30%, rgba(14,117,109,0.10), transparent 60%);
       }
       #starfield-layer {
-        position: absolute; top:-10%; left:-10%; width:120%; height:120%;
-        transform-style: preserve-3d;
-        will-change: transform;
+        position: absolute; top:0; left:0; width:100%; height:100%;
       }
-      /* Soft, cool-tinted stars (never pure white) that fade in and out
-         gently. Peak opacity is kept low so the sky stays in the background
-         and never competes with the text on top of it. */
+      /* Crisp pinpoint stars (never pure white) that fade softly in and out.
+         Only opacity is animated: no glow, no scaling, no 3D transform, so
+         every star stays a sharp pixel-sized point instead of a soft blob. */
       .sf-star {
-        position: absolute; border-radius: 50%; background: #CFE8E6;
-        opacity: 0.25; will-change: opacity;
+        position: absolute; border-radius: 50%; background: #DCEBFA;
+        opacity: 0.6;
         animation: sf-twinkle ease-in-out infinite;
       }
       @keyframes sf-twinkle {
-        0%, 100% { opacity: 0.22; transform: scale(0.9);  box-shadow: 0 0 1px rgba(207,232,230,0.15); }
-        50%      { opacity: 0.95; transform: scale(1.25); box-shadow: 0 0 6px 1px rgba(207,232,230,0.55); }
+        0%, 100% { opacity: 0.3; }
+        50%      { opacity: 1; }
       }
       /* A few larger four-point sparkles in the project's teal. */
       .sf-spark {
-        position: absolute; width: 16px; height: 16px; opacity: 0.3;
-        background:
-          radial-gradient(circle, #E6FFFB 0 2.4px, rgba(94,234,212,0.35) 3.5px, transparent 6px),
-          linear-gradient(#5EEAD4, #5EEAD4) center / 2px 100% no-repeat,
-          linear-gradient(#5EEAD4, #5EEAD4) center / 100% 2px no-repeat;
+        position: absolute; background: #7FF3E4; opacity: 0.7;
+        clip-path: polygon(50% 0%, 56% 44%, 100% 50%, 56% 56%, 50% 100%, 44% 56%, 0% 50%, 44% 44%);
         animation: sf-spark-twinkle ease-in-out infinite;
       }
       @keyframes sf-spark-twinkle {
-        0%, 100% { opacity: 0.25; transform: scale(0.8) rotate(0deg); }
-        50%      { opacity: 1;    transform: scale(1.15) rotate(8deg); }
-      }
-      .sf-particle {
-        position: absolute; background: #BFD9F2; border-radius: 2px;
-        animation: sf-drift linear infinite;
-      }
-      @keyframes sf-drift {
-        0%   { transform: translate(0,0); opacity: 0; }
-        12%  { opacity: 0.28; }
-        88%  { opacity: 0.28; }
-        100% { transform: translate(var(--dx), var(--dy)); opacity: 0; }
+        0%, 100% { opacity: 0.45; }
+        50%      { opacity: 1; }
       }
       @media (prefers-reduced-motion: reduce) {
-        .sf-star { animation-duration: 9s !important; }
-        .sf-spark { animation: none !important; opacity: 0.35; }
-        .sf-particle { animation: none !important; opacity: 0.2; }
-        #starfield-layer { transform: none !important; }
+        .sf-star { animation-duration: 10s !important; }
+        .sf-spark { animation: none !important; opacity: 0.5; }
       }
     `;
     doc.head.appendChild(style);
@@ -2199,81 +2181,40 @@ _html_iframe("""
     doc.body.appendChild(stage);
 
     // Evenly spread stars: one star per cell of a jittered grid, so the sky
-    // looks natural but never clumps behind a block of text.
-    var COLS = 18, ROWS = 11;
-    var tints = ['#D6EDEA', '#C4DDF4', '#DDF0F2', '#CFE3F0'];
+    // looks natural but never clumps behind a block of text. Many tiny stars,
+    // a few larger ones, like a real sky.
+    var COLS = 26, ROWS = 16;
+    var tints = ['#DCEBFA', '#D3EFEC', '#E4ECF6', '#CDE3F3'];
     for (var r = 0; r < ROWS; r++) {
       for (var c = 0; c < COLS; c++) {
         var s = doc.createElement('div');
         s.className = 'sf-star';
-        var size = (Math.random() * 1.8 + 1.6).toFixed(1);
+        var q = Math.random();
+        var size = q < 0.5 ? 1.2 : q < 0.82 ? 1.7 : q < 0.96 ? 2.2 : 3;
         s.style.width = size + 'px';
         s.style.height = size + 'px';
-        s.style.top = ((r + 0.15 + Math.random() * 0.7) / ROWS * 100).toFixed(2) + '%';
-        s.style.left = ((c + 0.15 + Math.random() * 0.7) / COLS * 100).toFixed(2) + '%';
+        s.style.top = ((r + 0.1 + Math.random() * 0.8) / ROWS * 100).toFixed(2) + '%';
+        s.style.left = ((c + 0.1 + Math.random() * 0.8) / COLS * 100).toFixed(2) + '%';
         s.style.background = tints[Math.floor(Math.random() * tints.length)];
-        s.style.animationDuration = (4 + Math.random() * 6).toFixed(2) + 's';
-        s.style.animationDelay = (Math.random() * -10).toFixed(2) + 's';
+        s.style.animationDuration = (3.5 + Math.random() * 5).toFixed(2) + 's';
+        s.style.animationDelay = (Math.random() * -9).toFixed(2) + 's';
         layer.appendChild(s);
       }
     }
 
-    for (var k = 0; k < 8; k++) {
+    var sparks = [[14, 22], [86, 12], [8, 78], [92, 70], [48, 8], [62, 90]];
+    for (var k = 0; k < sparks.length; k++) {
       var sp = doc.createElement('div');
       sp.className = 'sf-spark';
-      var ssize = (Math.random() * 8 + 13).toFixed(0);
+      var ssize = (k < 2 ? 26 : 16);
       sp.style.width = ssize + 'px';
       sp.style.height = ssize + 'px';
-      sp.style.top = (8 + Math.random() * 84).toFixed(1) + '%';
-      sp.style.left = (5 + Math.random() * 90).toFixed(1) + '%';
-      sp.style.animationDuration = (6 + Math.random() * 6).toFixed(1) + 's';
-      sp.style.animationDelay = (Math.random() * -12).toFixed(1) + 's';
+      sp.style.left = sparks[k][0] + '%';
+      sp.style.top = sparks[k][1] + '%';
+      sp.style.animationDuration = (5 + Math.random() * 4).toFixed(1) + 's';
+      sp.style.animationDelay = (Math.random() * -8).toFixed(1) + 's';
       layer.appendChild(sp);
     }
-
-    var particleCount = 10;
-    for (var j = 0; j < particleCount; j++) {
-      var p = doc.createElement('div');
-      p.className = 'sf-particle';
-      var psize = (Math.random() * 2 + 2).toFixed(1);
-      p.style.width = psize + 'px';
-      p.style.height = psize + 'px';
-      p.style.top = (Math.random() * 100) + '%';
-      p.style.left = (Math.random() * 100) + '%';
-      var dx = (Math.random() * 160 - 80).toFixed(0) + 'px';
-      var dy = (Math.random() * -140 - 40).toFixed(0) + 'px';
-      p.style.setProperty('--dx', dx);
-      p.style.setProperty('--dy', dy);
-      p.style.animationDuration = (16 + Math.random() * 14).toFixed(1) + 's';
-      p.style.animationDelay = (Math.random() * 10).toFixed(1) + 's';
-      layer.appendChild(p);
-    }
-
-    // Pseudo-3D "orbiting camera": the whole starfield slowly auto-rotates
-    // forever (like the presentation's `stars.rotation.y += 0.00015`),
-    // plus the mouse nudges azimuth/tilt further — same lerp-towards-target
-    // approach the presentation uses for its real Three.js camera, just
-    // driving a CSS rotateY/rotateX instead of an actual camera matrix.
-    var mouseX = 0, mouseY = 0;
-    var azimuth = 0, tilt = 0, autoAzimuth = 0;
-    var reduceMotion = doc.defaultView.matchMedia &&
-      doc.defaultView.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-    doc.addEventListener('mousemove', function(e) {
-      mouseX = (e.clientX / doc.documentElement.clientWidth) * 2 - 1;
-      mouseY = (e.clientY / doc.documentElement.clientHeight) * 2 - 1;
-    });
-
-    function tick() {
-      if (!reduceMotion) {
-        autoAzimuth += 0.008;
-        azimuth += ((autoAzimuth + mouseX * 6) - azimuth) * 0.03;
-        tilt += ((mouseY * -3) - tilt) * 0.03;
-        layer.style.transform = 'rotateY(' + azimuth.toFixed(3) + 'deg) rotateX(' + tilt.toFixed(3) + 'deg)';
-        requestAnimationFrame(tick);
-      }
-    }
-    if (!reduceMotion) requestAnimationFrame(tick);
   } catch (e) { /* cross-origin iframe — feature unavailable in this Streamlit setup */ }
 })();
 </script>
