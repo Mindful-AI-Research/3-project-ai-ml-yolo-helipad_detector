@@ -2099,8 +2099,9 @@ _html_iframe(f"""
 #
 # Matches the HTML presentation's visual identity (which renders its
 # starfield with real Three.js/WebGL — 850 silver points at #C9D6DE).
-# Both stars and particles use that same silver (#C9D6DE), not teal — the
-# whole field reads as one coherent silver starfield, like the reference.
+# Stars are cool-tinted (never pure white) and twinkle softly at low peak
+# opacity, spread on a jittered grid; a few teal four-point sparkles add
+# accents. The sky stays in the background and does not compete with text.
 # Pulling an actual Three.js scene from a CDN into the parent document
 # here would add a real external dependency and a new failure surface
 # (CDN blocked, WebGL context denied, etc.) on top of everything already
@@ -2146,34 +2147,45 @@ _html_iframe("""
         transform-style: preserve-3d;
         will-change: transform;
       }
+      /* Soft, cool-tinted stars (never pure white) that fade in and out
+         gently. Peak opacity is kept low so the sky stays in the background
+         and never competes with the text on top of it. */
       .sf-star {
-        position: absolute; border-radius: 50%; background: #E8EEF2;
+        position: absolute; border-radius: 50%; background: #CFE8E6;
+        opacity: 0.14; will-change: opacity;
         animation: sf-twinkle ease-in-out infinite;
       }
       @keyframes sf-twinkle {
-        0%, 100% {
-          opacity: 0.22; transform: scale(0.88);
-          box-shadow: 0 0 1px 0px rgba(201,214,222,0.12);
-        }
-        50% {
-          opacity: 0.95; transform: scale(1.2);
-          box-shadow: 0 0 6px 2px rgba(201,214,222,0.55);
-        }
+        0%, 100% { opacity: 0.12; transform: scale(0.9); }
+        50%      { opacity: 0.60; transform: scale(1.15); }
+      }
+      /* A few larger four-point sparkles in the project's teal. */
+      .sf-spark {
+        position: absolute; width: 12px; height: 12px; opacity: 0.18;
+        background:
+          radial-gradient(circle, #D9FBF6 0 1.6px, transparent 2.6px),
+          linear-gradient(#5EEAD4, #5EEAD4) center / 1.4px 100% no-repeat,
+          linear-gradient(#5EEAD4, #5EEAD4) center / 100% 1.4px no-repeat;
+        animation: sf-spark-twinkle ease-in-out infinite;
+      }
+      @keyframes sf-spark-twinkle {
+        0%, 100% { opacity: 0.14; transform: scale(0.8) rotate(0deg); }
+        50%      { opacity: 0.72; transform: scale(1.1) rotate(8deg); }
       }
       .sf-particle {
-        position: absolute; background: #C9D6DE; border-radius: 2px;
-        box-shadow: 0 0 4px rgba(201,214,222,0.6);
+        position: absolute; background: #BFD9F2; border-radius: 2px;
         animation: sf-drift linear infinite;
       }
       @keyframes sf-drift {
         0%   { transform: translate(0,0); opacity: 0; }
-        12%  { opacity: 0.6; }
-        88%  { opacity: 0.6; }
+        12%  { opacity: 0.28; }
+        88%  { opacity: 0.28; }
         100% { transform: translate(var(--dx), var(--dy)); opacity: 0; }
       }
       @media (prefers-reduced-motion: reduce) {
-        .sf-star { animation-duration: 6s !important; }
-        .sf-particle { animation: none !important; opacity: 0.35; }
+        .sf-star { animation-duration: 9s !important; }
+        .sf-spark { animation: none !important; opacity: 0.35; }
+        .sf-particle { animation: none !important; opacity: 0.2; }
         #starfield-layer { transform: none !important; }
       }
     `;
@@ -2186,25 +2198,44 @@ _html_iframe("""
     stage.appendChild(layer);
     doc.body.appendChild(stage);
 
-    var starCount = 140;
-    for (var i = 0; i < starCount; i++) {
-      var s = doc.createElement('div');
-      s.className = 'sf-star';
-      var size = (Math.random() * 2.4 + 1.4).toFixed(1);
-      s.style.width = size + 'px';
-      s.style.height = size + 'px';
-      s.style.top = (Math.random() * 100) + '%';
-      s.style.left = (Math.random() * 100) + '%';
-      s.style.animationDuration = (2.5 + Math.random() * 6.5).toFixed(2) + 's';
-      s.style.animationDelay = (Math.random() * -10).toFixed(2) + 's';
-      layer.appendChild(s);
+    // Evenly spread stars: one star per cell of a jittered grid, so the sky
+    // looks natural but never clumps behind a block of text.
+    var COLS = 14, ROWS = 10;
+    var tints = ['#CFE8E6', '#BFD9F2', '#D8EEF0', '#C6DDEA'];
+    for (var r = 0; r < ROWS; r++) {
+      for (var c = 0; c < COLS; c++) {
+        var s = doc.createElement('div');
+        s.className = 'sf-star';
+        var size = (Math.random() * 1.4 + 1.0).toFixed(1);
+        s.style.width = size + 'px';
+        s.style.height = size + 'px';
+        s.style.top = ((r + 0.15 + Math.random() * 0.7) / ROWS * 100).toFixed(2) + '%';
+        s.style.left = ((c + 0.15 + Math.random() * 0.7) / COLS * 100).toFixed(2) + '%';
+        s.style.background = tints[Math.floor(Math.random() * tints.length)];
+        s.style.animationDuration = (4 + Math.random() * 6).toFixed(2) + 's';
+        s.style.animationDelay = (Math.random() * -10).toFixed(2) + 's';
+        layer.appendChild(s);
+      }
     }
 
-    var particleCount = 24;
+    for (var k = 0; k < 6; k++) {
+      var sp = doc.createElement('div');
+      sp.className = 'sf-spark';
+      var ssize = (Math.random() * 6 + 9).toFixed(0);
+      sp.style.width = ssize + 'px';
+      sp.style.height = ssize + 'px';
+      sp.style.top = (8 + Math.random() * 84).toFixed(1) + '%';
+      sp.style.left = (5 + Math.random() * 90).toFixed(1) + '%';
+      sp.style.animationDuration = (6 + Math.random() * 6).toFixed(1) + 's';
+      sp.style.animationDelay = (Math.random() * -12).toFixed(1) + 's';
+      layer.appendChild(sp);
+    }
+
+    var particleCount = 10;
     for (var j = 0; j < particleCount; j++) {
       var p = doc.createElement('div');
       p.className = 'sf-particle';
-      var psize = (Math.random() * 3 + 2).toFixed(1);
+      var psize = (Math.random() * 2 + 2).toFixed(1);
       p.style.width = psize + 'px';
       p.style.height = psize + 'px';
       p.style.top = (Math.random() * 100) + '%';
@@ -2213,7 +2244,7 @@ _html_iframe("""
       var dy = (Math.random() * -140 - 40).toFixed(0) + 'px';
       p.style.setProperty('--dx', dx);
       p.style.setProperty('--dy', dy);
-      p.style.animationDuration = (14 + Math.random() * 14).toFixed(1) + 's';
+      p.style.animationDuration = (16 + Math.random() * 14).toFixed(1) + 's';
       p.style.animationDelay = (Math.random() * 10).toFixed(1) + 's';
       layer.appendChild(p);
     }
