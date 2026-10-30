@@ -2152,25 +2152,25 @@ _html_iframe("""
          and never competes with the text on top of it. */
       .sf-star {
         position: absolute; border-radius: 50%; background: #CFE8E6;
-        opacity: 0.14; will-change: opacity;
+        opacity: 0.25; will-change: opacity;
         animation: sf-twinkle ease-in-out infinite;
       }
       @keyframes sf-twinkle {
-        0%, 100% { opacity: 0.12; transform: scale(0.9); }
-        50%      { opacity: 0.60; transform: scale(1.15); }
+        0%, 100% { opacity: 0.22; transform: scale(0.9);  box-shadow: 0 0 1px rgba(207,232,230,0.15); }
+        50%      { opacity: 0.95; transform: scale(1.25); box-shadow: 0 0 6px 1px rgba(207,232,230,0.55); }
       }
       /* A few larger four-point sparkles in the project's teal. */
       .sf-spark {
-        position: absolute; width: 12px; height: 12px; opacity: 0.18;
+        position: absolute; width: 16px; height: 16px; opacity: 0.3;
         background:
-          radial-gradient(circle, #D9FBF6 0 1.6px, transparent 2.6px),
-          linear-gradient(#5EEAD4, #5EEAD4) center / 1.4px 100% no-repeat,
-          linear-gradient(#5EEAD4, #5EEAD4) center / 100% 1.4px no-repeat;
+          radial-gradient(circle, #E6FFFB 0 2.4px, rgba(94,234,212,0.35) 3.5px, transparent 6px),
+          linear-gradient(#5EEAD4, #5EEAD4) center / 2px 100% no-repeat,
+          linear-gradient(#5EEAD4, #5EEAD4) center / 100% 2px no-repeat;
         animation: sf-spark-twinkle ease-in-out infinite;
       }
       @keyframes sf-spark-twinkle {
-        0%, 100% { opacity: 0.14; transform: scale(0.8) rotate(0deg); }
-        50%      { opacity: 0.72; transform: scale(1.1) rotate(8deg); }
+        0%, 100% { opacity: 0.25; transform: scale(0.8) rotate(0deg); }
+        50%      { opacity: 1;    transform: scale(1.15) rotate(8deg); }
       }
       .sf-particle {
         position: absolute; background: #BFD9F2; border-radius: 2px;
@@ -2200,13 +2200,13 @@ _html_iframe("""
 
     // Evenly spread stars: one star per cell of a jittered grid, so the sky
     // looks natural but never clumps behind a block of text.
-    var COLS = 14, ROWS = 10;
-    var tints = ['#CFE8E6', '#BFD9F2', '#D8EEF0', '#C6DDEA'];
+    var COLS = 18, ROWS = 11;
+    var tints = ['#D6EDEA', '#C4DDF4', '#DDF0F2', '#CFE3F0'];
     for (var r = 0; r < ROWS; r++) {
       for (var c = 0; c < COLS; c++) {
         var s = doc.createElement('div');
         s.className = 'sf-star';
-        var size = (Math.random() * 1.4 + 1.0).toFixed(1);
+        var size = (Math.random() * 1.8 + 1.6).toFixed(1);
         s.style.width = size + 'px';
         s.style.height = size + 'px';
         s.style.top = ((r + 0.15 + Math.random() * 0.7) / ROWS * 100).toFixed(2) + '%';
@@ -2218,10 +2218,10 @@ _html_iframe("""
       }
     }
 
-    for (var k = 0; k < 6; k++) {
+    for (var k = 0; k < 8; k++) {
       var sp = doc.createElement('div');
       sp.className = 'sf-spark';
-      var ssize = (Math.random() * 6 + 9).toFixed(0);
+      var ssize = (Math.random() * 8 + 13).toFixed(0);
       sp.style.width = ssize + 'px';
       sp.style.height = ssize + 'px';
       sp.style.top = (8 + Math.random() * 84).toFixed(1) + '%';
