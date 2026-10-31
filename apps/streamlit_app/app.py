@@ -2133,14 +2133,14 @@ _html_iframe("""
       #starfield-canvas { display:none; }
       #starfield-dots { position:absolute; inset:0; }
       .sf-d { position:absolute; border-radius:50%; animation-timing-function: ease-in-out; animation-iteration-count: infinite; }
-@keyframes sf-breathe0 { 0%,100% { opacity: 0.05; } 50% { opacity: 1; } }
-      @keyframes sf-blink0 { 0%,40%,100% { opacity: 1; } 70% { opacity: 0.05; } }
-      @keyframes sf-breathe1 { 0%,100% { opacity: 0.12; } 50% { opacity: 1; } }
-      @keyframes sf-blink1 { 0%,40%,100% { opacity: 1; } 70% { opacity: 0.12; } }
-      @keyframes sf-breathe2 { 0%,100% { opacity: 0.2; } 50% { opacity: 1; } }
-      @keyframes sf-blink2 { 0%,40%,100% { opacity: 1; } 70% { opacity: 0.2; } }
-      @keyframes sf-breathe3 { 0%,100% { opacity: 0.3; } 50% { opacity: 1; } }
-      @keyframes sf-blink3 { 0%,40%,100% { opacity: 1; } 70% { opacity: 0.3; } }
+@keyframes sf-breathe0 { 0%,100% { opacity: 0.3; } 50% { opacity: 1; } }
+      @keyframes sf-blink0 { 0%,40%,100% { opacity: 1; } 70% { opacity: 0.3; } }
+      @keyframes sf-breathe1 { 0%,100% { opacity: 0.4; } 50% { opacity: 1; } }
+      @keyframes sf-blink1 { 0%,40%,100% { opacity: 1; } 70% { opacity: 0.4; } }
+      @keyframes sf-breathe2 { 0%,100% { opacity: 0.5; } 50% { opacity: 1; } }
+      @keyframes sf-blink2 { 0%,40%,100% { opacity: 1; } 70% { opacity: 0.5; } }
+      @keyframes sf-breathe3 { 0%,100% { opacity: 0.6; } 50% { opacity: 1; } }
+      @keyframes sf-blink3 { 0%,40%,100% { opacity: 1; } 70% { opacity: 0.6; } }
     `;
     doc.head.appendChild(style);
 
@@ -2168,7 +2168,7 @@ _html_iframe("""
     // nothing can freeze it (no iframe remount, no CSP, no throttling).
     var raw = '__STARS__'.split(',');
     var N = Math.floor(raw.length / 4);
-    var tints = ['196,204,214', '186,196,208', '208,214,222', '178,190,204'];   // silver-grey
+    var tints = ['222,230,240', '210,221,234', '232,238,245', '200,214,230'];   // silver-grey
     var old = doc.getElementById('starfield-dots'); if (old) old.remove();
     var layer = doc.createElement('div');
     layer.id = 'starfield-dots';
@@ -2176,8 +2176,8 @@ _html_iframe("""
     for (var i = 0; i < N; i++) {
       var r = Math.max(0.5, raw[i*4+2] / 100 * 1.1), o = raw[i*4+3] / 100;
       var d = doc.createElement('div'), k = Math.floor(Math.random() * 4);
-      var sz = (r * 2).toFixed(2) + 'px';
-      var a = (0.55 + 0.45 * o).toFixed(2);
+      var sz = Math.max(1.7, r * 2.6).toFixed(2) + 'px';
+      var a = (0.8 + 0.2 * o).toFixed(2);
       var sharp = Math.random() < 0.3;                      // some stars blink briefly, others breathe
       d.className = 'sf-d';
       d.style.cssText = 'left:' + (raw[i*4] / 75).toFixed(2) + '%;top:' + (raw[i*4+1] / 48.75).toFixed(2) +
