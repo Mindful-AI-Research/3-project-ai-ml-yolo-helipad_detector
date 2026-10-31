@@ -2134,7 +2134,7 @@ _html_iframe("""
       .sf-d { position:absolute; border-radius:50%; display:block; animation: sf-breathe ease-in-out infinite; }
       .sf-d.sf-b { animation-name: sf-blink; }
       @keyframes sf-breathe { 0%,100% { opacity: var(--lo); } 50% { opacity: 1; } }
-      @keyframes sf-blink { 0%,62%,100% { opacity: 1; } 78% { opacity: var(--lo); } }
+      @keyframes sf-blink { 0%,40%,100% { opacity: 1; } 70% { opacity: var(--lo); } }
       .sf-spark { position:absolute; opacity:0.7; animation: sf-spark-twinkle ease-in-out infinite; }
       @keyframes sf-spark-twinkle { 0%,100% { opacity:0.35; } 50% { opacity:1; } }
       @media (prefers-reduced-motion: reduce) { .sf-spark { animation:none !important; } }
@@ -2175,12 +2175,12 @@ _html_iframe("""
       var d = doc.createElement('i');
       var sz = (r * 2).toFixed(2) + 'px';
       var a = (0.55 + 0.45 * o).toFixed(2);
-      var sharp = Math.random() < 0.35;                      // some stars blink briefly, others breathe
+      var sharp = Math.random() < 0.3;                      // some stars blink briefly, others breathe
       d.className = sharp ? 'sf-d sf-b' : 'sf-d';
       d.style.cssText = 'left:' + (raw[i*4] / 75).toFixed(2) + '%;top:' + (raw[i*4+1] / 48.75).toFixed(2) +
         '%;width:' + sz + ';height:' + sz + ';background:rgba(' + tints[i % 4] + ',' + a + ');' +
-        '--lo:' + (0.08 + Math.random() * 0.35).toFixed(2) + ';' +
-        'animation-duration:' + (sharp ? 6 + Math.random() * 16 : 2.5 + Math.random() * 6.5).toFixed(2) + 's;' +
+        '--lo:' + (0.03 + Math.random() * 0.25).toFixed(2) + ';' +
+        'animation-duration:' + (sharp ? 3 + Math.random() * 7 : 1.6 + Math.random() * 3.4).toFixed(2) + 's;' +
         'animation-delay:-' + (Math.random() * 22).toFixed(2) + 's';
       frag.appendChild(d);
     }
