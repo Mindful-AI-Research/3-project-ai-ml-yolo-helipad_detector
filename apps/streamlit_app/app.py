@@ -2155,66 +2155,65 @@ _html_iframe("""
       stage.appendChild(im);
     });
 
-    var raw = '__STARS__'.split(',');
-    var N = Math.floor(raw.length / 4), stars = [];
-    var tints = ['220,235,250', '211,239,236', '228,236,246', '205,227,243'];
+    // The animation code is injected as a <script> INTO THE PARENT PAGE, so it
+    // belongs to the parent window and keeps running no matter what Streamlit
+    // does with this 1px iframe on reruns.
+    var code = `
+(function() {
+  var st = document.getElementById('starfield-stage');
+  var cv = document.getElementById('starfield-canvas');
+  if (!st || !cv) return;
+  if (window.__sfTimer) { clearInterval(window.__sfTimer); }
+  var raw = '__STARS__'.split(',');
+  var N = Math.floor(raw.length / 4), stars = [];
+  var tints = ['150,158,168', '142,152,164', '164,170,178', '134,146,158'];   // silver-grey
+  for (var i = 0; i < N; i++) {
+    stars.push({
+      x: raw[i*4] / 7500, y: raw[i*4+1] / 4875,
+      r: Math.max(0.5, raw[i*4+2] / 100 * 1.1),
+      o: raw[i*4+3] / 100 * 0.55,
+      t: tints[i % tints.length],
+      ph: Math.random() * 6.283, ph2: Math.random() * 6.283,
+      sp: 0.7 + Math.random() * 1.8, sp2: 1.9 + Math.random() * 2.4,
+      d: 0.45 + Math.random() * 0.5,
+      nf: Math.random() * 20, fl: -9
+    });
+  }
+  var ctx = cv.getContext('2d');
+  function fit() {
+    var dpr = Math.min(window.devicePixelRatio || 1, 2);
+    cv.width = Math.round(st.clientWidth * dpr);
+    cv.height = Math.round(st.clientHeight * dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+  function draw() {
+    var W = st.clientWidth, H = st.clientHeight, sec = performance.now() / 1000;
+    ctx.clearRect(0, 0, W, H);
     for (var i = 0; i < N; i++) {
-      stars.push({
-        x: raw[i*4] / 7500, y: raw[i*4+1] / 4875,
-        r: Math.max(0.5, raw[i*4+2] / 100 * 1.1),
-        o: raw[i*4+3] / 100,
-        t: tints[i % tints.length],
-        // every star twinkles on its own random rhythm: period 2.5-9 s,
-        // random depth (some barely, some strongly) and a second, faster
-        // wobble so the pattern never repeats evenly, like a real sky
-        ph: Math.random() * 6.283, ph2: Math.random() * 6.283,
-        sp: 0.7 + Math.random() * 1.8,           // radians per second
-        sp2: 1.9 + Math.random() * 2.4,
-        d: 0.45 + Math.random() * 0.5,           // twinkle depth
-        nf: Math.random() * 20, fl: -9           // next random flicker / its start
-      });
+      var s = stars[i];
+      var w = 0.7 * Math.sin(sec * s.sp + s.ph) + 0.3 * Math.sin(sec * s.sp2 + s.ph2);
+      var a = s.o * (1 - s.d * (0.5 - 0.5 * w));
+      if (sec > s.nf) { s.fl = sec; s.nf = sec + 4 + Math.random() * 22; }
+      var ft = (sec - s.fl) / 1.1;
+      if (ft >= 0 && ft < 1) a *= 1 - 0.7 * Math.sin(ft * 3.1416);
+      ctx.fillStyle = 'rgba(' + s.t + ',' + a.toFixed(3) + ')';
+      ctx.beginPath();
+      ctx.arc(s.x * W, s.y * H, s.r, 0, 6.2832);
+      ctx.fill();
     }
-
-    var ctx = cv.getContext('2d');
-    var reduce = doc.defaultView.matchMedia &&
-      doc.defaultView.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    function fit() {
-      var dpr = Math.min(doc.defaultView.devicePixelRatio || 1, 2);
-      cv.width = Math.round(stage.clientWidth * dpr);
-      cv.height = Math.round(stage.clientHeight * dpr);
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    }
-    function draw(ts) {
-      var W = stage.clientWidth, H = stage.clientHeight, sec = ts / 1000;
-      ctx.clearRect(0, 0, W, H);
-      for (var i = 0; i < N; i++) {
-        var s = stars[i], a = s.o;
-        if (!reduce) {
-          var w = 0.7 * Math.sin(sec * s.sp + s.ph) + 0.3 * Math.sin(sec * s.sp2 + s.ph2);  // -1..1
-          a = s.o * (1 - s.d * (0.5 - 0.5 * w));
-          // occasional soft random "blink": a smooth dip at an unpredictable moment
-          if (sec > s.nf) { s.fl = sec; s.nf = sec + 4 + Math.random() * 22; }
-          var ft = (sec - s.fl) / 1.1;
-          if (ft >= 0 && ft < 1) a *= 1 - 0.7 * Math.sin(ft * 3.1416);
-        }
-        ctx.fillStyle = 'rgba(' + s.t + ',' + a.toFixed(3) + ')';
-        ctx.beginPath();
-        ctx.arc(s.x * W, s.y * H, s.r, 0, 6.2832);
-        ctx.fill();
-      }
-    }
-    // Drive the animation with the PARENT window's clock: this script lives in
-    // a 1px iframe, and browsers pause requestAnimationFrame in such iframes,
-    // which left the sky frozen.
-    var pw = doc.defaultView, last = 0;
-    function tick(ts) {
-      if (!doc.getElementById('starfield-stage')) return;
-      if (ts - last > 40) { draw(ts); last = ts; }
-      pw.requestAnimationFrame(tick);
-    }
-    fit(); draw(0);
-    pw.addEventListener('resize', function() { fit(); draw(pw.performance.now()); });
-    if (!reduce) pw.requestAnimationFrame(tick);
+  }
+  fit(); draw();
+  window.addEventListener('resize', function() { fit(); draw(); });
+  window.__sfTimer = setInterval(function() {
+    if (!document.getElementById('starfield-stage')) { clearInterval(window.__sfTimer); return; }
+    draw();
+  }, 50);
+})();`;
+    var sc = doc.createElement('script');
+    sc.id = 'starfield-script';
+    var old = doc.getElementById('starfield-script'); if (old) old.remove();
+    sc.textContent = code;
+    doc.body.appendChild(sc);
   } catch (e) { /* cross-origin iframe — feature unavailable in this Streamlit setup */ }
 })();
 </script>
