@@ -2131,7 +2131,7 @@ _html_iframe("""
       }
       #starfield-canvas { position:absolute; top:0; left:0; width:100%; height:100%; }
       .sf-spark { position:absolute; opacity:0.7; animation: sf-spark-twinkle ease-in-out infinite; }
-      @keyframes sf-spark-twinkle { 0%,100% { opacity:0.45; } 50% { opacity:1; } }
+      @keyframes sf-spark-twinkle { 0%,100% { opacity:0.35; } 50% { opacity:1; } }
       @media (prefers-reduced-motion: reduce) { .sf-spark { animation:none !important; } }
     `;
     doc.head.appendChild(style);
@@ -2144,7 +2144,7 @@ _html_iframe("""
     doc.body.appendChild(stage);
 
     // two cyan four-point sparkles from the reference SVG (relative position)
-    [['__SPARK_BIG__', 0.865, 0.095, 44, 6.5], ['__SPARK_SMALL__', 0.818, 0.148, 28, 8.5]].forEach(function(d) {
+    [['__SPARK_BIG__', 0.865, 0.095, 44, 4.2], ['__SPARK_SMALL__', 0.818, 0.148, 28, 5.6]].forEach(function(d) {
       var im = doc.createElement('img');
       im.className = 'sf-spark';
       im.src = 'data:image/png;base64,' + d[0];
@@ -2164,9 +2164,14 @@ _html_iframe("""
         r: Math.max(0.5, raw[i*4+2] / 100 * 1.1),
         o: raw[i*4+3] / 100,
         t: tints[i % tints.length],
-        tw: (i % 3 === 0),                       // one in three twinkles
-        ph: Math.random() * 6.283,
-        sp: 0.35 + Math.random() * 0.55          // radians per second
+        // every star twinkles on its own random rhythm: period 2.5-9 s,
+        // random depth (some barely, some strongly) and a second, faster
+        // wobble so the pattern never repeats evenly, like a real sky
+        ph: Math.random() * 6.283, ph2: Math.random() * 6.283,
+        sp: 0.7 + Math.random() * 1.8,           // radians per second
+        sp2: 1.9 + Math.random() * 2.4,
+        d: 0.45 + Math.random() * 0.5,           // twinkle depth
+        nf: Math.random() * 20, fl: -9           // next random flicker / its start
       });
     }
 
@@ -2184,7 +2189,14 @@ _html_iframe("""
       ctx.clearRect(0, 0, W, H);
       for (var i = 0; i < N; i++) {
         var s = stars[i], a = s.o;
-        if (s.tw && !reduce) a = s.o * (0.35 + 0.65 * (0.5 + 0.5 * Math.sin(sec * s.sp + s.ph)));
+        if (!reduce) {
+          var w = 0.7 * Math.sin(sec * s.sp + s.ph) + 0.3 * Math.sin(sec * s.sp2 + s.ph2);  // -1..1
+          a = s.o * (1 - s.d * (0.5 - 0.5 * w));
+          // occasional soft random "blink": a smooth dip at an unpredictable moment
+          if (sec > s.nf) { s.fl = sec; s.nf = sec + 4 + Math.random() * 22; }
+          var ft = (sec - s.fl) / 1.1;
+          if (ft >= 0 && ft < 1) a *= 1 - 0.7 * Math.sin(ft * 3.1416);
+        }
         ctx.fillStyle = 'rgba(' + s.t + ',' + a.toFixed(3) + ')';
         ctx.beginPath();
         ctx.arc(s.x * W, s.y * H, s.r, 0, 6.2832);
@@ -2193,7 +2205,7 @@ _html_iframe("""
     }
     var last = 0;
     function tick(ts) {
-      if (ts - last > 33) { draw(ts); last = ts; }   // ~30 fps is plenty
+      if (ts - last > 40) { draw(ts); last = ts; }   // ~25 fps keeps the fades smooth and cheap
       requestAnimationFrame(tick);
     }
     fit(); draw(0);
