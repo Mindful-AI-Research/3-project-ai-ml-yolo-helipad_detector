@@ -2203,14 +2203,18 @@ _html_iframe("""
         ctx.fill();
       }
     }
-    var last = 0;
+    // Drive the animation with the PARENT window's clock: this script lives in
+    // a 1px iframe, and browsers pause requestAnimationFrame in such iframes,
+    // which left the sky frozen.
+    var pw = doc.defaultView, last = 0;
     function tick(ts) {
-      if (ts - last > 40) { draw(ts); last = ts; }   // ~25 fps keeps the fades smooth and cheap
-      requestAnimationFrame(tick);
+      if (!doc.getElementById('starfield-stage')) return;
+      if (ts - last > 40) { draw(ts); last = ts; }
+      pw.requestAnimationFrame(tick);
     }
     fit(); draw(0);
-    doc.defaultView.addEventListener('resize', function() { fit(); draw(performance.now()); });
-    if (!reduce) requestAnimationFrame(tick);
+    pw.addEventListener('resize', function() { fit(); draw(pw.performance.now()); });
+    if (!reduce) pw.requestAnimationFrame(tick);
   } catch (e) { /* cross-origin iframe — feature unavailable in this Streamlit setup */ }
 })();
 </script>
