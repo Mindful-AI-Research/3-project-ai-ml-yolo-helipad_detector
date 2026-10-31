@@ -2129,7 +2129,12 @@ _html_iframe("""
         pointer-events: none; z-index: 0; overflow: hidden;
         background: #05070a radial-gradient(ellipse at 50% 30%, rgba(14,117,109,0.10), transparent 60%);
       }
-      #starfield-canvas { position:absolute; top:0; left:0; width:100%; height:100%; }
+      #starfield-canvas { display:none; }
+      #starfield-dots { position:absolute; inset:0; }
+      .sf-d { position:absolute; border-radius:50%; display:block; animation: sf-breathe ease-in-out infinite; }
+      .sf-d.sf-b { animation-name: sf-blink; }
+      @keyframes sf-breathe { 0%,100% { opacity: var(--lo); } 50% { opacity: 1; } }
+      @keyframes sf-blink { 0%,62%,100% { opacity: 1; } 78% { opacity: var(--lo); } }
       .sf-spark { position:absolute; opacity:0.7; animation: sf-spark-twinkle ease-in-out infinite; }
       @keyframes sf-spark-twinkle { 0%,100% { opacity:0.35; } 50% { opacity:1; } }
       @media (prefers-reduced-motion: reduce) { .sf-spark { animation:none !important; } }
@@ -2155,65 +2160,32 @@ _html_iframe("""
       stage.appendChild(im);
     });
 
-    // The animation code is injected as a <script> INTO THE PARENT PAGE, so it
-    // belongs to the parent window and keeps running no matter what Streamlit
-    // does with this 1px iframe on reruns.
-    var code = `
-(function() {
-  var st = document.getElementById('starfield-stage');
-  var cv = document.getElementById('starfield-canvas');
-  if (!st || !cv) return;
-  if (window.__sfTimer) { clearInterval(window.__sfTimer); }
-  var raw = '__STARS__'.split(',');
-  var N = Math.floor(raw.length / 4), stars = [];
-  var tints = ['150,158,168', '142,152,164', '164,170,178', '134,146,158'];   // silver-grey
-  for (var i = 0; i < N; i++) {
-    stars.push({
-      x: raw[i*4] / 7500, y: raw[i*4+1] / 4875,
-      r: Math.max(0.5, raw[i*4+2] / 100 * 1.1),
-      o: raw[i*4+3] / 100 * 0.55,
-      t: tints[i % tints.length],
-      ph: Math.random() * 6.283, ph2: Math.random() * 6.283,
-      sp: 0.7 + Math.random() * 1.8, sp2: 1.9 + Math.random() * 2.4,
-      d: 0.45 + Math.random() * 0.5,
-      nf: Math.random() * 20, fl: -9
-    });
-  }
-  var ctx = cv.getContext('2d');
-  function fit() {
-    var dpr = Math.min(window.devicePixelRatio || 1, 2);
-    cv.width = Math.round(st.clientWidth * dpr);
-    cv.height = Math.round(st.clientHeight * dpr);
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-  }
-  function draw() {
-    var W = st.clientWidth, H = st.clientHeight, sec = performance.now() / 1000;
-    ctx.clearRect(0, 0, W, H);
+    // Pure CSS twinkle: each star is a tiny <div> with its own random duration,
+    // delay and depth. No JavaScript timers or injected scripts are involved, so
+    // nothing can freeze it (no iframe remount, no CSP, no throttling).
+    var raw = '__STARS__'.split(',');
+    var N = Math.floor(raw.length / 4);
+    var tints = ['196,204,214', '186,196,208', '208,214,222', '178,190,204'];   // silver-grey
+    var old = doc.getElementById('starfield-dots'); if (old) old.remove();
+    var layer = doc.createElement('div');
+    layer.id = 'starfield-dots';
+    var frag = doc.createDocumentFragment();
     for (var i = 0; i < N; i++) {
-      var s = stars[i];
-      var w = 0.7 * Math.sin(sec * s.sp + s.ph) + 0.3 * Math.sin(sec * s.sp2 + s.ph2);
-      var a = s.o * (1 - s.d * (0.5 - 0.5 * w));
-      if (sec > s.nf) { s.fl = sec; s.nf = sec + 4 + Math.random() * 22; }
-      var ft = (sec - s.fl) / 1.1;
-      if (ft >= 0 && ft < 1) a *= 1 - 0.7 * Math.sin(ft * 3.1416);
-      ctx.fillStyle = 'rgba(' + s.t + ',' + a.toFixed(3) + ')';
-      ctx.beginPath();
-      ctx.arc(s.x * W, s.y * H, s.r, 0, 6.2832);
-      ctx.fill();
+      var r = Math.max(0.5, raw[i*4+2] / 100 * 1.1), o = raw[i*4+3] / 100;
+      var d = doc.createElement('i');
+      var sz = (r * 2).toFixed(2) + 'px';
+      var a = (0.55 + 0.45 * o).toFixed(2);
+      var sharp = Math.random() < 0.35;                      // some stars blink briefly, others breathe
+      d.className = sharp ? 'sf-d sf-b' : 'sf-d';
+      d.style.cssText = 'left:' + (raw[i*4] / 75).toFixed(2) + '%;top:' + (raw[i*4+1] / 48.75).toFixed(2) +
+        '%;width:' + sz + ';height:' + sz + ';background:rgba(' + tints[i % 4] + ',' + a + ');' +
+        '--lo:' + (0.08 + Math.random() * 0.35).toFixed(2) + ';' +
+        'animation-duration:' + (sharp ? 6 + Math.random() * 16 : 2.5 + Math.random() * 6.5).toFixed(2) + 's;' +
+        'animation-delay:-' + (Math.random() * 22).toFixed(2) + 's';
+      frag.appendChild(d);
     }
-  }
-  fit(); draw();
-  window.addEventListener('resize', function() { fit(); draw(); });
-  window.__sfTimer = setInterval(function() {
-    if (!document.getElementById('starfield-stage')) { clearInterval(window.__sfTimer); return; }
-    draw();
-  }, 50);
-})();`;
-    var sc = doc.createElement('script');
-    sc.id = 'starfield-script';
-    var old = doc.getElementById('starfield-script'); if (old) old.remove();
-    sc.textContent = code;
-    doc.body.appendChild(sc);
+    layer.appendChild(frag);
+    stage.appendChild(layer);
   } catch (e) { /* cross-origin iframe — feature unavailable in this Streamlit setup */ }
 })();
 </script>
