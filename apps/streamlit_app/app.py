@@ -2140,12 +2140,12 @@ _html_iframe("""
       @keyframes sf-breathe2 { 0%,100% { opacity: 0.5; } 50% { opacity: 1; } }
       @keyframes sf-blink2 { 0%,40%,100% { opacity: 1; } 70% { opacity: 0.5; } }
       @keyframes sf-breathe3 { 0%,100% { opacity: 0.6; } 50% { opacity: 1; } }
-      .sf-star { position:absolute; border-radius:50%; background:#B4C2CE; animation: sf-twinkle ease-in-out infinite; }
+      .sf-star { position:absolute; background:#C4D0DA; animation: sf-twinkle ease-in-out infinite;
+        clip-path: polygon(50% 0, 60% 40%, 100% 50%, 60% 60%, 50% 100%, 40% 60%, 0 50%, 40% 40%); }
       @keyframes sf-twinkle {
-        0%,100% { opacity: 0.15; transform: scale(0.85); box-shadow: 0 0 1px 0 rgba(180,194,206,0.10); }
-        50% { opacity: 0.95; transform: scale(1.25); box-shadow: 0 0 5px 1px rgba(180,194,206,0.5); }
+        0%,100% { opacity: 0.12; transform: scale(0.55) rotate(0deg); }
+        50% { opacity: 1; transform: scale(1.2) rotate(12deg); }
       }
-      @keyframes sf-blink3 { 0%,40%,100% { opacity: 1; } 70% { opacity: 0.6; } }
     `;
     doc.head.appendChild(style);
 
@@ -2180,14 +2180,14 @@ _html_iframe("""
     var frag = doc.createDocumentFragment();
     for (var i = 0; i < N; i++) {
       var r = Math.max(0.5, raw[i*4+2] / 100 * 1.1), o = raw[i*4+3] / 100;
-      if (i % 14 === 0) {                                    // ~150 stars twinkle strongly (soft glow + scale)
+      if (i % 12 === 0) {                                    // ~150 stars twinkle strongly (soft glow + scale)
         var f = doc.createElement('div');
         f.className = 'sf-star';
-        var fs = (2.0 + Math.random() * 1.5).toFixed(1) + 'px';
+        var fs = (5 + Math.random() * 4).toFixed(1) + 'px';
         f.style.left = (raw[i*4] / 75).toFixed(2) + '%';
         f.style.top = (raw[i*4+1] / 48.75).toFixed(2) + '%';
         f.style.width = fs; f.style.height = fs;
-        f.style.animationDuration = (2.5 + Math.random() * 6.5).toFixed(2) + 's';
+        f.style.animationDuration = (0.9 + Math.random() * 2.3).toFixed(2) + 's';
         f.style.animationDelay = (Math.random() * -10).toFixed(2) + 's';
         frag.appendChild(f);
         continue;
@@ -2200,7 +2200,7 @@ _html_iframe("""
       d.style.cssText = 'left:' + (raw[i*4] / 75).toFixed(2) + '%;top:' + (raw[i*4+1] / 48.75).toFixed(2) +
         '%;width:' + sz + ';height:' + sz + ';background:rgba(' + tints[i % 4] + ',' + a + ');' +
         'animation-name:' + (sharp ? 'sf-blink' : 'sf-breathe') + k + ';' +
-        'animation-duration:' + (sharp ? 3 + Math.random() * 7 : 1.6 + Math.random() * 3.4).toFixed(2) + 's;' +
+        'animation-duration:' + (sharp ? 2 + Math.random() * 3.5 : 1.0 + Math.random() * 1.6).toFixed(2) + 's;' +
         'animation-delay:-' + (Math.random() * 22).toFixed(2) + 's';
       frag.appendChild(d);
     }
