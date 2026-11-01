@@ -2187,7 +2187,7 @@ _html_iframe("""
         f.style.left = (raw[i*4] / 75).toFixed(2) + '%';
         f.style.top = (raw[i*4+1] / 48.75).toFixed(2) + '%';
         f.style.width = fs; f.style.height = fs;
-        f.style.animationDuration = (1.8 + Math.random() * 3.2).toFixed(2) + 's';
+        f.style.animationDuration = (0.8 + Math.random() * 1.6).toFixed(2) + 's';
         f.style.animationDelay = (Math.random() * -10).toFixed(2) + 's';
         frag.appendChild(f);
         continue;
@@ -2200,7 +2200,7 @@ _html_iframe("""
       d.style.cssText = 'left:' + (raw[i*4] / 75).toFixed(2) + '%;top:' + (raw[i*4+1] / 48.75).toFixed(2) +
         '%;width:' + sz + ';height:' + sz + ';background:rgba(' + tints[i % 4] + ',' + a + ');' +
         'animation-name:' + (sharp ? 'sf-blink' : 'sf-breathe') + k + ';' +
-        'animation-duration:' + (sharp ? 2 + Math.random() * 3.5 : 1.0 + Math.random() * 1.6).toFixed(2) + 's;' +
+        'animation-duration:' + (sharp ? 1.4 + Math.random() * 2.2 : 0.7 + Math.random() * 1.1).toFixed(2) + 's;' +
         'animation-delay:-' + (Math.random() * 22).toFixed(2) + 's';
       frag.appendChild(d);
     }
