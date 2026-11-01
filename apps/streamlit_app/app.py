@@ -122,7 +122,7 @@ if "_warmed_up" not in st.session_state:
 GLOBAL_CSS = """
     <style>
     .main-title {text-align: center;}
-    .subtitle {text-align: center; color: #94A3B8; font-size: 18px; margin: 10px 0 30px 0;}
+    .subtitle {text-align: center; color: #C3CEDC; font-size: 18px; margin: 10px 0 30px 0;}
     /* Subtle frame + vignette on every detection image (Sample Images,
        Upload, Search by Region) so satellite tiles read as part of the
        same designed piece instead of looking like raw, unstyled crops. */
@@ -285,6 +285,17 @@ GLOBAL_CSS = """
     [data-baseweb="tab"][aria-selected="true"],
     [data-testid="stTab"][aria-selected="true"],
     [data-testid="stTab"][aria-selected="true"] p { color: #FFFFFF !important; }
+    /* Readable body text over the starfield: brighter greys everywhere */
+    [data-testid="stMarkdownContainer"] p,
+    [data-testid="stMarkdownContainer"] li,
+    [data-testid="stMarkdownContainer"] td { color: #EDF2F7; }
+    [data-testid="stMarkdownContainer"] strong { color: #FFFFFF; }
+    [data-testid="stCaptionContainer"], [data-testid="stCaptionContainer"] p,
+    [data-testid="stCaptionContainer"] em,
+    [data-testid="stMarkdownContainer"] small { color: #D3DCE6 !important; opacity: 1 !important; }
+    [data-testid="stWidgetLabel"] p, label { color: #E6ECF3 !important; }
+    [data-testid="stTab"] p { color: #D3DCE6; }
+    [data-testid="stSidebar"] p, [data-testid="stSidebar"] li { color: #EDF2F7; }
     [data-baseweb="tab-border"] { background: rgba(20,184,166,0.18) !important; }
     /* buttons: teal border turns into the red end on hover */
     [data-testid="stDownloadButton"] > button:hover,
@@ -380,7 +391,7 @@ GLOBAL_CSS = """
         background: rgba(20,184,166,0.07);
     }
     .hd-preproj h4 { margin: 0 0 6px 0; color: #5EEAD4; font-size: 1.05rem; }
-    .hd-preproj p { margin: 0; color: #CBD5E1; font-size: 13.5px; line-height: 1.6; }
+    .hd-preproj p { margin: 0; color: #E2E8F0; font-size: 13.5px; line-height: 1.6; }
     /* respect users who prefer reduced motion (page UI only) */
     @media (prefers-reduced-motion: reduce) {
         .metric-card, .flow-step, .sample-btn > button { transition: none !important; }
@@ -2273,10 +2284,10 @@ _html_iframe("""
 # small on purpose — an epigraph, not a banner competing with the title.
 st.markdown(f"""
 <div style="text-align:center; max-width:640px; margin:6px auto 22px auto;">
-    <p style="color:#7C8B93; font-style:italic; font-size:12.5px; letter-spacing:.03em; margin:0 0 6px 0;">
+    <p style="color:#B4C2CC; font-style:italic; font-size:12.5px; letter-spacing:.03em; margin:0 0 6px 0;">
         {t('epigraph.credit')}
     </p>
-    <p style="color:#9FB0B8; font-style:italic; font-size:13.5px; line-height:1.6; margin:0 0 4px 0;">
+    <p style="color:#D0DBE3; font-style:italic; font-size:13.5px; line-height:1.6; margin:0 0 4px 0;">
         {t('epigraph.line1')}
     </p>
     <p style="color:#C9D6DE; font-weight:700; font-size:13.5px; line-height:1.6; margin:0;">
