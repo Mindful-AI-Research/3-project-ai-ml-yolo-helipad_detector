@@ -19,7 +19,7 @@ seaborn>=0.11.0
 ########################
 # Computer Vision & Image Processing
 ########################
-pillow>=7.1.2
+pillow>=13.0.0
 opencv-python-headless>=4.6.0
 
 ########################
