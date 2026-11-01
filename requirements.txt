@@ -30,7 +30,7 @@ flask>=2.0.0
 streamlit>=1.56
 folium>=0.20.0
 streamlit-folium>=0.23.0
-plotly>=5.20.0
+plotly>=7.1.0
 reportlab>=4.0.0
 
 ########################
