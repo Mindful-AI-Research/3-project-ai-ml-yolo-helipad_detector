@@ -356,33 +356,41 @@ GLOBAL_CSS = """
     .hd-info strong { color: #FFFFFF; }
     .hd-info code { color: #5EEAD4; background: rgba(0,0,0,0.25); padding: 1px 5px; border-radius: 4px; }
 
-    /* Global-context table (About): stronger frame, visible row and column
-       rules, header band, zebra rows, hover, São Paulo (study focus) row marked. */
+    /* Global-context table (About): refined editorial look. Hairline rules only,
+       no vertical lines, soft header, São Paulo (study focus) marked with a
+       gentle gradient and a thin accent, not a heavy frame. */
     .hd-ctx-wrap {
-        overflow-x: auto; border: 1.5px solid rgba(20,184,166,0.65); border-radius: 10px;
-        box-shadow: 0 0 0 1px rgba(20,184,166,0.10), 0 4px 16px rgba(0,0,0,0.35);
+        overflow-x: auto; border-radius: 14px;
+        border: 1px solid rgba(255,255,255,0.08);
+        background: linear-gradient(180deg, rgba(10,18,26,0.78), rgba(6,10,16,0.78));
+        box-shadow: 0 10px 30px rgba(0,0,0,0.35);
     }
     .hd-ctx { width: 100%; border-collapse: collapse; }
+    .hd-ctx th, .hd-ctx td { border-left: none !important; border-right: none !important; }
     .hd-ctx th {
-        text-align: left; padding: 11px 14px; color: #5EEAD4; font-size: 12px;
-        text-transform: uppercase; letter-spacing: .05em;
-        background: rgba(20,184,166,0.14); border-bottom: 3px solid #14B8A6;
-        border-right: 1px solid rgba(94,234,212,0.28);
+        text-align: left; padding: 14px 20px; font-size: 10.5px; font-weight: 600;
+        text-transform: uppercase; letter-spacing: .14em; color: #8FD3CB;
+        background: rgba(255,255,255,0.025);
+        border-bottom: 1px solid rgba(94,234,212,0.28);
     }
     .hd-ctx td {
-        padding: 10px 14px; color: #E8EEF5; font-size: 13.5px; vertical-align: top;
-        border-bottom: 1px solid rgba(94,234,212,0.38);
-        border-right: 1px solid rgba(94,234,212,0.20);
+        padding: 15px 20px; color: #E3EAF1; font-size: 13.5px; line-height: 1.6;
+        vertical-align: top; border-bottom: 1px solid rgba(255,255,255,0.06);
     }
-    .hd-ctx th:last-child, .hd-ctx td:last-child { border-right: none; }
     .hd-ctx tbody tr:last-child td { border-bottom: none; }
-    .hd-ctx tbody tr:nth-child(even) td { background: rgba(255,255,255,0.025); }
-    .hd-ctx tbody tr:hover td { background: rgba(20,184,166,0.10); }
+    .hd-ctx tbody tr { transition: background .2s ease; }
+    .hd-ctx tbody tr:hover td { background: rgba(94,234,212,0.04); }
+    .hd-ctx td:first-child { font-weight: 500; color: #F1F5F9; white-space: nowrap; }
     .hd-ctx tbody tr:first-child td {
-        background: rgba(20,184,166,0.12); border-bottom: 2px solid rgba(94,234,212,0.55);
+        background: rgba(20,184,166,0.065);
+        border-bottom: 1px solid rgba(94,234,212,0.16);
     }
-    .hd-ctx tbody tr:first-child td:first-child { box-shadow: inset 4px 0 0 #14B8A6; }
-    .hd-ctx a { color: #5EEAD4; }
+    .hd-ctx tbody tr:first-child td:first-child { box-shadow: inset 2px 0 0 rgba(94,234,212,0.55); font-weight: 600; }
+    .hd-ctx a {
+        color: #86E3D6 !important; text-decoration: none !important;
+        border-bottom: 1px dotted rgba(134,227,214,0.45); transition: border-color .2s, color .2s;
+    }
+    .hd-ctx a:hover { color: #B6F3EA !important; border-bottom-style: solid; border-bottom-color: rgba(182,243,234,0.8); }
 
     /* Pre-project box (Downloads) */
     .hd-preproj {
