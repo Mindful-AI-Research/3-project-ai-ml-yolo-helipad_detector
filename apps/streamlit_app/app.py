@@ -2140,6 +2140,11 @@ _html_iframe("""
       @keyframes sf-breathe2 { 0%,100% { opacity: 0.5; } 50% { opacity: 1; } }
       @keyframes sf-blink2 { 0%,40%,100% { opacity: 1; } 70% { opacity: 0.5; } }
       @keyframes sf-breathe3 { 0%,100% { opacity: 0.6; } 50% { opacity: 1; } }
+      .sf-star { position:absolute; border-radius:50%; background:#B4C2CE; animation: sf-twinkle ease-in-out infinite; }
+      @keyframes sf-twinkle {
+        0%,100% { opacity: 0.15; transform: scale(0.85); box-shadow: 0 0 1px 0 rgba(180,194,206,0.10); }
+        50% { opacity: 0.95; transform: scale(1.25); box-shadow: 0 0 5px 1px rgba(180,194,206,0.5); }
+      }
       @keyframes sf-blink3 { 0%,40%,100% { opacity: 1; } 70% { opacity: 0.6; } }
     `;
     doc.head.appendChild(style);
@@ -2168,16 +2173,28 @@ _html_iframe("""
     // nothing can freeze it (no iframe remount, no CSP, no throttling).
     var raw = '__STARS__'.split(',');
     var N = Math.floor(raw.length / 4);
-    var tints = ['222,230,240', '210,221,234', '232,238,245', '200,214,230'];   // silver-grey
+    var tints = ['150,162,176', '142,156,172', '160,170,182', '136,150,168'];   // grey silver, not white
     var old = doc.getElementById('starfield-dots'); if (old) old.remove();
     var layer = doc.createElement('div');
     layer.id = 'starfield-dots';
     var frag = doc.createDocumentFragment();
     for (var i = 0; i < N; i++) {
       var r = Math.max(0.5, raw[i*4+2] / 100 * 1.1), o = raw[i*4+3] / 100;
+      if (i % 14 === 0) {                                    // ~150 stars twinkle strongly (soft glow + scale)
+        var f = doc.createElement('div');
+        f.className = 'sf-star';
+        var fs = (2.0 + Math.random() * 1.5).toFixed(1) + 'px';
+        f.style.left = (raw[i*4] / 75).toFixed(2) + '%';
+        f.style.top = (raw[i*4+1] / 48.75).toFixed(2) + '%';
+        f.style.width = fs; f.style.height = fs;
+        f.style.animationDuration = (2.5 + Math.random() * 6.5).toFixed(2) + 's';
+        f.style.animationDelay = (Math.random() * -10).toFixed(2) + 's';
+        frag.appendChild(f);
+        continue;
+      }
       var d = doc.createElement('div'), k = Math.floor(Math.random() * 4);
-      var sz = Math.max(1.7, r * 2.6).toFixed(2) + 'px';
-      var a = (0.8 + 0.2 * o).toFixed(2);
+      var sz = Math.max(1.5, r * 2.3).toFixed(2) + 'px';
+      var a = (0.5 + 0.35 * o).toFixed(2);
       var sharp = Math.random() < 0.3;                      // some stars blink briefly, others breathe
       d.className = 'sf-d';
       d.style.cssText = 'left:' + (raw[i*4] / 75).toFixed(2) + '%;top:' + (raw[i*4+1] / 48.75).toFixed(2) +
