@@ -127,11 +127,11 @@ GLOBAL_CSS = """
        Upload, Search by Region) so satellite tiles read as part of the
        same designed piece instead of looking like raw, unstyled crops. */
     [data-testid="stImage"] img {
-        border-radius: 10px;
-        border: 1px solid rgba(20,184,166,0.28);
+        border-radius: 12px;
+        border: 1px solid rgba(255,255,255,0.09);
         box-shadow:
             inset 0 0 34px rgba(0,0,0,0.30),
-            0 4px 18px rgba(0,0,0,0.35);
+            0 8px 24px rgba(0,0,0,0.35);
     }
     /* Same rounded, teal-bordered "netron box" outline applied to native
        Streamlit inputs that otherwise blend flat into the dark background:
@@ -140,9 +140,15 @@ GLOBAL_CSS = """
     [data-testid="stSelectbox"] > div > div,
     [data-testid="stNumberInput"] > div,
     [data-testid="stFileUploaderDropzone"] {
-        border: 1px solid rgba(20,184,166,0.35) !important;
-        border-radius: 10px !important;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.25);
+        border: 1px solid rgba(255,255,255,0.10) !important;
+        border-radius: 12px !important;
+        box-shadow: 0 4px 16px rgba(0,0,0,0.25);
+        transition: border-color .2s ease, box-shadow .2s ease;
+    }
+    [data-testid="stSelectbox"] > div > div:hover,
+    [data-testid="stNumberInput"] > div:hover,
+    [data-testid="stFileUploaderDropzone"]:hover {
+        border-color: rgba(20,184,166,0.50) !important;
     }
     /* Same teal outline extended to every st.dataframe table in the app
        (Top 10 cities, Coordinate data, Field Detections, Experiment
@@ -154,10 +160,11 @@ GLOBAL_CSS = """
        poking past it. */
     [data-testid="stDataFrame"],
     [data-testid="stExpander"] {
-        border: 1px solid rgba(20,184,166,0.35) !important;
-        border-radius: 10px !important;
+        border: 1px solid rgba(255,255,255,0.09) !important;
+        border-radius: 14px !important;
         overflow: hidden;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.25);
+        background: rgba(8,14,20,0.55);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.32);
     }
     /* Same teal outline on every button and download button (Downloads tab's
        "quadradinhos" — Annotated Dataset, Experiment Metrics, Detection
@@ -169,9 +176,15 @@ GLOBAL_CSS = """
        where the visible edges are. */
     [data-testid="stDownloadButton"] > button,
     [data-testid="stButton"] > button {
-        border: 1px solid rgba(20,184,166,0.35) !important;
-        border-radius: 10px !important;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.25);
+        border: 1px solid rgba(255,255,255,0.12) !important;
+        border-radius: 12px !important;
+        box-shadow: 0 4px 16px rgba(0,0,0,0.25);
+        transition: border-color .2s ease, box-shadow .2s ease, transform .2s ease;
+    }
+    [data-testid="stDownloadButton"] > button:hover,
+    [data-testid="stButton"] > button:hover {
+        border-color: rgba(20,184,166,0.60) !important;
+        box-shadow: 0 6px 20px rgba(20,184,166,0.12);
     }
     .result-card {background-color: #f8fafc; padding: 15px; border-radius: 12px; border: 1px solid #e2e8f0;}
     .metric-card {
@@ -392,6 +405,25 @@ GLOBAL_CSS = """
     }
     .hd-ctx a:hover { color: #B6F3EA !important; border-bottom-style: solid; border-bottom-color: rgba(182,243,234,0.8); }
 
+    /* Markdown tables everywhere (st.markdown pipe tables) share the refined look */
+    [data-testid="stMarkdownContainer"] table {
+        width: 100%; border-collapse: collapse; border: 1px solid rgba(255,255,255,0.08);
+        border-radius: 14px; overflow: hidden; margin: 10px 0 16px 0;
+        background: linear-gradient(180deg, rgba(10,18,26,0.78), rgba(6,10,16,0.78));
+    }
+    [data-testid="stMarkdownContainer"] th {
+        text-align: left; padding: 12px 16px; font-size: 10.5px; font-weight: 600;
+        text-transform: uppercase; letter-spacing: .14em; color: #8FD3CB !important;
+        background: rgba(255,255,255,0.025); border: none !important;
+        border-bottom: 1px solid rgba(94,234,212,0.28) !important;
+    }
+    [data-testid="stMarkdownContainer"] td {
+        padding: 12px 16px; color: #E3EAF1; line-height: 1.55; vertical-align: top;
+        border: none !important; border-bottom: 1px solid rgba(255,255,255,0.06) !important;
+    }
+    [data-testid="stMarkdownContainer"] tr:last-child td { border-bottom: none !important; }
+    [data-testid="stMarkdownContainer"] tbody tr:hover td { background: rgba(94,234,212,0.04); }
+
     /* Pre-project box (Downloads) */
     .hd-preproj {
         margin: 8px 0 10px 0; padding: 14px 18px; border-radius: 10px;
@@ -469,6 +501,28 @@ def blues_scale(frac: float) -> str:
     return "#{:02x}{:02x}{:02x}".format(*(int(c * 255) for c in rgba[:3]))
 
 
+_TABLE_SCALE = None
+
+
+def table_scale(frac: float) -> str:
+    """Dark, low-saturation teal ramp used ONLY for table rows (dataframes):
+    near-background navy at frac=0 up to a rich but muted teal at frac=1, so
+    rows read as a soft heatmap with light text instead of loud pastel bands.
+    Other uses (maps, cards, bars) keep blues_scale()."""
+    global _TABLE_SCALE
+    if _TABLE_SCALE is None:
+        from matplotlib.colors import LinearSegmentedColormap
+        _TABLE_SCALE = LinearSegmentedColormap.from_list(
+            "hd_table", ["#0C1822", "#0E2A33", "#0F4048", "#10585A", "#14766F"]
+        )
+    rgba = _TABLE_SCALE(max(0.0, min(1.0, frac)))
+    return "#{:02x}{:02x}{:02x}".format(*(int(c * 255) for c in rgba[:3]))
+
+
+def _table_row_css(bg: str) -> str:
+    return f"background-color:{bg}; color:#EAF1F6;"
+
+
 def style_rows_by_rank(obj):
     """Paints every row of an already-sorted, best-first table with the
     standardized Blues gradient (same technique as the Top 10 Cities
@@ -487,8 +541,8 @@ def style_rows_by_rank(obj):
     def _row_style(row):
         pos = df.index.get_loc(row.name)
         frac = 1 - pos / max(n - 1, 1)
-        bg = blues_scale(frac)
-        return [f"background-color:{bg}; color:{readable_text_color(bg)};"] * len(row)
+        bg = table_scale(frac)
+        return [_table_row_css(bg)] * len(row)
 
     return styler.apply(_row_style, axis=1)
 
@@ -510,8 +564,8 @@ def style_rows_by_value(obj, value_col: str, higher_is_darker: bool = True):
         frac = (row[value_col] - vmin) / span
         if not higher_is_darker:
             frac = 1 - frac
-        bg = blues_scale(frac)
-        return [f"background-color:{bg}; color:{readable_text_color(bg)};"] * len(row)
+        bg = table_scale(frac)
+        return [_table_row_css(bg)] * len(row)
 
     return styler.apply(_row_style, axis=1)
 
@@ -531,8 +585,8 @@ def style_rows_by_cycle(obj, cycle: int = 10):
     def _row_style(row):
         pos = df.index.get_loc(row.name) % cycle
         frac = 1 - pos / max(cycle - 1, 1)
-        bg = blues_scale(frac)
-        return [f"background-color:{bg}; color:{readable_text_color(bg)};"] * len(row)
+        bg = table_scale(frac)
+        return [_table_row_css(bg)] * len(row)
 
     return styler.apply(_row_style, axis=1)
 
