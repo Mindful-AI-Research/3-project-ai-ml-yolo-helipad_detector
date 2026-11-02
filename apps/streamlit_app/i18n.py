@@ -593,6 +593,46 @@ TR = {
     "pt": "Pular ▸",
 },
 
+"legend.rate_title": {"en": "Detection rate by region", "pt": "Taxa de detecção por região"},
+"legend.rate_note": {"en": "Detected ÷ tiles scanned, per region", "pt": "Detectados ÷ tiles varridos, por região"},
+"legend.density_title": {"en": "Point density", "pt": "Densidade de pontos"},
+"legend.low": {"en": "Low", "pt": "Baixa"},
+"legend.high": {"en": "High", "pt": "Alta"},
+
+"tabs.semiotics": {"en": "🔍 Semiotics", "pt": "🔍 Semiótica"},
+"semio.header": {"en": "🔍 Semiotics of the Image", "pt": "🔍 Semiótica da Imagem"},
+"semio.intro": {
+    "en": "This project starts from one idea of the **semiotics of the image**: seeing is not recording a fact, it is **interpreting a sign**. As in the TIDD pre-project (based on SANTAELLA; NÖTH, 1998), interpretation depends on conventions, repertoire and context. A satellite image is a representation made by a sensor, at a given date and resolution, so using it to state what exists on the ground requires inference.",
+    "pt": "Este projeto parte de uma ideia da **semiótica da imagem**: ver não é registrar um fato, é **interpretar um signo**. Como no pré-projeto do TIDD (apoiado em SANTAELLA; NÖTH, 1998), a interpretação depende de convenções, de repertório e de contexto. Uma imagem de satélite é uma representação feita por um sensor, em data e resolução determinadas, e usá-la para afirmar o que existe no solo exige inferência.",
+},
+"semio.chain.title": {"en": "Every layer of the pipeline is a sign", "pt": "Cada camada do pipeline é um signo"},
+"semio.table": {
+    "en": "| Layer | What it is | What it is **not** |\n|---|---|---|\n| Satellite image | A representation made by a sensor, at a given date and resolution | The ground itself |\n| Human label | An act of interpretation, shaped by the annotator's repertoire | An answer key |\n| Model detection | A visual inference: box and confidence | Confirmation of what exists on the ground |\n| Human review | A reading situated in a system (interface, criteria guide, model output) | A neutral reading |",
+    "pt": "| Camada | O que é | O que **não** é |\n|---|---|---|\n| Imagem de satélite | Representação feita por um sensor, em data e resolução determinadas | O solo em si |\n| Rótulo humano | Ato de interpretação, que depende do repertório de quem anota | Um gabarito |\n| Detecção do modelo | Inferência visual: caixa e confiança | Confirmação do que existe no solo |\n| Revisão humana | Leitura situada em um sistema (interface, guia de critérios, saída do modelo) | Leitura neutra |",
+},
+"semio.case.title": {"en": "Why it matters in the numbers", "pt": "Por que isso importa nos números"},
+"semio.case": {
+    "en": "Four experiments with nearly identical validation scores (mAP@50 between **0.993** and **0.994**) produced very different detection rates (**9.64%** to **21.00%**) on the same field imagery from ten regions of Greater São Paulo. Validation metrics alone do not describe behavior in a real, unannotated region, which is why every detection here is a **candidate for human review**.",
+    "pt": "Quatro experimentos com notas de validação quase idênticas (mAP@50 entre **0,993** e **0,994**) produziram taxas de detecção muito diferentes (**9,64%** a **21,00%**) nas mesmas imagens de campo de dez regiões da Grande São Paulo. As métricas de validação sozinhas não descrevem o comportamento numa região real e não anotada, e por isso toda detecção aqui é uma **candidata à revisão humana**.",
+},
+"semio.impl.title": {"en": "What this changes in practice", "pt": "O que isso muda na prática"},
+"semio.impl": {
+    "en": "- **Evidence from the pre-project:** a detection is a candidate for review, never a confirmation.\n- **Evidence from the pre-project:** disagreement between reviewers and the \"uncertain\" category are study data, not noise to discard.\n- **Evidence from the pre-project:** the model's confidence is a signal for the reviewer, not proof.\n- **Recommendation:** show the date and resolution of the image whenever possible, because they change what can be read in it.",
+    "pt": "- **Evidência do pré-projeto:** uma detecção é candidata à revisão, nunca uma confirmação.\n- **Evidência do pré-projeto:** a discordância entre revisores e a categoria \"incerto\" são dados do estudo, não ruído a descartar.\n- **Evidência do pré-projeto:** a confiança do modelo é um sinal para quem revisa, não uma prova.\n- **Recomendação:** mostrar a data e a resolução da imagem sempre que possível, porque elas mudam o que se pode ler nela.",
+},
+"semio.peirce.title": {"en": "A possible reading with Peirce's triad (hypothesis)", "pt": "Uma leitura possível com a tríade de Peirce (hipótese)"},
+"semio.peirce": {
+    "en": "In Peircean semiotics, a field where Santaella is a reference in Brazil, signs are told apart as **icon** (resemblance), **index** (physical connection) and **symbol** (convention). One possible reading for this project: the satellite image works as an **index** (a trace of the light the sensor captured over the territory) and as an **icon** (visual resemblance to the rooftop); the painted \"H\" of a helipad is a **symbol** (an aeronautical convention) that also acts as an icon; the model's detection is a new sign whose **interpretant** is whoever reviews it.\n\n*This reading is our own analytical proposal, to be checked with the supervision. It is not a conclusion of the pre-project nor a claim by the authors.*",
+    "pt": "Na semiótica de matriz peirceana, campo em que Santaella é referência no Brasil, os signos se distinguem em **ícone** (semelhança), **índice** (conexão física) e **símbolo** (convenção). Uma leitura possível para este projeto: a imagem de satélite funciona como **índice** (traço da luz captada pelo sensor sobre o território) e como **ícone** (semelhança visual com o telhado); o \"H\" pintado do heliponto é um **símbolo** (convenção aeronáutica) que também age como ícone; a detecção do modelo é um novo signo cujo **interpretante** é quem revisa.\n\n*Esta leitura é uma proposta analítica nossa, a ser conferida com a orientação. Não é uma conclusão do pré-projeto nem uma afirmação das autoras.*",
+},
+"semio.refs.title": {"en": "References", "pt": "Referências"},
+"semio.refs": {
+    "en": "- SANTAELLA, L.; NÖTH, W. *Imagem: cognição, semiótica, mídia.* São Paulo: Iluminuras, 1998.\n- HUTCHINS, E. *Cognition in the wild.* Cambridge, MA: MIT Press, 1995.",
+    "pt": "- SANTAELLA, L.; NÖTH, W. *Imagem: cognição, semiótica, mídia.* São Paulo: Iluminuras, 1998.\n- HUTCHINS, E. *Cognition in the wild.* Cambridge, MA: MIT Press, 1995.",
+},
+"upload.gallery.title": {"en": "No image yet? Try one of these", "pt": "Sem imagem ainda? Experimente uma destas"},
+"upload.gallery.body": {"en": "Download any example from the Sample Images tab and drop it above, or follow the path an uploaded image takes through the app:", "pt": "Baixe um exemplo na aba Imagens de Exemplo e solte acima, ou veja o caminho que uma imagem enviada percorre no app:"},
+
 "globe.caption.main": {
     "en": "Helipad map",
     "pt": "Mapa de helipontos",
