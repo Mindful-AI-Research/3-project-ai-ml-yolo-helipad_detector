@@ -1,0 +1,17 @@
+\input{common}
+\begin{document}
+\begin{tikzpicture}
+\node[blk,minimum width=3.2cm] (a) at (0,0) {\textbf{helipad\_coordinates.csv}\\[-1pt]\subx{\T{lat/lon em graus-minutos-segundos}{lat/lon in degrees-minutes-seconds}}};
+\node[blk,minimum width=3.2cm,right=1.1cm of a] (b) {\textbf{transform\_coordinates.py}\\[-1pt]\subx{\T{DMS $\rightarrow$ graus decimais}{DMS $\rightarrow$ decimal degrees}}\\[-1pt]\subx{\T{caixa com margem}{box with margin}}};
+\node[blk,minimum width=3.6cm,right=1.1cm of b] (c) {\textbf{bounding box}\\[-1pt]$(\lambda_{\min},\varphi_{\min},\lambda_{\max},\varphi_{\max})$};
+\node[blk,minimum width=3.2cm,below=1.5cm of c] (d) {\textbf{deg2tile}\\[-1pt]\subx{$(z,x,y)$, $z=19$}};
+\node[blk,minimum width=3.2cm,left=1.1cm of d] (e) {\textbf{ESRI World Imagery}\\[-1pt]\subx{\T{download dos tiles XYZ}{XYZ tile download}}\\[-1pt]\subx{\T{checa status HTTP e placeholders}{HTTP status + placeholder check}}};
+\node[blk,minimum width=3.2cm,left=1.1cm of e] (f) {\textbf{\T{Mosaicos por região}{Mosaics per region}}\\[-1pt]\subx{geospatial\_image\_collection.ipynb}\\[-1pt]\subx{$\rightarrow$ \T{triagem e Roboflow}{triage and Roboflow}}};
+\foreach \x/\y in {a/b,b/c,c/d,d/e,e/f} \draw[arr] (\x) -- (\y);
+\foreach \n/\i in {a/1,b/2,c/3,d/4,e/5,f/6} \node[num] at ($(\n.north west)+(0.15,0.0)$) {\i};
+\coordinate (mid) at ($(f.west)!0.5!(c.east)$);
+\node[ttl] (t) at ($(mid |- a.north)+(0,1.1)$) {\T{Automação geoespacial: das coordenadas aos mosaicos}{Geospatial automation: from coordinates to mosaics}};
+\node[ctext,anchor=north,text width=16cm] (foot) at ($(mid |- f.south)+(0,-0.8)$) {\T{Cada helipad do CSV vira uma caixa geográfica, depois índices de tile $(z,x,y)$ e, por fim, um mosaico para triagem. A fórmula de conversão está logo abaixo.}{Each helipad in the CSV becomes a geographic box, then tile indices $(z,x,y)$ and finally a mosaic for triage. The conversion formula is shown right below.}};
+\panel{(a)(b)(c)(d)(e)(f)(t)(foot)}
+\end{tikzpicture}
+\end{document}
