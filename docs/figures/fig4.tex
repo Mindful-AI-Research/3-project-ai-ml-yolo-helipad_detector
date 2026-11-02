@@ -1,0 +1,17 @@
+\input{common}
+\begin{document}
+\begin{tikzpicture}
+\node[blk,minimum width=3.1cm] (a) at (0,0) {\textbf{Upload}\\[-1pt]\subx{JPG / PNG}\\[-1pt]\subx{\T{limite de 10 MB}{10 MB limit}}};
+\node[blk,minimum width=3.1cm,right=1.0cm of a] (b) {\textbf{safe\_open\_image}\\[-1pt]\subx{\T{teto de pixels}{pixel cap}}\\[-1pt]\subx{\T{recria pelos pixels (sem EXIF)}{rebuilt from pixels (no EXIF)}}};
+\node[blk,minimum width=3.1cm,right=1.0cm of b] (c) {\textbf{YOLO best.pt}\\[-1pt]\subx{\T{SHA-256 conferido}{SHA-256 verified}}\\[-1pt]\subx{\T{antes de carregar}{before loading}}};
+\node[blk,minimum width=3.1cm,right=1.0cm of c] (d) {\textbf{\T{Caixas + confiança}{Boxes + confidence}}\\[-1pt]\subx{\T{saída estatística, não prova}{statistical output, not proof}}};
+\node[hot,minimum width=5.2cm,below=1.5cm of $(b)!0.5!(c)$] (e) {\textbf{\T{Revisão humana obrigatória}{Mandatory human review}}\\[-1pt]\subx{\T{confirmar no mapa e na imagem original}{confirm on the map and the original image}}};
+\draw[arr] (a)--(b); \draw[arr] (b)--(c); \draw[arr] (c)--(d);
+\draw[arr] (d.south) |- (e.east);
+\foreach \n/\i in {a/1,b/2,c/3,d/4,e/5} \node[num] at ($(\n.north west)+(0.15,0.0)$) {\i};
+\coordinate (mid) at ($(a.west)!0.5!(d.east)$);
+\node[ttl] (t) at ($(mid |- a.north)+(0,1.15)$) {\T{Inferência com controles de segurança e revisão humana}{Inference with security controls and human review}};
+\node[ctext,anchor=north,text width=16cm] (foot) at ($(mid |- e.south)+(0,-0.7)$) {\T{Detecção visual automatizada baseada em imagem, sujeita a erros e não equivalente a validação operacional, legal, de segurança ou aeronáutica.}{Automated image-based visual detection, error-prone and not equivalent to operational, legal, safety or aeronautical validation.}};
+\panel{(a)(b)(c)(d)(e)(t)(foot)}
+\end{tikzpicture}
+\end{document}
