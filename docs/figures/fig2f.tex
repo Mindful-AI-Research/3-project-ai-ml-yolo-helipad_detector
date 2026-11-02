@@ -1,0 +1,8 @@
+\input{common}
+\begin{document}
+\begin{tikzpicture}
+\node[color=formula,font=\Large] (m) at (0,0) {$\displaystyle x=\Big\lfloor \frac{\lambda+180}{360}\cdot 2^{z}\Big\rfloor,\qquad y=\Big\lfloor \frac{1-\ln(\tan\varphi+\sec\varphi)/\pi}{2}\cdot 2^{z}\Big\rfloor$};
+\node[ctext,anchor=north] (n) at ($(m.south)+(0,-0.45)$) {\T{Conversão de coordenadas geográficas ($\lambda$ longitude, $\varphi$ latitude) para índices de tile $(x,y)$ no zoom $z$ (esquema Web Mercator / XYZ).}{Conversion from geographic coordinates ($\lambda$ longitude, $\varphi$ latitude) to tile indices $(x,y)$ at zoom $z$ (Web Mercator / XYZ scheme).}};
+\panel{(m)(n)}
+\end{tikzpicture}
+\end{document}
