@@ -1,0 +1,32 @@
+\documentclass[tikz,border=14pt]{standalone}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[scaled=.95]{helvet}
+\usepackage{amsmath}
+\renewcommand{\familydefault}{\sfdefault}
+\usetikzlibrary{arrows.meta,positioning,calc,shapes.geometric,fit,backgrounds,decorations.pathreplacing,shadings}
+\definecolor{bg}{HTML}{05070A}
+\definecolor{node}{HTML}{0F1B26}
+\definecolor{node2}{HTML}{0A131B}
+\definecolor{tealL}{HTML}{14B8A6}
+\definecolor{tealD}{HTML}{0E756D}
+\definecolor{flow}{HTML}{14B8A6}      % arrows (animated in post-processing)
+\definecolor{badge}{HTML}{15B8A6}     % number badges (animated in post-processing)
+\definecolor{brandred}{HTML}{DD0000}
+\definecolor{silver}{HTML}{DCE5EC}
+\definecolor{mute}{HTML}{B7C7D3}
+\definecolor{formula}{HTML}{7EE0D4}   % formula text (gradient in post-processing)
+\ifx\LANG\undefined\def\LANG{p}\fi
+\def\T#1#2{\if\LANG p#1\else#2\fi}
+\newcommand{\subx}[1]{{\color{mute}\scriptsize #1}}
+\tikzset{
+  every node/.style={text=silver,font=\sffamily},
+  blk/.style={draw=tealL!70!bg,draw opacity=.55,top color=node,bottom color=node2,rounded corners=9pt,line width=.5pt,align=center,inner sep=8pt,minimum width=3.3cm,minimum height=1.9cm,font=\sffamily\small},
+  hot/.style={blk,draw=brandred,draw opacity=.75,top color=red!14!node,bottom color=node2},
+  ttl/.style={text=white,font=\sffamily\bfseries\large},
+  num/.style={circle,draw=badge,line width=.5pt,fill=badge!22!node2,text=badge!35!white,font=\sffamily\bfseries\scriptsize,inner sep=0pt,minimum size=14pt},
+  sub/.style={text=mute,font=\sffamily\scriptsize},
+  ctext/.style={text=mute,font=\sffamily\footnotesize,align=center},
+  arr/.style={-{Stealth[length=5pt,width=4.5pt]},flow,line width=.8pt,shorten >=2pt,shorten <=2pt},
+}
+\newcommand{\panel}[1]{\begin{scope}[on background layer]\node[fit=#1,inner sep=18pt,top color=node2!70!bg,bottom color=bg,draw=white,draw opacity=.10,line width=.5pt,rounded corners=16pt]{};\end{scope}}
