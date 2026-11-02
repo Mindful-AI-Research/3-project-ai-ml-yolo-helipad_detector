@@ -741,6 +741,26 @@
           ['07','Train / eval / infer','YOLO in Colab'],
         ] },
 
+      { id:'fig-pipeline', type:'figure', label:'End-to-end pipeline', eyebrow:'PIPELINE',
+        title:'End-to-end pipeline', titleAccent:'from discovery to human review',
+        src:'https://raw.githubusercontent.com/Mindful-AI-Research/3-project-ai-ml-yolo-helipad_detector/main/assets/figures/fig1_en.svg', alt:'End-to-end pipeline', note:'From a helipad on the map to a detection reviewed by a person, in eight steps.' },
+
+      { id:'fig-geo', type:'figure', label:'Geospatial automation', eyebrow:'GEOSPATIAL',
+        title:'Geospatial automation', titleAccent:'from coordinates to mosaics',
+        src:'https://raw.githubusercontent.com/Mindful-AI-Research/3-project-ai-ml-yolo-helipad_detector/main/assets/figures/fig2_en.svg', alt:'Geospatial automation', note:'Coordinates become bounding boxes, tile indices (z=19) and ESRI World Imagery mosaics.' },
+
+      { id:'fig-data', type:'figure', label:'Dataset preparation', eyebrow:'DATASET',
+        title:'Dataset preparation', titleAccent:'226 images: 178 train, 34 validation, 14 test',
+        src:'https://raw.githubusercontent.com/Mindful-AI-Research/3-project-ai-ml-yolo-helipad_detector/main/assets/figures/fig3_en.svg', alt:'Dataset preparation', note:'Actual proportions of the curated dataset; the briefing requires at least 1 neighborhood outside training.' },
+
+      { id:'fig-infer', type:'figure', label:'Inference with controls', eyebrow:'INFERENCE',
+        title:'Inference with controls', titleAccent:'upload hardening, checksum and human review',
+        src:'https://raw.githubusercontent.com/Mindful-AI-Research/3-project-ai-ml-yolo-helipad_detector/main/assets/figures/fig4_en.svg', alt:'Inference with controls', note:'Automated image-based visual detection, subject to errors and not equivalent to operational, legal, safety or aeronautical validation.' },
+
+      { id:'fig-semio', type:'figure', label:'Chain of signs', eyebrow:'SEMIOTICS',
+        title:'Chain of signs', titleAccent:'from the ground to the reviewed detection',
+        src:'https://raw.githubusercontent.com/Mindful-AI-Research/3-project-ai-ml-yolo-helipad_detector/main/assets/figures/fig5_en.svg', alt:'Chain of signs', note:'Basis: image semiotics (SANTAELLA; NÖTH, 1998) and distributed cognition (HUTCHINS, 1995), as in the TIDD pre-project. Every detection is a candidate for human review.' },
+
       { id:'scenario', type:'info', label:'AI Scenario', eyebrow:'AI SCENARIO',
         title:'A supervised, single-class', titleAccent:'object-detection problem',
         text:'The task is framed as supervised object detection on aerial imagery: one target class (helipad), transfer-learned from COCO-pretrained YOLO weights, fine-tuned on a small, purpose-built dataset.',
@@ -919,6 +939,18 @@
         text:'The project does not claim regulatory certification, but several of its practices mirror principles the EU AI Act asks of higher-risk AI systems: documentation, human oversight, and data governance.',
         list:['Documentation → full technical pipeline, glossary, and governance section in the report','Human oversight → manual triage before annotation; qualitative review of hits/FP/FN','Data governance → public-area imagery only, no personal identifiers, LGPD-aligned minimization','Transparency → auto-discovered experiment metrics, visible live in the dashboard'] },
 
+      { id:'ai-security', type:'info', label:'AI Security', eyebrow:'AI SECURITY',
+        title:'Protecting the detector', titleAccent:'as an AI system',
+        text:'No LLM, retrieval or agent tools: the attack surface is data, weights, image upload and external APIs. Controls come from a review against a practical guide on AI in cybersecurity.',
+        facts:[
+          ['Weights integrity','The .pt format is pickle-based. A SHA-256 manifest is checked before a model loads, and a mismatch refuses the load.'],
+          ['Upload hygiene','10 MB limit, structural check, 50 MP cap, and the image is rebuilt from raw pixels so EXIF/GPS metadata is dropped.'],
+          ['Human review','Every detection is a candidate for independent human review; a detection rate is never presented as precision or recall.'],
+          ['Secrets','A hardcoded Roboflow key was found, removed and moved to environment variables. Unknown in the provided materials: whether it was revoked.'],
+          ['Still open','Robustness suite, label provenance, dependency audit, Model Card and Data Card. Unknown in the provided materials: production monitoring, rollback criteria and formal ownership.']
+        ],
+        badges:['Weights checksum','Upload hardening','Threat model','Not operational validation'] },
+
       { id:'conclusion', type:'quote', label:'Conclusion', eyebrow:'CONCLUSION',
         title:'Data quality before', titleAccent:'model complexity',
         text:'Helipad Detector reaches professional-grade metrics — mAP@50 near 99% and mAP@50-95 near 88% — on a dataset built entirely from scratch. The deeper contribution is what that result proves: that a small, well-curated, well-governed dataset can outweigh architectural sophistication, and that transparent documentation of both successes and mistakes is itself part of responsible AI practice.' },
@@ -1038,6 +1070,26 @@
           ['06','Anotação','Rotulagem + divisão no Roboflow'],
           ['07','Treino / avaliação / inferência','YOLO no Colab'],
         ] },
+
+      { id:'fig-pipeline', type:'figure', label:'Pipeline ponta a ponta', eyebrow:'PIPELINE',
+        title:'Pipeline ponta a ponta', titleAccent:'da descoberta à revisão humana',
+        src:'https://raw.githubusercontent.com/Mindful-AI-Research/3-project-ai-ml-yolo-helipad_detector/main/assets/figures/fig1_pt.svg', alt:'Pipeline ponta a ponta', note:'Do heliponto no mapa à detecção revisada por uma pessoa, em oito etapas.' },
+
+      { id:'fig-geo', type:'figure', label:'Automação geoespacial', eyebrow:'GEOESPACIAL',
+        title:'Automação geoespacial', titleAccent:'das coordenadas aos mosaicos',
+        src:'https://raw.githubusercontent.com/Mindful-AI-Research/3-project-ai-ml-yolo-helipad_detector/main/assets/figures/fig2_pt.svg', alt:'Automação geoespacial', note:'Coordenadas viram bounding boxes, índices de tile (z=19) e mosaicos do ESRI World Imagery.' },
+
+      { id:'fig-data', type:'figure', label:'Preparo do dataset', eyebrow:'DATASET',
+        title:'Preparo do dataset', titleAccent:'226 imagens: 178 treino, 34 validação, 14 teste',
+        src:'https://raw.githubusercontent.com/Mindful-AI-Research/3-project-ai-ml-yolo-helipad_detector/main/assets/figures/fig3_pt.svg', alt:'Preparo do dataset', note:'Proporções reais do dataset curado; o briefing exige ao menos 1 bairro fora do treino.' },
+
+      { id:'fig-infer', type:'figure', label:'Inferência com controles', eyebrow:'INFERÊNCIA',
+        title:'Inferência com controles', titleAccent:'segurança de upload, checksum e revisão humana',
+        src:'https://raw.githubusercontent.com/Mindful-AI-Research/3-project-ai-ml-yolo-helipad_detector/main/assets/figures/fig4_pt.svg', alt:'Inferência com controles', note:'Detecção visual automatizada baseada em imagem, sujeita a erros e não equivalente a validação operacional, legal, de segurança ou aeronáutica.' },
+
+      { id:'fig-semio', type:'figure', label:'Cadeia de signos', eyebrow:'SEMIÓTICA',
+        title:'Cadeia de signos', titleAccent:'do solo à detecção revisada',
+        src:'https://raw.githubusercontent.com/Mindful-AI-Research/3-project-ai-ml-yolo-helipad_detector/main/assets/figures/fig5_pt.svg', alt:'Cadeia de signos', note:'Base: semiótica da imagem (SANTAELLA; NÖTH, 1998) e cognição distribuída (HUTCHINS, 1995), conforme o pré-projeto do TIDD. Toda detecção é candidata à revisão humana.' },
 
       { id:'scenario', type:'info', label:'Cenário de IA', eyebrow:'CENÁRIO DE IA',
         title:'Um problema supervisionado de', titleAccent:'detecção de uma única classe',
@@ -1216,6 +1268,18 @@
         title:'Práticas que incorporam', titleAccent:'princípios do AI Act',
         text:'O projeto não reivindica certificação regulatória. Ainda assim, várias de suas práticas estão alinhadas a princípios previstos pelo EU AI Act para sistemas de IA de maior risco, como documentação, supervisão humana e governança de dados.',
         list:['Documentação → pipeline técnico completo, glossário e seção de governança no relatório','Supervisão humana → triagem manual antes da anotação; revisão qualitativa de acertos/FP/FN','Governança de dados → apenas imagens de áreas públicas, sem identificadores pessoais, com minimização alinhada à LGPD','Transparência → métricas dos experimentos detectadas automaticamente e exibidas no dashboard'] },
+
+      { id:'ai-security', type:'info', label:'Segurança de IA', eyebrow:'SEGURANÇA DE IA',
+        title:'Protegendo o detector', titleAccent:'como sistema de IA',
+        text:'Sem LLM, recuperação nem ferramentas de agente: a superfície de ataque são dados, pesos, upload de imagem e APIs externas. Os controles vêm de uma revisão contra um guia prático de IA em cibersegurança.',
+        facts:[
+          ['Integridade dos pesos','O formato .pt é baseado em pickle. Um manifesto SHA-256 é verificado antes de carregar um modelo, e uma divergência recusa o carregamento.'],
+          ['Higiene do upload','Limite de 10 MB, verificação estrutural, teto de 50 MP, e a imagem é reconstruída a partir dos pixels para descartar metadados EXIF/GPS.'],
+          ['Revisão humana','Toda detecção é candidata à revisão humana independente; a taxa de detecção nunca é apresentada como precision ou recall.'],
+          ['Segredos','Uma chave do Roboflow estava no código, foi removida e movida para variáveis de ambiente. Desconhecido nos materiais fornecidos: se ela foi revogada.'],
+          ['Ainda em aberto','Suíte de robustez, proveniência dos labels, auditoria de dependências, Model Card e Data Card. Desconhecido nos materiais fornecidos: monitoramento em produção, critérios de rollback e responsabilidade formal.']
+        ],
+        badges:['Checksum dos pesos','Upload seguro','Modelo de ameaças','Não é validação operacional'] },
 
       { id:'conclusion', type:'quote', label:'Conclusão', eyebrow:'CONCLUSÃO',
         title:'Qualidade dos dados antes', titleAccent:'da complexidade do modelo',
@@ -2103,6 +2167,17 @@
             </>
           );
 
+          case 'figure': return (
+            <>
+              <Eyebrow n={n} label={data.eyebrow} />
+              <Title title={data.title} accent={data.titleAccent} />
+              <div className="animate d2" style={{ marginTop: 10, textAlign: 'center' }}>
+                <a href={data.src} target="_blank" rel="noopener noreferrer" title="Open full size"><img src={data.src} alt={data.alt} style={{ maxWidth: '100%', maxHeight: '60vh', borderRadius: 14, border: '1px solid var(--w10)' }} /></a>
+              </div>
+              {data.note && <div className="hl animate d3" style={{ marginTop: 14, maxWidth: 860 }}>{data.note}</div>}
+            </>
+          );
+
           case 'mermaidpipeline': return (
             <>
               <Eyebrow n={n} label={data.eyebrow} />
@@ -2410,7 +2485,7 @@
 
           {SLIDES.map((s, i) => {
             let cls = 'slide';
-            if (s.type === 'mermaidpipeline') cls += ' slide-top-align';
+            if (s.type === 'mermaidpipeline' || s.type === 'figure') cls += ' slide-top-align';
             if (i === cur) cls += ' active';
             else if (i < cur) cls += ' exit-up';
             else cls += ' exit-down';
