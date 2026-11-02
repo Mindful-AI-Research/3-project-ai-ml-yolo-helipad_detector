@@ -1,0 +1,20 @@
+\input{common}
+\begin{document}
+\begin{tikzpicture}
+\node[blk] (a) at (0,0) {\textbf{\T{Descoberta}{Discovery}}\\[-1pt]\subx{Selenium + FlightMarket}\\[-1pt]\subx{helipad\_bot.py}};
+\node[blk,right=1.0cm of a] (b) {\textbf{\T{Coordenadas}{Coordinates}}\\[-1pt]\subx{DMS $\rightarrow$ \T{decimal}{decimal}}\\[-1pt]\subx{bounding boxes}};
+\node[blk,right=1.0cm of b] (c) {\textbf{ESRI World Imagery}\\[-1pt]\subx{\T{tiles XYZ, $z=19$}{XYZ tiles, $z=19$}}\\[-1pt]\subx{\T{mosaicos}{mosaics}}};
+\node[blk,right=1.0cm of c] (d) {\textbf{\T{Triagem visual}{Visual triage}}\\[-1pt]\subx{\T{só tiles com heliponto}{only tiles with helipads}}\\[-1pt]\subx{\T{curadoria manual}{manual curation}}};
+\node[blk,below=1.5cm of d] (e) {\textbf{Roboflow}\\[-1pt]\subx{\T{1 classe: helipad}{1 class: helipad}}\\[-1pt]\subx{640$\times$640 · train/valid/test}};
+\node[blk,left=1.0cm of e] (f) {\textbf{\T{Treino YOLO}{YOLO training}}\\[-1pt]\subx{Ultralytics YOLOv8 / v11}\\[-1pt]\subx{Colab · GPU T4}};
+\node[blk,left=1.0cm of f] (g) {\textbf{\T{Avaliação}{Evaluation}}\\[-1pt]\subx{P · R · mAP · \T{matriz de confusão}{confusion matrix}}\\[-1pt]\subx{\T{análise de erros}{error analysis}}};
+\node[hot,left=1.0cm of g] (h) {\textbf{\T{Inferência + revisão humana}{Inference + human review}}\\[-1pt]\subx{\T{bairro nunca visto}{unseen neighborhood}}\\[-1pt]\subx{Streamlit}};
+\foreach \x/\y in {a/b,b/c,c/d,d/e,e/f,f/g,g/h} \draw[arr] (\x) -- (\y);
+\foreach \n/\i in {a/1,b/2,c/3,d/4,e/5,f/6,g/7,h/8} \node[num] at ($(\n.north west)+(0.15,0.0)$) {\i};
+\coordinate (mid) at ($(h.west)!0.5!(d.east)$);
+\node[ttl] (t) at ($(mid |- a.north)+(0,1.25)$) {\T{Pipeline ponta a ponta do Helipad Detector}{Helipad Detector end-to-end pipeline}};
+\node[ctext,anchor=north] (s) at ($(t.south)+(0,-0.15)$) {\T{Fonte das imagens: Esri, Maxar, Earthstar Geographics e comunidade GIS User Community}{Imagery source: Esri, Maxar, Earthstar Geographics, and the GIS User Community}};
+\node[ctext,anchor=north,text width=17cm] (foot) at ($(mid |- h.south)+(0,-0.8)$) {\T{Detecção visual automatizada baseada em imagem, sujeita a erros e não equivalente a validação operacional, legal, de segurança ou aeronáutica.}{Automated image-based visual detection, error-prone and not equivalent to operational, legal, safety or aeronautical validation.}};
+\panel{(a)(b)(c)(d)(e)(f)(g)(h)(t)(s)(foot)}
+\end{tikzpicture}
+\end{document}
