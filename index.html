@@ -57,7 +57,14 @@
     html, body { height: 100%; overflow: hidden; font-family: var(--font) }
     body { background: var(--bg); color: var(--white); transition: background .4s, color .4s }
 
-    #stage { position: fixed; inset: 0; background: var(--bg) }
+    #stage { position: fixed; inset: 0; background: transparent; z-index: 1 }
+    #hd-stars { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden }
+    [data-theme="light"] #hd-stars { display: none }
+    .hd-sf { position: absolute; border-radius: 50%; background: #8D9BAA; animation: hd-sf-tw ease-in-out infinite }
+    .hd-sf.big { border-radius: 0; background: #A9B6C3; clip-path: polygon(50% 0, 60% 40%, 100% 50%, 60% 60%, 50% 100%, 40% 60%, 0 50%, 40% 40%); animation-name: hd-sf-star }
+    @keyframes hd-sf-tw { 0%,100% { opacity: .12 } 50% { opacity: .65 } }
+    @keyframes hd-sf-star { 0%,100% { opacity: .15; transform: scale(.7) } 50% { opacity: .7; transform: scale(1) } }
+    @media (prefers-reduced-motion: reduce) { .hd-sf { animation: none; opacity: .35 } }
 
     .slide {
       position: absolute; inset: 0;
@@ -273,7 +280,12 @@
 </head>
 
 <body data-theme="dark">
+  <div id="hd-stars"></div>
   <div id="stage"></div>
+  <script>(function(){var h=document.getElementById("hd-stars"),f=document.createDocumentFragment(),i,e,r;function R(a,b){return a+Math.random()*(b-a)}
+    for(i=0;i<170;i++){e=document.createElement("div");e.className="hd-sf";r=R(1,2.2);e.style.cssText="left:"+R(0,100).toFixed(2)+"%;top:"+R(0,100).toFixed(2)+"%;width:"+r.toFixed(1)+"px;height:"+r.toFixed(1)+"px;animation-duration:"+R(2.2,6).toFixed(2)+"s;animation-delay:-"+R(0,6).toFixed(2)+"s";f.appendChild(e)}
+    for(i=0;i<14;i++){e=document.createElement("div");e.className="hd-sf big";r=R(7,12);e.style.cssText="left:"+R(2,98).toFixed(2)+"%;top:"+R(2,98).toFixed(2)+"%;width:"+r.toFixed(1)+"px;height:"+r.toFixed(1)+"px;animation-duration:"+R(2.5,5).toFixed(2)+"s;animation-delay:-"+R(0,5).toFixed(2)+"s";f.appendChild(e)}
+    h.appendChild(f)})()</script>
   <script type="text/babel">
     const { useState, useEffect, useRef, useCallback } = React;
 
@@ -700,7 +712,7 @@
 
       { id:'product', type:'info', label:'Product', eyebrow:'THE PRODUCT',
         title:'Helipad Detector', titleAccent:'satellite imagery in, structured intelligence out',
-        text:'A YOLOv8n/YOLOv11n object-detection system trained on a purpose-built São Paulo dataset, wrapped in a 9-tab Streamlit dashboard for search, upload, field-validation review, and reporting.',
+        text:'A YOLOv8n/YOLOv11n object-detection system trained on a purpose-built São Paulo dataset, wrapped in a 12-tab Streamlit dashboard for samples, maps, search, upload, flights, semiotics, benchmark, field validation, and reporting.',
         badges:['Single-class detector: helipad','640×640 tiles','Auto-discovered experiments','Live map + search'] },
 
       { id:'why', type:'stats', label:'Why it Matters', eyebrow:'WHY THIS MATTERS',
@@ -897,7 +909,7 @@
           ['🗂️','Data-first focus','Explicit emphasis on dataset engineering, not only architecture'],
           ['🛰️','Geospatial automation','Increases scale and productivity of target discovery'],
           ['🧪','Clear experiment trail','Runs and artifacts organized under artifacts/runs/runs/detect/'],
-          ['💻','A real application layer','9-tab dashboard reinforcing practical applicability'],
+          ['💻','A real application layer','12-tab dashboard (samples → maps → search → upload → semiotics) reinforcing practical applicability'],
         ] },
 
       { id:'limitations', type:'cards', label:'Limitations', eyebrow:'LIMITATIONS',
@@ -1030,7 +1042,7 @@
 
       { id:'product', type:'info', label:'Produto', eyebrow:'O PRODUTO',
         title:'Helipad Detector', titleAccent:'Da imagem de satélite à inteligência espacial estruturada',
-        text:'Um sistema de detecção de objetos com YOLOv8n/YOLOv11n, treinado em um dataset desenvolvido especificamente para São Paulo e integrado a um dashboard Streamlit de nove abas, com recursos de busca, upload, validação em campo e geração de relatórios.',
+        text:'Um sistema de detecção de objetos com YOLOv8n/YOLOv11n, treinado em um dataset desenvolvido especificamente para São Paulo e integrado a um dashboard Streamlit de 12 abas, com amostras, mapas, busca, upload, voos, semiótica, benchmark, validação em campo e geração de relatórios.',
         badges:['Detector de classe única: heliponto','Tiles 640×640','Experimentos identificados automaticamente','Mapa + busca dinâmica'] },
 
       { id:'why', type:'stats', label:'Relevância', eyebrow:'POR QUE ISSO IMPORTA',
@@ -1227,7 +1239,7 @@
           ['🗂️','Foco nos dados','Ênfase na engenharia do dataset, e não apenas na arquitetura do modelo'],
           ['🛰️','Automação geoespacial','Amplia a escala e a eficiência na descoberta dos alvos'],
           ['🧪','Histórico experimental claro','Execuções e artefatos organizados em artifacts/runs/runs/detect/'],
-          ['💻','Uma camada de aplicação real','Dashboard de nove abas que reforça a aplicabilidade prática'],
+          ['💻','Uma camada de aplicação real','Dashboard de 12 abas (amostras → mapas → busca → upload → semiótica) que reforça a aplicabilidade prática'],
         ] },
 
       { id:'limitations', type:'cards', label:'Limitações', eyebrow:'LIMITAÇÕES',
