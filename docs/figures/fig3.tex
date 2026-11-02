@@ -1,0 +1,24 @@
+\input{common}
+\begin{document}
+\begin{tikzpicture}
+\node[blk,minimum width=2.9cm,minimum height=1.5cm] (a) at (0,0) {\textbf{\T{Rótulos}{Labels}}\\[-1pt]\subx{\T{1 classe · polígonos $\rightarrow$ caixas}{1 class · polygons $\rightarrow$ boxes}}};
+\node[blk,minimum width=2.9cm,minimum height=1.5cm,right=0.9cm of a] (b) {\textbf{Resize}\\[-1pt]\subx{640$\times$640}};
+\node[blk,minimum width=2.9cm,minimum height=1.5cm,right=0.9cm of b] (c) {\textbf{\T{Aumentação}{Augmentation}}\\[-1pt]\subx{\T{giros 90°, flips, brilho/contraste}{90° rotations, flips, brightness/contrast}}};
+\node[blk,minimum width=2.9cm,minimum height=1.5cm,right=0.9cm of c] (d) {\textbf{\T{Exportação YOLO}{YOLO export}}\\[-1pt]\subx{data.yaml + labels}};
+\foreach \x/\y in {a/b,b/c,c/d} \draw[arr] (\x) -- (\y);
+\def\W{14.6}
+\coordinate (L) at ($(a.west)+(0,-2.6)$);
+\shade[top color=tealD!90!white,bottom color=tealD!55!black,rounded corners=5pt] ($(L)+(0,0.5)$) rectangle ($(L)+(0.788*\W,-0.5)$);
+\shade[top color=tealL,bottom color=tealL!65!black,rounded corners=0pt] ($(L)+(0.788*\W,0.5)$) rectangle ($(L)+(0.938*\W,-0.5)$);
+\shade[top color=brandred!90!white,bottom color=brandred!60!black,rounded corners=5pt] ($(L)+(0.938*\W,0.5)$) rectangle ($(L)+(\W,-0.5)$);
+\node[text=white,font=\sffamily\bfseries] at ($(L)+(0.394*\W,0)$) {train 178 (\T{78{,}8}{78.8}\%)};
+\node[text=bg,font=\sffamily\bfseries\footnotesize] at ($(L)+(0.863*\W,0)$) {valid 34};
+\node[text=white,font=\sffamily\bfseries\scriptsize] at ($(L)+(0.969*\W,0)$) {test 14};
+\node[ctext,anchor=south west] (bl) at ($(L)+(0,0.75)$) {\T{226 imagens curadas, divididas em treino, validação e teste (proporções reais do dataset)}{226 curated images split into train, validation and test (actual dataset proportions)}};
+\node[hot,minimum width=\W cm,minimum height=1.1cm,anchor=north west,align=left] (h) at ($(L)+(0,-1.0)$) {\textbf{\T{Holdout de generalização}{Generalization holdout}}\quad \subx{\T{o briefing exige pelo menos 1 bairro inteiro fora do treino, usado apenas na inferência final}{the briefing requires at least 1 whole neighborhood excluded from training, used only for final inference}}};
+\coordinate (mid) at ($(a.west)!0.5!(d.east)$);
+\node[ttl] (t) at ($(mid |- a.north)+(0,1.1)$) {\T{Dataset: preparo e divisão dos dados}{Dataset: preparation and data split}};
+\node[ctext,anchor=north,text width=16cm] (n) at ($(mid |- h.south)+(0,-0.45)$) {\T{Requisitos do briefing: mínimo de 200 imagens com o alvo e pelo menos 3 bairros distintos no treino.}{Briefing requirements: at least 200 images containing the target and at least 3 distinct neighborhoods in training.}};
+\panel{(a)(b)(c)(d)(h)(t)(n)(bl)}
+\end{tikzpicture}
+\end{document}
