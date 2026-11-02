@@ -1,0 +1,17 @@
+\input{common}
+\begin{document}
+\begin{tikzpicture}
+\node[blk,minimum width=3.0cm,minimum height=1.8cm] (a) at (0,0) {\textbf{\T{Território}{Territory}}\\[-1pt]\subx{\T{o que existe no solo}{what exists on the ground}}};
+\node[blk,minimum width=3.0cm,minimum height=1.8cm,right=1.7cm of a] (b) {\textbf{\T{Imagem de satélite}{Satellite image}}\\[-1pt]\subx{\T{signo feito por um sensor}{a sign made by a sensor}}\\[-1pt]\subx{\T{data e resolução}{date and resolution}}};
+\node[blk,minimum width=3.0cm,minimum height=1.8cm,right=1.7cm of b] (c) {\textbf{\T{Rótulo humano}{Human label}}\\[-1pt]\subx{\T{ato de interpretação}{an act of interpretation}}\\[-1pt]\subx{\T{não é gabarito}{not an answer key}}};
+\node[blk,minimum width=3.0cm,minimum height=1.8cm,right=1.7cm of c] (d) {\textbf{\T{Modelo YOLO}{YOLO model}}\\[-1pt]\subx{\T{inferência visual}{visual inference}}\\[-1pt]\subx{\T{caixa + confiança}{box + confidence}}};
+\node[hot,minimum width=3.0cm,minimum height=1.8cm,right=1.7cm of d] (e) {\textbf{\T{Revisão humana}{Human review}}\\[-1pt]\subx{\T{nova leitura, situada}{a new, situated reading}}\\[-1pt]\subx{\T{candidata, não confirmação}{candidate, not confirmation}}};
+\foreach \x/\y/\lab in {a/b/{\T{captura}{capture}},b/c/{\T{anotação}{annotation}},c/d/{\T{treino}{training}},d/e/{\T{detecção}{detection}}} {\draw[arr] (\x) -- (\y); \node[sub,above=1pt of $(\x.east)!0.5!(\y.west)$] {\lab};}
+\foreach \n/\i in {a/1,b/2,c/3,d/4,e/5} \node[num] at ($(\n.north west)+(0.15,0.0)$) {\i};
+\coordinate (mid) at ($(a.west)!0.5!(e.east)$);
+\node[ttl] (t) at ($(mid |- a.north)+(0,1.2)$) {\T{Cadeia de signos: do solo à detecção revisada}{Chain of signs: from the ground to the reviewed detection}};
+\node[ctext,anchor=north,text width=19cm] (s) at ($(mid |- a.south)+(0,-0.9)$) {\T{Cada etapa é uma leitura do que veio antes, e não um registro neutro do solo. Por isso toda detecção é tratada como candidata à revisão humana.}{Each step is a reading of what came before, not a neutral record of the ground. That is why every detection is treated as a candidate for human review.}};
+\node[ctext,anchor=north,text width=19cm] (f) at ($(s.south)+(0,-0.25)$) {\T{Base: semiótica da imagem (SANTAELLA; NÖTH, 1998) e cognição distribuída (HUTCHINS, 1995), conforme o pré-projeto TIDD.}{Basis: semiotics of the image (SANTAELLA; NÖTH, 1998) and distributed cognition (HUTCHINS, 1995), as in the TIDD pre-project.}};
+\panel{(a)(b)(c)(d)(e)(t)(s)(f)}
+\end{tikzpicture}
+\end{document}
