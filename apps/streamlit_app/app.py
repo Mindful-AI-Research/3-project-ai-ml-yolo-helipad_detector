@@ -140,11 +140,12 @@ GLOBAL_CSS = """
     [data-testid="stSelectbox"] > div > div,
     [data-testid="stNumberInput"] > div,
     [data-testid="stFileUploaderDropzone"] {
-        border: 1px solid rgba(255,255,255,0.10) !important;
-        border-radius: 12px !important;
-        box-shadow: 0 4px 16px rgba(0,0,0,0.25);
+        border: 1px solid rgba(20,184,166,0.38) !important;
+        border-radius: 10px !important;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.25);
         transition: border-color .2s ease, box-shadow .2s ease;
     }
+    [data-testid="stSidebar"] [data-testid="stExpander"] { border: 1px solid rgba(20,184,166,0.38) !important; border-radius: 10px !important; }
     [data-testid="stSelectbox"] > div > div:hover,
     [data-testid="stNumberInput"] > div:hover,
     [data-testid="stFileUploaderDropzone"]:hover {
@@ -176,9 +177,9 @@ GLOBAL_CSS = """
        where the visible edges are. */
     [data-testid="stDownloadButton"] > button,
     [data-testid="stButton"] > button {
-        border: 1px solid rgba(255,255,255,0.12) !important;
-        border-radius: 12px !important;
-        box-shadow: 0 4px 16px rgba(0,0,0,0.25);
+        border: 1px solid rgba(20,184,166,0.38) !important;
+        border-radius: 10px !important;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.25);
         transition: border-color .2s ease, box-shadow .2s ease, transform .2s ease;
     }
     [data-testid="stDownloadButton"] > button:hover,
@@ -424,6 +425,50 @@ GLOBAL_CSS = """
     [data-testid="stMarkdownContainer"] tr:last-child td { border-bottom: none !important; }
     [data-testid="stMarkdownContainer"] tbody tr:hover td { background: rgba(94,234,212,0.04); }
 
+    /* Section headings: thin teal-to-red hairline, same gradient as the logo underline */
+    [data-testid="stHeading"] h2::after, [data-testid="stHeading"] h3::after {
+        content: ""; display: block; width: 64px; height: 2px; margin-top: 10px;
+        border-radius: 2px; background: linear-gradient(90deg, #14B8A6, #DD0000); opacity: .85;
+    }
+    /* Alerts (warning / info / error / success): quiet glass cards with a thin accent */
+    [data-testid="stAlert"] {
+        border-radius: 12px !important; border: 1px solid rgba(255,255,255,0.09) !important;
+        background: rgba(255,255,255,0.03) !important; box-shadow: 0 6px 20px rgba(0,0,0,0.22);
+    }
+    [data-testid="stAlert"] > div { background: transparent !important; }
+    [data-testid="stAlert"] p { color: #E3EAF1 !important; font-size: 13.5px; line-height: 1.55; }
+    [data-testid="stAlert"]:has([data-testid="stAlertContentWarning"]) { border-left: 3px solid rgba(245,185,66,0.75) !important; }
+    [data-testid="stAlert"]:has([data-testid="stAlertContentInfo"]) { border-left: 3px solid rgba(94,234,212,0.70) !important; }
+    [data-testid="stAlert"]:has([data-testid="stAlertContentError"]) { border-left: 3px solid rgba(221,0,0,0.75) !important; }
+    [data-testid="stAlert"]:has([data-testid="stAlertContentSuccess"]) { border-left: 3px solid rgba(20,184,166,0.80) !important; }
+    [data-testid="stSidebar"] [data-testid="stAlert"] p { font-size: 12.5px; }
+    /* Numbers: tabular figures so columns and counters line up */
+    [data-testid="stMetricValue"], .hd-ctx td, .metric-card, .hd-num,
+    [data-testid="stMarkdownContainer"] td {
+        font-variant-numeric: tabular-nums lining-nums; font-feature-settings: "tnum" 1, "lnum" 1;
+    }
+    [data-testid="stMetricValue"], [data-testid="stMetricValue"] *, .hd-num {
+        font-family: "JetBrains Mono", "SF Mono", ui-monospace, Menlo, Consolas, monospace !important;
+        letter-spacing: -0.02em;
+    }
+    /* Glass legend used on the maps */
+    .hd-legend {
+        background: rgba(8,14,20,0.82); backdrop-filter: blur(6px);
+        border: 1px solid rgba(255,255,255,0.12); border-radius: 12px;
+        padding: 10px 14px; color: #E3EAF1; font: 12px/1.4 "Source Sans Pro", system-ui, sans-serif;
+        box-shadow: 0 8px 24px rgba(0,0,0,0.35); min-width: 170px;
+    }
+    .hd-legend b { display: block; font-size: 10.5px; letter-spacing: .14em; text-transform: uppercase; color: #8FD3CB; margin-bottom: 7px; font-weight: 600; }
+    .hd-legend .bar { height: 8px; border-radius: 6px; margin: 2px 0 5px 0; }
+    .hd-legend .row { display: flex; justify-content: space-between; color: #B7C7D3; font-size: 11px; }
+
+    .hd-center-title { text-align: center; color: #F1F5F9; font-size: 1.15rem; font-weight: 600; margin: 26px 0 4px 0; }
+    .hd-center-cap { text-align: center; color: #C9D6E2; font-size: 13.5px; line-height: 1.6; margin: 6px auto 14px auto; max-width: 880px; }
+    [data-testid="stImage"] { text-align: center; }
+    /* Soft entrance for tab content and figures (skipped when the OS asks for less motion) */
+    @keyframes hdrise { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+    [data-baseweb="tab-panel"] { animation: hdrise .45s ease both; }
+    @media (prefers-reduced-motion: reduce) { [data-baseweb="tab-panel"] { animation: none; } }
     /* Pre-project box (Downloads) */
     .hd-preproj {
         margin: 8px 0 10px 0; padding: 14px 18px; border-radius: 10px;
@@ -776,6 +821,46 @@ def _clean_globe_points(rows, limit: int = 600) -> list:
 
 from branca.element import MacroElement as _MacroElement
 from jinja2 import Template as _JinjaTemplate
+
+
+class _GlassLegend(_MacroElement):
+    """Small glass legend as a Leaflet control (works with st_folium and st.iframe).
+    gradient: CSS gradient string; low/high: end labels; note: optional footnote."""
+    from jinja2 import Template as _T
+    _template = _T("""
+        {% macro script(this, kwargs) %}
+        (function() {
+          var lg = L.control({position: 'bottomleft'});
+          lg.onAdd = function() {
+            var d = L.DomUtil.create('div', 'hd-legend');
+            d.innerHTML = {{ this.inner|tojson }};
+            L.DomEvent.disableClickPropagation(d);
+            return d;
+          };
+          lg.addTo({{ this._parent.get_name() }});
+        })();
+        {% endmacro %}
+    """)
+
+    def __init__(self, title: str, gradient: str, low: str, high: str, note: str = ""):
+        super().__init__()
+        self._name = "GlassLegend"
+        css = (
+            "<style>.hd-legend{background:rgba(8,14,20,.82);backdrop-filter:blur(6px);"
+            "border:1px solid rgba(255,255,255,.12);border-radius:12px;padding:10px 14px;"
+            "color:#E3EAF1;font:12px/1.4 system-ui,sans-serif;box-shadow:0 8px 24px rgba(0,0,0,.35);min-width:170px}"
+            ".hd-legend b{display:block;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;"
+            "color:#8FD3CB;margin-bottom:7px;font-weight:600}"
+            ".hd-legend .bar{height:8px;border-radius:6px;margin:2px 0 5px 0}"
+            ".hd-legend .row{display:flex;justify-content:space-between;color:#B7C7D3;font-size:11px}"
+            ".hd-legend .note{color:#8A97A6;font-size:10.5px;margin-top:6px}</style>"
+        )
+        note_html = f'<div class="note">{note}</div>' if note else ""
+        self.inner = (
+            f'{css}<b>{title}</b><div class="bar" style="background:{gradient}"></div>'
+            f'<div class="row"><span>{low}</span><span>{high}</span></div>{note_html}'
+        )
+
 
 
 class _GlobeIntroScript(_MacroElement):
@@ -2421,9 +2506,17 @@ def render_band(kind: str, label: str, message: str) -> None:
     )
 
 
-tab_about, tab_metrics, tab_field, tab4, tab_flights, tab2, tab3, tab1, tab5, tab6, tab7 = st.tabs([
-    t("tabs.about"), t("tabs.metrics"), t("tabs.field"), t("tabs.map"), t("tabs.flights"),
-    t("tabs.search"), t("tabs.samples"), t("tabs.upload"),
+_FIG_BASE = ("https://raw.githubusercontent.com/Mindful-AI-Research/"
+             "3-project-ai-ml-yolo-helipad_detector/main/assets/figures/")
+
+# Tab order: what is most striking for a lay audience first (images, maps, search,
+# upload), then the semiotics lens, then benchmark / field validation, pipeline,
+# governance and downloads. The `with tab_x:` blocks below can stay in any order.
+(tab_about, tab3, tab4, tab_flights, tab2, tab1, tab_semio,
+ tab_metrics, tab_field, tab5, tab6, tab7) = st.tabs([
+    t("tabs.about"), t("tabs.samples"), t("tabs.map"), t("tabs.flights"),
+    t("tabs.search"), t("tabs.upload"), t("tabs.semiotics"),
+    t("tabs.metrics"), t("tabs.field"),
     t("tabs.pipeline"), t("tabs.governance"), t("tabs.downloads"),
 ])
 
@@ -2459,6 +2552,20 @@ with tab1:
                     else:
                         st.warning(t("upload.warning_none"))
                     _disclaimer()
+
+    # Keeps the tab from looking empty: examples + the path an upload takes.
+    _up_files = []
+    if SAMPLES_DIR.exists():
+        _up_files = sorted(p for p in SAMPLES_DIR.iterdir() if p.suffix.lower() in (".jpg", ".jpeg", ".png"))
+    st.markdown(f"<div class='hd-center-title'>{t('upload.gallery.title')}</div>", unsafe_allow_html=True)
+    st.markdown(f"<div class='hd-center-cap'>{t('upload.gallery.body')}</div>", unsafe_allow_html=True)
+    if _up_files:
+        _gcols = st.columns(min(len(_up_files), 4))
+        for _gi, _gp in enumerate(_up_files[:4]):
+            with _gcols[_gi % len(_gcols)]:
+                st.image(str(_gp), width="stretch")
+    _fig_lang_u = "pt" if st.session_state.get("lang", "pt") == "pt" else "en"
+    st.image(f"{_FIG_BASE}fig4_{_fig_lang_u}.svg", width="stretch")
 
 # ====================== TAB 2: Bounding Box Search ======================
 with tab2:
@@ -2878,6 +2985,12 @@ with tab4:
         # floating over the map's top-right corner) was replaced by the
         # Streamlit checkboxes above, outside the map canvas.
         _force_leaflet_resize(fmap)
+        if field_summary_for_map and max_rate > min_rate:
+            _GlassLegend(
+                t("legend.rate_title"),
+                f"linear-gradient(90deg, {blues_scale(0.0)}, {blues_scale(0.5)}, {blues_scale(1.0)})",
+                f"{min_rate:.0%}", f"{max_rate:.0%}", t("legend.rate_note"),
+            ).add_to(fmap)
 
         st.write(t("map.summary").format(sp=len(sp_df), other=len(other_df)))
         add_globe_intro(
@@ -3114,6 +3227,11 @@ with tab4:
                 radius=18,
                 blur=22,
                 gradient={"0.2": "#FFF8DC", "0.5": "#FFA855", "0.8": "#FF7804", "1.0": "#FF6800"},
+            ).add_to(dark_map)
+            _GlassLegend(
+                t("legend.density_title"),
+                "linear-gradient(90deg, #FFF8DC, #FFA855, #FF7804, #FF6800)",
+                t("legend.low"), t("legend.high"),
             ).add_to(dark_map)
             _force_leaflet_resize(dark_map)
             # Rendered as a plain HTML embed (not st_folium) because this view never
@@ -3386,8 +3504,6 @@ with tab_about:
     st.header(t("about.header"))
 
     # Figures first (TikZ diagrams exported to SVG, one set per language).
-    _FIG_BASE = ("https://raw.githubusercontent.com/Mindful-AI-Research/"
-                 "3-project-ai-ml-yolo-helipad_detector/main/assets/figures/")
     _fig_lang = "pt" if st.session_state.get("lang", "pt") == "pt" else "en"
     _fig_tabs = st.tabs([
         "Pipeline",
@@ -3398,12 +3514,17 @@ with tab_about:
     for _i, _ft in enumerate(_fig_tabs, start=1):
         with _ft:
             st.image(f"{_FIG_BASE}fig{_i}_{_fig_lang}.svg", width="stretch")
-    st.caption(
-        "Detecção visual automatizada baseada em imagem, sujeita a erros e não equivalente "
-        "a validação operacional, legal, de segurança ou aeronáutica."
-        if _fig_lang == "pt" else
-        "Automated image-based visual detection, subject to errors and not equivalent to "
-        "operational, legal, safety or aeronautical validation."
+            if _i == 2:   # geospatial: the conversion formula gets its own animated figure
+                st.image(f"{_FIG_BASE}fig2f_{_fig_lang}.svg", width="stretch")
+    st.markdown(
+        "<div class='hd-center-cap'>"
+        + ("Detecção visual automatizada baseada em imagem, sujeita a erros e não equivalente "
+           "a validação operacional, legal, de segurança ou aeronáutica."
+           if _fig_lang == "pt" else
+           "Automated image-based visual detection, subject to errors and not equivalent to "
+           "operational, legal, safety or aeronautical validation.")
+        + "</div>",
+        unsafe_allow_html=True,
     )
 
     _about_intro = t("about.body_intro").replace(
@@ -3565,6 +3686,24 @@ with tab_about:
         """, unsafe_allow_html=True)
 
 # ====================== TAB 7: Downloads ======================
+# ====================== TAB: Semiotics ======================
+with tab_semio:
+    st.header(t("semio.header"))
+    st.markdown(t("semio.intro"))
+    _sl = "pt" if st.session_state.get("lang", "pt") == "pt" else "en"
+    st.image(f"{_FIG_BASE}fig5_{_sl}.svg", width="stretch")
+    st.markdown(f"#### {t('semio.chain.title')}")
+    st.markdown(t("semio.table"))
+    st.markdown(f"#### {t('semio.case.title')}")
+    st.markdown(t("semio.case"))
+    st.markdown(f"#### {t('semio.impl.title')}")
+    st.markdown(t("semio.impl"))
+    with st.expander(t("semio.peirce.title"), expanded=False):
+        st.markdown(t("semio.peirce"))
+    st.markdown(f"#### {t('semio.refs.title')}")
+    st.markdown(t("semio.refs"))
+    _disclaimer()
+
 with tab7:
     st.subheader(t("dl.subheader"))
     st.caption(t("dl.caption"))
@@ -3702,26 +3841,26 @@ with tab_metrics:
                 netron_link = netron_url_for(row['Experiment']) or "https://netron.app/"
                 netron_label = t("metrics.netron_view") if row['Experiment'] in MODEL_WEIGHTS_BY_EXP else t("metrics.netron_manual")
                 _frac = 1 - (i / (n_exp - 1) if n_exp > 1 else 0.0)
-                card_bg = blues_scale(_frac)
-                # Real Blues runs light->navy (unlike the old navy->teal
-                # blue_scale, which was always dark), so text color is
-                # computed per card instead of hardcoded white — keeps the
-                # lowest-scoring card's paler background readable too.
-                _txt = readable_text_color(card_bg)
-                _sub = "#D7F3EF" if _txt == "#ffffff" else "#1E293B"
+                card_bg = table_scale(_frac)
+                _txt, _sub = "#F1F5F9", "#B7C7D3"
+                _map = max(0.0, min(1.0, float(row['mAP@50-95'])))
                 st.markdown(f"""
                 <div style="{_metric_card_style} background:{card_bg};">
                     <h4 style="margin:0 0 8px 0; color:{_txt};">{row['Experiment']}</h4>
                     <p style="margin:2px 0; color:{_sub}; font-size:13px;">
                         {t('metrics.best_epoch')} {row['Best Epoch']} / {row['Total Epochs']}
                     </p>
-                    <p style="margin:6px 0; font-size:22px; font-weight:700; color:{_txt};">
+                    <p class="hd-num" style="margin:6px 0 4px 0; font-size:24px; font-weight:700; color:{_txt};">
                         {row['mAP@50-95']:.3f}
                     </p>
+                    <div style="height:5px; border-radius:4px; background:rgba(255,255,255,0.12); margin:0 14px 6px 14px; overflow:hidden;">
+                        <div style="width:{_map*100:.1f}%; height:100%; border-radius:4px;
+                                    background:linear-gradient(90deg,#14B8A6,#7EE0D3);"></div>
+                    </div>
                     <p style="margin:0; color:{_sub}; font-size:12px;">mAP@50-95</p>
                     <p style="margin:8px 0 0 0;">
                         <a href="{netron_link}" target="_blank" rel="noopener noreferrer"
-                           style="font-size:12px; color:{_txt}; font-weight:600; text-decoration:underline;">
+                           style="font-size:12px; color:{_txt}; font-weight:600; text-decoration:none; border-bottom:1px dotted rgba(255,255,255,0.5);">
                             {netron_label}
                         </a>
                     </p>
