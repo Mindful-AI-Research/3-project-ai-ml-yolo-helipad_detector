@@ -2399,16 +2399,19 @@
         };
       }, []);
 
+      /* Single source of truth for the music: the `muted` state, changed ONLY by the
+         🔇/🔊 button (or the auto-start on the first interaction). Switching language
+         never touches it; this effect re-applies it to the <audio> element after every
+         state or language change, so a paused track stays paused in both languages. */
+      useEffect(() => {
+        const a = audioRef.current;
+        if (!a) return;
+        if (muted) { a.muted = true; a.pause(); }
+        else { a.muted = false; a.play().catch(() => {}); }
+      }, [muted, lang]);
+
       const toggleSound = () => {
         autoStarted.current = true; // a manual click always wins over the auto-start listener
-        const audio = audioRef.current;
-        if (!audio) return;
-        if (muted) {
-          audio.muted = false;
-          audio.play().catch(() => {});
-        } else {
-          audio.muted = true;
-        }
         setMuted(m => !m);
       };
 
