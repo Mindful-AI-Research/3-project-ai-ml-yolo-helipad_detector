@@ -101,6 +101,13 @@
     .hud-btn { background: none; border: none; cursor: pointer; color: var(--w50); font-size: 13px; line-height: 1; padding: 3px 5px; border-radius: 6px; transition: color .2s, background .2s; white-space: nowrap; font-family: var(--font) }
     .hud-btn:hover { color: var(--teal); background: var(--teal-glow) }
     .hud-btn:disabled { opacity: .3; cursor: default }
+    .snd-btn { display: inline-flex; align-items: center; gap: 6px; font-size: 12px !important; font-weight: 600; letter-spacing: .04em; padding: 5px 12px !important; border-radius: 100px !important;
+      color: #fff !important; background: linear-gradient(135deg, rgba(20,184,166,.85), rgba(221,0,0,.75)) !important; border: 1px solid rgba(255,255,255,.25) !important; white-space: nowrap }
+    .snd-btn.muted { animation: snd-pulse 2.2s ease-in-out infinite }
+    .snd-btn.on { background: rgba(20,184,166,.22) !important; border-color: var(--teal) !important; color: var(--teal) !important; animation: none }
+    .snd-btn:hover { filter: brightness(1.15) }
+    @keyframes snd-pulse { 0%,100% { box-shadow: 0 0 0 0 rgba(20,184,166,.55) } 60% { box-shadow: 0 0 0 9px rgba(20,184,166,0) } }
+    @media (prefers-reduced-motion: reduce) { .snd-btn.muted { animation: none } }
     .hud-btn.danger:hover { color: var(--red); background: var(--red-glow) }
 
     .slide-counter { position: fixed; bottom: 24px; left: 28px; font-family: var(--mono); font-size: .72rem; color: var(--w50); letter-spacing: .1em; z-index: 1000; text-align: left }
@@ -2525,8 +2532,8 @@
               {theme === 'dark' ? '☀' : '🌙'}
             </button>
             <div className="hud-sep" />
-            <button className="hud-btn" onClick={toggleSound} title={muted ? (lang === 'pt' ? 'Ativar música' : 'Enable music') : (lang === 'pt' ? 'Silenciar música' : 'Mute music')}>
-              {muted ? '🔇' : '🔊'}
+            <button className={'hud-btn snd-btn ' + (muted ? 'muted' : 'on')} onClick={toggleSound} aria-pressed={!muted} title={muted ? (lang === 'pt' ? 'Ativar música' : 'Enable music') : (lang === 'pt' ? 'Silenciar música' : 'Mute music')}>
+              <span>{muted ? '🔇' : '🔊'}</span><span>{muted ? (lang === 'pt' ? 'Ativar música' : 'Music on') : (lang === 'pt' ? 'Música ligada' : 'Music playing')}</span>
             </button>
             <div className="hud-sep" />
             <button className="hud-btn" onClick={() => setShowShortcuts(true)} title={UI.shortcuts}>?</button>
