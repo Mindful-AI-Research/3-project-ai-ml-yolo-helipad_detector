@@ -2450,15 +2450,38 @@ _title_second = _title_words[1] if len(_title_words) > 1 else ""
 _title_letters = "".join(
     f'<span class="hd-red" style="color:{_TITLE_COLORS[k % len(_TITLE_COLORS)]} !important;-webkit-text-fill-color:{_TITLE_COLORS[k % len(_TITLE_COLORS)]}">{ch}</span>' for k, ch in enumerate(_title_second)
 )
-st.markdown(
-    '<div class="hd-title-card">'
-    f'<h1 class="main-title" aria-label="{_title_first} {_title_second}">'
-    '<span class="hd-emoji" aria-hidden="true">\U0001F681</span> '
-    f'<span class="hd-text" data-text="{_title_first} {_title_second}">'
-    f'<span class="hd-white">{_title_first}</span> {_title_letters}</span></h1>'
-    '<div class="hd-title-line"></div></div>',
-    unsafe_allow_html=True,
-)
+@st.cache_data(show_spinner=False)
+def _title_svg_data_uri() -> str:
+    """assets/title.svg as a data URI (so it works on Streamlit Cloud without a public URL); '' if missing."""
+    import base64
+    for c in (Path(__file__).resolve().parents[2] / "assets" / "title.svg", Path("assets/title.svg")):
+        try:
+            if c.exists():
+                return "data:image/svg+xml;base64," + base64.b64encode(c.read_bytes()).decode("ascii")
+        except Exception:
+            pass
+    return ""
+
+
+_title_uri = _title_svg_data_uri()
+if _title_uri:
+    # the repo's own title art (assets/title.svg, 980x150): scaled to the page width, centered, no extra card.
+    st.markdown(
+        '<div style="text-align:center;margin:6px auto 4px auto;">'
+        f'<img src="{_title_uri}" alt="Helipad Detector" '
+        'style="width:100%;max-width:760px;height:auto;display:inline-block;border-radius:14px;" /></div>',
+        unsafe_allow_html=True,
+    )
+else:
+    st.markdown(
+        '<div class="hd-title-card">'
+        f'<h1 class="main-title" aria-label="{_title_first} {_title_second}">'
+        '<span class="hd-emoji" aria-hidden="true">\U0001F681</span> '
+        f'<span class="hd-text" data-text="{_title_first} {_title_second}">'
+        f'<span class="hd-white">{_title_first}</span> {_title_letters}</span></h1>'
+        '<div class="hd-title-line"></div></div>',
+        unsafe_allow_html=True,
+    )
 st.markdown(f'<p class="subtitle">{t("main.subtitle")}</p>', unsafe_allow_html=True)
 if MODEL_OPTIONS:
     st.caption(f"{t('main.active_model')} **{st.session_state.get('model_choice') or list(MODEL_OPTIONS)[0]}**")
@@ -3516,6 +3539,27 @@ with tab_about:
             st.image(f"{_FIG_BASE}fig{_i}_{_fig_lang}.svg", width="stretch")
             if _i == 2:   # geospatial: the conversion formula gets its own animated figure
                 st.image(f"{_FIG_BASE}fig2f_{_fig_lang}.svg", width="stretch")
+    # Example tiles (original tile on top, model detection below). Files: assets/tiles/{tile,det}_0N.png
+    _tiles_base = _FIG_BASE.rsplit("figures/", 1)[0] + "tiles/"
+    _tl_pt = _fig_lang == "pt"
+    st.markdown(
+        "<div class='hd-center-cap'><b>"
+        + ("O que o detector lê: tiles e detecções" if _tl_pt else "What the detector reads: tiles and detections")
+        + "</b></div>",
+        unsafe_allow_html=True,
+    )
+    for _pref in ("tile", "det"):
+        _tcols = st.columns(3)
+        for _k, _c in enumerate(_tcols, start=1):
+            with _c:
+                st.image(f"{_tiles_base}{_pref}_0{_k}.png", width="stretch")
+    st.caption(
+        ("Em cima: tiles de satélite originais. Embaixo: detecções do modelo (exemplos escolhidos, confiança 0,94–0,97). "
+         "Uma detecção é candidata à revisão humana, não uma confirmação.")
+        if _tl_pt else
+        ("Top: original satellite tiles. Bottom: model detections (hand-picked examples, confidence 0.94–0.97). "
+         "A detection is a candidate for human review, not a confirmation.")
+    )
     st.markdown(
         "<div class='hd-center-cap'>"
         + ("Detecção visual automatizada baseada em imagem, sujeita a erros e não equivalente "
