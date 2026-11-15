@@ -12,7 +12,7 @@ scipy>=1.18.1
 # Scientific Computing / Data Analysis
 ########################
 numpy>=2.5.4
-pandas>=1.1.4
+pandas>=3.1.1
 matplotlib>=3.11.2
 seaborn>=0.11.0
 
